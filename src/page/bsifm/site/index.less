@@ -1,0 +1,128 @@
+@import '../../../theme/sorollbar.less';
+:local {
+  .action_bar {
+    position: relative;
+    .add_btn {
+      position: absolute;
+      right: 0;
+      top: 0;
+      border-radius: 17px;
+    }
+  }
+  .regional_wrap {
+    height: 100%;
+  }
+  .regional_ct {
+    .scrollCommon();
+    .min_width {
+      min-width: 1069px;
+      padding: 22px 38px 0;
+      height: 100%;
+    }
+    overflow: auto;
+    margin-top: 14px;
+    background: #fff;
+    height: -webkit-calc(~'100% - 68px');
+    height: -moz-calc(~'100% - 68px');
+    height: -ms-calc(~'100% - 68px');
+    height: -o-calc(~'100% - 68px');
+    height: calc(~'100% - 68px');
+    .table_wrap {
+      :global {
+        .ant-table .ant-table-tbody > tr > td {
+          line-height: 22px;
+        }
+      }
+    }
+  }
+  .operation {
+    .delete,
+    .detail,
+    .disable,
+    .add_child,
+    .edit {
+      i,
+      span {
+        display: inline-block;
+        vertical-align: top;
+      }
+      i {
+        margin-right: 6px;
+      }
+    }
+  }
+  .operation {
+    .delete,
+    .edit {
+      &:last-child {
+        margin-right: 0;
+      }
+      margin-right: 30px;
+      i {
+        cursor: pointer;
+        color: #7e7e7e;
+        font-size: 18px;
+        &:hover {
+          color: #5deda4;
+        }
+        &:active {
+          color: #40bc7e;
+        }
+      }
+      display: inline-block;
+    }
+  }
+  .more {
+    cursor: pointer;
+    font-size: 22px;
+  }
+  .delete_wrap {
+    .delete_title {
+      background-color: #f9f9f9;
+      height: 40px;
+      line-height: 40px;
+      padding-left: 20px;
+      color: #4a4a4a;
+    }
+    .delete_ct {
+      margin: 0;
+      padding: 30px 0 10px 38px;
+      i {
+        font-size: 18px;
+        display: inline-block;
+        padding-right: 10px;
+        color: #eb6100;
+        line-height: 18px;
+        vertical-align: top;
+      }
+      span {
+        color: #4a4a4a;
+        font-size: 14px;
+        display: inline-block;
+        line-height: 18px;
+        vertical-align: top;
+      }
+    }
+  }
+  .edit_wrap {
+    padding: 20px 20px 0 20px;
+    :global {
+      .cl_regional_select_157 {
+        width: auto;
+        .ant-row {
+          width: auto;
+        }
+        .ant-form-item-control-wrapper {
+          width: 157px;
+        }
+      }
+    }
+  }
+}
+:global {
+  .ant-form-item-label,
+  .ant-form-item-control-wrapper {
+    display: inline-block;
+    vertical-align: top;
+  }
+}

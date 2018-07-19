@@ -1,0 +1,259 @@
+import React, {Component} from 'react';
+import {action, observer, inject} from 'mobx-react';
+import {toJS} from 'mobx';
+import AlarmContent from './alarmTable.js';
+import classnames from 'classnames';
+import styles from './index.less';
+import {
+  FormInput,
+  FormRadio,
+  FormSelect,
+  CustomizedForm,
+} from '../../../components/FormItem';
+import {Form, Button, Input, Row, Col} from 'antd';
+const FormItem = Form.Item;
+
+//实例
+@inject('passagewayStore')
+@observer
+class Edit extends Component {
+  constructor(props) {
+    super(props);
+    this.handleFormChange = this.handleFormChange.bind(this);
+    this.state = {
+      detailShow: false,
+    };
+  }
+  handleFormChange(changedFields) {
+    const {handleFormChange} = this.props;
+    handleFormChange(changedFields);
+  }
+  render() {
+    const {
+      passagewayStore: {addData, detailData},
+      fields,
+      currentDevice,
+      currentChannelID,
+      mode,
+    } = this.props;
+
+    let data = {};
+    let disabled = false;
+    switch (mode) {
+      case 'new':
+        data = addData;
+        break;
+      case 'modify':
+      case 'detail':
+        data = detailData;
+        mode == 'detail' && (disabled = true);
+        break;
+    }
+
+    const channeltypeList = _.map(toJS(data.channeltypeList), item => {
+      return {
+        value: item.F_ID,
+        name: item.F_TypeName,
+      };
+    });
+    return (
+      <Form layout="inline" className={styles['edit_wrap']}>
+        <Row>
+          <FormInput
+            {...fields}
+            onChange={this.handleFormChange}
+            label={'通道ID'}
+            name={'F_ChannelID'}
+            disabled={disabled}
+            placeholder={'请输入设备名称'}
+            rules={[{required: true, message: '请必须填写!'}]}
+          />
+          <FormInput
+            {...fields}
+            onChange={this.handleFormChange}
+            label={'通道名称'}
+            name={'F_ChannelName'}
+            disabled={disabled}
+            placeholder={'请输入通道名称'}
+            rules={[{required: true, message: '请必须填写!'}]}
+          />
+          <FormSelect
+            {...fields}
+            onChange={this.handleFormChange}
+            disabled={disabled}
+            label={'值类型'}
+            name={'F_ValueType'}
+            placeholder={'请选择设备类型'}
+            rules={[{required: true, message: '请必须填写!'}]}
+            children={[
+              {value: 1, name: '整型'},
+              {value: 2, name: '浮点'},
+              {value: 3, name: '文本'},
+              {value: 4, name: '枚举'},
+            ]}
+          />
+          <FormSelect
+            {...fields}
+            onChange={this.handleFormChange}
+            label={'通道类型'}
+            disabled={disabled}
+            placeholder={'请选择设备类型'}
+            name={'F_ChannelType'}
+            rules={[{required: true, message: '请必须填写!'}]}
+            children={channeltypeList}
+          />
+        </Row>
+        <Row className={styles['sub_title']}>
+          <i
+            className={classnames(
+              styles['expand_icon'],
+              !this.state.detailShow
+                ? styles['row_collapsed']
+                : styles['row_expanded'],
+            )}
+            onClick={() => {
+              this.setState({
+                detailShow: !this.state.detailShow,
+              });
+            }}
+          />
+          <span>详细信息(选填):</span>
+        </Row>
+        {this.state.detailShow && (
+          <Row>
+            <FormSelect
+              {...fields}
+              onChange={this.handleFormChange}
+              label={'保存模式'}
+              name={'F_StoreMode'}
+              disabled={disabled}
+              placeholder={'请输入设备名称'}
+              rules={[{required: false}]}
+              children={[
+                {value: 0, name: '无条件保存'},
+                {value: 1, name: '变动值'},
+                {value: 2, name: '变动率'},
+              ]}
+            />
+            <FormInput
+              {...fields}
+              onChange={this.handleFormChange}
+              label={'阈值'}
+              name={'F_Threshold'}
+              disabled={disabled}
+              placeholder={'请输入设备名称'}
+              rules={[{required: false}]}
+            />
+            <FormInput
+              {...fields}
+              onChange={this.handleFormChange}
+              label={'值倍率'}
+              name={'ratio'}
+              disabled={disabled}
+              placeholder={'请输入设备名称'}
+              rules={[{required: false}]}
+            />
+            <FormInput
+              {...fields}
+              onChange={this.handleFormChange}
+              label={'单位'}
+              name={'F_Unit'}
+              disabled={disabled}
+              placeholder={'请输入设备名称'}
+              rules={[{required: false}]}
+            />
+            <FormInput
+              {...fields}
+              onChange={this.handleFormChange}
+              label={'显示精度'}
+              name={'F_ShowPrecision'}
+              disabled={disabled}
+              placeholder={'请输入设备名称'}
+              rules={[{required: false}]}
+            />
+            <FormInput
+              {...fields}
+              onChange={this.handleFormChange}
+              label={'显示序号'}
+              name={'F_ShowOrder'}
+              disabled={disabled}
+              placeholder={'请输入设备名称'}
+              rules={[{required: false}]}
+            />
+            <FormInput
+              {...fields}
+              onChange={this.handleFormChange}
+              label={'解析序号'}
+              name={'F_AnalyOrder'}
+              disabled={disabled}
+              placeholder={'请输入设备名称'}
+              rules={[{required: false}]}
+            />
+            <FormInput
+              {...fields}
+              onChange={this.handleFormChange}
+              label={'关联通道'}
+              name={'F_RelateChannelNO'}
+              disabled={disabled}
+              placeholder={'请输入设备名称'}
+              rules={[{required: false}]}
+            />
+            <FormSelect
+              {...fields}
+              onChange={this.handleFormChange}
+              label={'通道状态'}
+              name={'F_Status'}
+              disabled={disabled}
+              placeholder={'请输入设备名称'}
+              rules={[{required: false}]}
+              children={[{name: '显示', value: 0}, {name: '不显示', value: 1}]}
+            />
+            <FormInput
+              {...fields}
+              onChange={this.handleFormChange}
+              label={'通道描述'}
+              name={'F_ValueDescription'}
+              disabled={disabled}
+              placeholder={'请输入设备名称'}
+              rules={[{required: false}]}
+            />
+            <FormInput
+              {...fields}
+              onChange={this.handleFormChange}
+              label={'保存周期'}
+              name={'F_StorePeriod'}
+              disabled={disabled}
+              placeholder={'请输入设备名称'}
+              rules={[{required: false}]}
+            />
+            {/* <FormInput */}
+            {/*   {...fields} */}
+            {/*   onChange={this.handleFormChange} */}
+            {/*   label={'显示样式'} */}
+            {/*   name={'F_DisplayFormat'} */}
+            {/*   disabled={disabled} */}
+            {/*   placeholder={'请输入设备名称'} */}
+            {/*   rules={[{required: false}]} */}
+            {/* /> */}
+            {/* <FormInput */}
+            {/*   {...fields} */}
+            {/*   onChange={this.handleFormChange} */}
+            {/*   label={'告警延迟'} */}
+            {/*   name={'F_AlarmVoiceDelay'} */}
+            {/*   disabled={disabled} */}
+            {/*   placeholder={'请输入设备名称'} */}
+            {/*   rules={[{required: false}]} */}
+            {/* /> */}
+          </Row>
+        )}
+        <Row className={styles['line']} />
+        <Row className={styles['sub_title']}>告警条件:</Row>
+        <Row>
+          <AlarmContent channelID={currentChannelID} deviceID={currentDevice} />
+        </Row>
+      </Form>
+    );
+  }
+}
+
+export default Edit;

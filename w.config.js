@@ -6,13 +6,13 @@ var precss = require('precss');
 var autoprefixer = require('autoprefixer');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 var version = require('./package.json').version;
-
+var STITAC = __dirname + '/static/';
 
 // 程序入口
-var entry =  __dirname + '/src/index.js';
+var entry = __dirname + '/src/index.js';
 
 // 输出文件
-var output =  {
+var output = {
   filename: 'page/[name]/index.js',
   chunkFilename: 'chunk/[name].[chunkhash:5].chunk.js',
 };
@@ -21,37 +21,79 @@ var output =  {
 var devtool = 'source-map';
 
 // eslint
-var eslint =  {
+var eslint = {
   configFile: __dirname + '/.eslintrc.js',
-}
+};
 
 // loader
 var loaders = [
-    {
-      test: /\.(json)$/,
-      exclude: /node_modules/,
-      loader: 'json',
+  {
+    test: /\.(json)$/,
+    exclude: /node_modules/,
+    loader: 'json',
+  },
+  {
+    test: /\.(js|jsx)$/,
+    exclude: /node_modules/,
+    loader: 'babel-loader',
+    query: {
+      presets: ['react', 'es2015', 'stage-0'],
+      plugins: [
+        // 这个是配置ant design的按需加载的环境
+        [
+          'import',
+          {
+            libraryName: 'antd',
+            style: true,
+          },
+        ],
+        'transform-decorators-legacy',
+        'add-module-exports',
+      ],
     },
-    {
-      test: /\.(js|jsx)$/,
-      exclude: /node_modules/,
-      loader: 'babel!eslint-loader',
-    },
-    {
-      test: /\.(?:png|jpg|gif)$/,
-      loader: 'url?limit=8192', //小于8k,内嵌;大于8k生成文件
-    },
-    {
-      test: /\.less/,
-      loader: ExtractTextPlugin.extract('style', 'css?modules&localIdentName=[hash:base64:4]!postcss!less'),
-    }
+  },
+  {
+    test: /\.(?:png|jpg|gif)$/,
+    loader: 'url?limit=8192', //小于8k,内嵌;大于8k生成文件
+  },
+  {
+    test: /\.css$/,
+    loader: 'style-loader!css-loader!postcss-loader',
+  },
+  {
+    test: /\.less/,
+    loader: ExtractTextPlugin.extract(
+      'style',
+      'css?modules&localIdentName=[path][name]---[local]---[hash:base64:5]!postcss!less',
+    ),
+  },
+  {
+    // 专供iconfont方案使用的，后面会带一串时间戳，需要特别匹配到
+    test: /\.(woff|woff2|svg|eot|ttf)\??.*$/,
+    loader: 'file?name=./static/fonts/[name].[ext]',
+  },
 ];
 
 // dev plugin
-var devPlugins =  [
+var devPlugins = [
   new CopyWebpackPlugin([
-    { from: './src/resource/music/music.mp3' },
-    { from: './src/resource/css/loader.css' },
+    {from: './src/resource/music/music.mp3'},
+    {from: './src/resource/css/loader.css'},
+  ]),
+  // 复制
+  new CopyWebpackPlugin([
+    {
+      from: STITAC + 'iconfont/**',
+    },
+    {
+      from: STITAC + 'images/**',
+    },
+    {
+      from: STITAC + 'jq/jquery.min.js*',
+    },
+    {
+      from: STITAC + 'css/antd.min.css',
+    },
   ]),
   // 热更新
   new webpack.HotModuleReplacementPlugin(),
@@ -59,13 +101,14 @@ var devPlugins =  [
   new webpack.NoErrorsPlugin(),
   // 打开浏览器页面
   new OpenBrowserPlugin({
-    url: 'http://127.0.0.1:8080/'
+    url: 'http://localhost:9080',
+    browser: 'Google Chrome',
   }),
   // css打包
   new ExtractTextPlugin('css.css', {
-    allChunks: true
+    allChunks: true,
   }),
-]
+];
 
 // production plugin
 var productionPlugins = [
@@ -75,22 +118,32 @@ var productionPlugins = [
   }),
   // 复制
   new CopyWebpackPlugin([
-    { from: './src/resource/music/music.mp3' },
-    { from: './src/resource/css/loader.css' },
+    {
+      from: STITAC + 'iconfont/**',
+    },
+    {
+      from: STITAC + 'images/**',
+    },
+    {
+      from: STITAC + 'jq/**',
+    },
+    {
+      from: STITAC + 'css/**',
+    },
   ]),
   // HTML 模板
   new HtmlWebpackPlugin({
-    template: __dirname + '/server/index.tmpl.html'
+    template: __dirname + '/server/index.tmpl.html',
   }),
   // JS压缩
   new webpack.optimize.UglifyJsPlugin({
     compress: {
-      warnings: false
-    }}
-  ),
+      warnings: false,
+    },
+  }),
   // css打包
-  new ExtractTextPlugin('css-' + version + '.css', {
-    allChunks: true
+  new ExtractTextPlugin('./static/css-' + version + '.css', {
+    allChunks: true,
   }),
 ];
 
@@ -99,10 +152,17 @@ var devServer = {
   contentBase: './server',
   colors: true,
   historyApiFallback: false,
-  port: 8080, // defaults to "8080"
+  port: 9080, // defaults to "8080"
   hot: true, // Hot Module Replacement
   inline: true, // Livereload
   host: '0.0.0.0',
+  disableHostCheck: true,
+  proxy: [
+    {
+      context: ['/collect/**'],
+      target: 'http://172.29.7.71:8989/',
+    },
+  ],
 };
 
 module.exports = {
@@ -113,8 +173,8 @@ module.exports = {
   devPlugins: devPlugins,
   productionPlugins: productionPlugins,
   devServer: devServer,
-  postcss: function () {
+  postcss: function() {
     return [precss, autoprefixer];
   },
-  version: version
+  version: version,
 };

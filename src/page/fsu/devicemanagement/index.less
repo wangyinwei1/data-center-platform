@@ -1,0 +1,293 @@
+@import '../../../theme/sorollbar.less';
+:local {
+  .information_wrap {
+    height: 100%;
+  }
+  .edit_wrap {
+    padding: 20px 20px 0 20px;
+  }
+  .information_ct {
+    .scrollCommon();
+    overflow-x: auto;
+    .set_min_width {
+      min-width: 1076px;
+      padding: 22px 38px 0;
+    }
+    overflow: auto;
+    margin-top: 14px;
+    background: #fff;
+    height: -webkit-calc(~'100% - 68px');
+    height: -moz-calc(~'100% - 68px');
+    height: -ms-calc(~'100% - 68px');
+    height: -o-calc(~'100% - 68px');
+    height: calc(~'100% - 68px');
+  }
+  .more {
+    cursor: pointer;
+    font-size: 22px;
+  }
+  .icon_style {
+    cursor: pointer;
+  }
+  .history_wrap {
+    padding-top: 20px;
+  }
+  .nodata {
+    text-align: center;
+    font-size: 200px;
+    width: 180px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, 40px);
+    color: #bfbfbf;
+    span {
+      display: inline-block;
+      vertical-align: top;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, 88px);
+    }
+    i {
+      line-height: 180px;
+      font-size: 180px;
+    }
+    span {
+      font-size: 22px;
+    }
+  }
+  .control_ct {
+    padding: 20px;
+    .passageway {
+      display: inline-block;
+      vertical-align: top;
+      margin-right: 5px;
+      :global {
+        .ant-form-item-label {
+          min-width: 90px;
+        }
+        .ant-form-item-control-wrapper {
+          width: 290px;
+        }
+      }
+      width: 380px;
+    }
+    .operation {
+      :global {
+        .ant-form-item-control-wrapper {
+          width: 150px;
+        }
+      }
+      width: 205px;
+    }
+    .monitor {
+      :global {
+        .ant-form-item-label {
+          min-width: 90px;
+        }
+        .ant-form-item-control-wrapper {
+          width: 203px;
+        }
+      }
+      display: inline-block;
+      vertical-align: top;
+      width: 294px;
+    }
+    .fsu_operation {
+      margin-right: 10px;
+      display: inline-block;
+      vertical-align: top;
+      :global {
+        .ant-form-item-label {
+          min-width: 90px;
+        }
+        .ant-form-item-control-wrapper {
+          width: 290px;
+          .ant-input {
+            line-height: 36px;
+            height: 36px;
+            &:hover {
+              border-color: #56eca1;
+            }
+            &:focus {
+              border-color: #56eca1;
+              box-shadow: 0 0 0 2px rgba(86, 236, 161, 0.2);
+            }
+          }
+        }
+      }
+      width: 380px;
+    }
+
+    .operation_text {
+      :global {
+        .ant-form-item-control-wrapper {
+          width: 290px;
+        }
+        .ant-input {
+          line-height: 36px;
+          height: 36px;
+          &:hover {
+            border-color: #56eca1;
+          }
+          &:focus {
+            border-color: #56eca1;
+            box-shadow: 0 0 0 2px rgba(86, 236, 161, 0.2);
+          }
+        }
+      }
+      width: 342px;
+    }
+    .search {
+      display: inline-block;
+      vertical-align: top;
+      margin-top: 1px;
+      :global {
+        .ant-btn {
+          &.ant-btn-clicked {
+            &:after {
+              border-color: #40bc7e;
+            }
+          }
+          width: 82px;
+          height: 36px;
+          line-height: 36px;
+          color: #fff;
+          span,
+          i {
+            color: #fff;
+          }
+          background-color: #50e399;
+          border-color: #50e399;
+          &:hover {
+            background-color: #7fffbe;
+            border-color: #7fffbe;
+          }
+          &:active {
+            background-color: #40bc7e;
+            border-color: #40bc7e;
+          }
+          &:focus {
+            background-color: #50e399;
+            border-color: #50e399;
+          }
+        }
+      }
+    }
+  }
+  .delete_wrap {
+    .delete_title {
+      background-color: #f9f9f9;
+      height: 40px;
+      line-height: 40px;
+      padding-left: 20px;
+      color: #4a4a4a;
+    }
+  }
+  .history_wrap {
+    position: relative;
+  }
+  .history_ct {
+    .drop_down {
+      height: 36px;
+      min-width: 290px;
+      margin-left: 10px;
+      line-height: 36px;
+    }
+    :global {
+      .ant-select-selection {
+        border: 1px solid #d9d9d9;
+        border-radius: 4px;
+        background-color: #fff;
+        height: 36px;
+        line-height: 36px;
+        padding-bottom: 0;
+        .ant-select-selection__rendered {
+          line-height: 36px;
+          & > ul > li {
+            height: 28px;
+            line-height: 28px;
+          }
+        }
+      }
+      .ant-input,
+      .ant-calendar-picker,
+      .ant-btn {
+        display: inline-block;
+        vertical-align: top;
+      }
+      .ant-btn {
+        height: 36px;
+        line-height: 36px;
+        margin-left: 10px;
+      }
+      .ant-calendar-picker-input {
+        &:focus .ant-calendar-picker-input:not(.ant-input-disabled) {
+          border-color: #56eca1;
+        }
+
+        &:hover {
+          border-color: #56eca1 !important;
+        }
+        height: 36px;
+      }
+    }
+  }
+  .icon_active {
+    color: #ff9c00;
+  }
+  .statustwo {
+    background-color: #ffd9d9;
+  }
+  .icon_passive {
+    color: #5dccff;
+  }
+  .operation {
+    .delete,
+    .detail,
+    .disable,
+    .add_child,
+    .edit {
+      i,
+      span {
+        display: inline-block;
+        vertical-align: top;
+      }
+      i {
+        margin-right: 6px;
+      }
+    }
+  }
+  .information_ct {
+    :global {
+      .cl_g_border {
+        border-bottom: 1px solid #e4e4e4 !important;
+      }
+      .information_th {
+        position: relative;
+        .ant-table-row-expand-icon {
+          position: absolute;
+          left: 0;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+        padding: 16px 6px !important;
+      }
+      .td_padding {
+        td {
+          &:first-child {
+            width: 1%;
+          }
+          padding: 11px 6px !important;
+          &.ant-table-selection-column {
+          }
+        }
+      }
+      .cl_online_state {
+        background-color: #ffd9d9;
+        color: #eb0a11;
+      }
+    }
+  }
+}

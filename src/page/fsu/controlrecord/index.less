@@ -1,0 +1,22 @@
+@import '../../../theme/sorollbar.less';
+:local {
+  .controlrecord_wrap {
+    height: 100%;
+    padding-top: 6px;
+    .controlrecord_ct {
+      .scrollCommon();
+      .min_width {
+        min-width: 1069px;
+        padding: 22px 22px 0;
+        height: 100%;
+      }
+      height: -webkit-calc(~'100% - 48px');
+      height: -moz-calc(~'100% - 48px');
+      height: -ms-calc(~'100% - 48px');
+      height: -o-calc(~'100% - 48px');
+      height: calc(~'100% - 48px');
+      overflow: auto;
+      background: #fff;
+    }
+  }
+}

@@ -1,0 +1,93 @@
+// common modal footer
+.modal-footer {
+  height: 60px;
+  line-height: 60px;
+  margin: -10px 2px -10px -10px; //background: #f2f7fc;
+  background: #fff;
+  .ant-btn {
+    width: 82px;
+    height: 34px;
+    border-radius: 17px;
+    font-size: 14px;
+    color: #fff;
+    background-color: #50e399;
+    border-color: #50e399;
+    &:hover {
+      background-color: #7fffbe;
+      border-color: #7fffbe;
+    }
+    &:active {
+      background-color: #40bc7e;
+      border-color: #40bc7e;
+    }
+  }
+  .ant-btn-clicked {
+    &:after {
+      border-color: #50e399;
+    }
+  }
+  .ghostBtn {
+    border: 1px solid #e6e6e6;
+    color: #c4c4c4;
+    background-color: #fff;
+    &:hover {
+      color: #50e399;
+      background-color: #fff;
+      border-color: #50e399;
+    }
+    &:active {
+      color: #40bc7e;
+      background-color: #fff;
+      border-color: #40bc7e;
+    }
+  }
+}
+:global {
+  .ant-modal-footer {
+    border: none;
+    padding-bottom: 20px;
+  }
+  .ant-modal-body {
+    padding: 0;
+  }
+  .ant-modal-close {
+    .ant-modal-close-x {
+      width: 40px;
+      height: 40px;
+      color: #a6a6a6;
+      line-height: 40px;
+    }
+  }
+}
+
+.withIconDiv {
+  padding: 35px;
+  i {
+    position: relative;
+    display: inline-block;
+    font-size: 45px;
+    line-height: 1;
+    color: #a5f664;
+    vertical-align: top;
+  }
+  & > div {
+    display: inline-block;
+    width: 80%;
+    margin-left: 25px;
+    p {
+      display: inline-block;
+      line-height: 45px;
+    }
+    .title {
+      font-size: 16px;
+      line-height: 1.5;
+      color: #fff;
+    }
+    .content {
+      font-size: 14px;
+      color: #9dd6ff;
+      margin-bottom: 18px;
+      margin-top: 10px;
+    }
+  }
+}

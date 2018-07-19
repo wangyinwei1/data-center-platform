@@ -1,0 +1,270 @@
+:global {
+  .ant-calendar-picker-container {
+    z-index: 1500 !important;
+  }
+  .ant-calendar-range-quick-selector a {
+    color: #56eca1;
+    &:hover {
+      color: #56eca1;
+    }
+  }
+  .ant-calendar-cell .ant-calendar-date:hover {
+    background: #e6fcea;
+  }
+  .ant-calendar-table .ant-calendar-today .ant-calendar-date {
+    border-color: #56eca1;
+    color: #56eca1;
+  }
+
+  .ant-calendar-table .ant-calendar-selected-day .ant-calendar-date {
+    background: #56eca1;
+    color: #fff;
+  }
+  .ant-calendar-range .ant-calendar-selected-day .ant-calendar-date:hover {
+    background: #56eca1;
+  }
+  .ant-calendar-panel .ant-calendar-header a:hover {
+    color: #56eca1;
+  }
+  .ant-calendar-range .ant-calendar-in-range-cell:before {
+    background: #e6fcea !important;
+  }
+  .ant-layout-content .ant-input {
+    &:hover {
+      border-color: #56eca1;
+    }
+    &:focus {
+      border-color: #56eca1;
+      box-shadow: 0 0 0 2px rgba(86, 236, 161, 0.2);
+    }
+  }
+  .ant-table-row-expand-icon-cell {
+    width: 1%;
+  }
+  .ant-select-dropdown-menu .ant-select-dropdown-menu-item:hover {
+    background-color: #deffee;
+  }
+  .ant-select-dropdown-menu .ant-select-dropdown-menu-item-active {
+    background-color: #deffee;
+  }
+  .ant-select-dropdown.ant-select-dropdown--multiple
+    .ant-select-dropdown-menu-item-selected:after,
+  .ant-select-dropdown.ant-select-dropdown--multiple
+    .ant-select-dropdown-menu-item-selected:hover:after {
+    color: #56eca1 !important;
+  }
+  .ant-layout-content .ant-btn,
+  .ant-modal-content .ant-btn {
+    &.ant-btn-clicked {
+      &:after {
+        border-color: #40bc7e;
+      }
+    }
+    border-radius: 17px;
+    width: 82px;
+    height: 34px;
+    line-height: 34px;
+    color: #fff;
+    span,
+    i {
+      color: #fff;
+    }
+    background-color: #50e399;
+    border-color: #50e399;
+    &:hover {
+      background-color: #7fffbe;
+      border-color: #7fffbe;
+    }
+    &:active {
+      background-color: #40bc7e;
+      border-color: #40bc7e;
+    }
+    &:focus {
+      background-color: #50e399;
+      border-color: #50e399;
+    }
+  }
+  .ant-layout-content .ant-checkbox-input:focus + .ant-checkbox-inner,
+  .ant-layout-content .ant-checkbox-wrapper:hover .ant-checkbox-inner {
+    border-color: #50e399;
+  }
+  .ant-layout-content .ant-checkbox-checked:after {
+    border-color: #50e399;
+  }
+  .ant-layout-content .ant-checkbox-checked .ant-checkbox-inner,
+  .ant-layout-content .ant-checkbox-indeterminate .ant-checkbox-inner {
+    border-color: #50e399;
+    background-color: #50e399;
+  }
+  .ant-modal-content .ant-btn-ghost {
+    border: 1px solid #e6e6e6;
+    span {
+      color: #c4c4c4;
+    }
+    background-color: #fff;
+    &:hover {
+      span {
+        color: #50e399;
+      }
+      background-color: #fff;
+      border-color: #50e399;
+    }
+    &:focus {
+      span {
+        color: #50e399;
+      }
+      background-color: #fff;
+      border-color: #50e399;
+    }
+    &:active {
+      span {
+        color: #50e399;
+      }
+      background-color: #fff;
+      border-color: #50e399;
+    }
+  }
+
+  .ant-tooltip {
+    pointer-events: none;
+  }
+  .ant-tooltip-inner {
+    min-width: 50px;
+    font-size: 14px;
+  }
+  //分页
+  .ant-pagination-item-active:focus,
+  .ant-pagination-item-active:hover {
+    border-color: #f3f3f3;
+  }
+  .ant-layout-content {
+    .ant-pagination-item {
+      background: none;
+      border-color: #f3f3f3;
+      border-radius: 50%;
+      a {
+        color: #b0b0b0;
+      }
+      &:hover {
+        a {
+          color: #5deda4;
+        }
+      }
+    }
+    .ant-pagination-item-active {
+      border-color: #50e399;
+      a {
+        color: #50e399;
+      }
+    }
+    .ant-pagination-item-active:focus {
+      a {
+        border-color: #50e399;
+        color: #50e399;
+      }
+    }
+    .ant-pagination-item-active:hover {
+      a {
+        border-color: #7fffbe;
+        color: #7fffbe;
+      }
+    }
+    .ant-pagination-prev .ant-pagination-item-link,
+    .ant-pagination-next .ant-pagination-item-link {
+      background-color: #f9f9f9;
+      border-radius: 50%;
+      border: 1px solid #f3f3f3;
+    }
+    .ant-pagination-prev:focus .ant-pagination-item-link,
+    .ant-pagination-next:focus .ant-pagination-item-link,
+    .ant-pagination-prev:hover .ant-pagination-item-link,
+    .ant-pagination-next:hover .ant-pagination-item-link {
+      border-color: #7fffbe;
+      background: #fff;
+      color: #7fffbe;
+    }
+    .ant-pagination-disabled .ant-pagination-item-link,
+    .ant-pagination-disabled .ant-pagination-item-link {
+      &:hover {
+        background-color: #f9f9f9;
+        border-color: #f3f3f3;
+        a {
+          border-color: #f3f3f3;
+        }
+        color: #a6a6a6;
+      }
+    }
+    .ant-select-selection {
+      background-color: #f9f9f9;
+      border: 1px solid #f3f3f3;
+      border-radius: 16px;
+      &:hover {
+        border-color: #7fffbe;
+      }
+    }
+    .ant-select-arrow {
+    }
+    .ant-select-dropdown-menu-item:hover,
+    .ant-select-dropdown-menu-item-selected,
+    .ant-select-dropdown-menu-item-selected:hover {
+      background-color: #ddffee;
+      color: #59d998;
+      font-weight: normal;
+    }
+    .ant-select-focused .ant-select-selection,
+    .ant-select-selection:focus,
+    .ant-select-selection:active {
+      border-color: #50e399;
+      box-shadow: 0 0 0 2px rgba(80, 227, 153, 0.2);
+    }
+    .ant-pagination-item:focus,
+    .ant-pagination-item:hover {
+      border-color: #7fffbe;
+    }
+    .ant-select-dropdown-menu-item-active {
+      color: #59d998;
+      background-color: #ddffee;
+    }
+    .ant-pagination-options-quick-jumper input {
+      background-color: #f9f9f9;
+      border: 1px solid #f3f3f3;
+      border-radius: 16px;
+      &:hover {
+        border-color: #7fffbe;
+      }
+      &:focus,
+      &:active {
+        border-color: #50e399;
+        box-shadow: 0 0 0 2px rgba(80, 227, 153, 0.2);
+      }
+    }
+    .ant-table-pagination.ant-pagination {
+      margin-top: 28px;
+    }
+  }
+  .ant-dropdown .ant-dropdown-menu-item {
+    &:hover {
+      background-color: #deffee;
+      color: #59d998;
+    }
+  }
+  //mask
+  // .ant-modal-mask {
+  //   background-color: rgba(255, 255, 255, 0.1) !important;
+  // }
+  //select
+  .ant-select .ant-select-selection {
+    line-height: 36px;
+    height: 36px;
+    .ant-select-selection__rendered {
+      line-height: 36px;
+    }
+    &:hover {
+      border-color: #56eca1;
+    }
+    &:focus {
+      border-color: #56eca1;
+      box-shadow: 0 0 0 2px rgba(86, 236, 161, 0.2);
+    }
+  }
+}

@@ -1,0 +1,132 @@
+:local {
+  .action_bar {
+    position: relative;
+    min-height: 50px;
+    .btn_wrap {
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+    .add_btn,
+    .real_btn,
+    .export_btn,
+    .import_btn,
+    .exportTpl_btn,
+    .batch_btn,
+    .refresh_btn {
+      display: inline-block;
+      vertical-align: top;
+      border-radius: 17px;
+      margin-left: 10px;
+    }
+    .exportTpl_btn {
+      width: auto;
+      background-color: #50bfff;
+      border-color: #50bfff;
+      &:hover {
+        background-color: #73ccff;
+        border-color: #73ccff;
+      }
+      &:active {
+        background-color: #50bfff;
+        border-color: #50bfff;
+      }
+      &:focus {
+        background-color: #50bfff;
+        border-color: #50bfff;
+      }
+      &:global(.ant-btn-clicked) {
+        &:after {
+          border-color: #f7ba2a;
+        }
+      }
+    }
+
+    .export_btn {
+      width: auto;
+      background-color: #f7ba2a;
+      border-color: #f7ba2a;
+      &:hover {
+        background-color: #f9c855;
+        border-color: #f9c855;
+      }
+      &:active {
+        background-color: #f7ba2a;
+        border-color: #f7ba2a;
+      }
+      &:focus {
+        background-color: #f7ba2a;
+        border-color: #f7ba2a;
+      }
+      &:global(.ant-btn-clicked) {
+        &:after {
+          border-color: #f7ba2a;
+        }
+      }
+    }
+    .refresh_btn,
+    .batch_btn,
+    .import_btn {
+      width: auto;
+      background-color: #ff4949;
+      border-color: #ff4949;
+      &:hover {
+        background-color: #ff4949;
+        border-color: #ff4949;
+      }
+      &:active {
+        background-color: #ff4949;
+        border-color: #ff4949;
+      }
+      &:focus {
+        background-color: #ff4949;
+        border-color: #ff4949;
+      }
+      &:global(.ant-btn-clicked) {
+        &:after {
+          border-color: #ff4949;
+        }
+      }
+    }
+  }
+
+  :global(.ant-layout-content) {
+    .device_time {
+      display: inline-block;
+      vertical-align: top;
+      padding-right: 10px;
+      :global {
+        .ant-calendar-picker-input {
+          &:hover {
+            border-color: #7fffbe;
+          }
+        }
+      }
+    }
+    .device_status {
+      display: inline-block;
+      vertical-align: top;
+      padding-left: 20px;
+      :global {
+        .ant-select .ant-select-selection .ant-select-selection__rendered {
+          line-height: 32px;
+        }
+        .ant-select-selection {
+          line-height: 32px;
+          height: 32px;
+          background-color: #fff;
+          border-color: #d9d9d9;
+          border-radius: 4px;
+          &:hover,
+          &:focus {
+            border-color: #56eca1;
+          }
+        }
+        .ant-select {
+          margin-left: 10px;
+          width: 220px;
+        }
+      }
+    }
+  }
+}

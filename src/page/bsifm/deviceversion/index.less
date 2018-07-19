@@ -1,0 +1,227 @@
+@import '../../../theme/sorollbar.less';
+:local {
+  .deviceversion_wrap {
+    height: -webkit-calc(~'100% - 68px');
+    height: -moz-calc(~'100% - 68px');
+    height: -ms-calc(~'100% - 68px');
+    height: -o-calc(~'100% - 68px');
+    height: calc(~'100% - 68px');
+  }
+  .child_link {
+    display: block;
+    color: #13ce66;
+    cursor: pointer;
+    &:hover {
+      color: #13ce66;
+      text-decoration: underline;
+    }
+  }
+  .deviceversion_ct {
+    overflow: auto;
+    .scrollCommon();
+    .min_width {
+      min-width: 1069px;
+      padding: 22px 38px 0;
+      height: 100%;
+    }
+    margin-top: 14px;
+    background: #fff;
+    height: 100%;
+    .table_wrap {
+      :global {
+        .information_th {
+          padding: 11px 6px !important;
+        }
+      }
+    }
+  }
+  .delete_wrap {
+    .deviceversion_btn {
+      &:after {
+        border-color: #40bc7e;
+      }
+      border-radius: 17px;
+      padding: 0;
+      width: 82px;
+      height: 34px;
+      line-height: 34px;
+      color: #fff;
+      span,
+      i {
+        color: #fff;
+      }
+      background-color: #50e399;
+      border-color: #50e399;
+      &:hover {
+        background-color: #7fffbe;
+        border-color: #7fffbe;
+      }
+      &:active {
+        background-color: #40bc7e;
+        border-color: #40bc7e;
+      }
+      &:focus {
+        background-color: #50e399;
+        border-color: #50e399;
+      }
+    }
+    .out_modal {
+      background-color: #f9f9f9;
+      margin-bottom: 20px;
+      padding: 20px 20px 0 20px;
+      border-bottom: 1px solid #e4e4e4;
+      border-top: 1px solid #e4e4e4;
+    }
+    .dev_row {
+      padding: 0 20px 0 20px;
+    }
+    .deviceversion_cancel {
+      border: 1px solid #e6e6e6;
+      span {
+        color: #c4c4c4;
+      }
+      margin-right: 8px;
+      background-color: #fff;
+      &:hover {
+        background-color: #fff;
+        border-color: #7fffbe;
+        span {
+          color: #50e399;
+        }
+      }
+      &:active {
+        background-color: #fff;
+        border-color: #40bc7e;
+        span {
+          color: #50e399;
+        }
+      }
+      &:focus {
+        background-color: #fff;
+        border-color: #50e399;
+        span {
+          color: #50e399;
+        }
+      }
+    }
+    .new_import {
+      &:after {
+        border-color: #ff4949;
+      }
+      margin-right: 8px;
+      background-color: #ff4949;
+      border-color: #ff4949;
+      &:hover {
+        background-color: #ff6d6d;
+        border-color: #ff6d6d;
+      }
+      &:active {
+        background-color: #ff4949;
+        border-color: #ff4949;
+      }
+      &:focus {
+        background-color: #ff4949;
+        border-color: #ff4949;
+      }
+    }
+    .deviceversion_browse {
+      &:after {
+        border-color: #f7ba2a;
+      }
+      margin-right: 8px;
+      background-color: #f7ba2a;
+      border-color: #f7ba2a;
+      &:hover {
+        background-color: #f9c855;
+        border-color: #f9c855;
+      }
+      &:active {
+        background-color: #f9c855;
+        border-color: #f9c855;
+      }
+      &:focus {
+        background-color: #f7ba2a;
+        border-color: #f7ba2a;
+      }
+    }
+    .delete_title {
+      background-color: #f9f9f9;
+      height: 40px;
+      line-height: 40px;
+      padding-left: 20px;
+      color: #4a4a4a;
+    }
+  }
+  .edit_wrap {
+    padding: 20px 0px 0 0px;
+    :global {
+      .cl_select_678 {
+        width: auto;
+        .ant-row {
+          width: auto;
+        }
+        .ant-form-item-label {
+          vertical-align: top;
+        }
+        .ant-form-item-control-wrapper {
+          width: 678px;
+          .ant-input {
+            height: 450px;
+          }
+        }
+      }
+      .cl_select_290 {
+        width: auto;
+        .ant-row {
+          width: auto;
+        }
+      }
+    }
+  }
+  .operation {
+    .delete,
+    .detail,
+    .disable,
+    .add_child,
+    .edit {
+      i,
+      span {
+        display: inline-block;
+        vertical-align: top;
+      }
+      i {
+        margin-right: 6px;
+      }
+    }
+  }
+  .more {
+    cursor: pointer;
+    font-size: 22px;
+  }
+  .sub_title {
+    color: #999;
+    font-size: 14px;
+    padding: 5px 0 10px 11px;
+  }
+  .operation {
+    .delete,
+    .edit {
+      &:last-child {
+        margin-right: 0;
+      }
+      margin-right: 30px;
+      i {
+        cursor: pointer;
+        color: #7e7e7e;
+        font-size: 18px;
+        &:hover {
+          color: #5deda4;
+        }
+        &:active {
+          color: #40bc7e;
+        }
+      }
+      display: inline-block;
+    }
+  }
+}

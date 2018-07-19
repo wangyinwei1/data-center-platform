@@ -1,0 +1,72 @@
+@import '../../../theme/sorollbar.less';
+:local {
+  .information_wrap {
+    height: 100%;
+  }
+  .child_link {
+    display: block;
+    color: #13ce66;
+    cursor: pointer;
+    &:hover {
+      color: #13ce66;
+      text-decoration: underline;
+    }
+  }
+  .icon_active {
+    color: #ff9c00;
+  }
+  .more {
+    cursor: pointer;
+    font-size: 22px;
+  }
+  .icon_passive {
+    color: #5dccff;
+  }
+  .information_ct {
+    .min_width {
+      min-width: 1069px;
+      padding: 22px 38px 0;
+      height: 100%;
+    }
+    .scrollCommon();
+    overflow: auto;
+    margin-top: 14px;
+    background: #fff;
+    height: -webkit-calc(~'100% - 97px');
+    height: -moz-calc(~'100% - 97px');
+    height: -ms-calc(~'100% - 97px');
+    height: -o-calc(~'100% - 97px');
+    height: calc(~'100% - 97px');
+  }
+  .operation {
+    .delete,
+    .edit {
+      &:last-child {
+        margin-right: 0;
+      }
+      margin-right: 30px;
+      i {
+        cursor: pointer;
+        color: #7e7e7e;
+        font-size: 18px;
+        &:hover {
+          color: #5deda4;
+        }
+        &:active {
+          color: #40bc7e;
+        }
+      }
+      display: inline-block;
+    }
+  }
+}
+:global {
+  .cl_header_padding {
+    padding: 14px 8px !important;
+  }
+  .cl_row_padding {
+    td {
+      padding: 8px !important;
+    }
+  }
+}
