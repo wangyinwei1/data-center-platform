@@ -63,7 +63,6 @@ class Site extends Component {
   }
   initFromValue(data, mode, item) {
     this.setState(({fields}) => {
-      console.log(parseInt(data.pd.userType));
       let formValue = _.cloneDeep([fields])[0];
       formValue.EMAIL.value = data.pd.F_EMAIL || '';
       formValue.NAME.value = data.pd.F_NAME || '';
@@ -80,7 +79,10 @@ class Site extends Component {
       formValue.proCode.value = parseInt(data.pd.property.proCode) || '';
       formValue.proCode.value = parseInt(data.pd.property.proCode) || '';
       formValue.proCode.value = parseInt(data.pd.property.proCode) || '';
-      formValue.DevTypes.value = data.pd.property.F_DevTypes.split(',') || [];
+      formValue.DevTypes.value =
+        (data.pd.property.F_DevTypes &&
+          data.pd.property.F_DevTypes.split(',')) ||
+        [];
       return {
         fields: {
           ...fields,
@@ -96,8 +98,7 @@ class Site extends Component {
   editClick(item) {
     const {applicationuserStore} = this.props;
     applicationuserStore.getEidtData({USER_ID: item.F_UserID}).then(data => {
-      console.log(data);
-      this.initFromValue(data, 'modify');
+      this.initFromValue(data, 'modify', item);
     });
   }
   //删除回调
@@ -137,7 +138,7 @@ class Site extends Component {
       const {applicationuserStore: {save, editSave}} = this.props;
       const params = {};
       this.state.type === 'modify' &&
-        (params.USER_ID = this.state.singleLineData.USER_ID);
+        (params.USER_ID = this.state.singleLineData.F_UserID);
       _.forIn(fields, (value, key) => {
         if (key === 'DevTypes') {
           params[key] = value.value.join(',');
@@ -167,10 +168,18 @@ class Site extends Component {
   //校验循环
   test(fields) {
     let showError = {};
+    let emailReg = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+    let phoneReg = /^[1][3,4,5,7,8][0-9]{9}$/;
     //循环找到必填字段是否是空并作出警告
     _.forIn(fields, (v, k) => {
-      if (!v.value && v.value !== 0 && v.require) {
+      if (k === 'EMAIL' && !emailReg.test(v.value)) {
         showError[k] = {showError: true, ...v};
+      } else if (k === 'PHONE' && !phoneReg.test(v.value)) {
+        showError[k] = {showError: true, ...v};
+      } else {
+        if (!v.value && v.value !== 0 && v.require) {
+          showError[k] = {showError: true, ...v};
+        }
       }
     });
     return showError;

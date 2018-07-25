@@ -37,6 +37,24 @@
     height: -ms-calc(~'100% - 97px');
     height: -o-calc(~'100% - 97px');
     height: calc(~'100% - 97px');
+    .table_wrap {
+      :global {
+        .ant-table .ant-table-expanded-row-level-1 > td:last-child {
+          padding: 0 50px 0 0px;
+        }
+        .ant-table
+          .ant-table-expanded-row
+          .ant-table-expanded-row
+          > td:last-child {
+          padding: 0;
+        }
+        .cl_hidden_expand_icon {
+          .ant-table-row-expand-icon-cell .ant-table-row-expand-icon {
+            display: none;
+          }
+        }
+      }
+    }
   }
   .operation {
     .delete,

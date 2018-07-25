@@ -25,8 +25,10 @@ const formParams = {
     F_StoreMode: {
       value: 0,
     },
+    virtual: {
+      value: undefined,
+    },
     F_Threshold: {
-      require: true,
       value: 0,
     },
     F_ShowPrecision: {
@@ -75,4 +77,7 @@ const alarmFormParams = {
     },
   },
 };
-export {formParams, alarmFormParams};
+const virtualParams = {
+  virtualFields: {},
+};
+export {formParams, alarmFormParams, virtualParams};

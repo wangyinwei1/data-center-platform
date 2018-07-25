@@ -80,19 +80,28 @@ class Regional extends Component {
         };
       });
     } else {
-      const {regionalStore: {save, currentCode}} = this.props;
+      const {regionalStore: {save, edit, currentCode}} = this.props;
       const params = {
         F_AreaName: fields.F_AreaName.value,
         F_ParentAreaID: currentCode,
       };
-      save(params).then(data => {
-        data &&
-          this.setState({
-            ...formParams,
-            editShow: false,
+      this.state.type === 'modify' &&
+        (params['F_AreaID'] = this.state.singleLineData.code);
+      this.state.type === 'new'
+        ? save(params).then(data => {
+            this.clearParams(data);
+          })
+        : edit(params).then(data => {
+            this.clearParams(data);
           });
-      });
     }
+  }
+  clearParams(data) {
+    data &&
+      this.setState({
+        ...formParams,
+        editShow: false,
+      });
   }
   //校验循环
   test(fields) {
@@ -133,24 +142,24 @@ class Regional extends Component {
   //编辑回调
   editClick(item, e) {
     const {regionalStore} = this.props;
+
     regionalStore.getEidtData({F_AreaID: item.code}).then(data => {
-      this.initFromValue(data.pd, 'modify');
-      console.log(data.pd);
+      this.initFromValue(data.pd, 'modify', item);
     });
   }
-  initFromValue(data, mode) {
+  initFromValue(data, mode, item) {
     this.setState(({fields}) => {
       let formValue = _.cloneDeep([fields])[0];
       formValue.city.value = data.cityCode;
       formValue.county.value = data.countyCode;
       formValue.province.value = data.provinceCode || data.proCode;
       formValue.F_AreaName.value = data.F_AreaName;
-      console.log(typeof data.cityCode);
       return {
         fields: {
           ...fields,
           ...formValue,
         },
+        singleLineData: item,
         editShow: true,
         type: mode,
       };

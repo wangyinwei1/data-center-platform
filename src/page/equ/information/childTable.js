@@ -37,6 +37,7 @@ class Regional extends Component {
       sunDetailChange,
       sunDisableChange,
       sunRowKeyChange,
+      getSunAlarmTable,
     } = this.props;
 
     return (
@@ -51,6 +52,7 @@ class Regional extends Component {
         sunDetailChange={sunDetailChange}
         expandedRows={this.state.expandedRows}
         sunDisableChange={sunDisableChange}
+        getSunAlarmTable={getSunAlarmTable}
       />
     );
   }

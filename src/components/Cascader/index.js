@@ -36,7 +36,6 @@ class Regional extends Component {
     // 进入获取焦点
     $(this.areatext.input).focus();
     $(document).on('click.areatext', () => {
-      console.log(111);
       if (this.state.visible) {
         this.cascaderhide();
       }

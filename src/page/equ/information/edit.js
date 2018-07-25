@@ -73,11 +73,11 @@ class Edit extends Component {
         <FormRadio
           {...fields}
           onChange={this.handleFormChange}
-          disabled={disabled}
+          disabled={mode === 'modify' ? true : disabled}
           label={'选择添加'}
           name={'F_IsConcentrator'}
           rules={[{required: true, message: '请必须填写!'}]}
-          children={[{value: 0, name: '集中器'}, {value: 1, name: '普通设备'}]}
+          children={[{value: 1, name: '集中器'}, {value: 0, name: '普通设备'}]}
         />
         <FormSelect
           {...fields}
@@ -93,7 +93,7 @@ class Edit extends Component {
           {...fields}
           onChange={this.handleFormChange}
           label={'设备类型'}
-          disabled={disabled}
+          disabled={fields.F_IsConcentrator.value === 1 ? true : disabled}
           placeholder={'请选择设备类型'}
           name={'Id_Version'}
           rules={[{required: true, message: '请必须填写!'}]}
@@ -112,7 +112,7 @@ class Edit extends Component {
           {...fields}
           onChange={this.handleFormChange}
           label={'链接方式'}
-          disabled={disabled}
+          disabled={fields.F_IsConcentrator.value === 1 ? true : disabled}
           name={'F_ConnectType'}
           rules={[{required: true, message: '请必须填写!'}]}
           children={[{value: 0, name: '被动'}, {value: 1, name: '主动'}]}
@@ -121,19 +121,40 @@ class Edit extends Component {
           {...fields}
           onChange={this.handleFormChange}
           label={'设备IP'}
-          disabled={disabled}
+          disabled={fields.F_ConnectType.value === 1 ? true : disabled}
           name={'F_IP'}
           placeholder={'请输入设备IP'}
-          rules={[{required: true, message: '请必须填写!'}]}
+          rules={[
+            {
+              required: true,
+              message: '请必须填写!',
+            },
+            {
+              pattern: /^((1\d\d|2[0-4]\d|25[0-5]|\d{1,2})\.){3}(1\d\d|2[0-4]\d|25[0-5]|\d{1,2})$/,
+              message: '请写正确的IP!',
+            },
+          ]}
         />
         <FormInput
           {...fields}
           onChange={this.handleFormChange}
           label={'设备端口'}
-          disabled={disabled}
+          disabled={
+            fields.F_ConnectType.value === 1 ||
+            fields.F_IsConcentrator.value === 1
+              ? true
+              : disabled
+          }
           name={'F_Port'}
           placeholder={'请输入设备端口'}
-          rules={[{required: true, message: '请必须填写!'}]}
+          rules={[
+            {required: true, message: '请必须填写!'},
+
+            {
+              pattern: /^([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-5]{2}[0-3][0-5])$/,
+              message: '请写正确的端口!',
+            },
+          ]}
         />
         <FormInput
           {...fields}

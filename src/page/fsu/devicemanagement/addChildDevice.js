@@ -74,7 +74,7 @@ class AddChild extends Component {
         <FormInput
           {...fields}
           onChange={this.handleFormChange}
-          disabled={true}
+          disabled={mode === 'modify' ? true : disabled}
           label={'监控点ID'}
           name={'F_SpID'}
           width={385}

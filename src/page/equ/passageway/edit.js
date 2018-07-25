@@ -30,10 +30,9 @@ class Edit extends Component {
   }
   render() {
     const {
-      passagewayStore: {addData, detailData},
+      passagewayStore: {addData, detailData, virtualList},
       fields,
-      currentDevice,
-      currentChannelID,
+      editVirtual,
       mode,
     } = this.props;
 
@@ -49,6 +48,12 @@ class Edit extends Component {
         mode == 'detail' && (disabled = true);
         break;
     }
+    const newVirtualList = _.map(toJS(virtualList), item => {
+      return {
+        value: item.fid,
+        name: item.channelID,
+      };
+    });
 
     const channeltypeList = _.map(toJS(data.channeltypeList), item => {
       return {
@@ -65,7 +70,6 @@ class Edit extends Component {
             label={'通道ID'}
             name={'F_ChannelID'}
             disabled={disabled}
-            placeholder={'请输入设备名称'}
             rules={[{required: true, message: '请必须填写!'}]}
           />
           <FormInput
@@ -74,16 +78,45 @@ class Edit extends Component {
             label={'通道名称'}
             name={'F_ChannelName'}
             disabled={disabled}
-            placeholder={'请输入通道名称'}
             rules={[{required: true, message: '请必须填写!'}]}
           />
+          <FormSelect
+            {...fields}
+            onChange={this.handleFormChange}
+            label={'通道类型'}
+            disabled={mode === 'new' ? false : true}
+            name={'F_ChannelType'}
+            rules={[{required: true, message: '请必须填写!'}]}
+            children={channeltypeList}
+          />
+          <Row className={styles['row_float']}>
+            <FormSelect
+              {...fields}
+              onChange={this.handleFormChange}
+              label={'虚拟属性'}
+              disabled={
+                fields.F_ChannelType.value === 5 && mode === 'new'
+                  ? false
+                  : true
+              }
+              className={'cl_virtual_input'}
+              name={'virtual'}
+              rules={[{required: false}]}
+              children={newVirtualList}
+            />
+            <Button
+              disabled={fields.F_ChannelType.value === 5 ? false : true}
+              onClick={editVirtual}
+              className={styles['edit_virtual_btn']}>
+              修改
+            </Button>
+          </Row>
           <FormSelect
             {...fields}
             onChange={this.handleFormChange}
             disabled={disabled}
             label={'值类型'}
             name={'F_ValueType'}
-            placeholder={'请选择设备类型'}
             rules={[{required: true, message: '请必须填写!'}]}
             children={[
               {value: 1, name: '整型'},
@@ -91,16 +124,6 @@ class Edit extends Component {
               {value: 3, name: '文本'},
               {value: 4, name: '枚举'},
             ]}
-          />
-          <FormSelect
-            {...fields}
-            onChange={this.handleFormChange}
-            label={'通道类型'}
-            disabled={disabled}
-            placeholder={'请选择设备类型'}
-            name={'F_ChannelType'}
-            rules={[{required: true, message: '请必须填写!'}]}
-            children={channeltypeList}
           />
         </Row>
         <Row className={styles['sub_title']}>
@@ -127,7 +150,6 @@ class Edit extends Component {
               label={'保存模式'}
               name={'F_StoreMode'}
               disabled={disabled}
-              placeholder={'请输入设备名称'}
               rules={[{required: false}]}
               children={[
                 {value: 0, name: '无条件保存'},
@@ -141,7 +163,6 @@ class Edit extends Component {
               label={'阈值'}
               name={'F_Threshold'}
               disabled={disabled}
-              placeholder={'请输入设备名称'}
               rules={[{required: false}]}
             />
             <FormInput
@@ -150,7 +171,6 @@ class Edit extends Component {
               label={'值倍率'}
               name={'ratio'}
               disabled={disabled}
-              placeholder={'请输入设备名称'}
               rules={[{required: false}]}
             />
             <FormInput
@@ -159,7 +179,6 @@ class Edit extends Component {
               label={'单位'}
               name={'F_Unit'}
               disabled={disabled}
-              placeholder={'请输入设备名称'}
               rules={[{required: false}]}
             />
             <FormInput
@@ -167,8 +186,7 @@ class Edit extends Component {
               onChange={this.handleFormChange}
               label={'显示精度'}
               name={'F_ShowPrecision'}
-              disabled={disabled}
-              placeholder={'请输入设备名称'}
+              disabled={fields['F_ValueType'].value === 2 ? false : true}
               rules={[{required: false}]}
             />
             <FormInput
@@ -177,7 +195,6 @@ class Edit extends Component {
               label={'显示序号'}
               name={'F_ShowOrder'}
               disabled={disabled}
-              placeholder={'请输入设备名称'}
               rules={[{required: false}]}
             />
             <FormInput
@@ -186,7 +203,6 @@ class Edit extends Component {
               label={'解析序号'}
               name={'F_AnalyOrder'}
               disabled={disabled}
-              placeholder={'请输入设备名称'}
               rules={[{required: false}]}
             />
             <FormInput
@@ -195,7 +211,6 @@ class Edit extends Component {
               label={'关联通道'}
               name={'F_RelateChannelNO'}
               disabled={disabled}
-              placeholder={'请输入设备名称'}
               rules={[{required: false}]}
             />
             <FormSelect
@@ -204,7 +219,6 @@ class Edit extends Component {
               label={'通道状态'}
               name={'F_Status'}
               disabled={disabled}
-              placeholder={'请输入设备名称'}
               rules={[{required: false}]}
               children={[{name: '显示', value: 0}, {name: '不显示', value: 1}]}
             />
@@ -214,7 +228,6 @@ class Edit extends Component {
               label={'通道描述'}
               name={'F_ValueDescription'}
               disabled={disabled}
-              placeholder={'请输入设备名称'}
               rules={[{required: false}]}
             />
             <FormInput
@@ -247,10 +260,8 @@ class Edit extends Component {
           </Row>
         )}
         <Row className={styles['line']} />
-        <Row className={styles['sub_title']}>告警条件:</Row>
-        <Row>
-          <AlarmContent channelID={currentChannelID} deviceID={currentDevice} />
-        </Row>
+        {mode !== 'new' && <Row className={styles['sub_title']}>告警条件:</Row>}
+        <Row>{mode !== 'new' && <AlarmContent mode={mode} />}</Row>
       </Form>
     );
   }

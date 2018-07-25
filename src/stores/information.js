@@ -39,6 +39,7 @@ class Information {
   @observable g_tableData = {};
   @observable loading = false;
   @observable r_loading = false;
+  @observable d_loading = false;
   @observable s_loading = false;
   @observable g_loading = false;
   @observable showIconIndex = [];
@@ -205,7 +206,7 @@ class Information {
       params.number = data.Data.number;
       params.page = data.Data.page;
       const showIconIndex = _.map(data.Data.varList, (item, index) => {
-        if (item.isConcentrator == 1) {
+        if (item.isConcentrator === 1) {
           return index;
         } else {
           return false;
@@ -263,6 +264,7 @@ class Information {
     this.r_loading = false;
     if (data.Result == 'success') {
       params.page = data.Data.page;
+      params.number = data.Data.number;
       this.r_tableParmas = params;
       this.r_tableData = data.Data;
     } else {
@@ -290,7 +292,9 @@ class Information {
   }
   @action.bound
   async findDeviceData(params) {
+    this.d_loading = true;
     const data = await findDeviceData(params);
+    this.d_loading = false;
     this.deviceData = data.varList;
   }
   @action.bound

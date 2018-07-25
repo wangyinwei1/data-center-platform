@@ -6,9 +6,10 @@ import Table from '../../../components/Table';
 import {decorate as mixin} from 'react-mixin';
 import {Button, message} from 'antd';
 import columnData from './alarmColumns.js';
+import SimulationTable from '../../../components/SimulationTable';
 import Toolbar from '../../../components/Toolbar';
 //实例
-@inject('passagewayStore')
+@inject('basicchannelStore')
 @observer
 class Regional extends Component {
   constructor(props) {
@@ -17,39 +18,57 @@ class Regional extends Component {
       alarmList: [],
     };
     this.onSearch = this.onSearch.bind(this);
-    this.add = this.add.bind(this);
     this.inputChange = this.inputChange.bind(this);
   }
+  clearError(record) {
+    if (
+      (!record.conType && record.conType !== 0) ||
+      (!record.msgID && record.msgID !== 0) ||
+      (!record.condition && record.condition !== 0)
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  }
   handleChange(item, record, e) {
-    const {passagewayStore: {a_tableData, alarmDataChange}} = this.props;
+    const {basicchannelStore: {a_tableData, alarmDataChange}} = this.props;
     const newData = _.map(toJS(a_tableData), app => {
-      const conType =
-        item.F_StoreMode || item.F_StoreMode === 0
-          ? {
-              conType: item.F_StoreMode,
-            }
-          : {};
-      const msgID =
-        item.F_MsgID || item.F_MsgID === 0
-          ? {
-              msgID: item.F_MsgID,
-              alarmMsg: item.F_AlarmMsg,
-              msgVisible: !(record.msgVisible ? true : false),
-            }
-          : {};
-      return app.conID === record.conID
-        ? {
-            ...app,
-            ...conType,
-            ...msgID,
-          }
-        : app;
+      const conID = record.conID
+        ? app.conID === record.conID
+        : app.myConID === record.myConID;
+      let conType, msgID;
+      if (conID) {
+        conType =
+          item.F_StoreMode || item.F_StoreMode === 0
+            ? {
+                conType: item.F_StoreMode,
+              }
+            : {};
+        msgID =
+          item.F_MsgID || item.F_MsgID === 0
+            ? {
+                msgID: item.F_MsgID,
+                alarmMsg: item.F_AlarmMsg,
+                msgVisible: !(record.msgVisible ? true : false),
+              }
+            : {};
+      }
+      let option = {
+        ...app,
+        ...conType,
+        ...msgID,
+      };
+      const clearError = this.clearError(option);
+      clearError && (option['error'] = false);
+
+      return conID ? option : app;
     });
     this.setState({alarmList: []});
     alarmDataChange(newData);
   }
   onSearch(value) {
-    const {passagewayStore: {alarmList}} = this.props;
+    const {basicchannelStore: {alarmList}} = this.props;
     const filterAlarmList = _.filter(toJS(alarmList), item => {
       return item.F_AlarmMsg.indexOf(value) != -1;
     });
@@ -59,11 +78,16 @@ class Regional extends Component {
     });
   }
   visibleChange(item, record, e) {
-    const {passagewayStore: {a_tableData, alarmDataChange}} = this.props;
+    const {basicchannelStore: {a_tableData, alarmDataChange}} = this.props;
     const newData = _.map(toJS(a_tableData), app => {
       let obj = {};
-      obj[item.name] = !item.visible;
-      return app.conID === record.conID
+      const conID = record.conID
+        ? app.conID === record.conID
+        : app.myConID === record.myConID;
+      if (conID) {
+        obj[item.name] = !item.visible;
+      }
+      return conID
         ? {
             ...app,
             ...obj,
@@ -72,60 +96,46 @@ class Regional extends Component {
     });
     alarmDataChange(newData);
   }
-  async inputChange(value, target, record) {
-    const {passagewayStore: {a_tableData, alarmDataChange}} = this.props;
+  inputChange(value, key, target, record) {
+    const {basicchannelStore: {a_tableData, alarmDataChange}} = this.props;
     const newData = _.map(toJS(a_tableData), app => {
-      return app.conID === record.conID
-        ? {
-            ...app,
-            condition: value,
-          }
-        : app;
-    });
-    await alarmDataChange(newData);
-  }
-  alarmConfirm(record, e) {
-    if (!record.conType || record.conType !== 0) {
-      message.error('告警条件类型不能为空！');
-      return;
-    }
-    if (!record.msgID || record.msgID !== 0) {
-      message.error('告警信息不能为空！');
-      return;
-    }
-    if (!record.condition || record.condition !== 0) {
-      message.error('告警条件不能为空！');
-      return;
-    }
+      const conID = record.conID
+        ? app.conID === record.conID
+        : app.myConID === record.myConID;
+      let obj = {};
+      key === 'delay' ? (obj['delayID'] = value) : (obj['condition'] = value);
 
-    const {
-      channelID,
-      F_DeviceType,
-      F_Version,
-      passagewayStore: {alarmSave},
-    } = this.props;
-    const params = {
-      F_ChannelID: channelID,
-      F_DeviceType,
-      F_Version,
-      conType: record.conType,
-      condition: record.condition,
-      msgID: record.msgID,
-      conID: record.conID,
-    };
-    alarmSave(params);
+      let option = {
+        ...app,
+        ...obj,
+      };
+      const clearError = this.clearError(option);
+      clearError && (option['error'] = false);
+      return conID ? option : app;
+    });
+    alarmDataChange(newData);
   }
   alarmDelete(record, e) {
-    const {passagewayStore: {alarmDelete}} = this.props;
+    const {basicchannelStore: {a_tableData, alarmDataChange}} = this.props;
+    let rest = _.filter(toJS(a_tableData), app => {
+      return app.conID !== record.conID || app.myConID !== record.myConID;
+    });
     const params = {
-      conID: record.conID,
+      myConID: new Date().getTime(),
+      conType: undefined,
+      msgID: undefined,
+      condition: '',
+      alarmMsg: '',
+      newAddRow: true,
     };
-    alarmDelete(params);
+    !rest[0] && rest.push(params);
+    alarmDataChange(rest);
   }
-  add() {
-    const {passagewayStore: {a_tableData, alarmDataChange}} = this.props;
+  alarmAdd() {
+    const {basicchannelStore: {a_tableData, alarmDataChange}} = this.props;
     let newData = toJS(a_tableData);
     const params = {
+      myConID: new Date().getTime(),
       conType: undefined,
       msgID: undefined,
       condition: '',
@@ -135,79 +145,40 @@ class Regional extends Component {
     newData.push(params);
     alarmDataChange(newData);
   }
-  alarmEdit(record, e) {
-    if (!record.condition || record.condition !== 0) {
-      message.error('告警条件不能为空！');
-      return;
-    }
-    const {
-      channelID,
-      F_DeviceType,
-      F_Version,
-      passagewayStore: {alarmEditSave},
-    } = this.props;
-    const params = {
-      F_ChannelID: channelID,
-      F_DeviceType,
-      F_Version,
-      conType: record.conType,
-      condition: record.condition,
-      msgID: record.msgID,
-      conID: record.conID,
-    };
-    alarmEditSave(params);
-  }
   //table分页
   render() {
-    const {passagewayStore, fields} = this.props;
-    let tableData = toJS(passagewayStore.a_tableData) || [];
+    const {basicchannelStore, fields, mode} = this.props;
+    const tableData = toJS(basicchannelStore.a_tableData) || [];
     let data = [];
-    if (!tableData[0]) {
-      data.push({
-        conType: undefined,
-        msgID: undefined,
-        condition: '',
-        num: 1,
-        alarmMsg: '',
-        newAddRow: true,
-      });
-    } else {
-      data = _.map(tableData, (item, i) => {
-        return {
-          ...item,
-          num: i + 1,
-        };
-      });
-    }
-
+    data = _.map(tableData, (item, i) => {
+      return {
+        ...item,
+        num: i + 1,
+      };
+    });
     const columns = columnData({
       handleChange: this.handleChange,
       alarmList: this.state.alarmList[0]
         ? this.state.alarmList
-        : passagewayStore.alarmList,
+        : toJS(basicchannelStore.alarmList),
       visibleChange: this.visibleChange,
       inputChange: this.inputChange,
       onSearch: this.onSearch,
       _this: this,
+      data: data,
+      mode: mode,
+      alarmAdd: this.alarmAdd,
       alarmConfirm: this.alarmConfirm,
       alarmDelete: this.alarmDelete,
-      alarmEdit: this.alarmEdit,
     });
 
     return (
       <div className={styles['alarm_wrap']}>
-        <div className={styles['alarm_add_wrap']}>
-          <Button onClick={this.add}>新增</Button>
-        </div>
-        <Table
-          loading={passagewayStore.a_loading}
-          columns={columns}
-          pagination={false}
-          useDefaultRowKey={true}
-          rowClassName={() => {
-            return 'padding0';
-          }}
+        <SimulationTable
+          loading={basicchannelStore.a_loading}
           data={data}
+          disabled={mode === 'detail' ? true : false}
+          columns={columns}
         />
       </div>
     );

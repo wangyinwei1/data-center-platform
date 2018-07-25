@@ -83,6 +83,7 @@ class Information extends Component {
     this.onBatchOk = this.onBatchOk.bind(this);
     this.onBatchCancel = this.onBatchCancel.bind(this);
     this.sunRowKeyChange = this.sunRowKeyChange.bind(this);
+    this.getAlarmTable = this.getAlarmTable.bind(this);
 
     this.state = {
       disabledShow: false,
@@ -154,22 +155,22 @@ class Information extends Component {
   }
   componentDidUpdate() {
     const {informationStore: {showIconIndex}} = this.props;
-    toJS(showIconIndex)[0] &&
-      !this.stopOperation &&
-      $('.ant-table-row-level-0').each(function(index) {
-        if (showIconIndex.indexOf(index) != -1) {
-          $(this)
-            .find('.ant-table-row-expand-icon')
-            .css({display: 'block'});
-          $(this)
-            .find('.ant-table-selection-column > span')
-            .css({display: 'none'});
-        } else {
-          $(this)
-            .find('.ant-table-row-expand-icon')
-            .css({display: 'none'});
-        }
-      });
+    // toJS(showIconIndex)[0] &&
+    //   !this.stopOperation &&
+    //   $('.ant-table-row-level-0').each(function(index) {
+    //     if (showIconIndex.indexOf(index) != -1) {
+    //       $(this)
+    //         .find('.ant-table-row-expand-icon')
+    //         .css({display: 'block'});
+    //       $(this)
+    //         .find('.ant-table-selection-column > span')
+    //         .css({display: 'none'});
+    //     } else {
+    //       $(this)
+    //         .find('.ant-table-row-expand-icon')
+    //         .css({display: 'none'});
+    //     }
+    //   });
   }
   //真实数据弹框
   realtimeClick(item, e) {
@@ -179,6 +180,7 @@ class Information extends Component {
     const params = {
       keywords: '',
       page: 1,
+      number: 10,
       F_DeviceID: item.devID,
     };
     informationStore.getRealtimeTable(params);
@@ -262,17 +264,20 @@ class Information extends Component {
       let formValue = _.cloneDeep([fields])[0];
       formValue.F_BelongUnitID.value = data.pd.belongUnitID;
       formValue.F_CollectSpan.value = data.pd.collectSpan;
-      formValue.Id_Version.value = data.pd.Id_Version;
+      formValue.Id_Version.value =
+        data.pd.isConcentrator === 1 ? undefined : data.pd.Id_Version;
       formValue.F_HeartSpan.value = data.pd.heartSpan;
-      formValue.F_ConnectType.value = data.pd.connectType;
+      formValue.F_ConnectType.value =
+        data.pd.isConcentrator === 1 ? undefined : data.pd.connectType;
       formValue.F_DeviceName.value = data.pd.devName;
-      formValue.F_IP.value = data.pd.ip;
+      formValue.F_IP.value =
+        data.pd.isConcentrator === 1 ? data.pd.concentratorIP : data.pd.ip;
       formValue.F_Latitude.value = data.pd.latitude;
       formValue.F_Longitude.value = data.pd.longitude;
       formValue.F_IsConcentrator.value = data.pd.isConcentrator;
       formValue.F_NetInTime.value = data.pd.netInTime;
       formValue.F_OutDevID.value = data.pd.outDevID;
-      formValue.F_Port.value = data.pd.port;
+      formValue.F_Port.value = data.pd.isConcentrator === 1 ? '' : data.pd.port;
       formValue.rec.value = data.pd.rec;
       formValue.F_ReportType.value = data.pd.reportType;
       formValue.F_SimCardNO.value = data.pd.simCardNo;
@@ -500,10 +505,17 @@ class Information extends Component {
     let showError = {};
 
     //循环找到必填字段是否是空并作出警告
-
+    let portReg = /^([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-5]{2}[0-3][0-5])$/;
+    let ipReg = /^((1\d\d|2[0-4]\d|25[0-5]|\d{1,2})\.){3}(1\d\d|2[0-4]\d|25[0-5]|\d{1,2})$/;
     _.forIn(fields, (v, k) => {
-      if (!v.value && v.value !== 0 && v.require) {
+      if (k === 'F_Port' && !portReg.test(v.value)) {
         showError[k] = {showError: true, ...v};
+      } else if (k === 'F_IP' && !ipReg.test(v.value)) {
+        showError[k] = {showError: true, ...v};
+      } else {
+        if (!v.value && v.value !== 0 && v.require) {
+          showError[k] = {showError: true, ...v};
+        }
       }
     });
     const hasError = _.keys(showError);
@@ -703,6 +715,7 @@ class Information extends Component {
         currentPortChange={this.currentPortChange}
         sunRowKeyChange={this.sunRowKeyChange}
         sunDisableChange={this.sunDisableChange}
+        getSunAlarmTable={this.getAlarmTable}
       />
     );
   }
@@ -728,6 +741,21 @@ class Information extends Component {
     //showError让自己校验字段
     const key = _.keys(changedFields);
     const obj = {};
+    if (key[0] === 'F_ConnectType') {
+      if (changedFields[key].value === 1) {
+        obj['F_Port'] = {value: ''};
+        obj['F_IP'] = {value: ''};
+      }
+    }
+    if (key[0] === 'F_IsConcentrator') {
+      if (changedFields[key].value === 1) {
+        obj['F_ConnectType'] = {value: undefined};
+        obj['F_Port'] = {value: ''};
+        obj['Id_Version'] = {value: undefined};
+      } else {
+        obj['F_ConnectType'] = {value: 0};
+      }
+    }
     obj[key] = {showError: false, ...changedFields[key]};
     this.setState(({fields}) => {
       return {
@@ -766,7 +794,7 @@ class Information extends Component {
       this.initFromValue(data, 'detail');
     });
   }
-  getAlarmTable(item, e) {
+  getAlarmTable(item, e, sub) {
     e.stopPropagation();
     e.nativeEvent.stopImmediatePropagation();
     const {realtimealarmStore} = this.props;
@@ -774,7 +802,7 @@ class Information extends Component {
     const params = {
       keywords: '',
       page: 1,
-      F_DeviceID: item.devID,
+      F_DeviceID: sub === 'sun' ? item.subDeviceID : item.devID,
       number: 10,
     };
     realtimealarmStore.getChildTable(params);
@@ -830,14 +858,13 @@ class Information extends Component {
   }
   onBatchOk() {
     const {informationStore: {fsuDevsEnabledOnOff, fsuDelectAll}} = this.props;
-    console.log(this.state.batchIds, this.state.sunBatchField);
     switch (this.state.batchField) {
       case 'delete':
         fsuDelectAll({
           deviceID: this.state.batchIds + ',' + this.state.sunBatchField,
         });
         break;
-      case 'disabled':
+      case 'disable':
         fsuDevsEnabledOnOff({
           strDevs: this.state.batchIds + ',' + this.state.sunBatchField,
           status: 1,
@@ -877,13 +904,14 @@ class Information extends Component {
       _this: this,
     });
     const showIconIndex = toJS(informationStore.showIconIndex);
-    const nesting = showIconIndex[0]
-      ? {
-          expandedRowRender: this.expandedRowRender,
-          onExpand: this.onExpand,
-          expandedRowKeys: this.state.expandedRows,
-        }
-      : {};
+    const nesting =
+      showIconIndex[0] || showIconIndex[0] === 0
+        ? {
+            expandedRowRender: this.expandedRowRender,
+            onExpand: this.onExpand,
+            expandedRowKeys: this.state.expandedRows,
+          }
+        : {};
     let modalTitle = '';
     switch (this.state.type) {
       case 'new':
@@ -976,9 +1004,12 @@ class Information extends Component {
                 rowSelection={rowSelection}
                 columns={columns}
                 rowClassName={(record, index) => {
-                  return record.statustwo == 0
-                    ? 'cl_online_state td_padding'
-                    : 'td_padding';
+                  const rowClassName = ['td_padding'];
+                  record.statustwo === 0 &&
+                    rowClassName.push('cl_online_state');
+                  record.isConcentrator === 0 &&
+                    rowClassName.push('cl_hidden_expand_icon');
+                  return rowClassName.join(' ');
                 }}
                 onRowDoubleClick={this.onRowDoubleClick}
                 loading={informationStore.loading}

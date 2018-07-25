@@ -17,7 +17,7 @@
   }
 
   .edit_wrap {
-    padding: 20px 20px 0 20px;
+    padding: 20px 38px 0 38px;
   }
   .statustwo {
     background-color: #ffd9d9;
@@ -26,6 +26,112 @@
     color: #999;
     font-size: 14px;
     padding: 5px 0 10px 11px;
+  }
+  .alarm_delete {
+    margin-right: 8px;
+  }
+  .alarm_placeholder {
+    color: #a6a6a6;
+  }
+  .alarm_btn_wrap {
+    .alarm_add {
+      padding: 0;
+      &:global(.ant-btn-clicked) {
+        &:after {
+          border-color: #40bc7e;
+        }
+      }
+      width: 34px;
+      span,
+      i {
+        line-height: 30px;
+        height: 34px;
+        font-size: 20px;
+        width: 34px;
+        text-align: center;
+        color: #fff;
+        display: block;
+      }
+      background-color: #50e399;
+      border-color: #50e399;
+      &:hover {
+        background-color: #7fffbe;
+        border-color: #7fffbe;
+      }
+      &:active {
+        background-color: #40bc7e;
+        border-color: #40bc7e;
+      }
+      &:focus {
+        background-color: #50e399;
+        border-color: #50e399;
+      }
+    }
+  }
+  .alarm_btn_wrap .alarm_delete {
+    width: auto;
+    background-color: #ff4949;
+    border-color: #ff4949;
+    &:hover {
+      background-color: #ff4949;
+      border-color: #ff4949;
+    }
+    &:active {
+      background-color: #ff4949;
+      border-color: #ff4949;
+    }
+    &:focus {
+      background-color: #ff4949;
+      border-color: #ff4949;
+    }
+
+    &:global(.ant-btn-clicked) {
+      &:after {
+        border-color: #ff4949;
+      }
+    }
+    line-height: 30px;
+    height: 30px;
+    color: #fff;
+    span,
+    i {
+      color: #fff;
+    }
+    padding: 0 10px;
+  }
+  .row_collapsed {
+    &:after {
+      content: '+';
+    }
+  }
+  .row_expanded {
+    &:after {
+      content: '-';
+    }
+  }
+  .line {
+    height: 0px;
+    width: 100%;
+    border-bottom: 1px solid #e8e8e8;
+  }
+  .expand_icon {
+    font-style: normal;
+    margin-right: 8px;
+    margin-top: 2px;
+    display: inline-block;
+    vertical-align: top;
+    cursor: pointer;
+    display: inline-block;
+    width: 17px;
+    height: 17px;
+    text-align: center;
+    line-height: 14px;
+    border: 1px solid #e8e8e8;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background: #fff;
   }
   .more {
     cursor: pointer;
@@ -49,8 +155,11 @@
     height: -o-calc(~'100% - 68px');
     height: calc(~'100% - 68px');
   }
+  .valueType_wrap {
+    padding: 20px 20px 20px 20px;
+  }
   .alarm_wrap {
-    padding: 20px 38px 20px 38px;
+    padding: 20px 0px 20px 0px;
     .alarm_down {
       position: absolute;
       right: 24px;
@@ -103,7 +212,20 @@
     overflow: auto;
     max-height: 240px;
   }
-  .con_input {
+  .value_input {
+    box-shadow: none !important;
+    :global {
+      .ant-input-number-handler-wrap {
+        height: 58px;
+        top: -14px;
+      }
+      .ant-input-number-input {
+        text-align: center;
+      }
+    }
+  }
+  .con_input,
+  .value_input {
     width: 100%;
     text-align: center;
     border: none;
@@ -235,6 +357,78 @@
         }
       }
       display: inline-block;
+    }
+  }
+  .edit_wrap .add_virtual_btn {
+    &[disabled] {
+      opacity: 0.6;
+    }
+    width: auto;
+    line-height: 36px;
+    height: 36px;
+  }
+  .edit_wrap .valuetype_btn {
+    width: auto;
+    line-height: 36px;
+    height: 36px;
+    background-color: #50bfff;
+    border-color: #50bfff;
+    &[disabled] {
+      opacity: 0.6;
+    }
+    &:hover {
+      background-color: #73ccff;
+      border-color: #73ccff;
+    }
+    &:active {
+      background-color: #50bfff;
+      border-color: #50bfff;
+    }
+    &:focus {
+      background-color: #50bfff;
+      border-color: #50bfff;
+    }
+    &:global(.ant-btn-clicked) {
+      &:after {
+        border-color: #f7ba2a;
+      }
+    }
+  }
+  .virtual_wrap {
+    padding: 20px 20px 0 20px;
+    :global {
+      .cl_select_label_90 {
+        width: auto;
+        .ant-row {
+          width: auto;
+        }
+        .ant-form-item-label {
+          min-width: 95px;
+        }
+      }
+    }
+  }
+}
+:global {
+  .cl_basic_modal {
+    width: 100%;
+    .ant-modal {
+      .modal-footer {
+        text-align: center;
+      }
+      .ant-modal-footer button + button {
+        margin-left: 16px;
+      }
+      width: 100% !important;
+      top: 0;
+      height: 100%;
+      padding-bottom: 0;
+      .ant-modal-content {
+        height: 100%;
+        overflow: auto;
+        .scrollCommon();
+        min-width: 1100px;
+      }
     }
   }
 }

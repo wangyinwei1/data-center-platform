@@ -45,7 +45,7 @@ request.interceptors.response.use(res => {
   if (res.response && res.response.status == 401) {
     setTimeout(() => {
       message.error('登录超时,请重新登录！');
-      location.href = location.origin + '/';
+      location.href = location.origin + '/#/login';
     }, 800);
     return response;
   }

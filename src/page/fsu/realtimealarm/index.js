@@ -139,6 +139,11 @@ class Passageway extends Component {
                 pageSize={pagination.number}
                 total={pagination.count}
                 columns={columns}
+                rowClassName={(record, index) => {
+                  const rowClassName = [];
+                  record.statustwo == 0 && rowClassName.push('cl_online_state');
+                  return rowClassName.join(' ');
+                }}
                 loading={fsu_realtimealarmStore.loading}
                 onShowSizeChange={this.onShowSizeChange}
                 onChange={this.onPageChange}

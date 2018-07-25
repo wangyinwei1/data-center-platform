@@ -19,12 +19,6 @@ const menu = ({
 }) => {
   return (
     <Menu className={styles['operation']}>
-      <Menu.Item key="c_alarm" onClick={alarmClick.bind(_this, record)}>
-        <div className={styles['alarm']}>
-          <i className={classnames('icon iconfont icon-xiangqing')} />
-          <span>告警</span>
-        </div>
-      </Menu.Item>
       <Menu.Item key="c_detail" onClick={detailClick.bind(_this, record)}>
         <div className={styles['detail']}>
           <i className={classnames('icon iconfont icon-xiangqing')} />

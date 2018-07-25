@@ -24,6 +24,40 @@
     font-size: 14px;
     float: right;
   }
+  .subNav {
+    background-color: #fff;
+    position: absolute;
+    left: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    top: 50%;
+    transform: translateY(-50%);
+    width: 30px;
+    font-size: 12px;
+    border-top-right-radius: 16px;
+    border-bottom-right-radius: 16px;
+    border: 1px solid #e4e4e4;
+    .active {
+      box-shadow: 0 0px 4px rgba(0, 0, 0, 0.1) inset;
+      background: rgba(0, 0, 0, 0.05);
+    }
+    a {
+      &:hover {
+        color: #50e399;
+      }
+      cursor: pointer;
+      &:first-child {
+        border-top-right-radius: 16px;
+        border-bottom: 1px solid #e4e4e4;
+      }
+      &:last-child {
+        border-bottom-right-radius: 16px;
+      }
+      color: rgba(0, 0, 0, 0.65);
+      text-decoration: none;
+      display: block;
+      padding: 10px 0;
+    }
+  }
   .username {
     font-size: 14px;
     padding-left: 6px;

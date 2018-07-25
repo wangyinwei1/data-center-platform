@@ -7,7 +7,6 @@ class Login {
   @action
   async userLogin(params) {
     const data = await login(params);
-    console.log(data);
   }
 }
 

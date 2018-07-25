@@ -6,7 +6,7 @@ import Table from '../../../components/Table';
 import {decorate as mixin} from 'react-mixin';
 import {Button, message} from 'antd';
 import columnData from './alarmColumns.js';
-import SimulationTable from './simulationTable.js';
+import SimulationTable from '../../../components/SimulationTable';
 import Toolbar from '../../../components/Toolbar';
 //实例
 @inject('passagewayStore')
@@ -19,6 +19,17 @@ class Regional extends Component {
     };
     this.onSearch = this.onSearch.bind(this);
     this.inputChange = this.inputChange.bind(this);
+  }
+  clearError(record) {
+    if (
+      (!record.conType && record.conType !== 0) ||
+      (!record.msgID && record.msgID !== 0) ||
+      (!record.condition && record.condition !== 0)
+    ) {
+      return false;
+    } else {
+      return true;
+    }
   }
   handleChange(item, record, e) {
     const {passagewayStore: {a_tableData, alarmDataChange}} = this.props;
@@ -43,13 +54,15 @@ class Regional extends Component {
               }
             : {};
       }
-      return conID
-        ? {
-            ...app,
-            ...conType,
-            ...msgID,
-          }
-        : app;
+      let option = {
+        ...app,
+        ...conType,
+        ...msgID,
+      };
+      const clearError = this.clearError(option);
+      clearError && (option['error'] = false);
+
+      return conID ? option : app;
     });
     this.setState({alarmList: []});
     alarmDataChange(newData);
@@ -83,58 +96,39 @@ class Regional extends Component {
     });
     alarmDataChange(newData);
   }
-  inputChange(value, target, record) {
+  inputChange(value, key, target, record) {
     const {passagewayStore: {a_tableData, alarmDataChange}} = this.props;
     const newData = _.map(toJS(a_tableData), app => {
       const conID = record.conID
         ? app.conID === record.conID
         : app.myConID === record.myConID;
-      return conID
-        ? {
-            ...app,
-            condition: value,
-          }
-        : app;
+      let obj = {};
+      key === 'delay' ? (obj['delayID'] = value) : (obj['condition'] = value);
+
+      let option = {
+        ...app,
+        ...obj,
+      };
+      const clearError = this.clearError(option);
+      clearError && (option['error'] = false);
+      return conID ? option : app;
     });
     alarmDataChange(newData);
   }
-  alarmConfirm(record, e) {
-    if (!record.conType || record.conType !== 0) {
-      message.error('告警条件类型不能为空！');
-      return;
-    }
-    if (!record.msgID || record.msgID !== 0) {
-      message.error('告警信息不能为空！');
-      return;
-    }
-    console.log(record);
-    if (!record.condition || record.condition !== 0) {
-      message.error('告警条件不能为空！');
-      return;
-    }
-
-    const {channelID, deviceID, passagewayStore: {alarmSave}} = this.props;
-    const params = {
-      channelID: channelID,
-      deviceID: deviceID,
-      conType: record.conType,
-      condition: record.condition,
-      msgID: record.msgID,
-      conID: record.conID,
-    };
-    alarmSave(params);
-  }
   alarmDelete(record, e) {
-    // const {passagewayStore: {alarmDelete}} = this.props;
-    // const params = {
-    //   F_ConID: record.conID,
-    // };
-    // alarmDelete(params);
     const {passagewayStore: {a_tableData, alarmDataChange}} = this.props;
-    const rest = _.filter(toJS(a_tableData), app => {
+    let rest = _.filter(toJS(a_tableData), app => {
       return app.conID !== record.conID || app.myConID !== record.myConID;
     });
-    console.log(rest);
+    const params = {
+      myConID: new Date().getTime(),
+      conType: undefined,
+      msgID: undefined,
+      condition: '',
+      alarmMsg: '',
+      newAddRow: true,
+    };
+    !rest[0] && rest.push(params);
     alarmDataChange(rest);
   }
   alarmAdd() {
@@ -151,45 +145,17 @@ class Regional extends Component {
     newData.push(params);
     alarmDataChange(newData);
   }
-  alarmEdit(record, e) {
-    if (!record.condition || record.condition !== 0) {
-      message.error('告警条件不能为空！');
-      return;
-    }
-    const {passagewayStore: {alarmEditSave}, channelID, deviceID} = this.props;
-    const params = {
-      channelID: channelID,
-      deviceID: deviceID,
-      conType: record.conType,
-      condition: record.condition,
-      msgID: record.msgID,
-      conID: record.conID,
-    };
-    alarmEditSave(params);
-  }
   //table分页
   render() {
-    const {passagewayStore, fields} = this.props;
+    const {passagewayStore, fields, mode} = this.props;
     const tableData = toJS(passagewayStore.a_tableData) || [];
     let data = [];
-    if (!tableData[0]) {
-      data.push({
-        myConID: new Date().getTime(),
-        conType: undefined,
-        msgID: undefined,
-        condition: '',
-        num: 1,
-        alarmMsg: '',
-        newAddRow: true,
-      });
-    } else {
-      data = _.map(tableData, (item, i) => {
-        return {
-          ...item,
-          num: i + 1,
-        };
-      });
-    }
+    data = _.map(tableData, (item, i) => {
+      return {
+        ...item,
+        num: i + 1,
+      };
+    });
     const columns = columnData({
       handleChange: this.handleChange,
       alarmList: this.state.alarmList[0]
@@ -200,20 +166,18 @@ class Regional extends Component {
       onSearch: this.onSearch,
       _this: this,
       data: data,
+      mode: mode,
       alarmAdd: this.alarmAdd,
       alarmConfirm: this.alarmConfirm,
       alarmDelete: this.alarmDelete,
-      alarmEdit: this.alarmEdit,
     });
 
     return (
       <div className={styles['alarm_wrap']}>
-        {/* <div className={styles['alarm_add_wrap']}> */}
-        {/*   <Button onClick={this.add}>新增</Button> */}
-        {/* </div> */}
         <SimulationTable
           loading={passagewayStore.a_loading}
           data={data}
+          disabled={mode === 'detail' ? true : false}
           columns={columns}
         />
       </div>

@@ -58,12 +58,18 @@ class Regional extends Component {
         provinceDisable = true;
         break;
       case 'city':
+        provinceDisable = true;
         cityDisable = true;
         break;
       case 'area':
+        provinceDisable = true;
+        cityDisable = true;
         areaDisable = true;
         break;
       case 'zone':
+        provinceDisable = true;
+        cityDisable = true;
+        areaDisable = true;
         zoneDisable = true;
         break;
       case 'site':

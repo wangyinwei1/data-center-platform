@@ -246,7 +246,7 @@ class Site extends Component {
 
     this.setState({
       basicTableVisible: true,
-      deviceNameTitle: item.F_CategoryName,
+      deviceNameTitle: item.F_TypeName,
     });
   }
   onAgreementCancel() {

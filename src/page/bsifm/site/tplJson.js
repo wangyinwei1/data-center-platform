@@ -2,12 +2,15 @@ const formParams = {
   fields: {
     province: {
       value: undefined,
+      require: true,
     },
     city: {
       value: undefined,
+      require: true,
     },
     county: {
       value: undefined,
+      require: true,
     },
     region: {
       value: undefined,
@@ -35,12 +38,15 @@ const clearCity = {
   fields: {
     city: {
       value: undefined,
+      require: true,
     },
     county: {
       value: undefined,
+      require: true,
     },
     region: {
       value: undefined,
+      require: true,
     },
   },
 };
@@ -48,9 +54,11 @@ const clearCounty = {
   fields: {
     county: {
       value: undefined,
+      require: true,
     },
     region: {
       value: undefined,
+      require: true,
     },
   },
 };
@@ -58,6 +66,7 @@ const clearRegion = {
   fields: {
     region: {
       value: undefined,
+      require: true,
     },
   },
 };

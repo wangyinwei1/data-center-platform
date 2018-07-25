@@ -74,7 +74,6 @@ class Regional extends Component {
       confirmClick: this.confirmClick,
       _this: this,
     });
-    // console.log(columns);
     return (
       <div>
         <Toolbar onSearch={this.onSearch} closeAdd={true} />

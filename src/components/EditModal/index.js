@@ -20,7 +20,16 @@ class EditModal extends Component {
     const {onChange} = this.props;
   }
   render() {
-    const {isShow, onOk, onCancel, buttons, title, width, mode} = this.props;
+    const {
+      isShow,
+      onOk,
+      wrapClassName,
+      onCancel,
+      buttons,
+      title,
+      width,
+      mode,
+    } = this.props;
     const okProps = {
       onClick: () => {
         onOk();
@@ -43,6 +52,7 @@ class EditModal extends Component {
         mask={false}
         width={width}
         confirmLoading={true}
+        wrapClassName={wrapClassName}
         okProps={okProps}
         cancelProps={cancelProps}>
         <div className={styles['edit_wrap']}>

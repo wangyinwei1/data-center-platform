@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {action, observer, inject} from 'mobx-react';
-import {Form} from 'antd';
+import {message} from 'antd';
 import Remarks from '../../../components/Remarks';
 import styles from './index.less';
 import Cascader from '../../../components/Cascader';
@@ -14,8 +14,10 @@ import columnData from './columns.js';
 import Panel from '../../../components/Panel';
 import ChildTable from './childTable.js';
 import ClModal from '../information/controlModal.js';
-import {formParams, alarmFormParams} from './tplJson.js';
+import {formParams, alarmFormParams, virtualParams} from './tplJson.js';
 import EditContent from './edit.js';
+import VirtualContent from './virtualContent.js';
+import E_ChildTable from './e_childTable.js';
 //实例
 @inject('regionalStore', 'passagewayStore')
 @observer
@@ -43,12 +45,18 @@ class Passageway extends Component {
     this.onExportClick = this.onExportClick.bind(this);
     this.onAlarmCancel = this.onAlarmCancel.bind(this);
     this.onAlarmOk = this.onAlarmOk.bind(this);
-    this.childAlarmClick = this.childAlarmClick.bind(this);
+    this.editVirtual = this.editVirtual.bind(this);
+    this.onVirtualCancel = this.onVirtualCancel.bind(this);
+    this.onVirtualOk = this.onVirtualOk.bind(this);
+    this.virtualFormChange = this.virtualFormChange.bind(this);
+    this.expandedRowRender = this.expandedRowRender.bind(this);
+    this.onExpand = this.onExpand.bind(this);
 
     this.state = {
       cascaderText: '',
       cascaderLoading: false,
       cascaderValue: [],
+      ...virtualParams,
       currentDevice: '',
       areaName: '',
       editShow: false,
@@ -56,8 +64,10 @@ class Passageway extends Component {
       ...alarmFormParams,
       ...formParams,
       alarmShow: false,
-
+      virtualShow: false,
       currentChannelID: '',
+      currentVirtual: {},
+      expandedRows: [],
     };
   }
   //以下级联方法
@@ -117,7 +127,7 @@ class Passageway extends Component {
     this.c_onPageChange({pageNumber}, passagewayStore);
   }
   //获取子集表格
-  getChildTable(item, e) {
+  getChildTable(item, e, sub) {
     e.stopPropagation();
     e.nativeEvent.stopImmediatePropagation();
     const {passagewayStore} = this.props;
@@ -125,18 +135,24 @@ class Passageway extends Component {
     const params = {
       keywords: '',
       page: 1,
-      F_DeviceID: item.devID,
+      F_DeviceID: sub === 'sub' ? item.subDeviceID : item.devID,
       number: 10,
     };
     this.setState({
       childTableVisible: true,
       childTableTitle: item.devName,
       currentDevice: item.devID,
+      singleLineData: item,
     });
     passagewayStore.getChildTable(params);
   }
   addClick() {
-    const {passagewayStore: {initAdd}} = this.props;
+    const {passagewayStore: {initAdd, getVirtualList}} = this.props;
+    const item = this.state.singleLineData;
+    getVirtualList({
+      F_TypeID: item.typeID,
+      F_Version: item.version,
+    });
     initAdd().then(() => {
       this.setState({
         editShow: true,
@@ -162,6 +178,56 @@ class Passageway extends Component {
     return showError;
   }
 
+  alarmOk() {
+    const {passagewayStore: {a_tableData, alarmDataChange}} = this.props;
+    let alarmTable = toJS(a_tableData);
+    let hasAlarmError = [];
+    const errorTable = _.map(alarmTable, (record, index) => {
+      if (
+        (!record.conType && record.conType !== 0) ||
+        (!record.msgID && record.msgID !== 0) ||
+        (!record.condition && record.condition !== 0)
+      ) {
+        if (alarmTable.length === 1) {
+          alarmTable = [];
+        } else {
+          hasAlarmError.push(index + 1);
+        }
+        return {
+          ...record,
+          error: true,
+        };
+      } else {
+        return record;
+      }
+    });
+
+    if (hasAlarmError[0]) {
+      alarmDataChange(errorTable);
+      message.error(
+        `告警条件里的第${hasAlarmError.join(',')}条告警存在空值,请填写完整!`,
+      );
+      return false;
+    }
+    //过滤后端所需要的数据
+    const item = this.state.singleLineData;
+    const alarmData = _.map(alarmTable, item => {
+      return {
+        conType: item.conType,
+        condition: item.condition,
+        msgID: item.msgID,
+      };
+    });
+
+    const {passagewayStore: {alarmBatchSave}} = this.props;
+    const params = {
+      F_DeviceID: item.devID,
+      F_ChannelID: this.state.currentChannelID,
+      alarmConditions: alarmData,
+    };
+    alarmBatchSave(params);
+    return true;
+  }
   onEditOk() {
     const fields = this.state.fields;
     const showError = this.test(fields);
@@ -177,6 +243,8 @@ class Passageway extends Component {
         };
       });
     } else {
+      //告警条件确认
+      if (!this.alarmOk()) return;
       const {
         passagewayStore: {save, edit, getChildTable, c_tableParmas},
       } = this.props;
@@ -213,10 +281,28 @@ class Passageway extends Component {
     //showError让自己校验字段
     const key = _.keys(changedFields);
     const obj = {};
+    let currentVirtual = {};
+    //值类型影响显示精度
+    if (key[0] === 'F_ValueType') {
+      if (changedFields[key].value === 2) {
+        obj['F_ShowPrecision'] = {value: 2};
+      } else {
+        obj['F_ShowPrecision'] = {value: 0};
+      }
+    }
+    if (key[0] === 'virtual') {
+      const {passagewayStore: {virtualList}} = this.props;
+      const selected = _.filter(toJS(virtualList), item => {
+        return changedFields[key].value === item.fid;
+      });
+      currentVirtual['currentVirtual'] = selected[0];
+    }
+
     obj[key] = {showError: false, ...changedFields[key]};
     this.setState(({fields}) => {
       return {
         fields: {...fields, ...obj},
+        ...currentVirtual,
       };
     });
   }
@@ -268,6 +354,7 @@ class Passageway extends Component {
     initEdit(params).then(data => {
       data && this.initFromValue(data, 'modify');
     });
+    this.childAlarmClick(item);
   }
   childDetailClick(item) {
     const {passagewayStore: {initEdit}} = this.props;
@@ -299,7 +386,6 @@ class Passageway extends Component {
     };
     getAlarmTable(params).then(() => {
       this.setState({
-        // alarmShow: true,
         currentChannelID: item.channelID,
       });
     });
@@ -316,6 +402,115 @@ class Passageway extends Component {
   onExportClick() {
     location.href =
       '/collect/device_channel/toExcel.do?deviceID=' + this.state.currentDevice;
+  }
+  editVirtual() {
+    const fields = this.state.fields;
+    if (!fields.virtual.value) {
+      message.error('请选择虚拟通道属性!');
+      return;
+    }
+
+    const {passagewayStore: {getEditVirtual}} = this.props;
+    const item = this.state.singleLineData;
+    const params = {
+      deviceType: item.typeID,
+      channelID: this.state.currentChannelID,
+      version: item.version,
+    };
+    getEditVirtual(params).then(data => {
+      const relateChannelID = data.relateChannelID.split(',');
+      _.map(relateChannelID, item => {
+        const obj = {};
+        obj[item] = {value: undefined};
+
+        this.setState(({virtualFields}) => {
+          return {
+            virtualFields: {
+              ...virtualFields,
+              ...obj,
+            },
+          };
+        });
+      });
+      this.setState({
+        virtualShow: true,
+      });
+    });
+  }
+  onVirtualOk() {
+    const fields = this.state.virtualFields;
+    let hasError = true;
+    //循环找到必填字段是否是空并作出警告
+    _.forIn(fields, (v, k) => {
+      if (v.value || v.value === 0) {
+        hasError = false;
+      }
+    });
+
+    if (hasError) {
+      message.error('必须填写一个关联！');
+    } else {
+      const {passagewayStore: {vchannelEdit}} = this.props;
+      const item = this.state.currentVirtual;
+      const params = {
+        Id_Version: `${item.deviceType}_${item.version}`,
+        F_ChannelID: item.channelID,
+        F_CalculateType: item.calculateType,
+        F_Expression: item.expression,
+        F_RelateChannelID: item.relateChannelID,
+        F_RelateChannelName: item.relateChannelName,
+        F_Fid: item.fid,
+      };
+      vchannelEdit(params).then(data => {
+        this.clearState(data);
+      });
+    }
+  }
+  clearState(data) {
+    data &&
+      this.setState({
+        ...virtualParams,
+        virtualShow: false,
+      });
+  }
+  onVirtualCancel() {
+    this.setState({
+      ...virtualParams,
+      virtualShow: false,
+    });
+  }
+  virtualFormChange(changedFields) {
+    const obj = {};
+    const key = _.keys(changedFields);
+
+    //showError让自己校验字段
+    obj[key] = {showError: false, ...changedFields[key]};
+    this.setState(({virtualFields}) => {
+      return {
+        virtualFields: {...virtualFields, ...obj},
+      };
+    });
+  }
+  //嵌套表格
+  expandedRowRender(record, i) {
+    return <E_ChildTable getChildTable={this.getChildTable} />;
+  }
+  onExpand(expanded, record) {
+    const {passagewayStore} = this.props;
+    const expandedRows = this.state.expandedRows;
+    //孙设备
+    if (expandedRows[0] && expandedRows[0] !== record.devID) {
+      passagewayStore.c_expandedRowsChange([]);
+    }
+
+    this.stopOperation = true;
+    if (expanded) {
+      this.setState({expandedRows: [record.devID]});
+    } else {
+      this.setState({expandedRows: []});
+    }
+
+    passagewayStore.getSportTable({F_DeviceID: record.devID});
   }
   render() {
     const {passagewayStore, regionalStore} = this.props;
@@ -339,6 +534,23 @@ class Passageway extends Component {
         modalTitle = '设备通道详情';
         break;
     }
+    const showIconIndex = _.map(tableData, (item, index) => {
+      if (item.isConcentrator == 1) {
+        return index;
+      } else {
+        return false;
+      }
+    }).filter(item => {
+      return item || item === 0;
+    });
+    const nesting =
+      showIconIndex[0] || showIconIndex[0] === 0
+        ? {
+            expandedRowRender: this.expandedRowRender,
+            onExpand: this.onExpand,
+            expandedRowKeys: this.state.expandedRows,
+          }
+        : {};
     return (
       <div className={styles['information_wrap']}>
         <Remarks />
@@ -357,6 +569,14 @@ class Passageway extends Component {
             <Toolbar onSearch={this.onSearch} closeAdd={true} />
             <div className={styles['table_wrap']}>
               <Table
+                nesting={nesting}
+                rowClassName={(record, index) => {
+                  const rowClassName = ['td_padding'];
+                  record.statustwo == 0 && rowClassName.push('cl_online_state');
+                  record.isConcentrator == 0 &&
+                    rowClassName.push('cl_hidden_expand_icon');
+                  return rowClassName.join(' ');
+                }}
                 pageIndex={pagination.page}
                 pageSize={pagination.number}
                 total={pagination.count}
@@ -378,26 +598,23 @@ class Passageway extends Component {
             editClick={this.childEidtClick}
             detailClick={this.childDetailClick}
             deleteClick={this.childDeleteClick}
-            alarmClick={this.childAlarmClick}
             channelTypeChange={this.channelTypeChange}
             onExportClick={this.onExportClick}
-            channelID={this.state.currentChannelID}
-            deviceID={this.state.currentDevice}
           />
         </Panel>
 
-        {/* <EditModal */}
-        {/*   isShow={this.state.alarmShow} */}
-        {/*   onOk={this.onAlarmOk} */}
-        {/*   buttons={false} */}
-        {/*   width={900} */}
-        {/*   title={'告警条件'} */}
-        {/*   onCancel={this.onAlarmCancel}> */}
-        {/*   <AlarmContent */}
-        {/*     channelID={this.state.currentChannelID} */}
-        {/*     deviceID={this.state.currentDevice} */}
-        {/*   /> */}
-        {/* </EditModal> */}
+        <ClModal
+          isShow={this.state.virtualShow}
+          onOk={this.onVirtualOk}
+          buttons={true}
+          title={'虚拟通道关联修改'}
+          width={552}
+          onCancel={this.onVirtualCancel}>
+          <VirtualContent
+            handleFormChange={this.virtualFormChange}
+            fields={this.state.virtualFields}
+          />
+        </ClModal>
         <ClModal
           width={850}
           buttons={this.state.type == 'detail' ? false : true}
@@ -408,6 +625,7 @@ class Passageway extends Component {
           <EditContent
             fields={this.state.fields}
             mode={this.state.type}
+            editVirtual={this.editVirtual}
             handleFormChange={this.handleFormChange}
           />
         </ClModal>

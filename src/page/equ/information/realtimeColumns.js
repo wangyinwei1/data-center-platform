@@ -26,6 +26,10 @@ const columns = () => {
       title: '单位',
       dataIndex: 'unit',
     },
+    {
+      title: '采集时间',
+      dataIndex: 'RecordTime',
+    },
   ];
 };
 

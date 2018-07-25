@@ -7,6 +7,7 @@ import {
   getAreaSonList,
   site_delete,
   siteSave,
+  siteEdit,
 } from '../services/api.js';
 import {message} from 'antd';
 class Site {
@@ -66,6 +67,19 @@ class Site {
   @action.bound
   async save(params) {
     const data = await siteSave(params);
+
+    if (data.Result == 'success') {
+      this.getTable(this.tableParmas);
+      message.success(data.Msg);
+      return true;
+    } else {
+      message.error(data.Msg);
+      return false;
+    }
+  }
+  @action.bound
+  async edit(params) {
+    const data = await siteEdit(params);
 
     if (data.Result == 'success') {
       this.getTable(this.tableParmas);

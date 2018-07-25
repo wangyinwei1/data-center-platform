@@ -16,12 +16,27 @@ const columns = ({getChildTable, _this}) => {
       dataIndex: 'devName',
       width: '22%',
       render: (text, record, dex) => {
-        return (
-          <a
-            className={styles['child_link']}
-            onClick={
-              getChildTable ? getChildTable.bind(_this, record) : () => {}
-            }>
+        const children =
+          record.isConcentrator === 0 ? (
+            <a
+              className={styles['child_link']}
+              onClick={
+                getChildTable ? getChildTable.bind(_this, record) : () => {}
+              }>
+              <TextOverflow link={true}>
+                <i
+                  className={classnames(
+                    'icon iconfont',
+                    record.connectType == 0
+                      ? `icon-beidong ${styles['icon_passive']}`
+                      : `icon-zhudong ${styles['icon_active']}`,
+                    styles['connectType'],
+                  )}
+                />
+                {record.devName}
+              </TextOverflow>
+            </a>
+          ) : (
             <TextOverflow link={true}>
               <i
                 className={classnames(
@@ -34,8 +49,8 @@ const columns = ({getChildTable, _this}) => {
               />
               {record.devName}
             </TextOverflow>
-          </a>
-        );
+          );
+        return <div>{children}</div>;
       },
     },
     {

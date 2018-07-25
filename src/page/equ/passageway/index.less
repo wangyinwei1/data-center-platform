@@ -17,7 +17,7 @@
   }
 
   .edit_wrap {
-    padding: 20px 20px 0 20px;
+    padding: 20px 20px 20px 20px;
   }
   .statustwo {
     background-color: #ffd9d9;
@@ -31,45 +31,6 @@
       color: #999;
       display: inline-block;
       vertical-align: top;
-    }
-  }
-  .simulation_table_wrap {
-    border-top: 1px solid #e8e8e8;
-    border-right: 1px solid #e8e8e8;
-    border-left: 1px solid #e8e8e8;
-    .body .tr {
-      & > .td {
-        &:last-child {
-          border-right: none;
-        }
-        border-color: #e4e4e4;
-        text-align: center;
-        height: 58px;
-        line-height: 58px;
-        border-right: 1px solid #e8e8e8;
-        display: inline-block;
-        vertical-align: top;
-        border-bottom: 1px solid #e8e8e8;
-        word-break: break-word;
-        transition: all 0.3s;
-      }
-    }
-    .header .tr {
-      .th {
-        border-bottom: 1px solid #e8e8e8;
-        color: rgba(0, 0, 0, 0.85);
-        font-weight: 500;
-        border-collapse: separate;
-        border-spacing: 0;
-        display: inline-block;
-        vertical-align: top;
-        border-color: #e4e4e4;
-        font-size: 14px;
-        padding: 14px;
-        background-color: #fafafa;
-        text-align: center;
-        word-break: break-word;
-      }
     }
   }
   .row_collapsed {
@@ -113,6 +74,27 @@
   .icon_passive {
     color: #5dccff;
   }
+  .virtualLabel {
+    display: inline-block;
+    vertical-align: top;
+    line-height: 36px;
+    padding-right: 10px;
+    span {
+      font-size: 20px;
+      padding: 0 8px;
+    }
+  }
+  .virtual_wrap {
+    padding: 20px 20px 20px 36px;
+    :global {
+      .cl_select_label_90 {
+        width: auto;
+        .ant-row {
+          width: auto;
+        }
+      }
+    }
+  }
   .information_ct {
     .scrollCommon();
     .min_width {
@@ -128,6 +110,24 @@
     height: -ms-calc(~'100% - 97px');
     height: -o-calc(~'100% - 97px');
     height: calc(~'100% - 97px');
+    .table_wrap {
+      :global {
+        .ant-table .ant-table-expanded-row-level-1 > td:last-child {
+          padding: 0 50px 0 0px;
+        }
+        .ant-table
+          .ant-table-expanded-row
+          .ant-table-expanded-row
+          > td:last-child {
+          padding: 0;
+        }
+        .cl_hidden_expand_icon {
+          .ant-table-row-expand-icon-cell .ant-table-row-expand-icon {
+            display: none;
+          }
+        }
+      }
+    }
   }
   .alarm_wrap {
     .alarm_down {
@@ -263,35 +263,6 @@
     }
     padding: 0 10px;
   }
-  .alarm_confirm {
-    padding: 0 10px;
-    &:global(.ant-btn-clicked) {
-      &:after {
-        border-color: #40bc7e;
-      }
-    }
-    line-height: 30px;
-    height: 30px;
-    color: #fff;
-    span,
-    i {
-      color: #fff;
-    }
-    background-color: #50e399;
-    border-color: #50e399;
-    &:hover {
-      background-color: #7fffbe;
-      border-color: #7fffbe;
-    }
-    &:active {
-      background-color: #40bc7e;
-      border-color: #40bc7e;
-    }
-    &:focus {
-      background-color: #50e399;
-      border-color: #50e399;
-    }
-  }
   .operation {
     .delete,
     .alarm,
@@ -315,5 +286,48 @@
       }
       display: inline-block;
     }
+  }
+  .row_float {
+    display: inline-block;
+    vertical-align: top;
+    :global {
+      .cl_virtual_input {
+        width: auto;
+        margin-right: 12px;
+        .ant-form-item-control-wrapper {
+          width: 224px;
+        }
+      }
+    }
+  }
+  .edit_wrap .edit_virtual_btn {
+    background-color: #f7ba2a;
+    border-color: #f7ba2a;
+    padding: 0 10px;
+    &:hover {
+      background-color: #f9c855;
+      border-color: #f9c855;
+    }
+    &:active {
+      background-color: #f7ba2a;
+      border-color: #f7ba2a;
+    }
+    &:focus {
+      background-color: #f7ba2a;
+      border-color: #f7ba2a;
+    }
+    &:global(.ant-btn-clicked) {
+      &:after {
+        border-color: #f7ba2a;
+      }
+    }
+    &[disabled] {
+      color: #fff;
+      background-color: #f3d388;
+      border-color: #f3d388;
+    }
+    width: auto;
+    line-height: 36px;
+    height: 36px;
   }
 }

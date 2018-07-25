@@ -119,7 +119,6 @@ class Site extends Component {
     } else {
       const {alarminformationStore: {save, editSave}} = this.props;
       const params = {};
-      console.log(this.state.type, this.state.singleLineData);
       this.state.type === 'modify' &&
         (params.msgID = this.state.singleLineData.msgID);
       _.forIn(fields, (value, key) => {

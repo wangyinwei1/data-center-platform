@@ -98,6 +98,10 @@ class Regional extends Component {
     const {sunDetailChange} = this.props;
     sunDetailChange(item);
   }
+  getAlarmTable(item, e) {
+    const {getSunAlarmTable} = this.props;
+    getSunAlarmTable(item, e, 'sun');
+  }
   render() {
     const {informationStore, sunRowKeyChange} = this.props;
     const g_tableData = toJS(informationStore.g_tableData);
@@ -108,6 +112,7 @@ class Regional extends Component {
       detailClick: this.detailClick,
       realtimeClick: this.realtimeClick,
       historyClick: this.historyClick,
+      getAlarmTable: this.getAlarmTable,
       controlClick: this.controlClick,
       rumorClick: this.rumorClick,
       disableClick: this.disableClick,

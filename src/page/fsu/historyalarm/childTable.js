@@ -51,7 +51,6 @@ class Regional extends Component {
       lastLoginEnd: dateStrings[1],
     };
     fsu_historyalarmStore.childSearch(params);
-    console.log(dates, dateStrings);
   }
   render() {
     const {fsu_historyalarmStore} = this.props;
@@ -59,7 +58,6 @@ class Regional extends Component {
     const tableData = (c_tableData && c_tableData.varList) || [];
     const pagination = c_tableData || {};
     const columns = columnData();
-    // console.log(columns);
     const data = _.map(tableData, (item, index) => {
       return {...item, num: index + 1};
     });

@@ -140,6 +140,11 @@ class Passageway extends Component {
                 columns={columns}
                 loading={fsu_historyalarmStore.loading}
                 onShowSizeChange={this.onShowSizeChange}
+                rowClassName={(record, index) => {
+                  const rowClassName = [];
+                  record.statustwo == 0 && rowClassName.push('cl_online_state');
+                  return rowClassName.join(' ');
+                }}
                 onChange={this.onPageChange}
                 data={tableDada}
               />

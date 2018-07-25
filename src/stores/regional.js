@@ -8,6 +8,7 @@ import {
   getZone,
   save,
   addArea,
+  regionalEdit,
 } from '../services/api.js';
 import _ from 'lodash';
 import {message} from 'antd';
@@ -106,6 +107,19 @@ class Regional {
   @action.bound
   async save(params) {
     const data = await save(params);
+
+    if (data.result == 'success') {
+      this.getTable(this.tableParmas);
+      message.success('保存成功!');
+      return true;
+    } else {
+      message.error(data.msg);
+      return false;
+    }
+  }
+  @action.bound
+  async edit(params) {
+    const data = await regionalEdit(params);
 
     if (data.result == 'success') {
       this.getTable(this.tableParmas);

@@ -175,11 +175,13 @@ class Regional extends Component {
         break;
       case 'browse_protocol':
         const {fields} = this.props;
-        if (fields.F_Name.value || fields.F_Name.valu === 0) {
+        if (fields.F_Name.value || fields.F_Name.value === 0) {
           this.setState(({modalFields}) => {
             let formValue = _.cloneDeep([modalFields])[0];
-            formValue.P_Protocol.value = this.state.currentProtocol.F_Protocol;
-            formValue.P_Name.value = this.state.currentProtocol.F_Name;
+            formValue.P_Protocol.value =
+              this.state.currentProtocol.F_Protocol || fields.F_Name.F_Protocol;
+            formValue.P_Name.value =
+              this.state.currentProtocol.F_Name || fields.F_Name.F_Name;
             return {
               modalFields: {
                 ...modalFields,

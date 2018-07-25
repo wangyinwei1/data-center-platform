@@ -7,11 +7,46 @@
       right: 0;
       top: 0;
     }
+
+    .exportTpl_btn,
+    .export_btn,
+    .import_btn {
+      display: inline-block;
+      vertical-align: top;
+      border-radius: 17px;
+      margin-left: 10px;
+      width: auto;
+      background-color: #fff;
+      border-color: #fff;
+      padding: 0 2px;
+      span,
+      i {
+        color: #3c3c3c;
+      }
+      .common_icon {
+        padding-right: 5px;
+        font-size: 18px;
+      }
+      &:hover {
+        background-color: #fff;
+        border-color: #fff;
+      }
+      &:active {
+        background-color: #fff;
+        border-color: #fff;
+      }
+      &:focus {
+        background-color: #fff;
+        border-color: #fff;
+      }
+      &:global(.ant-btn-clicked) {
+        &:after {
+          border-color: #fff;
+        }
+      }
+    }
     .add_btn,
     .real_btn,
-    .export_btn,
-    .import_btn,
-    .exportTpl_btn,
     .batch_btn,
     .refresh_btn {
       display: inline-block;
@@ -19,54 +54,9 @@
       border-radius: 17px;
       margin-left: 10px;
     }
-    .exportTpl_btn {
-      width: auto;
-      background-color: #50bfff;
-      border-color: #50bfff;
-      &:hover {
-        background-color: #73ccff;
-        border-color: #73ccff;
-      }
-      &:active {
-        background-color: #50bfff;
-        border-color: #50bfff;
-      }
-      &:focus {
-        background-color: #50bfff;
-        border-color: #50bfff;
-      }
-      &:global(.ant-btn-clicked) {
-        &:after {
-          border-color: #f7ba2a;
-        }
-      }
-    }
 
-    .export_btn {
-      width: auto;
-      background-color: #f7ba2a;
-      border-color: #f7ba2a;
-      &:hover {
-        background-color: #f9c855;
-        border-color: #f9c855;
-      }
-      &:active {
-        background-color: #f7ba2a;
-        border-color: #f7ba2a;
-      }
-      &:focus {
-        background-color: #f7ba2a;
-        border-color: #f7ba2a;
-      }
-      &:global(.ant-btn-clicked) {
-        &:after {
-          border-color: #f7ba2a;
-        }
-      }
-    }
     .refresh_btn,
-    .batch_btn,
-    .import_btn {
+    .batch_btn {
       width: auto;
       background-color: #ff4949;
       border-color: #ff4949;

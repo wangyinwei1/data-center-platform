@@ -30,11 +30,14 @@ export function getEidtData(params) {
 export function searchArea(params) {
   return request.get(base + '/device_area/areaSearch.do', {params});
 }
-export function addArea(params) {
-  return request.get(base + '/device_area/getAddArea.do', {params});
+export function addArea(data) {
+  return request.post(base + '/device_area/getAddArea.do', data);
 }
-export function save(params) {
-  return request.get(base + '/device_area/save.do', {params});
+export function save(data) {
+  return request.post(base + '/device_area/save.do', data);
+}
+export function regionalEdit(data) {
+  return request.post(base + '/device_area/edit.do', data);
 }
 //site
 export function getSiteTable(params) {
@@ -55,8 +58,11 @@ export function siteInitEdit(params) {
 export function getAreaSonList(params) {
   return request.get(base + '/device_area/getAreaSonList.do', {params});
 }
-export function siteSave(params) {
-  return request.get(base + '/device_devbelongunit/save.do', {params});
+export function siteSave(data) {
+  return request.post(base + '/device_devbelongunit/save.do', data);
+}
+export function siteEdit(data) {
+  return request.post(base + '/device_devbelongunit/edit.do', data);
 }
 //deviceversion
 export function getDeviceversionTable(params) {
@@ -298,6 +304,9 @@ export function passageway_search(params) {
 export function passageway_save(data) {
   return request.post(base + '/device_channel/save2.do', data);
 }
+export function passageway_virtualList(data) {
+  return request.post(base + '/device_vchannel/find.do', data);
+}
 export function passageway_delete(params) {
   return request.get(base + '/device_channel/delete2.do', {params});
 }
@@ -316,6 +325,9 @@ export function alarmConditionUpd(data) {
     data,
   );
 }
+export function vchannel_edit(data) {
+  return request.post(base + '/device_vchannel/edit.do', data);
+}
 export function alarmConditionAdd(data) {
   return request.post(
     base + '/device_devalearminfo/AlarmConditionAdd.do',
@@ -327,6 +339,15 @@ export function passageway_initEdit(params) {
 }
 export function passageway_export(params) {
   return request.get(base + '/device_channel/toExcel.do', {params});
+}
+export function passageway_getDev(params) {
+  return request.get(base + '/device_dev/getDevListByDeviceType.do', {params});
+}
+export function passageway_getVirtual(params) {
+  return request.get(
+    base + '/device_vchannel/getVirtualChannelByChannleIDAndDeviceType.do',
+    {params},
+  );
 }
 export function getAlarmTable(params) {
   return request.get(base + '/device_devalearminfo/AlarmConditions.do', {
@@ -353,6 +374,11 @@ export function getBaseAlarmConditions(params) {
     params,
   });
 }
+export function getVirtualChannelList(params) {
+  return request.get(base + '/device_basechannel/getVirtualChannelList.do', {
+    params,
+  });
+}
 export function getInitBasechannelAlarm(params) {
   return request.get(base + '/device_basechannel/initAlarmConditionsAdd.do', {
     params,
@@ -360,6 +386,11 @@ export function getInitBasechannelAlarm(params) {
 }
 export function basicchannel_toExcel(params) {
   return request.get(base + '/device_basechannel/toExcel.do', {
+    params,
+  });
+}
+export function getValuePropertyList(params) {
+  return request.get(base + '/device_basechannel/getValuePropertyList.do', {
     params,
   });
 }
@@ -371,6 +402,9 @@ export function basechannelAlarmAdd(data) {
     base + '/device_basechannel/baseAlarmConditionAdd.do',
     data,
   );
+}
+export function batchValueMeanAdd(data) {
+  return request.post(base + '/device_basechannel/batchValueMeanAdd', data);
 }
 export function basechannelAlarmUpd(data) {
   return request.post(
@@ -384,6 +418,12 @@ export function basechannelAlarmDel(data) {
     data,
   );
 }
+export function batchDeviceAlarmConditionAdd(data) {
+  return request.post(
+    base + '/device_channel/BatchDeviceAlarmConditionAdd',
+    data,
+  );
+}
 export function basechannelEdit(data) {
   return request.post(base + '/device_basechannel/edit.do', data);
 }
@@ -391,6 +431,12 @@ export function basechannelDelete(data) {
   return request.post(base + '/device_basechannel/delete.do', data);
 }
 
+export function batchBaseAlarmConditionAdd(data) {
+  return request.post(
+    base + '/device_basechannel/batchBaseAlarmConditionAdd',
+    data,
+  );
+}
 //realtimealarme
 export function getRealtimealarmTable(params) {
   return request.get(base + '/device_dev/list2.do', {params});

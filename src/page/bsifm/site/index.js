@@ -74,16 +74,16 @@ class Regional extends Component {
     const hasError = _.keys(showError);
 
     if (hasError[0]) {
-      this.setState(({childDevicefields}) => {
+      this.setState(({fields}) => {
         return {
-          childDevicefields: {
-            ...childDevicefields,
+          fields: {
+            ...fields,
             ...showError,
           },
         };
       });
     } else {
-      const {siteStore: {save}} = this.props;
+      const {siteStore: {save, edit}} = this.props;
       const params = {
         F_ParentAreaID: fields.county.value,
         F_Name: fields.F_Name.value,
@@ -94,17 +94,26 @@ class Regional extends Component {
       fields.region.code
         ? (params.F_AreaID = fields.region.code)
         : (params.F_AreaName = fields.region.value);
-      save(params).then(data => {
-        data &&
-          this.setState({
-            ...formParams,
-            editShow: false,
-            cityList: [],
-            countyList: [],
-            regionList: [],
+      this.state.type === 'modify' &&
+        (params['F_ID'] = this.state.singleLineData.F_ID);
+      this.state.type === 'new'
+        ? save(params).then(data => {
+            this.clearParams(data);
+          })
+        : edit(params).then(data => {
+            this.clearParams(data);
           });
-      });
     }
+  }
+  clearParams(data) {
+    data &&
+      this.setState({
+        ...formParams,
+        editShow: false,
+        cityList: [],
+        countyList: [],
+        regionList: [],
+      });
   }
   //校验循环
   test(fields) {
@@ -149,10 +158,10 @@ class Regional extends Component {
   editClick(item, e) {
     const {siteStore} = this.props;
     siteStore.getEidtData({F_ID: item.F_ID}).then(data => {
-      this.initFromValue(data, 'modify');
+      this.initFromValue(data, 'modify', item);
     });
   }
-  initFromValue(data, mode) {
+  initFromValue(data, mode, item) {
     this.setState(({fields}) => {
       let formValue = _.cloneDeep([fields])[0];
       formValue.city.value = data.area.cityCode || undefined;
@@ -169,6 +178,7 @@ class Regional extends Component {
           ...fields,
           ...formValue,
         },
+        singleLineData: item,
         editShow: true,
         type: mode,
       };

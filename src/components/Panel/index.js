@@ -30,21 +30,24 @@ class Regional extends Component {
     }, 100);
   }
   componentDidMount() {
-    this.setState({
-      children: [this.props.children],
-    });
+    // this.setState({
+    //   children: [this.props.children],
+    // });
     this.monitorWindowWidth();
     $(window).on('resize.panel', () => {
       this.monitorWindowWidth();
     });
   }
   componentDidUpdate() {
-    // window.onresize = () => {
-    //   this.monitorWindowWidth();
-    // };
-    !this.state.children[0] &&
+    this.props.isShow &&
+      !this.state.children[0] &&
       this.setState({
         children: [this.props.children],
+      });
+    !this.props.isShow &&
+      this.state.children[0] &&
+      this.setState({
+        children: [],
       });
   }
   componentWillUnmount() {

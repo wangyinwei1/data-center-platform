@@ -53,7 +53,6 @@ class Site extends Component {
   initFromValue(mode, item) {
     this.setState(({fields}) => {
       let formValue = _.cloneDeep([fields])[0];
-      console.log(item);
       formValue.F_Name.value = item.F_Name;
       formValue.F_Protocol.value = item.F_Protocol;
       return {

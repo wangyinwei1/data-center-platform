@@ -52,6 +52,7 @@ const columns = ({
   historyClick,
   realtimeClick,
   detailClick,
+  getAlarmTable,
   disableClick,
   controlClick,
   rumorClick,
@@ -122,6 +123,17 @@ const columns = ({
       width: '6%',
       className: 'information_th',
       dataIndex: 'alerm_count',
+      render: (text, record, dex) => {
+        return (
+          <a
+            className={styles['child_link']}
+            onClick={
+              getAlarmTable ? getAlarmTable.bind(_this, record) : () => {}
+            }>
+            {text}
+          </a>
+        );
+      },
     },
     {
       title: '控制',

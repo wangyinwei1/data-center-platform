@@ -193,19 +193,37 @@ class Regional extends Component {
               <Button
                 className={styles['exportTpl_btn']}
                 onClick={this.exportTpl}>
-                导出模板
+                <i
+                  className={classnames(
+                    'icon iconfont icon-xiazai',
+                    styles['common_icon'],
+                  )}
+                />
+                <span>下载模板</span>
               </Button>
             )}
           {showValue &&
             showValue.indexOf('import') != -1 && (
               <Button className={styles['import_btn']} onClick={this.import}>
-                导入
+                <i
+                  className={classnames(
+                    'icon iconfont icon-daoru',
+                    styles['common_icon'],
+                  )}
+                />
+                <span>导入</span>
               </Button>
             )}
           {showValue &&
             showValue.indexOf('export') != -1 && (
               <Button className={styles['export_btn']} onClick={this.export}>
-                导出
+                <i
+                  className={classnames(
+                    'icon iconfont icon-daochu',
+                    styles['common_icon'],
+                  )}
+                />
+                <span>导出</span>
               </Button>
             )}
           {showValue &&

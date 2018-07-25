@@ -1,6 +1,5 @@
 import {observable, action, autorun} from 'mobx';
 import {login} from '../services/api.js';
-console.log(JSON.parse(localStorage.getItem('cl_navPath')));
 class Global {
   @observable serviceip = '';
   @observable collapsed = false;

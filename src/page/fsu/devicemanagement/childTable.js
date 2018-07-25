@@ -63,7 +63,6 @@ class Regional extends Component {
     currentPortChange(record);
     getGrandsonTable({...s_tableParmas, F_DeviceID: record.deviceID});
     if (expanded) {
-      console.log(record.deviceID);
       expandedRowsChange([record.deviceID]);
     } else {
       expandedRowsChange([]);

@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {action, observer, inject} from 'mobx-react';
 import {toJS} from 'mobx';
+import {message} from 'antd';
 import Cascader from '../../../components/Cascader';
 import styles from './index.less';
 import Cookies from 'js-cookie';
@@ -11,8 +12,10 @@ import Toolbar from '../../../components/Toolbar';
 import {cascader} from '../common';
 import EditModal from '../../../components/EditModal';
 import EditContent from './editContent.js';
+import ValueTypeContent from './valueTypeTable.js';
 import AlarmContent from './alarmTable.js';
-import {formParams} from './tplJson.js';
+import VirtualContent from './virtualContent.js';
+import {formParams, virtualParams} from './tplJson.js';
 //实例
 @inject('basicchannelStore', 'regionalStore')
 @observer
@@ -33,18 +36,26 @@ class Regional extends Component {
     this.loadData = this.loadData.bind(this);
     this.onEditCancel = this.onEditCancel.bind(this);
     this.onEditOk = this.onEditOk.bind(this);
-    this.onAlarmCancel = this.onAlarmCancel.bind(this);
+    this.onValueTypeCancel = this.onValueTypeCancel.bind(this);
+    this.onValueTypeOk = this.onValueTypeOk.bind(this);
     this.handleFormChange = this.handleFormChange.bind(this);
     this.onExportTplClick = this.onExportTplClick.bind(this);
     this.onRowDoubleClick = this.onRowDoubleClick.bind(this);
+    this.valueTypeClick = this.valueTypeClick.bind(this);
+    this.addVirtual = this.addVirtual.bind(this);
+    this.onVirtualCancel = this.onVirtualCancel.bind(this);
+    this.onVirtualOk = this.onVirtualOk.bind(this);
+    this.virtualFormChange = this.virtualFormChange.bind(this);
     this.state = {
       cascaderLoading: false,
       cascaderText: '',
       cascaderValue: [],
       editShow: false,
+      virtualShow: false,
       type: 'new',
-      alarmShow: false,
+      valueTypeShow: false,
       ...formParams,
+      ...virtualParams,
       singleLineData: {},
       currentChannelID: '',
       F_DeviceType: '',
@@ -108,6 +119,10 @@ class Regional extends Component {
     });
   }
   initFromValue(data, mode, item) {
+    const {basicchannelStore: {virtualList}} = this.props;
+    const record = _.filter(toJS(virtualList), app => {
+      return app.channelID === data.pd.F_ChannelID;
+    });
     this.setState(({fields}) => {
       let formValue = _.cloneDeep([fields])[0];
       formValue.F_ChannelID.value = data.pd.F_ChannelID || '';
@@ -117,7 +132,10 @@ class Regional extends Component {
       formValue.F_Ratio.value = data.pd.F_Ratio;
       formValue.F_StorePeriod.value = data.pd.F_StorePeriod;
       formValue.F_StoreMode.value = data.pd.F_StoreMode;
-      formValue.F_DeviceType.value = data.pd.F_DeviceType;
+      // formValue.F_DeviceType.value = `${data.pd.F_DeviceType}_${
+      //   data.pd.F_Version
+      // }`;
+      record[0] && (formValue.virtual.value = record[0].fid);
       formValue.F_Threshold.value = data.pd.F_Threshold;
       formValue.F_ShowPrecision.value = data.pd.F_ShowPrecision;
       formValue.F_Unit.value = data.pd.F_Unit || '';
@@ -140,18 +158,155 @@ class Regional extends Component {
     });
   }
   editClick(item) {
-    const {basicchannelStore: {initEdit}} = this.props;
+    const {basicchannelStore: {initEdit, getVirtualList}} = this.props;
+    getVirtualList({
+      F_TypeID: item.F_DeviceType,
+      F_Version: item.F_Version,
+    });
     const params = {
       F_ID: item.F_ID,
     };
     initEdit(params).then(data => {
       data && this.initFromValue(data, 'modify', item);
     });
+    this.alarmClick(item);
   }
   //告警设置
-  onAlarmCancel() {
+  onValueTypeCancel() {
     this.setState({
-      alarmShow: false,
+      valueTypeShow: false,
+    });
+  }
+  onValueTypeOk() {
+    const {
+      basicchannelStore: {v_tableData, valueTypeChange, valueMeanSave},
+    } = this.props;
+    let valueMeanTable = toJS(v_tableData);
+    let hasError = [];
+    const errorTable = _.map(valueMeanTable, (record, index) => {
+      if (
+        (!record.value && record.value !== 0) ||
+        (!record.valueMean && record.valueMean !== 0)
+      ) {
+        if (valueMeanTable.length === 1) {
+          valueMeanTable = [];
+        } else {
+          hasError.push(index + 1);
+        }
+        return {
+          ...record,
+          error: true,
+        };
+      } else {
+        return record;
+      }
+    });
+
+    if (hasError[0]) {
+      valueTypeChange(errorTable);
+      message.error(
+        `配置值属性里的第${hasError.join(',')}条值里存在空值,请填写完整!`,
+      );
+      return;
+    }
+    //过滤后端所需要的数据
+    const item = this.state.singleLineData;
+    const valueMeanData = _.map(valueMeanTable, item => {
+      return `${item.value}:${item.valueMean}`;
+    });
+
+    const params = {
+      F_DeviceType: item.F_DeviceType,
+      F_Version: item.F_Version,
+      F_ChannelID: item.F_ChannelID,
+      F_ChannelType: item.F_ChannelType,
+      values: valueMeanData.join(','),
+    };
+    valueMeanSave(params).then(() => {
+      this.setState({
+        valueTypeShow: false,
+      });
+    });
+  }
+  valueTypeClick() {
+    const {basicchannelStore: {getValuePropertyList}} = this.props;
+    const item = this.state.singleLineData;
+    const params = {
+      F_ChannelID: item.F_ChannelID,
+      F_DeviceType: item.F_DeviceType,
+      F_Version: item.F_Version,
+      F_ChannelType: item.F_ChannelType,
+    };
+    getValuePropertyList(params).then(() => {
+      this.setState({
+        valueTypeShow: true,
+      });
+    });
+  }
+  addVirtual() {
+    const {basicchannelStore} = this.props;
+    basicchannelStore.getGoAdd({Area_ID: 0}).then(() => {
+      this.setState({
+        virtualShow: true,
+      });
+    });
+  }
+  onVirtualOk() {
+    const fields = this.state.virtualFields;
+    const showError = this.test(fields);
+    const hasError = _.keys(showError);
+
+    if (hasError[0]) {
+      this.setState(({virtualFields}) => {
+        return {
+          virtualFields: {
+            ...virtualFields,
+            ...showError,
+          },
+        };
+      });
+    } else {
+      const {
+        basicchannelStore: {virtualSave, channelList, getVirtualList},
+      } = this.props;
+      const item = this.state.singleLineData;
+      const params = {Id_Version: `${item.F_DeviceType}_${item.F_Version}`};
+      // this.state.type === 'modify' &&
+      //   (params.F_Fid = this.state.singleLineData.fid);
+      _.forIn(fields, (value, key) => {
+        if (key === 'F_RelateChannelName') {
+          params['F_RelateChannelID'] = value.value.join(',');
+          const selectChannel = _.filter(channelList.varList, item => {
+            return value.value.indexOf(item.F_ChannelID) != -1;
+          });
+          params[key] = _.map(selectChannel, item => {
+            return item.F_ChannelName;
+          }).join(',');
+        } else {
+          params[key] = value.value;
+        }
+      });
+
+      virtualSave(params).then(data => {
+        getVirtualList({
+          F_TypeID: item.F_DeviceType,
+          F_Version: item.F_Version,
+        });
+        this.clearState(data);
+      });
+    }
+  }
+  clearState(data) {
+    data &&
+      this.setState({
+        ...virtualParams,
+        virtualShow: false,
+      });
+  }
+  onVirtualCancel() {
+    this.setState({
+      ...virtualParams,
+      virtualShow: false,
     });
   }
   onEditCancel() {
@@ -161,13 +316,18 @@ class Regional extends Component {
     });
   }
   detailClick(item) {
-    const {basicchannelStore: {initEdit}} = this.props;
+    const {basicchannelStore: {initEdit, getVirtualList}} = this.props;
+    getVirtualList({
+      F_TypeID: item.F_DeviceType,
+      F_Version: item.F_Version,
+    });
     const params = {
       F_ID: item.F_ID,
     };
     initEdit(params).then(data => {
       data && this.initFromValue(data, 'detail', item);
     });
+    this.alarmClick(item, 'detail');
   }
   deleteClick(item) {
     const {basicchannelStore} = this.props;
@@ -177,16 +337,15 @@ class Regional extends Component {
 
     basicchannelStore.delete(params);
   }
-  alarmClick(item) {
+  alarmClick(item, detail) {
     const {basicchannelStore: {getAlarmTable}} = this.props;
     const params = {
       F_DeviceType: item.F_DeviceType,
       F_Version: item.F_Version,
       F_ChannelID: item.F_ChannelID,
     };
-    getAlarmTable(params).then(() => {
+    getAlarmTable(params, detail).then(() => {
       this.setState({
-        alarmShow: true,
         currentChannelID: item.F_ChannelID,
         F_DeviceType: item.F_DeviceType,
         F_Version: item.F_Version,
@@ -225,6 +384,58 @@ class Regional extends Component {
     });
     return showError;
   }
+  alarmOk() {
+    const {
+      basicchannelStore: {a_tableData, alarmDataChange, alarmBatchSave},
+    } = this.props;
+    let alarmTable = toJS(a_tableData);
+    let hasAlarmError = [];
+    const errorTable = _.map(alarmTable, (record, index) => {
+      if (
+        (!record.conType && record.conType !== 0) ||
+        (!record.msgID && record.msgID !== 0) ||
+        (!record.condition && record.condition !== 0)
+      ) {
+        if (alarmTable.length === 1) {
+          alarmTable = [];
+        } else {
+          hasAlarmError.push(index + 1);
+        }
+        return {
+          ...record,
+          error: true,
+        };
+      } else {
+        return record;
+      }
+    });
+
+    if (hasAlarmError[0]) {
+      alarmDataChange(errorTable);
+      message.error(
+        `告警条件里的第${hasAlarmError.join(',')}条告警存在空值,请填写完整!`,
+      );
+      return false;
+    }
+    //过滤后端所需要的数据
+    const item = this.state.singleLineData;
+    const alarmData = _.map(alarmTable, item => {
+      return {
+        conType: item.conType,
+        condition: item.condition,
+        msgID: item.msgID,
+      };
+    });
+
+    const params = {
+      F_DeviceType: item.F_DeviceType,
+      F_Version: item.F_Version,
+      F_ChannelID: item.F_ChannelID,
+      alarmConditions: alarmData,
+    };
+    alarmBatchSave(params);
+    return true;
+  }
   onEditOk() {
     const fields = this.state.fields;
     const showError = this.test(fields);
@@ -240,6 +451,10 @@ class Regional extends Component {
         };
       });
     } else {
+      //告警条件确认
+      if (this.state.type !== 'new') {
+        if (!this.alarmOk()) return;
+      }
       const {
         basicchannelStore: {save, edit, getTable, tableParmas},
       } = this.props;
@@ -258,10 +473,10 @@ class Regional extends Component {
       });
       this.state.type == 'modify'
         ? edit(params).then(() => {
-            getChildTable(c_tableParmas);
+            getTable(tableParmas);
           })
         : save(params).then(() => {
-            getChildTable(c_tableParmas);
+            getTable(tableParmas);
           });
       this.setState({
         ...formParams,
@@ -273,6 +488,23 @@ class Regional extends Component {
     //showError让自己校验字段
     const key = _.keys(changedFields);
     const obj = {};
+    //值类型影响显示精度
+    if (key[0] === 'F_ValueType') {
+      if (changedFields[key].value === 2) {
+        obj['F_ShowPrecision'] = {value: 2};
+      } else {
+        obj['F_ShowPrecision'] = {value: 0};
+      }
+    } else if (key[0] === 'virtual') {
+      const {basicchannelStore: {virtualList}} = this.props;
+      const item = _.filter(virtualList, item => {
+        return item.fid === changedFields[key].value;
+      });
+      obj['F_ChannelID'] = {value: item[0].channelID};
+    } else if (key[0] === 'F_ChannelID') {
+      obj['virtual'] = {value: undefined};
+    }
+
     obj[key] = {showError: false, ...changedFields[key]};
     this.setState(({fields}) => {
       return {
@@ -289,6 +521,33 @@ class Regional extends Component {
       data && this.initFromValue(data, 'detail', item);
     });
   }
+  virtualFormChange(changedFields) {
+    const obj = {};
+    const key = _.keys(changedFields);
+    if (key[0] === 'F_RelateChannelName') {
+      const expression = {
+        value: _.map(changedFields[key].value, (item, i) => {
+          return `{${i}}`;
+        }).join(','),
+        name: 'F_Expression',
+      };
+      // const {vchannelStore: {channelList}} = this.props;
+      // const selectedChannel = _.filter(channelList, item => {
+      //   return changedFields[key].value.indexOf(item.F_ChannelID) != -1;
+      // });
+
+      obj['F_Expression'] = expression;
+    }
+
+    //showError让自己校验字段
+    obj[key] = {showError: false, ...changedFields[key]};
+    this.setState(({virtualFields}) => {
+      return {
+        virtualFields: {...virtualFields, ...obj},
+      };
+    });
+  }
+
   render() {
     const {basicchannelStore, regionalStore} = this.props;
     const tableData = toJS(basicchannelStore.tableData);
@@ -298,7 +557,6 @@ class Regional extends Component {
       deleteClick: this.deleteClick,
       detailClick: this.detailClick,
       editClick: this.editClick,
-      alarmClick: this.alarmClick,
       _this: this,
     });
     let title = '';
@@ -352,21 +610,30 @@ class Regional extends Component {
           </div>
         </div>
         <EditModal
-          isShow={this.state.alarmShow}
-          onOk={this.onAlarmOk}
-          buttons={false}
+          isShow={this.state.valueTypeShow}
+          onOk={this.onValueTypeOk}
+          buttons={true}
           width={900}
-          title={'告警条件'}
-          onCancel={this.onAlarmCancel}>
-          <AlarmContent
-            F_DeviceType={this.state.F_DeviceType}
-            F_Version={this.state.F_Version}
-            channelID={this.state.currentChannelID}
+          title={'配置值属性'}
+          onCancel={this.onValueTypeCancel}>
+          <ValueTypeContent />
+        </EditModal>
+        <EditModal
+          isShow={this.state.virtualShow}
+          onOk={this.onVirtualOk}
+          buttons={true}
+          title={'虚拟通道新增'}
+          width={842}
+          onCancel={this.onVirtualCancel}>
+          <VirtualContent
+            handleFormChange={this.virtualFormChange}
+            fields={this.state.virtualFields}
           />
         </EditModal>
         <EditModal
           width={850}
           buttons={this.state.type == 'detail' ? false : true}
+          wrapClassName={'cl_basic_modal'}
           isShow={this.state.editShow}
           title={title}
           onOk={this.onEditOk}
@@ -374,6 +641,8 @@ class Regional extends Component {
           <EditContent
             fields={this.state.fields}
             mode={this.state.type}
+            valueTypeClick={this.valueTypeClick}
+            addVirtual={this.addVirtual}
             handleFormChange={this.handleFormChange}
           />
         </EditModal>

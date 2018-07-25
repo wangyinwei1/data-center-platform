@@ -11,9 +11,16 @@ import {
   passageway_delete,
   getInitAlarmConditionsAdd,
   getAlarmTable,
+  batchDeviceAlarmConditionAdd,
   alarmConditionDel,
   alarmConditionAdd,
   alarmConditionUpd,
+  passageway_virtualList,
+  passageway_getVirtual,
+  getSportTable,
+  getGrandsonTable,
+  passageway_getDev,
+  vchannel_edit,
 } from '../services/api.js';
 import {message} from 'antd';
 class Passageway {
@@ -29,6 +36,43 @@ class Passageway {
   @observable addData = {};
   @observable detailData = {};
   @observable alarmList = [];
+  @observable virtualList = [];
+  @observable editVirtualData = {};
+  @observable virtualDevList = [];
+  @observable g_tableData = {};
+  @observable g_tableParmas = {};
+  @observable s_tableData = {};
+  @observable s_tableParmas = {};
+  @observable s_loading = false;
+  @observable g_loading = false;
+  @observable c_expandedRows = [];
+  @action.bound
+  async c_expandedRowsChange(value) {
+    this.c_expandedRows = value;
+  }
+  @action.bound
+  async getSportTable(params) {
+    this.s_loading = true;
+    const data = await getSportTable(params);
+    this.s_loading = false;
+    if (data.Result == 'success') {
+      this.s_tableParmas = params;
+      this.s_tableData = data;
+    } else {
+      message.error(data.Msg);
+    }
+  }
+  @action.bound
+  async getGrandsonTable(params) {
+    this.g_loading = true;
+    const data = await getGrandsonTable(params);
+    this.g_loading = false;
+    if (data.Result == 'success') {
+      this.g_tableData = data;
+    } else {
+      message.error(data.Msg);
+    }
+  }
 
   @action.bound
   async getTable(params) {
@@ -46,6 +90,58 @@ class Passageway {
   }
 
   @action.bound
+  async getEditVirtual(params) {
+    const data = await passageway_getVirtual(params);
+    // const data = {
+    //   Data: {
+    //     calculateType: 1,
+    //     channelID: 'Vriqi',
+    //     deviceType: 2,
+    //     expression: '{0}-{1}-{2}',
+    //     fid: 93,
+    //     relateChannelID: '2000E,2000F,20010',
+    //     relateChannelList: [
+    //       {
+    //         relateChannelID: '2000E',
+    //         relateChannelName: '年份',
+    //       },
+    //       {
+    //         relateChannelID: '2000F',
+    //         relateChannelName: '月份',
+    //       },
+    //       {
+    //         relateChannelID: '20010',
+    //         relateChannelName: '日期',
+    //       },
+    //     ],
+    //     relateChannelName: '年份,月份,日期',
+    //     relatedevList: [],
+    //     version: 11,
+    //   },
+    //   Msg: '',
+    //   Result: 'success',
+    // };
+    if (data.Result == 'success') {
+      this.getVirtualDevList({
+        typeID: params.deviceType,
+        version: params.version,
+      });
+      this.editVirtualData = data.Data;
+      return data.Data;
+    } else {
+      message.error(data.Msg);
+    }
+  }
+  @action.bound
+  async getVirtualDevList(params) {
+    const data = await passageway_getDev(params);
+    if (data.Result == 'success') {
+      this.virtualDevList = data.Data;
+    } else {
+      message.error(data.Msg);
+    }
+  }
+  @action.bound
   async alarmDataChange(data) {
     this.a_tableData = data;
   }
@@ -57,7 +153,21 @@ class Passageway {
       this.a_loading = false;
       this.getAlarmList();
       this.a_tableParmas = params;
-      this.a_tableData = data.Data;
+      //没有数据默认给一条数据
+      this.a_tableData = data.Data[0]
+        ? data.Data
+        : [
+            {
+              myConID: new Date().getTime(),
+              conType: undefined,
+              msgID: undefined,
+              condition: '',
+              alarmMsg: '',
+              newAddRow: true,
+              //告警延迟
+              delayID: 0,
+            },
+          ];
     } else {
       message.error(data.Msg);
     }
@@ -83,10 +193,43 @@ class Passageway {
     }
   }
   @action.bound
+  async getVirtualList(params) {
+    const data = await passageway_virtualList(params);
+    if (data.Result == 'success') {
+      this.virtualList = data.Data;
+      return data.Data;
+    } else {
+      message.error(data.Msg);
+    }
+  }
+  @action.bound
+  async alarmBatchSave(params) {
+    const data = await batchDeviceAlarmConditionAdd(params);
+    if (data.Result == 'success') {
+      return true;
+    } else {
+      message.error(data.Msg);
+      return false;
+    }
+  }
+  @action.bound
   async alarmEditSave(params) {
     const data = await alarmConditionUpd(params);
     if (data.Result == 'success') {
       this.getAlarmTable(this.a_tableParmas);
+      message.success(data.Msg);
+    } else {
+      message.error(data.Msg);
+    }
+  }
+  @action.bound
+  async vchannelEdit(params) {
+    const data = await vchannel_edit(params);
+    if (data.Result == 'success') {
+      this.getVirtualDevList({
+        typeID: params.deviceType,
+        version: params.version,
+      });
       message.success(data.Msg);
     } else {
       message.error(data.Msg);

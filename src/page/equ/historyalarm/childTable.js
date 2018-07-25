@@ -55,7 +55,6 @@ class Regional extends Component {
       lastLoginEnd: dateStrings[1],
     };
     historyalarmStore.childSearch(params);
-    console.log(dates, dateStrings);
   }
   render() {
     const {historyalarmStore} = this.props;

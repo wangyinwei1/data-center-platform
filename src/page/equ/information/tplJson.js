@@ -66,7 +66,7 @@ const clearFormParams = {
       require: true,
     },
     F_IsConcentrator: {
-      value: '0',
+      value: 0,
       require: true,
     },
     F_BelongUnitID: {
@@ -78,11 +78,11 @@ const clearFormParams = {
       require: true,
     },
     F_ReportType: {
-      value: '0',
+      value: 0,
       require: true,
     },
     F_ConnectType: {
-      value: '0',
+      value: 0,
       require: true,
     },
     F_IP: {

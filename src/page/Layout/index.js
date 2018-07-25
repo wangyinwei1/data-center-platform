@@ -191,6 +191,18 @@ class BasicLayout extends Component {
     });
     //特殊路径处理
     path == 'bsifm-devicetype' && (title = '设备类型管理');
+    const exclusionPath = [
+      ['fsu-devicemanagement', 'equ-information'],
+      ['fsu-realtimealarm', 'equ-realtimealarm'],
+      ['fsu-historyalarm', 'equ-historyalarm'],
+      ['fsu-controlrecord', 'equ-controlrecord'],
+    ];
+    let currentLink = [];
+    _.map(exclusionPath, item => {
+      if (item.indexOf(path) != -1) {
+        currentLink = item;
+      }
+    });
 
     return (
       <div className={styles['layout_wrap']}>
@@ -208,7 +220,27 @@ class BasicLayout extends Component {
           />
           <Layout className={styles['layout_content']}>
             <Content style={{height: '100%'}}>
-              <div className={styles['content']}>{this.props.children}</div>
+              <div className={styles['content']}>
+                {this.props.children}
+                {currentLink[0] && (
+                  <div className={styles['subNav']}>
+                    <a
+                      href={`/#/${currentLink[1]}`}
+                      className={classnames(
+                        currentLink[1] === path && styles['active'],
+                      )}>
+                      基础设备
+                    </a>
+                    <a
+                      href={`/#/${currentLink[0]}`}
+                      className={classnames(
+                        currentLink[0] === path && styles['active'],
+                      )}>
+                      FSU设备
+                    </a>
+                  </div>
+                )}
+              </div>
               <div
                 id="cl_tree_cascader"
                 onClick={this.handleClick}

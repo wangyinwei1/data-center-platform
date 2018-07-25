@@ -104,7 +104,13 @@ class Regional extends Component {
             label={'手机号'}
             disabled={disabled}
             name={'PHONE'}
-            rules={[{required: true, message: '请必须填写!'}]}
+            rules={[
+              {required: true, message: '请必须填写!'},
+              {
+                pattern: /^[1][3,4,5,7,8][0-9]{9}$/,
+                message: '请输入正确的手机号码!',
+              },
+            ]}
           />
           <FormInput
             {...fields}
@@ -112,7 +118,13 @@ class Regional extends Component {
             label={'邮箱'}
             disabled={disabled}
             name={'EMAIL'}
-            rules={[{required: false}]}
+            rules={[
+              {required: false},
+              {
+                pattern: /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
+                message: '请输入正确的邮箱!',
+              },
+            ]}
           />
           <FormSelect
             {...fields}
@@ -182,6 +194,7 @@ class Regional extends Component {
             label={'设备类型'}
             name={'DevTypes'}
             mode="multiple"
+            optionFilterProp="children"
             rules={[{required: false}]}
             children={typeList}
           />

@@ -3,6 +3,7 @@ import {action, observer, inject} from 'mobx-react';
 import {toJS} from 'mobx';
 import styles from './index.less';
 import _ from 'lodash';
+import classnames from 'classnames';
 //实例
 class SimulationTable extends Component {
   constructor(props) {
@@ -32,9 +33,10 @@ class SimulationTable extends Component {
     return result;
   }
   render() {
-    const {columns, data, loading} = this.props;
+    const {columns, data, disabled, loading} = this.props;
     return (
       <div className={styles['simulation_table_wrap']}>
+        {disabled && <div className={styles['mask']} />}
         <div className={styles['header']}>
           <div className={styles['tr']}>
             {_.map(columns, (item, i) => {
@@ -54,12 +56,18 @@ class SimulationTable extends Component {
           </div>
         </div>
         <div className={styles['body']}>
-          <div className={styles['tr']}>
-            {_.map(data, (app, index) => {
-              const children = this.getBodyTd(app, index);
-              return children;
-            })}
-          </div>
+          {_.map(data, (app, index) => {
+            return (
+              <div
+                key={index.toString(36) + index}
+                className={classnames(
+                  app.error && styles['table_error'],
+                  styles['tr'],
+                )}>
+                {this.getBodyTd(app, index)}
+              </div>
+            );
+          })}
         </div>
       </div>
     );

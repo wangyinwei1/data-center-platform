@@ -40,7 +40,7 @@ class AddChild extends Component {
           onChange={this.handleFormChange}
           label={'设备ID'}
           name={'F_DeviceID'}
-          disabled={true}
+          disabled={mode === 'modify' ? true : disabled}
           placeholder={'请输入端口号'}
           rules={[{required: true, message: '请必须填写!'}]}
         />

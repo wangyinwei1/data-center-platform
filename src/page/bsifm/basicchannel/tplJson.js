@@ -16,27 +16,27 @@ const formParams = {
       value: undefined,
       require: true,
     },
-    F_DeviceType: {
-      value: undefined,
-      require: true,
-    },
+    // F_DeviceType: {
+    //   value: undefined,
+    //   require: true,
+    // },
     F_Ratio: {
       value: '',
-      require: true,
     },
     F_StorePeriod: {
-      require: true,
-      value: '',
+      value: 365,
     },
     F_StoreMode: {
-      value: undefined,
+      value: 0,
     },
     F_Threshold: {
-      require: true,
-      value: '',
+      value: 0,
     },
     F_ShowPrecision: {
-      value: '',
+      value: 0,
+    },
+    virtual: {
+      value: undefined,
     },
     F_Unit: {
       value: '',
@@ -45,16 +45,16 @@ const formParams = {
       value: '',
     },
     F_ShowOrder: {
-      value: '',
+      value: 1,
     },
     F_Status: {
-      value: undefined,
+      value: 0,
     },
     F_ValueDescription: {
       value: '',
     },
     F_AnalyOrder: {
-      value: '',
+      value: 1,
     },
     F_RelateChannelNO: {
       value: '',
@@ -81,4 +81,27 @@ const alarmFormParams = {
     },
   },
 };
-export {formParams, alarmFormParams};
+const virtualParams = {
+  virtualFields: {
+    F_ChannelID: {
+      value: '',
+      require: true,
+    },
+    F_CalculateType: {
+      value: undefined,
+      require: true,
+    },
+    F_RelateChannelID: {
+      value: '',
+    },
+    F_RelateChannelName: {
+      value: [],
+      require: true,
+    },
+    F_Expression: {
+      value: '',
+      require: true,
+    },
+  },
+};
+export {formParams, alarmFormParams, virtualParams};

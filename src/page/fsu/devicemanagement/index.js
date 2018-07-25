@@ -725,7 +725,7 @@ class Information extends Component {
       case 'delete':
         fsuDelectAll({suIDs: this.state.batchIds});
         break;
-      case 'disabled':
+      case 'disable':
         fsuDevsEnabledOnOff({strDevs: this.state.batchIds, status: 1});
         break;
       case 'enabled':
@@ -838,9 +838,11 @@ class Information extends Component {
                 total={pagination.count}
                 columns={columns}
                 rowClassName={(record, index) => {
-                  return record.statustwo == 0
-                    ? 'cl_online_state1 td_padding'
-                    : 'td_padding';
+                  const rowClassName = ['td_padding'];
+                  record.statustwo == 0 && rowClassName.push('cl_online_state');
+                  record.isConcentrator == 0 &&
+                    rowClassName.push('cl_hidden_expand_icon');
+                  return rowClassName.join(' ');
                 }}
                 expandIconAsCell={false}
                 loading={fsu_devicemanagementStore.loading}

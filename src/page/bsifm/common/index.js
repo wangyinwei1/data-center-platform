@@ -26,7 +26,7 @@ const cascader = {
       page: 1,
       sing: selectedOptions[0].sing,
       keywords: '',
-      showCount: 10,
+      number: 10,
       ztreeChild: selectedOptions[0].code,
     };
     return params;
@@ -127,7 +127,7 @@ const cascader = {
     const params = {
       ...myselfStore.tableParmas,
       page: current,
-      showCount: pageSize,
+      number: pageSize,
     };
     myselfStore.getTable(params);
   },

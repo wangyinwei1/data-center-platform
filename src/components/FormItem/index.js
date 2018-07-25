@@ -12,7 +12,7 @@ const mapPropsToFields = props => {
 
   let object = {...props[props.name]};
   if (
-    (value === 0 || !value) &&
+    ((value !== 0 && !value) || !value[0]) &&
     props.rules[0].required &&
     props[props.name].showError
   ) {
@@ -298,6 +298,10 @@ class CustomSelect extends Component {
       name,
       rules,
     } = this.props;
+    const hasValue = _.filter(children, item => {
+      return item.value === parseInt(fields[name].value);
+    });
+    hasValue[0] && (fields[name].value = hasValue[0].name);
 
     return (
       <div

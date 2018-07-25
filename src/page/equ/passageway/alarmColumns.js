@@ -74,15 +74,16 @@ const columns = ({
   _this,
   data,
   fields,
+  mode,
 }) => {
-  return [
+  const options = [
     {
       title: '序号',
       dataIndex: 'num',
       width: '8%',
       render: (text, record, index) => {
         const content =
-          !data[0] || data.length - 1 == index ? (
+          (!data[0] || data.length - 1 == index) && mode !== 'detail' ? (
             <div className={styles['alarm_btn_wrap']}>
               <Button
                 className={styles['alarm_add']}
@@ -99,7 +100,7 @@ const columns = ({
     {
       title: '告警信息',
       dataIndex: 'msgID',
-      width: '19%',
+      width: mode === 'detail' ? '23%' : '19%',
       render: (text, record, index) => {
         return (
           <Dropdown
@@ -137,7 +138,7 @@ const columns = ({
     {
       title: '告警条件类型',
       dataIndex: 'conType',
-      width: '19%',
+      width: mode === 'detail' ? '23%' : '19%',
       render: (text, record, index) => {
         const currentCon = _.filter(conType, item => {
           return item.F_StoreMode === record.conType;
@@ -169,13 +170,13 @@ const columns = ({
     {
       title: '告警条件',
       dataIndex: 'condition',
-      width: '19%',
+      width: mode === 'detail' ? '23%' : '19%',
       render: (text, record, index) => {
         return (
           <Input
             onChange={e => {
               const value = e.target.value;
-              inputChange(value, e.target, record);
+              inputChange(value, 'condition', e.target, record);
             }}
             placeholder={'请输入内容'}
             className={styles['con_input']}
@@ -186,24 +187,25 @@ const columns = ({
     },
     {
       title: '告警延迟',
-      dataIndex: 'msgID',
-      width: '18%',
+      dataIndex: 'delayID',
+      width: mode === 'detail' ? '23%' : '18%',
       render: (text, record, index) => {
         return (
           <Input
             onChange={e => {
-              console.log(11);
-              // const value = e.target.value;
-              // inputChange(value, e.target, record);
+              const value = e.target.value;
+              inputChange(value, 'delay', e.target, record);
             }}
             placeholder={'请输入内容'}
             className={styles['con_input']}
-            value={record.condition}
+            value={record.delayID}
           />
         );
       },
     },
-    {
+  ];
+  mode !== 'detail' &&
+    options.push({
       title: '操作',
       dataIndex: '',
       width: '17%',
@@ -225,18 +227,19 @@ const columns = ({
                   className={styles['alarm_delete']}>
                   移除
                 </Button>
-                <Button
-                  onClick={alarmEdit.bind(_this, record)}
-                  className={styles['alarm_edit']}>
-                  修改
-                </Button>
+                {/* <Button */}
+                {/*   onClick={alarmEdit.bind(_this, record)} */}
+                {/*   className={styles['alarm_edit']}> */}
+                {/*   修改 */}
+                {/* </Button> */}
               </div>
             }
           </div>
         );
       },
-    },
-  ];
+    });
+
+  return options;
 };
 
 export default columns;

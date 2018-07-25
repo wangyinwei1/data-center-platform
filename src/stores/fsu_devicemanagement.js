@@ -169,7 +169,6 @@ class Devicemanagement {
   async getOperateList(params) {
     const data = await getFsuSpTable(params);
     if (data.Result == 'success') {
-      console.log(data);
       this.operateList = data.Data;
       return true;
     } else {
@@ -236,13 +235,10 @@ class Devicemanagement {
   }
   @action.bound
   async getRealtimeTable(params) {
-    console.log(111);
-
     this.r_loading = true;
     const data = await getFsuRealtimeTable(params);
     this.r_loading = false;
     if (data.Result == 'success') {
-      console.log(data);
       this.r_tableParmas = params;
       this.r_tableData = data.Data;
     } else {
@@ -306,7 +302,6 @@ class Devicemanagement {
       params.page = data.Data.page;
       this.r_tableParmas = params;
       this.r_tableData = data.Data;
-      console.log(data.Data);
     } else {
       message.error(data.Msg);
     }

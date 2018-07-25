@@ -10,7 +10,6 @@ class Login {
     const data = await login(params);
 
     if (data.result === 'success') {
-      console.log(data);
       return {ip: data.serviceip, username: data.username};
     } else {
       message.error(data.msg);

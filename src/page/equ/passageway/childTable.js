@@ -65,10 +65,6 @@ class Regional extends Component {
     const {editClick} = this.props;
     editClick(item);
   }
-  alarmClick(item) {
-    const {alarmClick} = this.props;
-    alarmClick(item);
-  }
   channelTypeChange(value) {
     const {channelTypeChange} = this.props;
     channelTypeChange(value);
@@ -91,10 +87,8 @@ class Regional extends Component {
       deleteClick: this.deleteClick,
       detailClick: this.detailClick,
       editClick: this.editClick,
-      alarmClick: this.alarmClick,
       _this: this,
     });
-    // console.log(columns);
     const data = _.map(tableData, (item, index) => {
       return {...item, num: index + 1};
     });
