@@ -76,7 +76,7 @@ class Site extends Component {
     const {agreementStore} = this.props;
     const item = this.state.singleLineData;
     const params = {
-      USER_ID: item.F_UserID,
+      F_ProID: item.F_ProID,
     };
     this.c_onDeleteOk(agreementStore, params);
   }

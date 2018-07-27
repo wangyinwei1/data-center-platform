@@ -77,11 +77,13 @@ class Site extends Component {
           ? 0
           : parseInt(data.pd.userType) || undefined;
       formValue.proCode.value = parseInt(data.pd.property.proCode) || '';
-      formValue.proCode.value = parseInt(data.pd.property.proCode) || '';
-      formValue.proCode.value = parseInt(data.pd.property.proCode) || '';
+      formValue.countyCode.value = parseInt(data.pd.property.countyCode) || '';
+      formValue.cityCode.value = parseInt(data.pd.property.cityCode) || '';
       formValue.DevTypes.value =
         (data.pd.property.F_DevTypes &&
-          data.pd.property.F_DevTypes.split(',')) ||
+          data.pd.property.F_DevTypes.split(',').map(item => {
+            return parseInt(item);
+          })) ||
         [];
       return {
         fields: {
@@ -172,7 +174,7 @@ class Site extends Component {
     let phoneReg = /^[1][3,4,5,7,8][0-9]{9}$/;
     //循环找到必填字段是否是空并作出警告
     _.forIn(fields, (v, k) => {
-      if (k === 'EMAIL' && !emailReg.test(v.value)) {
+      if (k === 'EMAIL' && v.value && !emailReg.test(v.value)) {
         showError[k] = {showError: true, ...v};
       } else if (k === 'PHONE' && !phoneReg.test(v.value)) {
         showError[k] = {showError: true, ...v};

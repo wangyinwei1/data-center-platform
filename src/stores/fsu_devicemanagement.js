@@ -334,7 +334,7 @@ class Devicemanagement {
   }
   @action
   async delectConsport(params) {
-    const data = await delFSUSun2(params);
+    const data = await delFSU_Sun2(params);
     if (data.Result == 'success') {
       message.success('删除成功!');
     } else {

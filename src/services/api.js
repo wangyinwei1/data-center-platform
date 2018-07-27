@@ -251,30 +251,30 @@ export function getGoAdd(params) {
 export function goFind2(params) {
   return request.get(base + '/device_dev/goFind2.do', {params});
 }
-export function informationSave(params) {
-  return request.get(base + '/device_dev/save2.do', {params});
+export function informationSave(data) {
+  return request.post(base + '/device_dev/save2.do', data);
 }
-export function informationEditSave(params) {
-  return request.get(base + '/device_dev/edit2.do', {params});
+export function informationEditSave(data) {
+  return request.post(base + '/device_dev/edit2.do', data);
 }
-export function saveConsport(params) {
-  return request.get(base + '/device_dev/save_consport.do', {params});
+export function saveConsport(data) {
+  return request.post(base + '/device_dev/save_consport.do', data);
 }
-export function editConsport(params) {
-  return request.get(base + '/device_dev/edit_consport.do', {params});
+export function editConsport(data) {
+  return request.post(base + '/device_dev/edit_consport.do', data);
 }
-export function delectConsport(params) {
-  return request.get(base + '/device_dev/delect_consport.do', {params});
+export function delectConsport(data) {
+  return request.post(base + '/device_dev/delect_consport.do', data);
 }
 
-export function saveSun(params) {
-  return request.get(base + '/device_dev/save_sun.do', {params});
+export function saveSun(data) {
+  return request.post(base + '/device_dev/save_sun.do', data);
 }
-export function editSun(params) {
-  return request.get(base + '/device_dev/edit_sun.do', {params});
+export function editSun(data) {
+  return request.post(base + '/device_dev/edit_sun.do', data);
 }
-export function delectSun(params) {
-  return request.get(base + '/device_dev/delect_sun.do', {params});
+export function delectSun(data) {
+  return request.post(base + '/device_dev/delect_sun.do', data);
 }
 export function onoroff(params) {
   return request.get(base + '/device_dev/onoroff.do', {params});
@@ -490,20 +490,20 @@ export function getFsuSp(params) {
 export function findStation(params) {
   return request.get(base + '/FSU_device/find_station.do', {params});
 }
-export function fsuDevicemanagementSave(params) {
-  return request.get(base + '/FSU_device/save_FSU2.do', {params});
+export function fsuDevicemanagementSave(data) {
+  return request.post(base + '/FSU_device/save_FSU2.do', data);
 }
 export function findFSU2(params) {
   return request.get(base + '/FSU_device/find_FSU2.do', {params});
 }
-export function delFSU2(params) {
-  return request.get(base + '/FSU_device/delFSU2.do', {params});
+export function delFSU2(data) {
+  return request.post(base + '/FSU_device/delFSU2.do', data);
 }
-export function saveFSU_Sun2(params) {
-  return request.get(base + '/FSU_device/save_FSUSun2.do', {params});
+export function saveFSU_Sun2(data) {
+  return request.post(base + '/FSU_device/save_FSUSun2.do', data);
 }
-export function editFSU2(params) {
-  return request.get(base + '/FSU_device/edit_FSU2.do', {params});
+export function editFSU2(data) {
+  return request.post(base + '/FSU_device/edit_FSU2.do', data);
 }
 export function saveFSU_Sp2(data) {
   return request.post(base + '/FSU_device/save_FSUSp2.do', data);

@@ -82,7 +82,13 @@ class Edit extends Component {
           label={'设备IP'}
           placeholder={'请选择站点'}
           name={'F_SuIP'}
-          rules={[{required: true, message: '请必须填写!'}]}
+          rules={[
+            {required: true, message: '请必须填写!'},
+            {
+              pattern: /^((1\d\d|2[0-4]\d|25[0-5]|\d{1,2})\.){3}(1\d\d|2[0-4]\d|25[0-5]|\d{1,2})$/,
+              message: '请填写正确的IP!',
+            },
+          ]}
         />
         <FormInput
           {...fields}
@@ -91,7 +97,13 @@ class Edit extends Component {
           disabled={disabled}
           placeholder={'请选择设备类型'}
           name={'F_SuPort'}
-          rules={[{required: true, message: '请必须填写!'}]}
+          rules={[
+            {required: true, message: '请必须填写!'},
+            {
+              pattern: /^([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-5]{2}[0-3][0-5])$/,
+              message: '请填写正确的端口!',
+            },
+          ]}
         />
         <FormInput
           {...fields}

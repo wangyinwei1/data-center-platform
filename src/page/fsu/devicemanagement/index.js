@@ -439,14 +439,28 @@ class Information extends Component {
   onEditOk() {
     const fields = this.state.fields;
     let showError = {};
+    console.log(111);
 
     //循环找到必填字段是否是空并作出警告
-
+    let portReg = /^([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-5]{2}[0-3][0-5])$/;
+    let ipReg = /^((1\d\d|2[0-4]\d|25[0-5]|\d{1,2})\.){3}(1\d\d|2[0-4]\d|25[0-5]|\d{1,2})$/;
     _.forIn(fields, (v, k) => {
-      if (!v.value && v.value !== 0 && v.require) {
+      if (k === 'F_SuPort' && !portReg.test(v.value)) {
         showError[k] = {showError: true, ...v};
+      } else if (k === 'F_SuIP' && !ipReg.test(v.value)) {
+        showError[k] = {showError: true, ...v};
+      } else {
+        if (!v.value && v.value !== 0 && v.require) {
+          showError[k] = {showError: true, ...v};
+        }
       }
     });
+
+    // _.forIn(fields, (v, k) => {
+    //   if (!v.value && v.value !== 0 && v.require) {
+    //     showError[k] = {showError: true, ...v};
+    //   }
+    // });
     const hasError = _.keys(showError);
 
     if (hasError[0]) {
@@ -649,8 +663,7 @@ class Information extends Component {
     const key = _.keys(changedFields);
     const obj = {};
     obj[key] = {showError: false, ...changedFields[key]};
-    tilClick;
-    his.setState(({fields}) => {
+    this.setState(({fields}) => {
       return {
         fields: {...fields, ...obj},
       };

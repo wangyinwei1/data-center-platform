@@ -88,6 +88,7 @@ class Regional extends Component {
               onShowSizeChange={this.onShowSizeChange}
               onChange={this.onPageChange}
               data={tableData}
+              useDefaultRowKey={true}
             />
           </div>
         </div>

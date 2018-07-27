@@ -65,6 +65,12 @@ class Regional extends Component {
     return false;
   }
   handleFormChange(changedFields) {
+    // this.setState({
+    //   showBigClasses: false,
+    //   showProtocol: false,
+    //   showNewProtocol: false,
+    //   browseDisable: false,
+    // });
     const key = _.keys(changedFields);
 
     if (
@@ -100,12 +106,6 @@ class Regional extends Component {
         changedFields.F_Name.F_Protocol = currentValue[0].F_Protocol;
       }
       handleFormChange(changedFields);
-      this.setState({
-        showBigClasses: false,
-        showProtocol: false,
-        showNewProtocol: false,
-        browseDisable: false,
-      });
     }
   }
   childProtocolOk() {

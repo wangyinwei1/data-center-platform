@@ -295,7 +295,11 @@ class Information {
     this.d_loading = true;
     const data = await findDeviceData(params);
     this.d_loading = false;
-    this.deviceData = data.varList;
+    if (data.Result == 'success') {
+      this.deviceData = data.varList;
+    } else {
+      message.error(data.Msg);
+    }
   }
   @action.bound
   async getGrandsonTable(params) {

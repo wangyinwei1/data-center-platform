@@ -364,7 +364,7 @@ class Edit extends Component {
               onChange={this.handleFormChange}
               label={'虚拟属性'}
               disabled={
-                fields.F_ChannelType.value === 5 && mode === 'modify'
+                fields.F_ChannelType.value === 5 && mode !== 'detail'
                   ? false
                   : true
               }
@@ -374,7 +374,7 @@ class Edit extends Component {
             />
             <Button
               disabled={
-                fields.F_ChannelType.value === 5 && mode === 'modify'
+                fields.F_ChannelType.value === 5 && mode !== 'detail'
                   ? false
                   : true
               }

@@ -98,6 +98,27 @@ class BasicLayout extends Component {
   }
   render() {
     const {menu, collapsed, loading, selectedKeys, openKeys} = this.props;
+
+    let path = '';
+    //特殊处理
+    switch (selectedKeys) {
+      case 'fsu-historyalarm':
+        path = 'equ-historyalarm';
+        break;
+      case 'fsu-devicemanagement':
+        path = 'equ-information';
+        break;
+      case 'fsu-controlrecord':
+        path = 'equ-controlrecord';
+        break;
+      case 'fsu-realtimealarm':
+        path = 'equ-realtimealarm';
+        break;
+      default:
+        path = selectedKeys;
+
+        break;
+    }
     return (
       <Spin
         className={styles['loading']}
@@ -112,7 +133,7 @@ class BasicLayout extends Component {
           <div className="logo" />
           <Menu
             onClick={this.handleClick}
-            selectedKeys={[selectedKeys]}
+            selectedKeys={[path]}
             openKeys={openKeys}
             onOpenChange={this.onOpenChange}
             mode="inline"

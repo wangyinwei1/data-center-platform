@@ -131,7 +131,7 @@ class Edit extends Component {
             },
             {
               pattern: /^((1\d\d|2[0-4]\d|25[0-5]|\d{1,2})\.){3}(1\d\d|2[0-4]\d|25[0-5]|\d{1,2})$/,
-              message: '请写正确的IP!',
+              message: '请填写正确的IP!',
             },
           ]}
         />
@@ -152,7 +152,7 @@ class Edit extends Component {
 
             {
               pattern: /^([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-5]{2}[0-3][0-5])$/,
-              message: '请写正确的端口!',
+              message: '请填写正确的端口!',
             },
           ]}
         />

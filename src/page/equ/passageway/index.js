@@ -318,7 +318,7 @@ class Passageway extends Component {
       formValue.F_StoreMode.value = data.pd.storeMode;
       formValue.F_Threshold.value = data.pd.threshold;
       formValue.F_ShowPrecision.value = data.pd.showPrecision;
-      formValue.F_Unit.value = data.pd.netInTime;
+      formValue.F_Unit.value = data.pd.unit;
       formValue.F_AlarmVoiceDelay.value = data.pd.alarmVoiceDelay;
       formValue.F_ShowOrder.value = data.pd.showOrder;
       formValue.F_Status.value = data.pd.status;

@@ -54,7 +54,10 @@ class Regional extends Component {
     });
   }
   onSelect(value, option) {
-    if (value.indexOf('all') != -1) return;
+    if (value.indexOf('all') != -1) {
+      this.allSelectClick();
+      return;
+    }
     if (!value[0]) {
       this.setState({
         Channels: value.join(','),
@@ -62,11 +65,24 @@ class Regional extends Component {
         allSelected: false,
       });
     } else {
+      const {informationStore} = this.props;
+      const deviceMenu = toJS(informationStore.deviceMenu);
+      const isAll =
+        value.length === deviceMenu.length &&
+        this.isAllSelected(value, deviceMenu);
       this.setState({
         Channels: value.join(','),
+        allSelected: isAll,
         value,
       });
     }
+  }
+  isAllSelected(value, deviceMenu) {
+    let isAll = true;
+    _.map(deviceMenu, item => {
+      if (value.indexOf(item.F_ChannelID) === -1) isAll = false;
+    });
+    return isAll;
   }
   allSelectClick() {
     const selected = this.state.allSelected;
@@ -83,11 +99,7 @@ class Regional extends Component {
         value: result,
       });
     } else {
-      this.setState({
-        allSelected: !this.state.allSelected,
-        Channels: '',
-        value: [],
-      });
+      $(`.${styles['drop_down']} .ant-select-selection__clear`).click();
     }
   }
   handleClick() {
@@ -121,7 +133,6 @@ class Regional extends Component {
     });
     children.unshift(
       <Option
-        onClick={this.allSelectClick}
         className={classnames(this.state.allSelected && styles['all_selected'])}
         key={'all'}>
         全选
@@ -187,7 +198,16 @@ class Regional extends Component {
 
                 return (
                   <ReactEcharts
-                    style={{paddingTop: '20px'}}
+                    style={
+                      deviceData.length <= 1
+                        ? {width: '100%', paddingTop: '20px'}
+                        : {
+                            width: '50%',
+                            paddingTop: '20px',
+                            display: 'inline-block',
+                            verticalAlign: 'top',
+                          }
+                    }
                     key={i.toString(36) + i}
                     option={echartOptions}
                   />

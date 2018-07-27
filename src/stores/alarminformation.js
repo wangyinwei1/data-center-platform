@@ -86,9 +86,11 @@ class Site {
   @action
   async delete(params) {
     const data = await alarminformation_delete(params);
-    if (data.result == 'success') {
+    if (data.Result == 'success') {
       this.getTable(this.tableParmas);
-      message.success('删除成功!');
+      message.success(data.Msg);
+    } else {
+      message.error(data.Msg);
     }
     return data;
   }

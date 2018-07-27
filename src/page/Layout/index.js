@@ -83,9 +83,24 @@ class BasicLayout extends Component {
     //路由
     const {layoutStore, location} = this.props;
     const menu = toJS(layoutStore.menu);
-    const path = newPath || location.pathname.replace('/', '');
+    let path = newPath || location.pathname.replace('/', '');
     let title = '';
     let openKeys = null;
+    //特殊处理
+    switch (path) {
+      case 'fsu-historyalarm':
+        path = 'equ-historyalarm';
+        break;
+      case 'fsu-devicemanagement':
+        path = 'equ-information';
+        break;
+      case 'fsu-controlrecord':
+        path = 'equ-controlrecord';
+        break;
+      case 'fsu-realtimealarm':
+        path = 'equ-realtimealarm';
+        break;
+    }
     _.map(menu, item => {
       if (item.subMenu[0]) {
         const second = item.subMenu;
@@ -197,6 +212,7 @@ class BasicLayout extends Component {
       ['fsu-historyalarm', 'equ-historyalarm'],
       ['fsu-controlrecord', 'equ-controlrecord'],
     ];
+
     let currentLink = [];
     _.map(exclusionPath, item => {
       if (item.indexOf(path) != -1) {
@@ -224,20 +240,20 @@ class BasicLayout extends Component {
                 {this.props.children}
                 {currentLink[0] && (
                   <div className={styles['subNav']}>
-                    <a
-                      href={`/#/${currentLink[1]}`}
+                    <Link
+                      to={`/${currentLink[1]}`}
                       className={classnames(
                         currentLink[1] === path && styles['active'],
                       )}>
                       基础设备
-                    </a>
-                    <a
-                      href={`/#/${currentLink[0]}`}
+                    </Link>
+                    <Link
+                      to={`/${currentLink[0]}`}
                       className={classnames(
                         currentLink[0] === path && styles['active'],
                       )}>
                       FSU设备
-                    </a>
+                    </Link>
                   </div>
                 )}
               </div>

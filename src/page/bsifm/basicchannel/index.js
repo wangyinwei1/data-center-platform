@@ -13,6 +13,7 @@ import {cascader} from '../common';
 import EditModal from '../../../components/EditModal';
 import EditContent from './editContent.js';
 import ValueTypeContent from './valueTypeTable.js';
+import DeleteModal from '../regional/delete.js';
 import AlarmContent from './alarmTable.js';
 import VirtualContent from './virtualContent.js';
 import {formParams, virtualParams} from './tplJson.js';
@@ -46,6 +47,8 @@ class Regional extends Component {
     this.onVirtualCancel = this.onVirtualCancel.bind(this);
     this.onVirtualOk = this.onVirtualOk.bind(this);
     this.virtualFormChange = this.virtualFormChange.bind(this);
+    this.onDeleteOk = this.onDeleteOk.bind(this);
+    this.onDeleteCancel = this.onDeleteCancel.bind(this);
     this.state = {
       cascaderLoading: false,
       cascaderText: '',
@@ -60,7 +63,31 @@ class Regional extends Component {
       currentChannelID: '',
       F_DeviceType: '',
       F_Version: '',
+      deleteShow: false,
     };
+  }
+  //删除回调
+  onDeleteOk() {
+    const item = this.state.singleLineData;
+    const {basicchannelStore} = this.props;
+    const params = {
+      F_ID: item.F_ID,
+    };
+
+    basicchannelStore.delete(params).then(() => {
+      this.setState({
+        deleteShow: false,
+      });
+    });
+  }
+  onDeleteCancel() {
+    this.c_onDeleteCancel();
+  }
+  deleteClick(item, e) {
+    this.setState({
+      deleteShow: true,
+      singleLineData: item,
+    });
   }
   //级联组件方法
   loadData(selectedOptions, index, callback) {
@@ -110,7 +137,13 @@ class Regional extends Component {
     basicchannelStore.search(params);
   }
   add() {
-    const {basicchannelStore: {initAdd}} = this.props;
+    const {
+      basicchannelStore: {initAdd, tableParmas, getVirtualList},
+    } = this.props;
+    getVirtualList({
+      F_TypeID: tableParmas.F_TypeID,
+      F_Version: tableParmas.F_Version,
+    });
     initAdd().then(() => {
       this.setState({
         editShow: true,
@@ -267,10 +300,18 @@ class Regional extends Component {
       });
     } else {
       const {
-        basicchannelStore: {virtualSave, channelList, getVirtualList},
+        basicchannelStore: {
+          virtualSave,
+          channelList,
+          getVirtualList,
+          tableParmas,
+        },
       } = this.props;
       const item = this.state.singleLineData;
-      const params = {Id_Version: `${item.F_DeviceType}_${item.F_Version}`};
+      const params =
+        this.state.type === 'new'
+          ? {Id_Version: `${tableParmas.F_TypeID}_${tableParmas.F_Version}`}
+          : {Id_Version: `${item.F_DeviceType}_${item.F_Version}`};
       // this.state.type === 'modify' &&
       //   (params.F_Fid = this.state.singleLineData.fid);
       _.forIn(fields, (value, key) => {
@@ -289,8 +330,12 @@ class Regional extends Component {
 
       virtualSave(params).then(data => {
         getVirtualList({
-          F_TypeID: item.F_DeviceType,
-          F_Version: item.F_Version,
+          F_TypeID:
+            this.state.type === 'new'
+              ? tableParmas.F_TypeID
+              : item.F_DeviceType,
+          F_Version:
+            this.state.type === 'new' ? tableParmas.F_Version : item.F_Version,
         });
         this.clearState(data);
       });
@@ -329,14 +374,6 @@ class Regional extends Component {
     });
     this.alarmClick(item, 'detail');
   }
-  deleteClick(item) {
-    const {basicchannelStore} = this.props;
-    const params = {
-      F_ID: item.F_ID,
-    };
-
-    basicchannelStore.delete(params);
-  }
   alarmClick(item, detail) {
     const {basicchannelStore: {getAlarmTable}} = this.props;
     const params = {
@@ -364,7 +401,7 @@ class Regional extends Component {
   onExportClick() {
     const {basicchannelStore: {tableParmas}} = this.props;
     location.href =
-      'collect/device_basechannel/toExcel.do?F_DeviceType=' +
+      '/collect/device_basechannel/toExcel.do?F_DeviceType=' +
       tableParmas.F_TypeID +
       '&F_Version=' +
       tableParmas.F_Version;
@@ -465,11 +502,20 @@ class Regional extends Component {
 
       const params = {
         ...F_ID,
+        F_DeviceType:
+          this.state.type !== 'new'
+            ? this.state.singleLineData.F_DeviceType
+            : tableParmas.F_TypeID,
+        F_Version:
+          this.state.type !== 'new'
+            ? this.state.singleLineData.F_Version
+            : tableParmas.F_Version,
       };
       _.forIn(fields, (value, key) => {
-        key == 'F_ChannelName'
-          ? (params[key] = encodeURIComponent(value.value))
-          : (params[key] = value.value);
+        // key == 'F_ChannelName'
+        //   ? (params[key] = encodeURIComponent(value.value))
+        //   : (params[key] = value.value);
+        params[key] = value.value;
       });
       this.state.type == 'modify'
         ? edit(params).then(() => {
@@ -630,6 +676,11 @@ class Regional extends Component {
             fields={this.state.virtualFields}
           />
         </EditModal>
+        <DeleteModal
+          isShow={this.state.deleteShow}
+          onOk={this.onDeleteOk}
+          onCancel={this.onDeleteCancel}
+        />
         <EditModal
           width={850}
           buttons={this.state.type == 'detail' ? false : true}

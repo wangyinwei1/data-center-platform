@@ -262,6 +262,22 @@ class Information extends Component {
   initFromValue(data, mode) {
     this.setState(({fields}) => {
       let formValue = _.cloneDeep([fields])[0];
+      if (data.pd.connectType === 1) {
+        formValue.F_IP.require = false;
+        formValue.F_Port.require = false;
+      } else {
+        formValue.F_IP.require = true;
+        formValue.F_Port.require = true;
+      }
+      if (data.pd.isConcentrator === 1) {
+        formValue.Id_Version.require = false;
+        formValue.F_Port.require = false;
+        formValue.F_ConnectType.require = false;
+      } else {
+        formValue.Id_Version.require = true;
+        formValue.F_Port.require = true;
+        formValue.F_ConnectType.require = true;
+      }
       formValue.F_BelongUnitID.value = data.pd.belongUnitID;
       formValue.F_CollectSpan.value = data.pd.collectSpan;
       formValue.Id_Version.value =
@@ -508,9 +524,9 @@ class Information extends Component {
     let portReg = /^([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-5]{2}[0-3][0-5])$/;
     let ipReg = /^((1\d\d|2[0-4]\d|25[0-5]|\d{1,2})\.){3}(1\d\d|2[0-4]\d|25[0-5]|\d{1,2})$/;
     _.forIn(fields, (v, k) => {
-      if (k === 'F_Port' && !portReg.test(v.value)) {
+      if (k === 'F_Port' && v.require && !portReg.test(v.value)) {
         showError[k] = {showError: true, ...v};
-      } else if (k === 'F_IP' && !ipReg.test(v.value)) {
+      } else if (k === 'F_IP' && v.require && !ipReg.test(v.value)) {
         showError[k] = {showError: true, ...v};
       } else {
         if (!v.value && v.value !== 0 && v.require) {
@@ -539,7 +555,11 @@ class Information extends Component {
         F_NetInMode: 0,
       };
       _.forIn(fields, (value, key) => {
-        params[key] = value.value;
+        if (key === 'F_IP' && fields['F_IsConcentrator'].value === 1) {
+          params['F_ConcentratorIP'] = value.value;
+        } else {
+          params[key] = value.value;
+        }
       });
       this.state.type !== 'new' &&
         (params['F_DeviceID'] = F_DeviceID.F_DeviceID);
@@ -740,23 +760,41 @@ class Information extends Component {
   handleFormChange(changedFields) {
     //showError让自己校验字段
     const key = _.keys(changedFields);
+    const fields = this.state.fields;
     const obj = {};
     if (key[0] === 'F_ConnectType') {
+      if (changedFields[key].value === 1 && this.state.type === 'new') {
+        obj['F_Port'] = {...fields['F_Port'], value: ''};
+        obj['F_IP'] = {...fields['F_Port'], value: ''};
+      }
       if (changedFields[key].value === 1) {
-        obj['F_Port'] = {value: ''};
-        obj['F_IP'] = {value: ''};
+        obj['F_Port'] = {...fields['F_Port'], require: false};
+        obj['F_IP'] = {...fields['F_IP'], require: false};
+      } else {
+        obj['F_Port'] = {...fields['F_Port'], require: true};
+        obj['F_IP'] = {...fields['F_IP'], require: true};
       }
     }
     if (key[0] === 'F_IsConcentrator') {
       if (changedFields[key].value === 1) {
-        obj['F_ConnectType'] = {value: undefined};
-        obj['F_Port'] = {value: ''};
-        obj['Id_Version'] = {value: undefined};
+        obj['F_ConnectType'] = {
+          ...fields['F_ConnectType'],
+          value: undefined,
+          require: false,
+        };
+        obj['F_Port'] = {...fields['F_Port'], value: '', require: false};
+        obj['F_IP'] = {...fields['F_IP'], require: true};
+        obj['Id_Version'] = {
+          ...fields['Id_Version'],
+          value: undefined,
+          require: false,
+        };
       } else {
-        obj['F_ConnectType'] = {value: 0};
+        obj['F_ConnectType'] = {...fields['F_ConnectType'], value: 0};
       }
     }
     obj[key] = {showError: false, ...changedFields[key]};
+    console.log(obj);
     this.setState(({fields}) => {
       return {
         fields: {...fields, ...obj},

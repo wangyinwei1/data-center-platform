@@ -88,7 +88,7 @@ class Site extends Component {
     const {alarminformationStore} = this.props;
     const item = this.state.singleLineData;
     const params = {
-      USER_ID: item.F_UserID,
+      msgID: item.msgID,
     };
     this.c_onDeleteOk(alarminformationStore, params);
   }
