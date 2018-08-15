@@ -2,19 +2,6 @@
   .table_wrap {
     .table_wrap {
       :global {
-        // .ant-table-tbody > tr > td {
-        //   border-color: #e4e4e4;
-        //   text-align: center;
-        //   padding: 12px;
-        //   background-color: #fff;
-        // }
-        // .ant-table-thead > tr > th {
-        //   border-color: #e4e4e4;
-        //   font-size: 14px;
-        //   padding: 14px;
-        //   background-color: #fafafa;
-        //   text-align: center;
-        // }
         .ant-table {
           border: none;
         }
@@ -99,14 +86,91 @@
         .ant-table-expanded-row > td:last-child {
           padding: 0 50px 0 50px;
         }
-        // .components-table-demo-nested .ant-table-expanded-row > td:last-child {
-        //   padding: 0 48px 0 8px;
-        // }
-        // .ant-table-tbody > tr {
-        //   &:nth-child(2n) {
-        //     background-color: #f6f6f6;
-        //   }
-        // }
+      }
+    }
+  }
+  .table_darker {
+    :global {
+      .ant-pagination {
+        .ant-pagination-total-text {
+          color: #fff;
+        }
+      }
+      .ant-pagination-options-quick-jumper {
+        color: #fff;
+      }
+      .ant-pagination-prev .ant-pagination-item-link,
+      .ant-pagination-next .ant-pagination-item-link {
+        background-color: #4c596f;
+        border: 1px solid #4c596f;
+        color: #213544;
+      }
+      .ant-pagination-disabled .ant-pagination-item-link:hover,
+      .ant-pagination-disabled .ant-pagination-item-link:hover {
+        background-color: #4c596f;
+        border: 1px solid #4c596f;
+        color: #213544;
+        &:hover {
+          border: 1px solid #4c596f;
+        }
+      }
+      .ant-pagination-options-quick-jumper input {
+        background-color: #4c596f;
+        border: 1px solid #4c596f;
+        color: #213544;
+      }
+      .ant-select-selection {
+        background-color: #4c596f;
+        border: 1px solid #4c596f;
+        color: #fff;
+        &:hover {
+          border: 1px solid #4c596f;
+        }
+      }
+      .ant-select-arrow {
+        color: #fff;
+      }
+      .ant-pagination-next:hover .ant-pagination-item-link,
+      .ant-pagination-prev:hover .ant-pagination-item-link {
+        background-color: #4c596f;
+        border: 1px solid #4c596f;
+        color: #213544;
+      }
+      .ant-pagination-item {
+        border-color: #4c596f;
+        a {
+          color: #fff;
+        }
+      }
+      .ant-pagination-jump-next:after,
+      .ant-pagination-jump-prev:after {
+        color: #fff;
+      }
+      .ant-table {
+        border: 1px solid #4c596f;
+        border-bottom: none;
+        .ant-table-placeholder {
+          border-color: #4c596f;
+          background-color: rgba(0, 0, 0, 0.05);
+          color: #fff;
+        }
+        .ant-table-tbody > tr {
+          &:hover {
+            & > td {
+              background-color: rgba(0, 0, 0, 0.05);
+            }
+          }
+        }
+        .ant-table-tbody > tr > td {
+          background-color: rgba(0, 0, 0, 0.05);
+          border-color: #4c596f;
+          color: #fff;
+        }
+        .ant-table-thead > tr > th {
+          border-color: #4c596f;
+          background-color: #283144;
+          color: #fff;
+        }
       }
     }
   }

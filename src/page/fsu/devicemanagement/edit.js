@@ -49,13 +49,16 @@ class Edit extends Component {
         mode == 'detail' && (disabled = true);
         break;
     }
+    console.log(data);
 
+    console.log(toJS(data.dev_belongunit));
     const devBelongunit = _.map(toJS(data.dev_belongunit), item => {
       return {
         value: item.F_ID,
         name: item.F_Name,
       };
     });
+    console.log(devBelongunit);
     return (
       <Form layout="inline" className={styles['edit_wrap']}>
         <FormInput

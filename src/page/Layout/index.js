@@ -26,7 +26,7 @@ class BasicLayout extends Component {
       openKeys: [],
     };
   }
-  monitorWindowWidth(globalStore) {
+  monitorWindowWidth(globalStore, collapsed) {
     clearTimeout(this.timer);
     this.timer = setTimeout(() => {
       if ($(window).width() < 1280) {
@@ -34,7 +34,7 @@ class BasicLayout extends Component {
         globalStore.changeCollapsed(true);
       } else {
         this.setOrGetOpenKeys();
-        globalStore.changeCollapsed(false);
+        globalStore.changeCollapsed(collapsed);
       }
     }, 100);
   }
@@ -42,14 +42,19 @@ class BasicLayout extends Component {
     $(window).off('resize.panel');
   }
   componentDidMount() {
-    const {globalStore, layoutStore} = this.props;
+    const {globalStore, layoutStore, location} = this.props;
+    const path = location.pathname.replace('/', '');
+    let collapsed = false;
+    if (path === 'shouye') {
+      collapsed = true;
+    }
     //获取菜单接口
     layoutStore.getMenu().then(() => {
       this.setOrGetOpenKeys();
       //监听窗口变化影响导航是否收缩
-      this.monitorWindowWidth(globalStore);
+      this.monitorWindowWidth(globalStore, collapsed);
       $(window).on('resize.leftnav', () => {
-        this.monitorWindowWidth(globalStore);
+        this.monitorWindowWidth(globalStore, collapsed);
       });
     });
     // if ('WebSocket' in window) {
@@ -221,7 +226,7 @@ class BasicLayout extends Component {
     });
 
     return (
-      <div className={styles['layout_wrap']}>
+      <div className={styles['layout_wrap']} id={'layout_wrap'}>
         <TopNav title={title} username={username} router={router} />
         <Layout>
           <LeftNav
@@ -236,7 +241,11 @@ class BasicLayout extends Component {
           />
           <Layout className={styles['layout_content']}>
             <Content style={{height: '100%'}}>
-              <div className={styles['content']}>
+              <div
+                className={classnames(
+                  styles['content'],
+                  path === 'shouye' && styles['no_padding'],
+                )}>
                 {this.props.children}
                 {currentLink[0] && (
                   <div className={styles['subNav']}>

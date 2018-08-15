@@ -130,8 +130,12 @@ class Information extends Component {
     };
     const {fsu_devicemanagementStore} = this.props;
     fsu_devicemanagementStore.getTable(params);
+    this.clearSelected();
+  }
+  clearSelected() {
     this.setState({
       batchIds: '',
+      sunBatchIds: '',
     });
   }
   componentDidMount() {
@@ -148,6 +152,7 @@ class Information extends Component {
     const params = {
       keywords: '',
       page: 1,
+      number: 10,
       F_Suid: item.suID,
     };
     fsu_devicemanagementStore.getRealtimeTable(params);
@@ -439,7 +444,6 @@ class Information extends Component {
   onEditOk() {
     const fields = this.state.fields;
     let showError = {};
-    console.log(111);
 
     //循环找到必填字段是否是空并作出警告
     let portReg = /^([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-5]{2}[0-3][0-5])$/;
@@ -501,9 +505,10 @@ class Information extends Component {
     const {fsu_devicemanagementStore} = this.props;
     const params = {
       ...fsu_devicemanagementStore.tableParmas,
-      keywords: value,
+      keywords: encodeURIComponent(value),
     };
     fsu_devicemanagementStore.search(params);
+    this.clearSelected();
   }
   //table分页
   onShowSizeChange(current, pageSize) {
@@ -515,10 +520,12 @@ class Information extends Component {
       number: pageSize,
     };
     fsu_devicemanagementStore.getTable(params);
+    this.clearSelected();
   }
   onPageChange(pageNumber) {
     const {fsu_devicemanagementStore} = this.props;
     this.c_onPageChange({pageNumber}, fsu_devicemanagementStore);
+    this.clearSelected();
   }
   //孙集回调
   realtimeChange() {
@@ -635,6 +642,7 @@ class Information extends Component {
         addChildShow={this.addChildShow}
         childDetailClick={this.childDetailClick}
         childEditClick={this.childEditClick}
+        childDeleteClick={this.childDeleteClick}
         sunEditChange={this.sunEditChange}
         sunDeleteChange={this.sunDeleteChange}
         sunDetailChange={this.sunDetailChange}
@@ -790,13 +798,25 @@ class Information extends Component {
 
         break;
     }
-    // rowSelection objects indicates the need for row selection
+    //自定义值
+    const batchIds = this.state.batchIds;
+    const selectedRowKeys = batchIds ? batchIds.split(',') : [];
     const rowSelection = {
-      onChange: (selectedRowKeys, selectedRows) => {
-        this.setState({
-          batchIds: selectedRowKeys.join(','),
-        });
+      onSelectAll: (selected, selectedRows, changeRows) => {
+        if (selected) {
+          const suIDs = selectedRows.map(item => {
+            return item.suID;
+          });
+          this.setState({
+            batchIds: suIDs.join(','),
+          });
+        } else {
+          this.setState({
+            batchIds: '',
+          });
+        }
       },
+      selectedRowKeys,
       onSelect: (record, selected, selectedRows) => {
         if (selected) {
           const batchIds = this.state.batchIds;

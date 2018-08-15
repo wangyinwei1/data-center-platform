@@ -73,7 +73,7 @@ class Passageway extends Component {
     const {realtimealarmStore} = this.props;
     const params = {
       ...realtimealarmStore.tableParmas,
-      keywords: value,
+      keywords: encodeURIComponent(value),
     };
     realtimealarmStore.search(params);
   }

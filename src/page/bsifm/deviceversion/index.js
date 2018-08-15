@@ -187,7 +187,7 @@ class Site extends Component {
     const {deviceversionStore} = this.props;
     const params = {
       ...deviceversionStore.tableParmas,
-      keywords: value,
+      keywords: encodeURIComponent(value),
     };
     deviceversionStore.search(params);
   }

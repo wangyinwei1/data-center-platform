@@ -39,6 +39,7 @@ class Regional extends Component {
     this.onKeyPress = this.onKeyPress.bind(this);
     this.onSearch = this.onSearch.bind(this);
     this.handleFormChange = this.handleFormChange.bind(this);
+    this.getAreaSonList = this.getAreaSonList.bind(this);
 
     this.state = {
       cascaderLoading: false,
@@ -219,56 +220,56 @@ class Regional extends Component {
     const {siteStore} = this.props;
     const params = {
       ...siteStore.tableParmas,
-      keywords: value,
+      keywords: encodeURIComponent(value),
     };
     siteStore.search(params);
   }
-  handleFormChange(changedFields) {
+  getAreaSonList(changedFields) {
     const {siteStore: {getAreaSonList}} = this.props;
     const key = _.keys(changedFields);
-    (key[0] === 'province' || key[0] === 'city' || key[0] === 'county') &&
-      getAreaSonList({F_ParentAreaID: changedFields[key[0]].value}).then(
-        data => {
-          switch (key[0]) {
-            case 'province':
-              this.setState(({fields}) => {
-                return {
-                  fields: {
-                    ...fields,
-                    ...clearCity.fields,
-                  },
-                  cityList: data,
-                  countyList: [],
-                  regionList: [],
-                };
-              });
-              break;
-            case 'city':
-              this.setState(({fields}) => {
-                return {
-                  fields: {
-                    ...fields,
-                    ...clearCounty.fields,
-                  },
-                  countyList: data,
-                  regionList: [],
-                };
-              });
-              break;
-            case 'county':
-              this.setState(({fields}) => {
-                return {
-                  fields: {
-                    ...fields,
-                    ...clearRegion.fields,
-                  },
-                  regionList: data,
-                };
-              });
-              break;
-          }
-        },
-      );
+    getAreaSonList({F_ParentAreaID: changedFields[key[0]]}).then(data => {
+      switch (key[0]) {
+        case 'province':
+          this.setState(({fields}) => {
+            return {
+              fields: {
+                ...fields,
+                ...clearCity.fields,
+              },
+              cityList: data,
+              countyList: [],
+              regionList: [],
+            };
+          });
+          break;
+        case 'city':
+          this.setState(({fields}) => {
+            return {
+              fields: {
+                ...fields,
+                ...clearCounty.fields,
+              },
+              countyList: data,
+              regionList: [],
+            };
+          });
+          break;
+        case 'county':
+          this.setState(({fields}) => {
+            return {
+              fields: {
+                ...fields,
+                ...clearRegion.fields,
+              },
+              regionList: data,
+            };
+          });
+          break;
+      }
+    });
+  }
+  handleFormChange(changedFields) {
+    const key = _.keys(changedFields);
     //showError让自己校验字段
     const obj = {};
     obj[key] = {showError: false, ...changedFields[key]};
@@ -339,6 +340,7 @@ class Regional extends Component {
             regionMenu={this.state.regionList}
             cityMenu={this.state.cityList}
             countyMenu={this.state.countyList}
+            getAreaSonList={this.getAreaSonList}
           />
         </EditModal>
       </div>

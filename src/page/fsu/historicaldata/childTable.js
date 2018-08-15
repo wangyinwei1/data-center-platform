@@ -39,7 +39,7 @@ class Regional extends Component {
     const {fsu_historicaldataStore} = this.props;
     const params = {
       ...fsu_historicaldataStore.c_tableParmas,
-      keywords: value,
+      keywords: encodeURIComponent(value),
     };
     fsu_historicaldataStore.childSearch(params);
   }

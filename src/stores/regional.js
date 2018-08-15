@@ -93,6 +93,18 @@ class Regional {
   }
 
   @action
+  async search(params) {
+    this.loading = true;
+    const data = await getTable(params);
+    this.loading = false;
+    this.tableParmas = params;
+    this.tableData = data;
+    this.currentCode = params.ztreeChild;
+    this.matchArea(params.ztreeChild).then(data => {
+      this.belongRegion = data;
+    });
+  }
+  @action
   async getTable(params) {
     this.loading = true;
     const data = await getTable(params);

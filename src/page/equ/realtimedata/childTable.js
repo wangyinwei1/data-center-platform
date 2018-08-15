@@ -41,7 +41,7 @@ class Regional extends Component {
     const {realtimedataStore} = this.props;
     const params = {
       ...realtimedataStore.c_tableParmas,
-      keywords: value,
+      keywords: encodeURIComponent(value),
     };
     realtimedataStore.childSearch(params);
   }

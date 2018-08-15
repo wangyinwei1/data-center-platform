@@ -157,7 +157,7 @@ class Site extends Component {
     const {agreementStore} = this.props;
     const params = {
       ...agreementStore.tableParmas,
-      keywords: value,
+      keywords: encodeURIComponent(value),
     };
     agreementStore.search(params);
   }

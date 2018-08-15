@@ -46,7 +46,8 @@ const FormSelect = Form.create({
     return mapPropsToFields(props);
   },
   onValuesChange(_, values) {
-    console.log((_, values));
+    console.log(_, values);
+    _.getAreaSonList && _.getAreaSonList(values);
   },
 })(props => {
   const {getFieldDecorator} = props.form;

@@ -206,7 +206,7 @@ class Site extends Component {
     const {vchannelStore} = this.props;
     const params = {
       ...vchannelStore.tableParmas,
-      keywords: value,
+      keywords: encodeURIComponent(value),
     };
     vchannelStore.search(params);
   }

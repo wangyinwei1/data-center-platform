@@ -169,7 +169,7 @@ class Site extends Component {
     const {alarminformationStore} = this.props;
     const params = {
       ...alarminformationStore.tableParmas,
-      keywords: value,
+      keywords: encodeURIComponent(value),
     };
     alarminformationStore.search(params);
   }

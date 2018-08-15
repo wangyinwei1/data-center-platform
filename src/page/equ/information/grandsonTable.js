@@ -141,7 +141,7 @@ class Regional extends Component {
           const batchIds = this.state.batchIds;
           let subDeviceIDs = batchIds.split(',');
           const filterSuIDs = subDeviceIDs.filter(item => {
-            return item !== record.subDeviceID;
+            return (isNaN(item) ? item : parseInt(item)) !== record.subDeviceID;
           });
           this.setState({
             batchIds: filterSuIDs.join(','),

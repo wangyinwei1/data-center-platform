@@ -43,7 +43,7 @@ class Regional extends Component {
     const {historicaldataStore} = this.props;
     const params = {
       ...historicaldataStore.c_tableParmas,
-      keywords: value,
+      keywords: encodeURIComponent(value),
     };
     historicaldataStore.childSearch(params);
   }

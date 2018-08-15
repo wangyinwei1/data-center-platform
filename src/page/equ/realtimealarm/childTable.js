@@ -42,7 +42,7 @@ class Regional extends Component {
     const {realtimealarmStore} = this.props;
     const params = {
       ...realtimealarmStore.c_tableParmas,
-      keywords: value,
+      keywords: encodeURIComponent(value),
     };
     realtimealarmStore.childSearch(params);
   }

@@ -142,10 +142,7 @@ class Information extends Component {
     };
     const {informationStore} = this.props;
     informationStore.getTable(params);
-    this.setState({
-      batchIds: '',
-      sunBatchField: '',
-    });
+    this.clearSelected();
   }
   componentDidMount() {
     const {informationStore} = this.props;
@@ -583,10 +580,11 @@ class Information extends Component {
     const {informationStore} = this.props;
     const params = {
       ...informationStore.tableParmas,
-      keywords: value,
+      keywords: encodeURIComponent(value),
     };
     informationStore.search(params);
     this.setState({expandedRows: []});
+    this.clearSelected();
   }
   //table分页
   onShowSizeChange(current, pageSize) {
@@ -598,10 +596,18 @@ class Information extends Component {
       number: pageSize,
     };
     informationStore.getTable(params);
+    this.clearSelected();
+  }
+  clearSelected() {
+    this.setState({
+      batchIds: '',
+      sunBatchIds: '',
+    });
   }
   onPageChange(pageNumber) {
     const {informationStore} = this.props;
     this.c_onPageChange({pageNumber}, informationStore);
+    this.clearSelected();
   }
   //孙集回调
   realtimeChange() {
@@ -794,7 +800,6 @@ class Information extends Component {
       }
     }
     obj[key] = {showError: false, ...changedFields[key]};
-    console.log(obj);
     this.setState(({fields}) => {
       return {
         fields: {...fields, ...obj},
@@ -896,21 +901,28 @@ class Information extends Component {
   }
   onBatchOk() {
     const {informationStore: {fsuDevsEnabledOnOff, fsuDelectAll}} = this.props;
+    const batchIds = this.state.batchIds;
     switch (this.state.batchField) {
       case 'delete':
         fsuDelectAll({
-          deviceID: this.state.batchIds + ',' + this.state.sunBatchField,
+          deviceID: batchIds
+            ? batchIds + ',' + this.state.sunBatchField
+            : this.state.sunBatchField,
         });
         break;
       case 'disable':
         fsuDevsEnabledOnOff({
-          strDevs: this.state.batchIds + ',' + this.state.sunBatchField,
+          strDevs: batchIds
+            ? batchIds + ',' + this.state.sunBatchField
+            : this.state.sunBatchField,
           status: 1,
         });
         break;
       case 'enabled':
         fsuDevsEnabledOnOff({
-          strDevs: this.state.batchIds + ',' + this.state.sunBatchField,
+          strDevs: batchIds
+            ? batchIds + ',' + this.state.sunBatchField
+            : this.state.sunBatchField,
           status: 0,
         });
         break;
@@ -965,6 +977,12 @@ class Information extends Component {
 
         break;
     }
+    const batchIds = this.state.batchIds;
+    const selectedRowKeys = batchIds
+      ? batchIds.split(',').map(item => {
+          return parseInt(item);
+        })
+      : [];
     const rowSelection = {
       onSelectAll: (selected, selectedRows, changeRows) => {
         if (selected) {
@@ -983,6 +1001,7 @@ class Information extends Component {
           });
         }
       },
+      selectedRowKeys,
 
       onSelect: (record, selected, selectedRows) => {
         if (selected) {
@@ -999,7 +1018,7 @@ class Information extends Component {
           const batchIds = this.state.batchIds;
           let devIDs = batchIds.split(',');
           const filterDevIDs = devIDs.filter(item => {
-            return item !== record.devID;
+            return (isNaN(item) ? item : parseInt(item)) !== record.devID;
           });
           this.setState({
             batchIds: filterDevIDs.join(','),
@@ -1047,6 +1066,8 @@ class Information extends Component {
                     rowClassName.push('cl_online_state');
                   record.isConcentrator === 0 &&
                     rowClassName.push('cl_hidden_expand_icon');
+                  record.isConcentrator === 1 &&
+                    rowClassName.push('cl_hidden_selcted_icon');
                   return rowClassName.join(' ');
                 }}
                 onRowDoubleClick={this.onRowDoubleClick}

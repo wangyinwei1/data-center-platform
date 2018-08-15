@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {action, observer, inject} from 'mobx-react';
-import {Button, Select, DatePicker} from 'antd';
+import {Button, Select, DatePicker, Upload, message} from 'antd';
 import moment from 'moment';
 import styles from './index.less';
 import Search from '../Search';
@@ -84,6 +84,7 @@ class Regional extends Component {
       showValue,
       deviceStatus,
       closeAdd,
+      theme,
       channelType,
     } = this.props;
     const channelTypeData = [
@@ -111,7 +112,7 @@ class Regional extends Component {
               />
             </div>
           )}
-        {onSearch && <Search onSearch={onSearch} />}
+        {onSearch && <Search onSearch={onSearch} theme={theme} />}
         {deviceStatus && (
           <div className={styles['device_status']}>
             <span>设备状态:</span>

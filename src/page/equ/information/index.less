@@ -24,6 +24,11 @@
     height: calc(~'100% - 97px');
     .table_wrap {
       :global {
+        .cl_hidden_selcted_icon {
+          .ant-checkbox-wrapper {
+            display: none;
+          }
+        }
         .cl_hidden_expand_icon {
           .ant-table-row-expand-icon {
             display: none;
@@ -286,6 +291,10 @@
     & + .ant-table-expanded-row {
       td,
       th {
+        color: #eb0a11;
+      }
+
+      .ant-table-placeholder {
         color: #eb0a11;
       }
     }

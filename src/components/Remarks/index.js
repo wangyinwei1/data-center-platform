@@ -7,8 +7,13 @@ class Remarks extends Component {
     super(props);
   }
   render() {
+    const {theme} = this.props;
     return (
-      <div className={styles['remarks']}>
+      <div
+        className={classnames(
+          styles['remarks'],
+          theme === 'darker' && styles['theme_darker'],
+        )}>
         <i
           className={classnames(
             'icon iconfont icon-beidong',

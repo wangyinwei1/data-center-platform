@@ -485,7 +485,7 @@ export function getFsuSunDevice(params) {
 }
 
 export function getFsuSp(params) {
-  return request.get(base + '/FSU_device/FsuSp_list2.do', {params});
+  return request.get(base + '/FSU_device/FsuSp_controlist.do', {params});
 }
 export function findStation(params) {
   return request.get(base + '/FSU_device/find_station.do', {params});
@@ -527,7 +527,7 @@ export function getFsuSunDeviceTable(params) {
   return request.get(base + '/FSU_device/FsuSunDevice_list2.do', {params});
 }
 export function getFsuSpTable(params) {
-  return request.get(base + '/FSU_device/FsuSp_list2.do', {params});
+  return request.get(base + '/FSU_device/FsuSp_controlist.do', {params});
 }
 export function fsuDeviceControl(params) {
   return request.get(base + '/FSU_device/FsuDeviceControl.do', {params});
@@ -649,4 +649,42 @@ export function fsu_historicaldataChild_search(params) {
 }
 export function fsu_historicaldata_search(params) {
   return request.get(base + '/FSU_device/list2.do', {params});
+}
+//index
+export function queryAlarmList(params) {
+  return request.get(base + '/device_alarm/queryAlarmList.do', {params});
+}
+
+export function queryFSUAlarmList(params) {
+  return request.get(base + '/device_alarm/queryFSUAlarmList.do', {params});
+}
+export function queryAlarmCountList(params) {
+  return request.get(base + '/device_alarm/queryAlarmCountList.do', {params});
+}
+export function getDispatchInfo(params) {
+  return request.get(base + '/onlinemanager/index/dispatch', {params});
+}
+export function getApiInfo(params) {
+  return request.get(base + '/onlinemanager/index/api', {params});
+}
+export function getDataInfo(params) {
+  return request.get(base + '/onlinemanager/index/data', {params});
+}
+export function getFrontInfo(params) {
+  return request.get(base + '/onlinemanager/index/front', {params});
+}
+export function getCountInfo(params) {
+  return request.get(base + '/onlinemanager/countInfo', {params});
+}
+
+export function queryFSUAlarmCountList(params) {
+  return request.get(base + '/device_alarm/queryFSUAlarmCountList.do', {
+    params,
+  });
+}
+export function fsuExecuteOperatio(data) {
+  return request.post(base + '/device_alarm/fsuExecuteOperation.do', data);
+}
+export function executeOperation(data) {
+  return request.post(base + '/device_alarm/executeOperation.do', data);
 }

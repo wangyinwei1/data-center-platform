@@ -25,21 +25,25 @@ class Regional extends Component {
     const {informationStore} = this.props;
 
     const params = {
-      ...informationStore.tableParmas,
+      ...informationStore.r_tableParmas,
       page: current,
       number: pageSize,
     };
-    informationStore.getTable(params);
+    informationStore.getRealtimeTable(params);
   }
   onPageChange(pageNumber) {
     const {informationStore} = this.props;
-    this.c_onPageChange({pageNumber}, informationStore);
+    const params = {
+      ...informationStore.r_tableParmas,
+      page: pageNumber,
+    };
+    informationStore.getRealtimeTable(params);
   }
   onSearch(value) {
     const {informationStore} = this.props;
     const params = {
       ...informationStore.r_tableParmas,
-      keywords: value,
+      keywords: encodeURIComponent(value),
     };
     informationStore.realtimeSearch(params);
   }
@@ -72,6 +76,7 @@ class Regional extends Component {
           pageSize={pagination.number}
           total={pagination.count}
           columns={columns}
+          useDefaultRowKey={true}
           onShowSizeChange={this.onShowSizeChange}
           onChange={this.onPageChange}
           data={data}

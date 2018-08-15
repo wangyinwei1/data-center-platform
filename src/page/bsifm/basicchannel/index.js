@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {action, observer, inject} from 'mobx-react';
 import {toJS} from 'mobx';
-import {message} from 'antd';
+import {message, Upload} from 'antd';
 import Cascader from '../../../components/Cascader';
 import styles from './index.less';
 import Cookies from 'js-cookie';
@@ -13,7 +13,7 @@ import {cascader} from '../common';
 import EditModal from '../../../components/EditModal';
 import EditContent from './editContent.js';
 import ValueTypeContent from './valueTypeTable.js';
-import DeleteModal from '../regional/delete.js';
+import DeleteModal from '../../../components/DeleteModal';
 import AlarmContent from './alarmTable.js';
 import VirtualContent from './virtualContent.js';
 import {formParams, virtualParams} from './tplJson.js';
@@ -49,6 +49,8 @@ class Regional extends Component {
     this.virtualFormChange = this.virtualFormChange.bind(this);
     this.onDeleteOk = this.onDeleteOk.bind(this);
     this.onDeleteCancel = this.onDeleteCancel.bind(this);
+    this.onImportOk = this.onImportOk.bind(this);
+    this.onImportCancel = this.onImportCancel.bind(this);
     this.state = {
       cascaderLoading: false,
       cascaderText: '',
@@ -62,6 +64,7 @@ class Regional extends Component {
       singleLineData: {},
       currentChannelID: '',
       F_DeviceType: '',
+      importShow: false,
       F_Version: '',
       deleteShow: false,
     };
@@ -78,6 +81,17 @@ class Regional extends Component {
       this.setState({
         deleteShow: false,
       });
+    });
+  }
+  async onImportOk() {
+    await this.setState({
+      importShow: false,
+    });
+    await $(this.upload).click();
+  }
+  onImportCancel() {
+    this.setState({
+      importShow: false,
     });
   }
   onDeleteCancel() {
@@ -132,7 +146,7 @@ class Regional extends Component {
     const {basicchannelStore} = this.props;
     const params = {
       ...basicchannelStore.tableParmas,
-      keywords: value,
+      keywords: encodeURIComponent(value),
     };
     basicchannelStore.search(params);
   }
@@ -406,7 +420,11 @@ class Regional extends Component {
       '&F_Version=' +
       tableParmas.F_Version;
   }
-  onImportClick() {}
+  onImportClick() {
+    this.setState({
+      importShow: true,
+    });
+  }
   onExportTplClick() {
     location.href = '/collect/device_basechannel/downExcel.do';
   }
@@ -617,6 +635,29 @@ class Regional extends Component {
         title = '通道修改';
         break;
     }
+    const props = {
+      name: 'file',
+      action: '/collect/device_basechannel/readExcel.do',
+      headers: {
+        authorization: 'authorization-text',
+      },
+      data: {
+        F_TypeID: basicchannelStore.tableParmas.F_TypeID,
+        F_Version: basicchannelStore.tableParmas.F_Version,
+      },
+      showUploadList: false,
+      onChange(info) {
+        if (info.file.status !== 'uploading') {
+          console.log(info.file, info.fileList);
+        }
+        if (info.file.status === 'done') {
+          message.success(`${info.file.name} 导入成功！`);
+          basicchannelStore.getTable(basicchannelStore.tableParmas);
+        } else if (info.file.status === 'error') {
+          message.error(`${info.file.name} 导入失败！`);
+        }
+      },
+    };
     return (
       <div className={styles['information_wrap']}>
         {/* <Cascader */}
@@ -681,6 +722,14 @@ class Regional extends Component {
           onOk={this.onDeleteOk}
           onCancel={this.onDeleteCancel}
         />
+        <DeleteModal
+          isShow={this.state.importShow}
+          hintContent={
+            '导入基础通道会删除当前设备类型下原有通道信息, 是否继续?'
+          }
+          onOk={this.onImportOk}
+          onCancel={this.onImportCancel}
+        />
         <EditModal
           width={850}
           buttons={this.state.type == 'detail' ? false : true}
@@ -697,6 +746,14 @@ class Regional extends Component {
             handleFormChange={this.handleFormChange}
           />
         </EditModal>
+        <Upload {...props}>
+          <span
+            style={{display: 'none'}}
+            ref={c => {
+              this.upload = c;
+            }}
+          />
+        </Upload>
       </div>
     );
   }

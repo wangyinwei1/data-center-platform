@@ -16,9 +16,17 @@ class Regional extends Component {
     };
   }
   monitorWindowWidth(globalStore) {
+    const path = window.location.href;
+    console.log(path);
+    console.log(path.indexOf('/shouye'));
+
     clearTimeout(this.panelTimer);
     this.panelTimer = setTimeout(() => {
       if ($(window).width() < 1280) {
+        this.setState({
+          widthClassName: 'panel_active_1280',
+        });
+      } else if (path.indexOf('/shouye') != -1) {
         this.setState({
           widthClassName: 'panel_active_1280',
         });
@@ -55,13 +63,18 @@ class Regional extends Component {
     // $(document).off('click.panel');
   }
   render() {
-    const {isShow, title = '', onCancel, left} = this.props;
+    const {isShow, title = '', theme, onCancel, left} = this.props;
 
     return (
       <div>
         {isShow && (
           <div
-            className={styles['cl_mask']}
+            className={classnames(
+              styles['cl_mask'],
+              theme === 'darker'
+                ? styles['theme_darker']
+                : styles['theme_white'],
+            )}
             onClick={e => {
               e.stopPropagation();
               e.nativeEvent.stopImmediatePropagation();
@@ -100,7 +113,7 @@ class Regional extends Component {
               <i className={classnames('icon iconfont icon-guanbi')} />
             </div>
             <div
-              style={{padding: '12px'}}
+              style={{padding: '12px', fontSize: '14px'}}
               ref={c => {
                 this.content = c;
               }}>

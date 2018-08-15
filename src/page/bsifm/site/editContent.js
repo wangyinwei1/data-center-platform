@@ -27,6 +27,7 @@ class Regional extends Component {
       siteStore: {editData, addLists, belongRegion},
       regionMenu,
       cityMenu,
+      getAreaSonList,
       countyMenu,
       fields,
       mode,
@@ -126,6 +127,7 @@ class Regional extends Component {
             onChange={this.handleFormChange}
             label={'区域ID'}
             disabled={provinceDisable}
+            getAreaSonList={getAreaSonList}
             name={'province'}
             rules={[{required: true, message: '请必须填写!'}]}
             className={currentClass}
@@ -138,6 +140,7 @@ class Regional extends Component {
             onChange={this.handleFormChange}
             label={''}
             disabled={cityDisable ? true : cityList[0] ? false : true}
+            getAreaSonList={getAreaSonList}
             name={'city'}
             className={currentClass}
             rules={[{required: true, message: '请必须填写!'}]}
@@ -150,6 +153,7 @@ class Regional extends Component {
             onChange={this.handleFormChange}
             label={''}
             disabled={areaDisable ? true : countyList[0] ? false : true}
+            getAreaSonList={getAreaSonList}
             name={'county'}
             className={currentClass}
             rules={[{required: true, message: '请必须填写!'}]}

@@ -20,24 +20,28 @@ class Regional extends Component {
   componentDidMount() {}
   //table分页
   onShowSizeChange(current, pageSize) {
-    // const {fsu_devicemanagementStore} = this.props;
-    //
-    // const params = {
-    //   ...fsu_devicemanagementStore.tableParmas,
-    //   page: current,
-    //   number: pageSize,
-    // };
-    // fsu_devicemanagementStore.getTable(params);
+    const {fsu_devicemanagementStore} = this.props;
+
+    const params = {
+      ...fsu_devicemanagementStore.r_tableParmas,
+      page: current,
+      number: pageSize,
+    };
+    fsu_devicemanagementStore.getRealtimeTable(params);
   }
   onPageChange(pageNumber) {
-    // const {fsu_devicemanagementStore} = this.props;
-    // this.c_onPageChange({pageNumber},fsu_devicemanagementStore);
+    const {fsu_devicemanagementStore} = this.props;
+    const params = {
+      ...fsu_devicemanagementStore.r_tableParmas,
+      page: pageNumber,
+    };
+    fsu_devicemanagementStore.getRealtimeTable(params);
   }
   onSearch(value) {
     const {fsu_devicemanagementStore} = this.props;
     const params = {
       ...fsu_devicemanagementStore.r_tableParmas,
-      keywords: value,
+      keywords: encodeURIComponent(value),
     };
     fsu_devicemanagementStore.realtimeSearch(params);
   }
@@ -69,6 +73,7 @@ class Regional extends Component {
           columns={columns}
           onShowSizeChange={this.onShowSizeChange}
           onChange={this.onPageChange}
+          useDefaultRowKey={true}
           data={tableData}
         />
       </div>

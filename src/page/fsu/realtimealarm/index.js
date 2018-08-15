@@ -67,7 +67,7 @@ class Passageway extends Component {
     const {fsu_realtimealarmStore} = this.props;
     const params = {
       ...fsu_realtimealarmStore.tableParmas,
-      keywords: value,
+      keywords: encodeURIComponent(value),
     };
     fsu_realtimealarmStore.search(params);
   }

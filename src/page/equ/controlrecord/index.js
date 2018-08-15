@@ -48,7 +48,7 @@ class Regional extends Component {
     const {controlrecordStore} = this.props;
     const params = {
       ...controlrecordStore.tableParmas,
-      keywords: value,
+      keywords: encodeURIComponent(value),
     };
     controlrecordStore.search(params);
   }

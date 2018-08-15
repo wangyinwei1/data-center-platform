@@ -68,19 +68,20 @@
   },
   "dependencies": {
     "antd": "^3.5.3",
+    "axios-mock-adapter": "^1.11.0",
+    "classnames": "^2.2.5",
+    "document-offset": "^1.0.4",
+    "echarts": "^3.8.5",
+    "echarts-for-react": "^2.0.12",
+    "immutable": "^3.8.1",
     "js-cookie": "^2.2.0",
     "mobx": "3.2.0",
     "mobx-react": "4.2.2",
     "moment": "^2.22.2",
-    "classnames": "^2.2.5",
-    "immutable": "^3.8.1",
     "prop-types": "^15.5.10",
     "react": "^15.3.0",
-    "echarts": "^3.8.5",
-    "echarts-for-react": "^2.0.12",
     "react-dom": "^15.3.0",
     "react-redux": "^4.4.5",
-    "react-router": "^3.0.2",
-    "axios-mock-adapter": "^1.11.0"
+    "react-router": "^3.0.2"
   }
 }

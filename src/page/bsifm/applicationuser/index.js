@@ -31,6 +31,7 @@ class Site extends Component {
     this.onEditOk = this.onEditOk.bind(this);
     this.onPageChange = this.onPageChange.bind(this);
     this.handleFormChange = this.handleFormChange.bind(this);
+    this.getAreaSonList = this.getAreaSonList.bind(this);
     this.state = {
       singleLineData: {},
       deleteShow: false,
@@ -40,6 +41,7 @@ class Site extends Component {
       type: 'new',
       ...formParams,
       cityList: [],
+      districtList: [],
       countyList: [],
     };
   }
@@ -164,6 +166,7 @@ class Site extends Component {
         editShow: false,
         cityList: [],
         countyList: [],
+        districtList: [],
       });
   }
 
@@ -192,6 +195,9 @@ class Site extends Component {
     this.setState({
       ...formParams,
       editShow: false,
+      cityList: [],
+      districtList: [],
+      countyList: [],
     });
   }
   //搜索
@@ -199,7 +205,7 @@ class Site extends Component {
     const {applicationuserStore} = this.props;
     const params = {
       ...applicationuserStore.tableParmas,
-      keywords: value,
+      keywords: encodeURIComponent(value),
     };
     applicationuserStore.search(params);
   }
@@ -215,7 +221,7 @@ class Site extends Component {
   getAreaSonList(changedFields) {
     const {applicationuserStore: {getAreaSonList}} = this.props;
     const key = _.keys(changedFields);
-    getAreaSonList({F_ParentAreaID: changedFields[key[0]].value}).then(data => {
+    getAreaSonList({F_ParentAreaID: changedFields[key[0]]}).then(data => {
       switch (key[0]) {
         case 'proCode':
           this.setState(({fields}) => {
@@ -226,6 +232,7 @@ class Site extends Component {
               },
               cityList: data,
               countyList: [],
+              districtList: [],
             };
           });
           break;
@@ -237,6 +244,14 @@ class Site extends Component {
                 ...clearCounty.fields,
               },
               countyList: data,
+              districtList: [],
+            };
+          });
+          break;
+        case 'countyCode':
+          this.setState(({fields}) => {
+            return {
+              districtList: data,
             };
           });
           break;
@@ -245,8 +260,6 @@ class Site extends Component {
   }
   handleFormChange(changedFields) {
     const key = _.keys(changedFields);
-    (key[0] === 'proCode' || key[0] === 'cityCode') &&
-      this.getAreaSonList(changedFields);
     //showError让自己校验字段
     const obj = {};
     obj[key] = {showError: false, ...changedFields[key]};
@@ -300,8 +313,10 @@ class Site extends Component {
             handleFormChange={this.handleFormChange}
             fields={this.state.fields}
             mode={this.state.type}
+            getAreaSonList={this.getAreaSonList}
             cityMenu={this.state.cityList}
             countyMenu={this.state.countyList}
+            districtMenu={this.state.districtList}
           />
         </EditModal>
       </div>

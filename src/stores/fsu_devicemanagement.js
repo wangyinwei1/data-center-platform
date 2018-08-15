@@ -159,7 +159,7 @@ class Devicemanagement {
     const data = await findFSU2(params);
     if (data.Result == 'success') {
       this.currentDevice = params.suID;
-      this.detailData = data.Data;
+      this.detailData = data;
       return data.Data;
     } else {
       message.error(data.Msg);

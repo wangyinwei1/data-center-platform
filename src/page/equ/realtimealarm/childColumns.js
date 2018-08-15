@@ -34,19 +34,21 @@ const menu = ({
             </div>
           </Menu.Item>
         )}
-      {record.Status !== '已处理' && (
-        <Menu.Item key="confirm" onClick={confirmClick.bind(_this, record)}>
-          <div className={styles['confirm']}>
-            <i
-              className={classnames(
-                'icon iconfont icon-queren',
-                styles['confirm_alarm'],
-              )}
-            />
-            <span>确认告警</span>
-          </div>
-        </Menu.Item>
-      )}
+      {record.Status !== '已处理' &&
+        record.Status !== '待处理' &&
+        record.Status !== '已确认' && (
+          <Menu.Item key="confirm" onClick={confirmClick.bind(_this, record)}>
+            <div className={styles['confirm']}>
+              <i
+                className={classnames(
+                  'icon iconfont icon-queren',
+                  styles['confirm_alarm'],
+                )}
+              />
+              <span>确认告警</span>
+            </div>
+          </Menu.Item>
+        )}
       {record.Status !== '已处理' && (
         <Menu.Item key="cancel" onClick={cancelClick.bind(_this, record)}>
           <div className={styles['cancel']}>
@@ -60,19 +62,17 @@ const menu = ({
           </div>
         </Menu.Item>
       )}
-      {record.Status !== '已确认' && (
-        <Menu.Item key="end" onClick={endClick.bind(_this, record)}>
-          <div className={styles['end']}>
-            <i
-              className={classnames(
-                'icon iconfont icon-jieshu',
-                styles['end_alarm'],
-              )}
-            />
-            <span>结束告警</span>
-          </div>
-        </Menu.Item>
-      )}
+      <Menu.Item key="end" onClick={endClick.bind(_this, record)}>
+        <div className={styles['end']}>
+          <i
+            className={classnames(
+              'icon iconfont icon-jieshu',
+              styles['end_alarm'],
+            )}
+          />
+          <span>结束告警</span>
+        </div>
+      </Menu.Item>
     </Menu>
   );
 };

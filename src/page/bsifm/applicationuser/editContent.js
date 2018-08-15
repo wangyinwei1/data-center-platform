@@ -8,6 +8,7 @@ import {
   FormRadio,
   FormSelect,
   FormMultiSelect,
+  CustomSelect,
 } from '../../../components/FormItem';
 import {toJS} from 'mobx';
 //实例
@@ -28,12 +29,18 @@ class Regional extends Component {
       fields,
       cityMenu,
       countyMenu,
+      districtMenu,
       mode,
+      getAreaSonList,
     } = this.props;
+    // (key[0] === 'proCode' ||
+    //   key[0] === 'cityCode' ||
+    //   key[0] === 'countyCode') &&
+    //   this.getAreaSonList(changedFields);
 
     let data = {};
     let disabled = false,
-      currentClass = 'cl_regional_select_215',
+      currentClass = 'cl_regional_select_157',
       provinceDisable = false,
       cityDisable = false,
       areaDisable = false,
@@ -60,6 +67,15 @@ class Regional extends Component {
     );
     const countyList = _.map(
       countyMenu[0] ? countyMenu : toJS(data.countyList),
+      item => {
+        return {
+          value: item.F_AreaID,
+          name: item.F_AreaName,
+        };
+      },
+    );
+    const districtList = _.map(
+      districtMenu[0] ? districtMenu : toJS(data.districtList),
       item => {
         return {
           value: item.F_AreaID,
@@ -166,6 +182,7 @@ class Regional extends Component {
             name={'proCode'}
             rules={[{required: true, message: '请必须填写!'}]}
             className={currentClass}
+            getAreaSonList={getAreaSonList}
             children={provinceList}
           />
           <FormSelect
@@ -173,9 +190,10 @@ class Regional extends Component {
             onChange={this.handleFormChange}
             label={''}
             disabled={cityList[0] ? false : true}
+            getAreaSonList={getAreaSonList}
             name={'cityCode'}
             className={currentClass}
-            rules={[{required: false}]}
+            rules={[{required: true, message: '请必须填写!'}]}
             children={cityList}
           />
           <FormSelect
@@ -183,29 +201,40 @@ class Regional extends Component {
             onChange={this.handleFormChange}
             label={''}
             disabled={countyList[0] ? false : true}
+            getAreaSonList={getAreaSonList}
             name={'countyCode'}
             className={currentClass}
-            rules={[{required: false}]}
+            rules={[{required: true, message: '请必须填写!'}]}
             children={countyList}
           />
-          <FormSelect
-            {...fields}
+          <CustomSelect
+            fields={fields}
             onChange={this.handleFormChange}
-            label={'设备类型'}
-            name={'DevTypes'}
-            mode="multiple"
-            optionFilterProp="children"
-            rules={[{required: false}]}
-            children={typeList}
+            label={''}
+            disabled={fields.countyCode.value ? false : true}
+            className={currentClass}
+            name={'districtCode'}
+            rules={[{required: true, message: '请必须填写!'}]}
+            children={districtList}
           />
-          <FormInput
-            {...fields}
-            onChange={this.handleFormChange}
-            label={'设备'}
-            disabled={disabled}
-            name={'Devices'}
-            rules={[{required: false}]}
-          />
+          {/* <FormSelect */}
+          {/*   {...fields} */}
+          {/*   onChange={this.handleFormChange} */}
+          {/*   label={'设备类型'} */}
+          {/*   name={'DevTypes'} */}
+          {/*   mode="multiple" */}
+          {/*   optionFilterProp="children" */}
+          {/*   rules={[{required: false}]} */}
+          {/*   children={typeList} */}
+          {/* /> */}
+          {/* <FormInput */}
+          {/*   {...fields} */}
+          {/*   onChange={this.handleFormChange} */}
+          {/*   label={'设备'} */}
+          {/*   disabled={disabled} */}
+          {/*   name={'Devices'} */}
+          {/*   rules={[{required: false}]} */}
+          {/* /> */}
         </Row>
       </Form>
     );

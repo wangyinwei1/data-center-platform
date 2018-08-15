@@ -119,6 +119,12 @@ class BasicLayout extends Component {
 
         break;
     }
+    let isClose = true;
+    if (selectedKeys === 'shouye') {
+      isClose = true;
+    } else {
+      isClose = collapsed;
+    }
     return (
       <Spin
         className={styles['loading']}
@@ -127,7 +133,7 @@ class BasicLayout extends Component {
         <Sider
           width={180}
           collapsible
-          collapsed={collapsed}
+          collapsed={isClose}
           collapsedWidth={46}
           onCollapse={this.onCollapse}>
           <div className="logo" />

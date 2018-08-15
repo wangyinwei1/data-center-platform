@@ -201,7 +201,7 @@ class Regional extends Component {
     const {regionalStore} = this.props;
     const params = {
       ...regionalStore.tableParmas,
-      keywords: value,
+      keywords: encodeURIComponent(value),
     };
     regionalStore.search(params);
   }
@@ -245,11 +245,7 @@ class Regional extends Component {
         />
         <div className={styles['regional_ct']}>
           <div className={styles['min_width']}>
-            <Toolbar
-              onSearch={this.onSearch}
-              onClick={this.add}
-              closeAdd={isCloseAdd}
-            />
+            <Toolbar onClick={this.add} closeAdd={isCloseAdd} />
             <div className={styles['table_wrap']}>
               <Table
                 pageIndex={pagination.page}

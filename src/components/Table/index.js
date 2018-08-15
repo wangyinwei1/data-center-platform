@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {action, observer, inject} from 'mobx-react';
 import {Table} from 'antd';
 import styles from './index.less';
+import classnames from 'classnames';
 import {random6} from '../../utils/tool.js';
 
 class Cl_Table extends Component {
@@ -25,6 +26,7 @@ class Cl_Table extends Component {
       nesting,
       rowClassName,
       pagination,
+      theme,
       onRowDoubleClick,
       useDefaultRowKey,
       expandIconAsCell,
@@ -43,7 +45,11 @@ class Cl_Table extends Component {
       : {};
 
     return (
-      <div className={styles['table_wrap']}>
+      <div
+        className={classnames(
+          styles['table_wrap'],
+          theme === 'darker' && styles['table_darker'],
+        )}>
         <Table
           rowKey={(record, index) => {
             return !useDefaultRowKey

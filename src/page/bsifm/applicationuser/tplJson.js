@@ -30,9 +30,19 @@ const formParams = {
     },
     cityCode: {
       value: undefined,
+      require: true,
     },
     countyCode: {
       value: undefined,
+      require: true,
+    },
+    countyCode: {
+      value: undefined,
+      require: true,
+    },
+    districtCode: {
+      value: undefined,
+      require: true,
     },
     DevTypes: {
       value: [],
@@ -46,9 +56,15 @@ const clearCity = {
   fields: {
     cityCode: {
       value: undefined,
+      require: true,
     },
     countyCode: {
       value: undefined,
+      require: true,
+    },
+    districtCode: {
+      value: undefined,
+      require: true,
     },
   },
 };
@@ -56,6 +72,11 @@ const clearCounty = {
   fields: {
     countyCode: {
       value: undefined,
+      require: true,
+    },
+    districtCode: {
+      value: undefined,
+      require: true,
     },
   },
 };

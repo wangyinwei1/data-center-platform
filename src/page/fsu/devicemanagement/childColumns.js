@@ -60,7 +60,7 @@ const columns = ({editClick, deleteClick, addClick, detailClick, _this}) => {
     },
     {
       title: '创建时间',
-      dataIndex: 'updateTime',
+      dataIndex: 'craeteTime',
       width: '30%',
     },
     {

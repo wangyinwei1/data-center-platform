@@ -87,4 +87,63 @@
       }
     }
   }
+  .theme_darker {
+    :global {
+      .ant-input-search {
+        .ant-input {
+          background-color: #4c596f;
+          border: 1px solid #4c596f;
+          color: #fff;
+          &:focus {
+            border-color: #4c596f !important;
+            box-shadow: 0 0 0 2px rgba(80, 227, 153, 0.1);
+            & + .ant-input-suffix {
+              .ant-input-search-button {
+                background-color: #213544;
+                border-color: #213544;
+                .anticon-search {
+                  color: #fff;
+                }
+              }
+            }
+          }
+        }
+        &:hover {
+          .ant-input:not(.ant-input-disabled) {
+            border-color: #4c596f;
+          }
+          .ant-input-suffix .ant-input-search-button {
+            background-color: #243b4f;
+            border-color: #243b4f;
+            .anticon-search {
+              color: #fff;
+            }
+          }
+        }
+        &:active {
+          .ant-input:not(.ant-input-disabled) {
+            border-color: #4c596f;
+          }
+          .ant-input-suffix .ant-input-search-button {
+            background-color: #213544;
+            border-color: #213544;
+            .anticon-search {
+              color: #fff;
+            }
+          }
+        }
+        .ant-input-suffix {
+          .ant-btn-clicked {
+            &:after {
+              border-color: #213544;
+            }
+          }
+        }
+        .ant-input-search-button {
+          background-color: #213544;
+          border-color: #213544;
+        }
+      }
+    }
+  }
 }

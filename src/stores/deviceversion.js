@@ -82,6 +82,8 @@ class Deviceversion {
     if (data.result == 'success') {
       this.getTable(this.tableParmas);
       message.success('删除成功!');
+    } else {
+      message.error(data.msg);
     }
     return data;
   }

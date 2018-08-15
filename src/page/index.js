@@ -1,6 +1,6 @@
 export Loginer from './Login';
 export Layout from './Layout';
-export Index from './index';
+export Index from './index/index.js';
 export Regional from './bsifm/regional';
 export Site from './bsifm/site';
 export Deviceversion from './bsifm/deviceversion';
