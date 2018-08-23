@@ -79,7 +79,7 @@ const columns = ({endClick, handleClick, cancelClick, confirmClick, _this}) => {
   return [
     {
       title: '等级',
-      dataIndex: 'F_AlarmGrade',
+      dataIndex: 'F_LevID',
       width: '5%',
       className: 'information_th',
       render: (text, record, index) => {

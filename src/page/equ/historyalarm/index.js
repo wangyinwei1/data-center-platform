@@ -101,6 +101,8 @@ class Passageway extends Component {
       page: 1,
       F_DeviceID: sub === 'sub' ? item.subDeviceID : item.devID,
       number: 10,
+      lastLoginStart: '',
+      lastLoginEnd: '',
     };
     historyalarmStore.getChildTable(params);
     this.setState({

@@ -33,6 +33,7 @@ class Edit extends Component {
       passagewayStore: {addData, detailData, virtualList},
       fields,
       editVirtual,
+      isVchannel,
       mode,
     } = this.props;
 

@@ -17,8 +17,6 @@ class Regional extends Component {
   }
   monitorWindowWidth(globalStore) {
     const path = window.location.href;
-    console.log(path);
-    console.log(path.indexOf('/shouye'));
 
     clearTimeout(this.panelTimer);
     this.panelTimer = setTimeout(() => {

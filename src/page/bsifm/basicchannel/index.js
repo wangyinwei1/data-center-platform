@@ -58,6 +58,7 @@ class Regional extends Component {
       editShow: false,
       virtualShow: false,
       type: 'new',
+      isVchannel: false,
       valueTypeShow: false,
       ...formParams,
       ...virtualParams,
@@ -182,7 +183,9 @@ class Regional extends Component {
       // formValue.F_DeviceType.value = `${data.pd.F_DeviceType}_${
       //   data.pd.F_Version
       // }`;
-      record[0] && (formValue.virtual.value = record[0].fid);
+      data.pd.F_ChannelType === 5
+        ? (formValue.virtual.value = data.pd.F_ChannelID)
+        : '';
       formValue.F_Threshold.value = data.pd.F_Threshold;
       formValue.F_ShowPrecision.value = data.pd.F_ShowPrecision;
       formValue.F_Unit.value = data.pd.F_Unit || '';
@@ -198,6 +201,7 @@ class Regional extends Component {
           ...fields,
           ...formValue,
         },
+        isVchannel: data.pd.F_ChannelType === 5,
         singleLineData: item,
         editShow: true,
         type: mode,
@@ -371,6 +375,7 @@ class Regional extends Component {
   onEditCancel() {
     this.setState({
       ...formParams,
+      isVchannel: false,
       editShow: false,
     });
   }
@@ -743,6 +748,7 @@ class Regional extends Component {
             mode={this.state.type}
             valueTypeClick={this.valueTypeClick}
             addVirtual={this.addVirtual}
+            isVchannel={this.state.isVchannel}
             handleFormChange={this.handleFormChange}
           />
         </EditModal>

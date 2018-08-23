@@ -265,7 +265,8 @@ class Passageway {
   async delete(params) {
     const data = await passageway_delete(params);
     if (data.Result == 'success') {
-      message.success(data.Msg);
+      this.getChildTable(this.c_tableParmas);
+      message.success('删除成功!');
     } else {
       message.error(data.Msg);
     }

@@ -17,7 +17,7 @@ class Pie extends Component {
   }
   render() {
     const {home_pageStore: {allCount}, height} = this.props;
-    const count = toJS(allCount);
+    const count = toJS(allCount) || {};
     const options = pieOption(count, height);
     return (
       <ReactEcharts

@@ -57,32 +57,34 @@ class BasicLayout extends Component {
         this.monitorWindowWidth(globalStore, collapsed);
       });
     });
-    // if ('WebSocket' in window) {
-    //   var ws = new WebSocket(
-    //     'ws://' + globalStore.serviceip + ':11111/collect/websocket',
-    //   );
-    //   ws.onopen = function() {
-    //     console.log('已连接...');
-    //     ws.send(username + 'QQ872474447');
-    //   };
-    //
-    //   ws.onmessage = function(evt) {
-    //     var msg = evt.data;
-    //     console.log(msg);
-    //     var result = eval('(' + msg + ')');
-    //     console.log(result);
-    //     if (result.Result == 'success') {
-    //     } else if (result.Result == 'mssg') {
-    //       console.log(result.Msg);
-    //     }
-    //
-    //     ws.onbeforeunload = function() {
-    //       ws.close();
-    //     };
-    //   };
-    // } else {
-    //   console.log('暂不支持WebSocket!');
-    // }
+    if ('WebSocket' in window) {
+      console.log(window.location);
+      var ws = new WebSocket(
+        'ws://' + '172.29.7.71' + ':11111/collect/AlarmMsg',
+      );
+      ws.onopen = function() {
+        console.log('已连接...');
+        ws.send('username' + 'QQ872474447');
+      };
+
+      ws.onmessage = function(evt) {
+        console.log(evt);
+        // var msg = evt.data;
+        // console.log(msg);
+        // var result = eval('(' + msg + ')');
+        // console.log(result);
+        // if (result.Result == 'success') {
+        // } else if (result.Result == 'mssg') {
+        //   console.log(result.Msg);
+        // }
+        //
+        ws.onbeforeunload = function() {
+          ws.close();
+        };
+      };
+    } else {
+      console.log('暂不支持WebSocket!');
+    }
   }
   setOrGetOpenKeys(getOpenKeys, newPath) {
     //路由

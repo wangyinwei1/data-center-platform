@@ -45,7 +45,7 @@ class Regional extends Component {
     const {passagewayStore} = this.props;
     const params = {
       ...passagewayStore.c_tableParmas,
-      keywords: value,
+      keywords: encodeURIComponent(value),
     };
     passagewayStore.childSearch(params);
   }

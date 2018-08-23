@@ -31,12 +31,12 @@ class Deviceversion {
   @action.bound
   async editSave(params) {
     const data = await deviceversionEditSave(params);
-    if (data.Result == 'success') {
+    if (data.result == 'success') {
       this.getTable(this.tableParmas);
-      message.success(data.Msg);
+      message.success(data.msg);
       return true;
     } else {
-      message.error(data.Msg);
+      message.error(data.msg);
       return false;
     }
     return data;
@@ -44,12 +44,12 @@ class Deviceversion {
   @action.bound
   async save(params) {
     const data = await deviceversionSave(params);
-    if (data.Result == 'success') {
+    if (data.result == 'success') {
       this.getTable(this.tableParmas);
-      message.success(data.MJsg);
+      message.success(data.msg);
       return true;
     } else {
-      message.error(data.Msg);
+      message.error(data.msg);
       return false;
     }
     return data;

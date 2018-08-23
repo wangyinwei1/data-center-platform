@@ -76,7 +76,7 @@ const columns = ({
     },
     {
       title: '创建时间',
-      dataIndex: 'updateTime',
+      dataIndex: 'createTime',
       className: 'information_th',
       width: '12%',
     },

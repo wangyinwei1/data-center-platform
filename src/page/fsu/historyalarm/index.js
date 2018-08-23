@@ -96,6 +96,8 @@ class Passageway extends Component {
       page: 1,
       ztreeChild: item.suID,
       number: 10,
+      lastLoginStart: '',
+      lastLoginEnd: '',
     };
     fsu_historyalarmStore.getChildTable(params);
     this.setState({

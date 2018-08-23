@@ -14,6 +14,7 @@ import {
   getDispatchInfo,
   executeOperation,
   getCountInfo,
+  getFrontInfo,
 } from '../services/api.js';
 import {message} from 'antd';
 class HomePage {
@@ -22,22 +23,27 @@ class HomePage {
   @observable loading = false;
   @observable servicesData = {};
   @observable apiData = [];
+  @observable frontsData = [];
   @observable dataCenterData = [];
   @observable alarmMenuList = [];
   @observable allCount = {};
+  @observable s_loading = false;
   @observable alarmFsuMenuList = [];
   @action.bound
   async fsuExecuteOperatio(params) {
     const data = await fsuExecuteOperatio(params);
     if (data.Result == 'success') {
       message.success(data.Msg);
+      this.getFsuTable(this.tableParmas);
     } else {
       message.error(data.Msg);
     }
   }
   @action.bound
   async getDispatchInfo(params) {
+    this.s_loading = true;
     const data = await getDispatchInfo(params);
+    this.s_loading = false;
     const data1 = {
       Data: {
         cpu: 0,
@@ -143,10 +149,132 @@ class HomePage {
     this.allCount = data;
   }
   @action.bound
-  async getDataInfo(params) {
-    const data1 = await getDataInfo(params);
-    const data = {
+  async getFrontInfo(params) {
+    this.s_loading = true;
+    const data = await getFrontInfo(params);
+    this.s_loading = false;
+    const data1 = {
       Data: [
+        {
+          frontType: 1,
+          fronts: [
+            {
+              cpu: 0,
+              memory: 0,
+              nodeid: 0,
+              host: '172.16.4.117',
+              port: 8765,
+              ondate: '2018-08-12 13:01:10',
+              runStatus: '300/500',
+            },
+            {
+              cpu: 0,
+              memory: 0,
+              nodeid: 0,
+              host: '172.16.4.117',
+              port: 8765,
+              ondate: '2018-08-12 13:01:10',
+              runStatus: '300/500',
+            },
+            {
+              cpu: 0,
+              memory: 0,
+              nodeid: 0,
+              host: '172.16.4.117',
+              port: 8765,
+              ondate: '2018-08-12 13:01:10',
+              runStatus: '300/500',
+            },
+          ],
+          strDeviceIDs: '33464,33465,33466',
+          onLineCount: 300,
+          exeCount: 50,
+          devTypeList: [
+            {
+              devType: 23,
+              typeName: '门禁',
+              count: 100,
+            },
+            {
+              devType: 23,
+              typeName: '门禁',
+              count: 100,
+            },
+            {
+              devType: 23,
+              typeName: '门禁',
+              count: 100,
+            },
+            {
+              devType: 23,
+              typeName: '门禁',
+              count: 100,
+            },
+            {
+              devType: 23,
+              typeName: '门禁',
+              count: 100,
+            },
+            {
+              devType: 23,
+              typeName: '门禁',
+              count: 100,
+            },
+            {
+              devType: 23,
+              typeName: '门禁',
+              count: 100,
+            },
+            {
+              devType: 23,
+              typeName: '门禁',
+              count: 100,
+            },
+            {
+              devType: 23,
+              typeName: '门禁',
+              count: 100,
+            },
+            {
+              devType: 23,
+              typeName: '门禁',
+              count: 100,
+            },
+            {
+              devType: 23,
+              typeName: '门禁',
+              count: 100,
+            },
+          ],
+        },
+      ],
+      Result: 'success',
+    };
+
+    if (data.Result == 'success') {
+      this.frontsData = data.Data;
+      // message.success(data.Msg);
+    } else {
+      message.error(data.Msg);
+    }
+  }
+  @action.bound
+  async getDataInfo(params) {
+    this.s_loading = true;
+    const data = await getDataInfo(params);
+    this.s_loading = false;
+    const data1 = {
+      Data: [
+        {
+          cpu: 0,
+          memory: 0,
+          nodeid: 0,
+          host: '172.16.4.117',
+          port: 8765,
+          ondate: '2018-08-12 13:01:10',
+          availability: '60%',
+          freeCons: 5,
+        },
         {
           cpu: 0,
           memory: 0,
@@ -191,9 +319,127 @@ class HomePage {
 
   @action.bound
   async getApiInfo(params) {
-    const data1 = await getApiInfo(params);
-    const data = {
+    this.s_loading = true;
+    const data = await getApiInfo(params);
+    this.s_loading = false;
+    const data1 = {
       Data: [
+        {
+          cpu: 0,
+          memory: 0,
+          nodeid: 0,
+          host: '172.16.4.117',
+          port: 8765,
+          ondate: '2018-08-12 13:01:10',
+          fronts: [
+            {
+              nodeid: 0,
+              host: '172.16.4.117',
+              port: 8765,
+            },
+            {
+              nodeid: 0,
+              host: '172.16.4.117',
+              port: 8765,
+            },
+            {
+              nodeid: 0,
+              host: '172.16.4.117',
+              port: 8765,
+            },
+            {
+              nodeid: 0,
+              host: '172.16.4.117',
+              port: 8765,
+            },
+            {
+              nodeid: 0,
+              host: '172.16.4.117',
+              port: 8765,
+            },
+          ],
+          app: [
+            {
+              appID: 'XXXXXXXXXXXXXX',
+              time: '2018-08-12 01:01:11',
+            },
+            {
+              appID: 'XXXXXXXXXXXXXX',
+              time: '2018-08-12 01:01:11',
+            },
+            {
+              appID: 'XXXXXXXXXXXXXX',
+              time: '2018-08-12 01:01:11',
+            },
+            {
+              appID: 'XXXXXXXXXXXXXX',
+              time: '2018-08-12 01:01:11',
+            },
+            {
+              appID: 'XXXXXXXXXXXXXX',
+              time: '2018-08-12 01:01:11',
+            },
+          ],
+          deviceCount: 200,
+        },
+        {
+          cpu: 0,
+          memory: 0,
+          nodeid: 0,
+          host: '172.16.4.117',
+          port: 8765,
+          ondate: '2018-08-12 13:01:10',
+          fronts: [
+            {
+              nodeid: 0,
+              host: '172.16.4.117',
+              port: 8765,
+            },
+            {
+              nodeid: 0,
+              host: '172.16.4.117',
+              port: 8765,
+            },
+            {
+              nodeid: 0,
+              host: '172.16.4.117',
+              port: 8765,
+            },
+            {
+              nodeid: 0,
+              host: '172.16.4.117',
+              port: 8765,
+            },
+            {
+              nodeid: 0,
+              host: '172.16.4.117',
+              port: 8765,
+            },
+          ],
+          app: [
+            {
+              appID: 'XXXXXXXXXXXXXX',
+              time: '2018-08-12 01:01:11',
+            },
+            {
+              appID: 'XXXXXXXXXXXXXX',
+              time: '2018-08-12 01:01:11',
+            },
+            {
+              appID: 'XXXXXXXXXXXXXX',
+              time: '2018-08-12 01:01:11',
+            },
+            {
+              appID: 'XXXXXXXXXXXXXX',
+              time: '2018-08-12 01:01:11',
+            },
+            {
+              appID: 'XXXXXXXXXXXXXX',
+              time: '2018-08-12 01:01:11',
+            },
+          ],
+          deviceCount: 200,
+        },
         {
           cpu: 0,
           memory: 0,
@@ -384,6 +630,7 @@ class HomePage {
   async executeOperation(params) {
     const data = await executeOperation(params);
     if (data.Result == 'success') {
+      this.getTable(this.tableParmas);
       message.success(data.Msg);
     } else {
       message.error(data.Msg);

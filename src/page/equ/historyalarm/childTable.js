@@ -51,7 +51,7 @@ class Regional extends Component {
     const {historyalarmStore} = this.props;
     const params = {
       ...historyalarmStore.c_tableParmas,
-      stLoginStart: dateStrings[0],
+      lastLoginStart: dateStrings[0],
       lastLoginEnd: dateStrings[1],
     };
     historyalarmStore.childSearch(params);

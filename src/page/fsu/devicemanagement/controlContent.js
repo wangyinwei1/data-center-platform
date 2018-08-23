@@ -73,7 +73,7 @@ class ControlContent extends Component {
       <Form className={styles['control_ct']}>
         <Row style={{width: '100%'}}>
           <Col className={styles['passageway']}>
-            <FormItem label="通道名称">
+            <FormItem label="子设备名称">
               <Select
                 value={
                   this.state.F_ChannelID || toJS(controlChannel)[0].deviceID

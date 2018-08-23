@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {action, observer, inject} from 'mobx-react';
 import styles from './index.less';
 import {toJS} from 'mobx';
+import {Spin} from 'antd';
 import classnames from 'classnames';
 const CenterItem = props => {
   let data = null;
@@ -43,9 +44,21 @@ const Basic = props => {
   const api = props.api;
   const app = api.app;
   const fronts = api.fronts;
+  const length = props.length;
+  let style = {};
+  switch (length) {
+    case 2:
+      style.style = {width: '49%'};
+      break;
+    case 1:
+      style.style = {width: '99%'};
+      break;
+  }
 
   return (
-    <div className={classnames(styles['api_wrap'], styles['data_wrap'])}>
+    <div
+      {...style}
+      className={classnames(styles['api_wrap'], styles['data_wrap'])}>
       <div
         className={classnames(styles['basic_info'], styles['api_basic_info'])}>
         <div className={styles['float']}>
@@ -140,21 +153,44 @@ const Basic = props => {
 class Pie extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      currentPage: 1,
+    };
   }
   componentDidMount() {
     const {home_pageStore: {getDataInfo}} = this.props;
     getDataInfo();
   }
   render() {
-    const {home_pageStore: {dataCenterData}, height} = this.props;
+    const {
+      home_pageStore: {dataCenterData, s_loading},
+      height,
+      currentPage,
+    } = this.props;
     const dataCenter = toJS(dataCenterData);
+    const length = dataCenter.length % 3;
+    const pageNum = Math.ceil(dataCenter.length / 3);
+    let showData = _.filter(dataCenter, (item, i) => {
+      return i + 1 <= currentPage * 3 && i + 1 > currentPage * 3 - 3;
+    });
 
     return (
-      <div className={styles['services_ct']}>
-        {_.map(dataCenter, (item, i) => {
-          console.log(item);
-          return <Basic api={item} key={i.toString + i} />;
-        })}
+      <div
+        className={styles['services_ct']}
+        style={length === 1 && currentPage === pageNum ? {width: '50%'} : null}>
+        <Spin spinning={s_loading}>
+          <div className={styles['services_data_ct_center']}>
+            {_.map(showData, (item, i) => {
+              return (
+                <Basic
+                  length={currentPage === pageNum ? length : 0}
+                  api={item}
+                  key={i.toString + i}
+                />
+              );
+            })}
+          </div>
+        </Spin>
       </div>
     );
   }

@@ -13,6 +13,7 @@ const formParams = {
     },
     STATUS: {
       value: undefined,
+      require: true,
     },
     EMAIL: {
       value: '',

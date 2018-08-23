@@ -4,6 +4,7 @@ import styles from './index.less';
 import DispatchCenter from './dispacth.js';
 import Datacenter from './dataCenter.js';
 import Api from './api.js';
+import Front from './fronts.js';
 import {toJS} from 'mobx';
 import _ from 'lodash';
 import classnames from 'classnames';
@@ -53,7 +54,9 @@ const centerItem = props => {
           return (
             <div className={styles['form_item']} key={i.toString(36) + i}>
               <span className={styles['label']}>{item.nodeid}</span>
-              <span className={styles['wrapper']}>{item.host + item.port}</span>
+              <span className={styles['wrapper']}>
+                {item.host ? item.host + ':' + item.port : ''}
+              </span>
             </div>
           );
         })}
@@ -130,12 +133,14 @@ class Pie extends Component {
     this.handleClick = this.handleClick.bind(this);
     this.state = {
       activeIndex: 1,
+      currentPage: 1,
     };
   }
   componentDidMount() {}
   handleClick(code) {
     this.setState({
       activeIndex: code,
+      currentPage: 1,
     });
   }
   render() {
@@ -173,61 +178,54 @@ class Pie extends Component {
       (width - height * 6 * 0.106 - width * 0.08 * 2) / 5 || 0;
     const servicesInfoWidth =
       service_ct_width - height * 0.3 - service_ct_width * 0.06;
-    // let serviceContentProps = {
-    //   className: styles['services_info_icon'],
-    //   width: height * 24 / 525,
-    //   height: height * 24 / 525,
-    // };
-    // let serviceContent = [
-    //   {
-    //     name: '应用数量',
-    //     iconDom: <Number {...serviceContentProps} />,
-    //   },
-    //   {
-    //     name: '服务器地址',
-    //     iconDom: <AddressService {...serviceContentProps} />,
-    //   },
-    //   {
-    //     name: '连接前置机',
-    //     iconDom: <Font {...serviceContentProps} />,
-    //   },
-    //   {
-    //     name: '地址',
-    //     iconDom: <Address {...serviceContentProps} />,
-    //   },
-    //   {
-    //     name: '上线时间',
-    //     iconDom: <Timer {...serviceContentProps} />,
-    //   },
-    // ];
+    let navItem = [];
+    //导航
+    if (this.state.activeIndex === 2 || this.state.activeIndex === 4) {
+      const {home_pageStore: {dataCenterData, apiData}} = this.props;
+      const data =
+        this.state.activeIndex === 4 ? toJS(dataCenterData) : toJS(apiData);
+      const pageNum = Math.ceil(data.length / 3);
+      for (let i = 0; i <= pageNum - 1; i++) {
+        navItem.push(
+          <span
+            key={i.toString(36) + i}
+            onClick={() => {
+              this.setState({
+                currentPage: i + 1,
+              });
+            }}
+            className={classnames(
+              styles['data_nav_item'],
+              this.state.currentPage === i + 1 && styles['active'],
+            )}
+          />,
+        );
+      }
+    }
     return (
       <div
         className={styles['services_inner_wrap']}
         ref={c => {
           this.root = c;
         }}>
-        <defs>
-          <filter id="f1" x="0" y="0" width="200%" height="200%">
-            <feOffset result="offOut" in="SourceGraphic" dx="40" dy="100" />
-            <feGaussianBlur
-              result="blurOut"
-              in="offOut"
-              in="matrixOut"
-              stdDeviation="100"
-            />
-            <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
-          </filter>
-        </defs>
         <div className={styles['service_title']}>
           <span className={styles['service_zh']}>{title.zh}</span>
           <span className={styles['service_en']}>{title.en}</span>
         </div>
+        {(this.state.activeIndex === 2 || this.state.activeIndex === 4) && (
+          <div className={styles['data_center_nav']}>{navItem}</div>
+        )}
         <div className={styles['services_body']}>
           {this.state.activeIndex === 1 && (
             <DispatchCenter CenterItem={centerItem} RightItem={rightItem} />
           )}
-          {this.state.activeIndex === 2 && <Api />}
-          {this.state.activeIndex === 4 && <Datacenter />}
+          {this.state.activeIndex === 2 && (
+            <Api currentPage={this.state.currentPage} />
+          )}
+          {this.state.activeIndex === 3 && <Front />}
+          {this.state.activeIndex === 4 && (
+            <Datacenter currentPage={this.state.currentPage} />
+          )}
           <div className={styles['services_nav']}>
             <Dispatch
               width={height * 0.106}

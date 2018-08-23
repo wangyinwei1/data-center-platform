@@ -902,27 +902,35 @@ class Information extends Component {
   onBatchOk() {
     const {informationStore: {fsuDevsEnabledOnOff, fsuDelectAll}} = this.props;
     const batchIds = this.state.batchIds;
+    const sunBatchField = this.state.sunBatchField;
+    let result = '';
+    result = !batchIds && sunBatchField;
+    result = !sunBatchField && batchIds;
+    result = !sunBatchField;
+    if (!batchIds && sunBatchField) {
+      result = sunBatchField;
+    } else if (batchIds && !sunBatchField) {
+      result = batchIds;
+    } else {
+      result = batchIds + ',' + sunBatchField;
+    }
+
     switch (this.state.batchField) {
       case 'delete':
         fsuDelectAll({
-          deviceID: batchIds
-            ? batchIds + ',' + this.state.sunBatchField
-            : this.state.sunBatchField,
+          deviceID: result,
         });
         break;
       case 'disable':
         fsuDevsEnabledOnOff({
-          strDevs: batchIds
-            ? batchIds + ',' + this.state.sunBatchField
-            : this.state.sunBatchField,
+          strDevs: result,
+
           status: 1,
         });
         break;
       case 'enabled':
         fsuDevsEnabledOnOff({
-          strDevs: batchIds
-            ? batchIds + ',' + this.state.sunBatchField
-            : this.state.sunBatchField,
+          strDevs: result,
           status: 0,
         });
         break;

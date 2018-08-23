@@ -15,6 +15,7 @@ import Panel from '../../../components/Panel';
 import ChildTable from './childTable.js';
 import ClModal from '../information/controlModal.js';
 import {formParams, alarmFormParams, virtualParams} from './tplJson.js';
+import DeleteModal from '../../../components/DeleteModal';
 import EditContent from './edit.js';
 import VirtualContent from './virtualContent.js';
 import E_ChildTable from './e_childTable.js';
@@ -44,8 +45,9 @@ class Passageway extends Component {
     this.channelTypeChange = this.channelTypeChange.bind(this);
     this.onExportClick = this.onExportClick.bind(this);
     this.onAlarmCancel = this.onAlarmCancel.bind(this);
-    this.onAlarmOk = this.onAlarmOk.bind(this);
     this.editVirtual = this.editVirtual.bind(this);
+    this.onDeleteOk = this.onDeleteOk.bind(this);
+    this.onDeleteCancel = this.onDeleteCancel.bind(this);
     this.onVirtualCancel = this.onVirtualCancel.bind(this);
     this.onVirtualOk = this.onVirtualOk.bind(this);
     this.virtualFormChange = this.virtualFormChange.bind(this);
@@ -55,11 +57,13 @@ class Passageway extends Component {
     this.state = {
       cascaderText: '',
       cascaderLoading: false,
+      isVchannel: false,
       cascaderValue: [],
       ...virtualParams,
       currentDevice: '',
       areaName: '',
       editShow: false,
+      deleteShow: false,
       type: 'new',
       ...alarmFormParams,
       ...formParams,
@@ -107,7 +111,7 @@ class Passageway extends Component {
     const {passagewayStore} = this.props;
     const params = {
       ...passagewayStore.tableParmas,
-      keywords: value,
+      keywords: encodeURIComponent(value),
     };
     passagewayStore.search(params);
   }
@@ -141,7 +145,7 @@ class Passageway extends Component {
     this.setState({
       childTableVisible: true,
       childTableTitle: item.devName,
-      currentDevice: item.devID,
+      currentDevice: item.devID || item.subDeviceID,
       singleLineData: item,
     });
     passagewayStore.getChildTable(params);
@@ -150,7 +154,7 @@ class Passageway extends Component {
     const {passagewayStore: {initAdd, getVirtualList}} = this.props;
     const item = this.state.singleLineData;
     getVirtualList({
-      F_TypeID: item.typeID,
+      F_TypeID: item.typeID || item.devType,
       F_Version: item.version,
     });
     initAdd().then(() => {
@@ -244,7 +248,9 @@ class Passageway extends Component {
       });
     } else {
       //告警条件确认
-      if (!this.alarmOk()) return;
+      if (this.state.type !== 'new') {
+        if (!this.alarmOk()) return;
+      }
       const {
         passagewayStore: {save, edit, getChildTable, c_tableParmas},
       } = this.props;
@@ -255,7 +261,7 @@ class Passageway extends Component {
       };
       _.forIn(fields, (value, key) => {
         key == 'F_ChannelName'
-          ? (params[key] = encodeURIComponent(value.value))
+          ? (params[key] = value.value)
           : (params[key] = value.value);
       });
       this.state.type == 'modify'
@@ -314,6 +320,9 @@ class Passageway extends Component {
       formValue.F_ValueType.value = data.pd.valueType;
       formValue.F_ChannelType.value = data.pd.channelType;
       formValue.ratio.value = data.pd.ratio;
+      data.pd.channelType === 5
+        ? (formValue.virtual.value = data.pd.channelID)
+        : '';
       formValue.F_StorePeriod.value = data.pd.storePeriod;
       formValue.F_StoreMode.value = data.pd.storeMode;
       formValue.F_Threshold.value = data.pd.threshold;
@@ -331,6 +340,7 @@ class Passageway extends Component {
           ...fields,
           ...formValue,
         },
+        isVchannel: data.pd.channelType === 5,
         editShow: true,
         type: mode,
       };
@@ -343,7 +353,6 @@ class Passageway extends Component {
       ...alarmFormParams,
     });
   }
-  onAlarmOk() {}
   childEidtClick(item) {
     const {passagewayStore: {initEdit}} = this.props;
     const params = {
@@ -368,7 +377,9 @@ class Passageway extends Component {
     });
     this.childAlarmClick(item);
   }
-  childDeleteClick(item) {
+  //删除回调
+  onDeleteOk() {
+    const item = this.state.singleLineData;
     const {passagewayStore} = this.props;
     const params = {
       channelID: item.channelID,
@@ -377,6 +388,20 @@ class Passageway extends Component {
     };
 
     passagewayStore.delete(params);
+    this.setState({
+      deleteShow: false,
+    });
+  }
+  onDeleteCancel() {
+    this.setState({
+      deleteShow: false,
+    });
+  }
+  childDeleteClick(item) {
+    this.setState({
+      singleLineData: item,
+      deleteShow: true,
+    });
   }
   childAlarmClick(item) {
     const {passagewayStore: {getAlarmTable}} = this.props;
@@ -602,6 +627,11 @@ class Passageway extends Component {
             onExportClick={this.onExportClick}
           />
         </Panel>
+        <DeleteModal
+          isShow={this.state.deleteShow}
+          onOk={this.onDeleteOk}
+          onCancel={this.onDeleteCancel}
+        />
 
         <ClModal
           isShow={this.state.virtualShow}
@@ -625,6 +655,7 @@ class Passageway extends Component {
           <EditContent
             fields={this.state.fields}
             mode={this.state.type}
+            isVchannel={this.state.isVchannel}
             editVirtual={this.editVirtual}
             handleFormChange={this.handleFormChange}
           />

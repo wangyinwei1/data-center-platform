@@ -37,12 +37,12 @@ li {
       url('/static/fonts/iconfont.svg?t=1534226355684#iconfont') format('svg'); /* iOS 4.1- */
 }
 
-@font-face {
-  font-family: 'PingFang-Regular';
-  src: url('/static/fonts/PingFang-Regular.ttf');
-  font-weight: normal;
-  font-style: normal;
-}
+/* @font-face { */
+/*   font-family: 'PingFang-Regular'; */
+/*   src: url('/static/fonts/PingFang-Regular.ttf'); */
+/*   font-weight: normal; */
+/*   font-style: normal; */
+/* } */
 
 .iconfont {
   font-family: 'iconfont' !important;

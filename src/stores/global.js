@@ -3,8 +3,6 @@ import {login} from '../services/api.js';
 const isIndex = window.location.href.indexOf('/shouye') != -1;
 const isMinWidth = $(window).width() < 1280;
 
-console.log(isIndex || isMinWidth ? true : false);
-console.log(window.location.href);
 class Global {
   @observable serviceip = '';
   @observable collapsed = isIndex || isMinWidth ? true : false;

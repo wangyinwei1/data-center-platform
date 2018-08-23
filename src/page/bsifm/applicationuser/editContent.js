@@ -148,7 +148,7 @@ class Regional extends Component {
             label={'状态'}
             disabled={disabled}
             name={'STATUS'}
-            rules={[{required: false}]}
+            rules={[{required: true, message: '请必须填写!'}]}
             children={[{value: 1, name: '正常'}, {value: 0, name: '冻结'}]}
           />
           <FormSelect

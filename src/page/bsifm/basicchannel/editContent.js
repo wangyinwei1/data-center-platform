@@ -32,6 +32,7 @@ class Edit extends Component {
     const {
       basicchannelStore: {addData, virtualList, detailData},
       fields,
+      isVchannel,
       valueTypeClick,
       addVirtual,
       mode,
@@ -129,7 +130,7 @@ class Edit extends Component {
               {...fields}
               onChange={this.handleFormChange}
               label={'通道类型'}
-              disabled={disabled}
+              disabled={isVchannel ? true : disabled}
               placeholder={'请选择设备类型'}
               name={'F_ChannelType'}
               rules={[{required: true, message: '请必须填写!'}]}
@@ -140,7 +141,9 @@ class Edit extends Component {
               onChange={this.handleFormChange}
               label={'虚拟属性'}
               disabled={
-                fields.F_ChannelType.value === 5 && mode !== 'detail'
+                !isVchannel &&
+                fields.F_ChannelType.value === 5 &&
+                mode !== 'detail'
                   ? false
                   : true
               }
@@ -150,7 +153,9 @@ class Edit extends Component {
             />
             <Button
               disabled={
-                fields.F_ChannelType.value === 5 && mode !== 'detail'
+                !isVchannel &&
+                fields.F_ChannelType.value === 5 &&
+                mode !== 'detail'
                   ? false
                   : true
               }

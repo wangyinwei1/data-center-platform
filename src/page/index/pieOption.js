@@ -1,4 +1,4 @@
-const option = (allCount, height) => {
+const option = (allCount: {}, height) => {
   return {
     tooltip: {
       trigger: 'item',

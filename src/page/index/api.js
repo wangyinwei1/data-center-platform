@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {action, observer, inject} from 'mobx-react';
 import styles from './index.less';
 import {toJS} from 'mobx';
+import {Spin} from 'antd';
 import classnames from 'classnames';
 const CenterItem = props => {
   let data = null;
@@ -41,11 +42,21 @@ const CenterItem = props => {
 };
 const Basic = props => {
   const api = props.api;
-  const app = api.app;
-  const fronts = api.fronts;
+  const app = api.app || [];
+  const fronts = api.fronts || [];
+  const length = props.length;
+  let style = {};
+  switch (length) {
+    case 2:
+      style.style = {width: '49%'};
+      break;
+    case 1:
+      style.style = {width: '99%'};
+      break;
+  }
 
   return (
-    <div className={styles['api_wrap']}>
+    <div {...style} className={styles['api_wrap']}>
       <div
         className={classnames(styles['basic_info'], styles['api_basic_info'])}>
         <div className={styles['node_id_info']}>
@@ -114,10 +125,12 @@ const Basic = props => {
             <span>请求设备数量</span>
           </span>
           <span className={styles['dev_num']}>
-            {api.deviceCount ? api.deviceCount : 0}
+            <span>{api.deviceCount ? api.deviceCount : 0}</span>
           </span>
         </div>
+        <div className={styles['api_margin10']} />
         <CenterItem app={app} name={'app'} />
+        <div className={styles['api_margin10']} />
         <CenterItem fronts={fronts} name={'fronts'} />
       </div>
     </div>
@@ -135,14 +148,34 @@ class Pie extends Component {
     getApiInfo();
   }
   render() {
-    const {home_pageStore: {apiData}, height} = this.props;
+    const {
+      home_pageStore: {apiData, s_loading},
+      height,
+      currentPage,
+    } = this.props;
     const ApiServices = toJS(apiData);
+    const length = ApiServices.length % 3;
+    const pageNum = Math.ceil(ApiServices.length / 3);
+    let showData = _.filter(ApiServices, (item, i) => {
+      return i + 1 <= currentPage * 3 && i + 1 > currentPage * 3 - 3;
+    });
 
     return (
-      <div className={styles['services_ct']}>
-        {_.map(ApiServices, (item, i) => {
-          return <Basic api={item} key={i.toString + i} />;
-        })}
+      <div
+        className={styles['services_ct']}
+        style={length === 1 && currentPage === pageNum ? {width: '50%'} : null}>
+        <Spin spinning={s_loading}>
+          {_.map(showData, (item, i) => {
+            return (
+              <Basic
+                api={item}
+                length={currentPage === pageNum ? length : 0}
+                key={i.toString + i}
+              />
+            );
+          })}
+          {/* {!showData[0] && <div className={styles['pos_nodata']}>暂无数据</div>} */}
+        </Spin>
       </div>
     );
   }

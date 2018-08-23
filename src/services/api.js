@@ -107,7 +107,7 @@ export function getAgreementTable(params) {
   return request.get(base + '/device_protocol/list.do', {params});
 }
 export function agreement_delete(data) {
-  return request.post(base + '/device_devtype/deletegenera.do', data);
+  return request.post(base + '/device_protocol/delete', data);
 }
 export function agreement_search(params) {
   return request.get(base + '/device_devtype/generaList.do', {params});
@@ -307,8 +307,8 @@ export function passageway_save(data) {
 export function passageway_virtualList(data) {
   return request.post(base + '/device_vchannel/find.do', data);
 }
-export function passageway_delete(params) {
-  return request.get(base + '/device_channel/delete2.do', {params});
+export function passageway_delete(data) {
+  return request.post(base + '/device_channel/delete2.do', data);
 }
 export function passageway_edit(data) {
   return request.post(base + '/device_channel/edit2.do', data);
@@ -485,7 +485,7 @@ export function getFsuSunDevice(params) {
 }
 
 export function getFsuSp(params) {
-  return request.get(base + '/FSU_device/FsuSp_controlist.do', {params});
+  return request.get(base + '/FSU_device/FsuSp_list2.do', {params});
 }
 export function findStation(params) {
   return request.get(base + '/FSU_device/find_station.do', {params});
