@@ -554,28 +554,31 @@ class Regional extends Component {
     }
   }
   handleFormChange(changedFields) {
-    //showError让自己校验字段
-    const key = _.keys(changedFields);
-    const obj = {};
-    //值类型影响显示精度
-    if (key[0] === 'F_ValueType') {
-      if (changedFields[key].value === 2) {
-        obj['F_ShowPrecision'] = {value: 2};
-      } else {
-        obj['F_ShowPrecision'] = {value: 0};
-      }
-    } else if (key[0] === 'virtual') {
-      const {basicchannelStore: {virtualList}} = this.props;
-      const item = _.filter(virtualList, item => {
-        return item.fid === changedFields[key].value;
-      });
-      obj['F_ChannelID'] = {value: item[0].channelID};
-    } else if (key[0] === 'F_ChannelID') {
-      obj['virtual'] = {value: undefined};
-    }
-
-    obj[key] = {showError: false, ...changedFields[key]};
     this.setState(({fields}) => {
+      //showError让自己校验字段
+      const key = _.keys(changedFields);
+      const obj = {};
+      //值类型影响显示精度
+      if (key[0] === 'F_ValueType') {
+        if (changedFields[key].value === 2) {
+          obj['F_ShowPrecision'] = {...fields.F_ShowPrecision, value: 2};
+        } else {
+          obj['F_ShowPrecision'] = {...fields.F_ShowPrecision, value: 0};
+        }
+      } else if (key[0] === 'virtual') {
+        const {basicchannelStore: {virtualList}} = this.props;
+        const item = _.filter(virtualList, item => {
+          return item.fid === changedFields[key].value;
+        });
+        obj['F_ChannelID'] = {...fields.F_ChannelID, value: item[0].channelID};
+      } else if (key[0] === 'F_ChannelID') {
+        obj['virtual'] = {...fields.virtual, value: undefined};
+      } else if (key[0] === 'F_ChannelType') {
+        changedFields[key].value !== 5 &&
+          (obj['virtual'] = {...fields.virtual, value: undefined});
+      }
+
+      obj[key] = {showError: false, ...changedFields[key]};
       return {
         fields: {...fields, ...obj},
       };
@@ -656,8 +659,13 @@ class Regional extends Component {
           console.log(info.file, info.fileList);
         }
         if (info.file.status === 'done') {
-          message.success(`${info.file.name} 导入成功！`);
-          basicchannelStore.getTable(basicchannelStore.tableParmas);
+          if (info.file.response && info.file.response.Result === 'success') {
+            message.success(`${info.file.name} 导入成功！`);
+
+            basicchannelStore.getTable(basicchannelStore.tableParmas);
+          } else {
+            message.error(`${info.file.name} 导入失败！`);
+          }
         } else if (info.file.status === 'error') {
           message.error(`${info.file.name} 导入失败！`);
         }

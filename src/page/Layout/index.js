@@ -45,9 +45,6 @@ class BasicLayout extends Component {
     const {globalStore, layoutStore, location} = this.props;
     const path = location.pathname.replace('/', '');
     let collapsed = false;
-    if (path === 'shouye') {
-      collapsed = true;
-    }
     //获取菜单接口
     layoutStore.getMenu().then(() => {
       this.setOrGetOpenKeys();
@@ -226,7 +223,6 @@ class BasicLayout extends Component {
         currentLink = item;
       }
     });
-
     return (
       <div className={styles['layout_wrap']} id={'layout_wrap'}>
         <TopNav title={title} username={username} router={router} />

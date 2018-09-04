@@ -35,12 +35,12 @@ const centerItem = props => {
       data = props.fronts;
       name = '普通前置机';
       break;
-    case 'fsufronts':
-      data = props.fsufronts;
-      name = '直连前置机';
-      break;
     case 'directfronts':
       data = props.directfronts;
+      name = '直连前置机';
+      break;
+    case 'fsufronts':
+      data = props.fsufronts;
       name = 'FSU前置机';
       break;
   }

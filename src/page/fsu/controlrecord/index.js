@@ -22,6 +22,8 @@ class Regional extends Component {
       page: 1,
       keywords: '',
       number: 10,
+      lastLoginStart: '',
+      lastLoginEnd: '',
     };
     getTable(params);
   }
@@ -30,7 +32,7 @@ class Regional extends Component {
     const {fsu_controlrecordStore} = this.props;
 
     const params = {
-      ...fsu_controlrecordStore.c_tableParmas,
+      ...fsu_controlrecordStore.tableParmas,
       page: current,
       number: pageSize,
     };
@@ -56,7 +58,8 @@ class Regional extends Component {
     const {fsu_controlrecordStore} = this.props;
     const params = {
       ...fsu_controlrecordStore.tableParmas,
-      stLoginStart: dateStrings[0],
+      page: 1,
+      lastLoginStart: dateStrings[0],
       lastLoginEnd: dateStrings[1],
     };
     fsu_controlrecordStore.getTable(params);
@@ -67,7 +70,7 @@ class Regional extends Component {
       (toJS(fsu_controlrecordStore.tableData) &&
         toJS(fsu_controlrecordStore.tableData).varList) ||
       [];
-    const pagination = tableData || {};
+    const pagination = fsu_controlrecordStore.tableData || {};
     const columns = columnData();
     return (
       <div className={styles['controlrecord_wrap']}>
@@ -87,6 +90,7 @@ class Regional extends Component {
               columns={columns}
               onShowSizeChange={this.onShowSizeChange}
               onChange={this.onPageChange}
+              useDefaultRowKey={true}
               data={tableData}
             />
           </div>

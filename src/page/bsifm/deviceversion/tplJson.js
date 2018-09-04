@@ -7,6 +7,8 @@ const formParams = {
     F_Name: {
       value: undefined,
       require: true,
+      F_Name: '',
+      F_Protocol: '',
     },
     F_TypeName: {
       value: '',

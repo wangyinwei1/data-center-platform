@@ -38,7 +38,7 @@ class Site {
     const data = await devicetype_delete(params);
     if (data.result == 'success') {
       this.getTable(this.tableParmas);
-      message.success('删除成功!');
+      message.success(data.msg);
     }
     return data;
   }

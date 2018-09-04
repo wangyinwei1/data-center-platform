@@ -46,7 +46,7 @@ const FormSelect = Form.create({
     return mapPropsToFields(props);
   },
   onValuesChange(_, values) {
-    console.log(_, values);
+    //console.log(_, values);
     _.getAreaSonList && _.getAreaSonList(values);
   },
 })(props => {
@@ -101,7 +101,7 @@ const FormRadio = Form.create({
     return mapPropsToFields(props);
   },
   onValuesChange(_, values) {
-    console.log((_, values));
+    // console.log((_, values));
   },
 })(props => {
   const {getFieldDecorator} = props.form;
@@ -141,7 +141,7 @@ const FormTextArea = Form.create({
     return mapPropsToFields(props);
   },
   onValuesChange(_, values) {
-    console.log(values);
+    //console.log(values);
   },
 })(props => {
   const {getFieldDecorator} = props.form;
@@ -191,7 +191,7 @@ const FormInput = Form.create({
     return mapPropsToFields(props);
   },
   onValuesChange(_, values) {
-    console.log(values);
+    //console.log(values);
   },
 })(props => {
   const {getFieldDecorator} = props.form;
@@ -263,9 +263,6 @@ class CustomSelect extends Component {
     const key = _.keys(changedFields);
     changedFields[key[0]].code = '';
     onChange(changedFields);
-    this.setState({
-      show: false,
-    });
   }
   handleClick(item, e, r) {
     const txt = $(e.target).text();
@@ -279,7 +276,6 @@ class CustomSelect extends Component {
 
     this.setState({
       show: false,
-      newFields: formValue,
     });
   }
   onFocus(e) {
@@ -302,7 +298,15 @@ class CustomSelect extends Component {
     const hasValue = _.filter(children, item => {
       return item.value === parseInt(fields[name].value);
     });
-    hasValue[0] && (fields[name].value = hasValue[0].name);
+    if (hasValue[0]) {
+      fields[name].value = hasValue[0].name;
+      fields[name]['code'] = hasValue[0].value || '';
+    }
+    // console.log(fields[name].value);
+    // console.log(children);
+    const isSame = _.filter(children, item => {
+      return item.name === fields[name].value;
+    });
 
     return (
       <div
@@ -319,7 +323,8 @@ class CustomSelect extends Component {
           onFocus={this.onFocus}
           rules={rules}
         />
-        {this.state.show && (
+        {((this.state.show && !fields[name].value) ||
+          (this.state.show && isSame[0])) && (
           <ul
             className={styles['custom_select_menu']}
             style={{width: this.state.width}}>

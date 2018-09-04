@@ -50,6 +50,7 @@ class Regional extends Component {
     const params = {
       keywords: '',
       page: 1,
+      number: 10,
       F_DeviceID: item.subDeviceID,
     };
     informationStore.getRealtimeTable(params);

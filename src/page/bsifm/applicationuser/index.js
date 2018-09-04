@@ -61,6 +61,7 @@ class Site extends Component {
     applicationuserStore.getGoAdd();
     this.setState({
       editShow: true,
+      type: 'new',
     });
   }
   initFromValue(data, mode, item) {
@@ -74,13 +75,15 @@ class Site extends Component {
           ? 0
           : parseInt(data.pd.F_Status) || undefined;
       formValue.USERNAME.value = data.pd.F_UserName || '';
-      formValue.userType.value =
-        parseInt(data.pd.userType) === 0
-          ? 0
-          : parseInt(data.pd.userType) || undefined;
+      // formValue.userType.value =
+      //   parseInt(data.pd.userType) === 0
+      //     ? 0
+      //     : parseInt(data.pd.userType) || undefined;
       formValue.proCode.value = parseInt(data.pd.property.proCode) || '';
       formValue.countyCode.value = parseInt(data.pd.property.countyCode) || '';
       formValue.cityCode.value = parseInt(data.pd.property.cityCode) || '';
+      formValue.districtCode.value =
+        parseInt(data.pd.property.districtCode) || '';
       formValue.DevTypes.value =
         (data.pd.property.F_DevTypes &&
           data.pd.property.F_DevTypes.split(',').map(item => {

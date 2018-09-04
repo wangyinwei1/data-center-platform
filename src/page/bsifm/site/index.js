@@ -86,6 +86,8 @@ class Regional extends Component {
     } else {
       const {siteStore: {save, edit}} = this.props;
       const params = {
+        F_AreaID: fields.region.code,
+        F_AreaName: fields.region.value,
         F_ParentAreaID: fields.county.value,
         F_Name: fields.F_Name.value,
         F_Leader: fields.F_Leader.value,
@@ -168,6 +170,7 @@ class Regional extends Component {
       formValue.city.value = data.area.cityCode || undefined;
       formValue.county.value = data.area.countyCode || undefined;
       formValue.province.value = data.area.provinceCode || data.proCode;
+      formValue.region.value = data.area.regionCode || undefined;
       formValue.region.value = data.area.regionCode || undefined;
       formValue.F_Name.value = (data.pd && data.pd.F_Name) || '';
       formValue.F_Leader.value = (data.pd && data.pd.F_Leader) || '';

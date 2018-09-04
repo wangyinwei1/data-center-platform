@@ -2,7 +2,8 @@ const option = (allCount: {}, height) => {
   return {
     tooltip: {
       trigger: 'item',
-      formatter: '{a} <br/>{b} : {c} ({d}%)',
+      //formatter: '{a} <br/>{b} : {c} ({d}%)',
+      formatter: '{a} <br/>{b} ({d}%)',
     },
     legend: {
       orient: 'vertical',

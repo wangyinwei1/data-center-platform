@@ -609,14 +609,15 @@ class Information extends Component {
     } = this.props;
     delectSun({
       F_Spid: item.spID,
+      F_Suid: item.suID,
       F_DeviceID: this.state.currentDeviceID,
-      F_Suid: currentDevice,
     }).then(() => {
       const F_DeviceID = {F_DeviceID: currentDevice};
       selectedChildRowKey[0] === this.state.currentDeviceID &&
         getGrandsonTable({
           ...F_DeviceID,
           F_DeviceID: this.state.currentDeviceID,
+          F_Suid: item.suID,
         });
     });
   }

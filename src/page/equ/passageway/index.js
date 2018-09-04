@@ -225,7 +225,7 @@ class Passageway extends Component {
 
     const {passagewayStore: {alarmBatchSave}} = this.props;
     const params = {
-      F_DeviceID: item.devID,
+      F_DeviceID: item.devID || item.subDeviceID,
       F_ChannelID: this.state.currentChannelID,
       alarmConditions: alarmData,
     };
@@ -284,28 +284,35 @@ class Passageway extends Component {
     });
   }
   handleFormChange(changedFields) {
-    //showError让自己校验字段
-    const key = _.keys(changedFields);
-    const obj = {};
-    let currentVirtual = {};
-    //值类型影响显示精度
-    if (key[0] === 'F_ValueType') {
-      if (changedFields[key].value === 2) {
-        obj['F_ShowPrecision'] = {value: 2};
-      } else {
-        obj['F_ShowPrecision'] = {value: 0};
-      }
-    }
-    if (key[0] === 'virtual') {
-      const {passagewayStore: {virtualList}} = this.props;
-      const selected = _.filter(toJS(virtualList), item => {
-        return changedFields[key].value === item.fid;
-      });
-      currentVirtual['currentVirtual'] = selected[0];
-    }
-
-    obj[key] = {showError: false, ...changedFields[key]};
     this.setState(({fields}) => {
+      //showError让自己校验字段
+      const key = _.keys(changedFields);
+      const obj = {};
+      let currentVirtual = {};
+      //值类型影响显示精度
+      if (key[0] === 'F_ValueType') {
+        if (changedFields[key].value === 2) {
+          obj['F_ShowPrecision'] = {...fields.F_ShowPrecision, value: 2};
+        } else {
+          obj['F_ShowPrecision'] = {...fields.F_ShowPrecision, value: 0};
+        }
+      }
+      if (key[0] === 'virtual') {
+        const {passagewayStore: {virtualList}} = this.props;
+        const selected = _.filter(toJS(virtualList), item => {
+          return changedFields[key].value === item.fid;
+        });
+        obj['F_ChannelID'] = {
+          ...fields.F_ChannelID,
+          value: selected[0].channelID,
+        };
+        currentVirtual['currentVirtual'] = selected[0];
+      } else if (key[0] === 'F_ChannelType') {
+        changedFields[key].value !== 5 &&
+          (obj['virtual'] = {...fields.virtual, value: undefined});
+      }
+
+      obj[key] = {showError: false, ...changedFields[key]};
       return {
         fields: {...fields, ...obj},
         ...currentVirtual,

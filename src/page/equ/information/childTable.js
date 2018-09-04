@@ -77,10 +77,12 @@ class Regional extends Component {
     const {
       informationStore: {delectConsport, currentDevice, getSportTable},
     } = this.props;
-    delectConsport({F_PortID: item.portID}).then(() => {
-      const F_DeviceID = {F_DeviceID: currentDevice};
-      getSportTable(F_DeviceID);
-    });
+    delectConsport({F_PortID: item.portID, F_DeviceID: currentDevice}).then(
+      () => {
+        const F_DeviceID = {F_DeviceID: currentDevice};
+        getSportTable(F_DeviceID);
+      },
+    );
   }
   detailClick(item) {
     const {childDetailClick} = this.props;

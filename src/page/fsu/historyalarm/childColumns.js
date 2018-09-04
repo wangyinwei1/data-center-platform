@@ -12,12 +12,8 @@ import columnData from './childColumns.js';
 const columns = () => {
   return [
     {
-      title: '序号',
-      dataIndex: 'num',
-    },
-    {
-      title: 'FSU名称',
-      dataIndex: 'suName',
+      title: 'FSU编号',
+      dataIndex: 'suID',
     },
     {
       title: '子设备名称',
@@ -28,16 +24,28 @@ const columns = () => {
       dataIndex: 'spName',
     },
     {
-      title: '采集值',
-      dataIndex: 'value',
+      title: '开始时间',
+      dataIndex: 'startTime',
     },
     {
-      title: '单位',
-      dataIndex: 'spUnit',
+      title: '告警值',
+      dataIndex: 'triggerVal',
     },
     {
-      title: '采集时间',
-      dataIndex: 'recordTime',
+      title: '告警等级',
+      dataIndex: 'alarmLevel',
+    },
+    {
+      title: '告警信息',
+      dataIndex: 'alarmDesc',
+    },
+    {
+      title: '处理时间',
+      dataIndex: 'dealTime',
+    },
+    {
+      title: '处理时间',
+      dataIndex: 'endTime',
     },
   ];
 };

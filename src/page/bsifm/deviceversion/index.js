@@ -71,15 +71,17 @@ class Site extends Component {
   initFromValue(data, mode, item) {
     this.setState(({fields}) => {
       let formValue = _.cloneDeep([fields])[0];
+      const protocolList = _.filter(data.protocolList || [], item => {
+        return item.F_ProID === data.pd.F_ProID;
+      });
+      const F_Protocol = (protocolList[0] && protocolList[0].F_Protocol) || '';
       formValue.F_TypeID.value = data.pd.F_TypeID || undefined;
       formValue.F_Name.value = data.pd.F_ProID || undefined;
-      formValue.F_Name.F_Name = data.pd.F_Name || '';
+      formValue.F_Name['F_Name'] = data.pd.F_Name || '';
       formValue.F_TypeName.value = data.pd.F_TypeName || '';
       formValue.F_SoftVersion.value = data.pd.F_SoftVersion || '';
       formValue.F_HardVersion.value = data.pd.F_HardVersion || '';
-      formValue.F_Name.F_Protocol = _.filter(data.protocolList, item => {
-        return item.F_ProID === data.pd.F_ProID;
-      })[0].F_Protocol;
+      formValue.F_Name['F_Protocol'] = F_Protocol;
       return {
         fields: {
           ...fields,

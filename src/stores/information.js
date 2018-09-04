@@ -346,6 +346,8 @@ class Information {
     if (data.Result == 'success') {
       this.getTable(this.tableParmas);
       message.success('删除成功!');
+    } else {
+      // message.error(data.Msg);
     }
     return data;
   }
@@ -354,6 +356,8 @@ class Information {
     const data = await delectConsport(params);
     if (data.Result == 'success') {
       message.success('删除成功!');
+    } else {
+      message.error(data.Msg);
     }
     return data;
   }

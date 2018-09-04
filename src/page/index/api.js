@@ -8,13 +8,13 @@ const CenterItem = props => {
   let data = null;
   let name = '';
   switch (props.name) {
-    case 'app':
-      data = props.app;
+    case 'apps':
+      data = props.apps;
       name = '接入应用';
       break;
     case 'fronts':
       data = props.fronts;
-      name = '直连前置机';
+      name = '连接前置机';
       break;
   }
   return (
@@ -27,10 +27,16 @@ const CenterItem = props => {
           return (
             <div className={styles['form_item']} key={i.toString(36) + i}>
               <span className={styles['label']}>
-                {item.nodeid || item.nodeid === 0 ? item.nodeid : item.appID}
+                {item.nodeid || item.nodeid === 0
+                  ? item.nodeid ? item.nodeid : '-'
+                  : item.appID ? item.appID : '-'}
               </span>
               <span className={styles['wrapper']}>
-                {item.host ? item.host + item.port : item.time}
+                {item.host || item.time
+                  ? item.host
+                    ? item.host + ':' + item.port
+                    : item.time ? item.time : '-'
+                  : '-'}
               </span>
             </div>
           );
@@ -42,7 +48,7 @@ const CenterItem = props => {
 };
 const Basic = props => {
   const api = props.api;
-  const app = api.app || [];
+  const apps = api.apps || [];
   const fronts = api.fronts || [];
   const length = props.length;
   let style = {};
@@ -67,7 +73,7 @@ const Basic = props => {
             )}
           />
           <span className={styles['basic_title']}>{`节点编号 ${
-            api.nodeid || api.nodeid === 0 ? api.cpu : ''
+            api.nodeid || api.nodeid === 0 ? api.nodeid : ''
           }`}</span>
         </div>
         <div className={styles['cpu_info']}>
@@ -129,7 +135,7 @@ const Basic = props => {
           </span>
         </div>
         <div className={styles['api_margin10']} />
-        <CenterItem app={app} name={'app'} />
+        <CenterItem apps={apps} name={'apps'} />
         <div className={styles['api_margin10']} />
         <CenterItem fronts={fronts} name={'fronts'} />
       </div>

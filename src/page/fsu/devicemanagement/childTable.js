@@ -104,7 +104,6 @@ class Regional extends Component {
     const {fsu_devicemanagementStore} = this.props;
     const s_tableData = toJS(fsu_devicemanagementStore.s_tableData);
     const tableData = s_tableData || [];
-    console.log(tableData);
     const columns = columnData({
       deleteClick: this.deleteClick,
       editClick: this.editClick,

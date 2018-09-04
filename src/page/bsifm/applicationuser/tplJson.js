@@ -8,9 +8,9 @@ const formParams = {
       value: '',
       require: true,
     },
-    userType: {
-      value: undefined,
-    },
+    // userType: {
+    //   value: undefined,
+    // },
     STATUS: {
       value: undefined,
       require: true,
@@ -22,9 +22,10 @@ const formParams = {
       value: '',
       require: true,
     },
-    AppID: {
-      value: '',
-    },
+    // AppID: {
+    //   value: '',
+    //   require: true,
+    // },
     proCode: {
       value: undefined,
       require: true,

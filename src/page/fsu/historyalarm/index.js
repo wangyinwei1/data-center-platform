@@ -96,6 +96,7 @@ class Passageway extends Component {
       page: 1,
       ztreeChild: item.suID,
       number: 10,
+      sing: 'device',
       lastLoginStart: '',
       lastLoginEnd: '',
     };
@@ -142,6 +143,7 @@ class Passageway extends Component {
                 columns={columns}
                 loading={fsu_historyalarmStore.loading}
                 onShowSizeChange={this.onShowSizeChange}
+                useDefaultRowKey={true}
                 rowClassName={(record, index) => {
                   const rowClassName = [];
                   record.statustwo == 0 && rowClassName.push('cl_online_state');

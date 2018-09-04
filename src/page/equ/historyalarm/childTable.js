@@ -81,6 +81,7 @@ class Regional extends Component {
           onShowSizeChange={this.onShowSizeChange}
           loading={historyalarmStore.c_loading}
           onChange={this.onPageChange}
+          useDefaultRowKey={true}
           data={tableData}
         />
       </div>

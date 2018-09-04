@@ -67,7 +67,10 @@ class Regional extends Component {
       (toJS(passivedevicechangerecordStore.tableData) &&
         toJS(passivedevicechangerecordStore.tableData).varList) ||
       [];
-    const pagination = tableData || {};
+    const pagination =
+      (passivedevicechangerecordStore.tableData &&
+        passivedevicechangerecordStore.tableData.pd) ||
+      {};
     const columns = columnData();
     return (
       <div className={styles['controlrecord_wrap']}>
@@ -82,7 +85,7 @@ class Regional extends Component {
             <Table
               pageIndex={pagination.page}
               pageSize={pagination.number}
-              total={pagination.count}
+              total={pagination.allCount}
               loading={passivedevicechangerecordStore.loading}
               columns={columns}
               onShowSizeChange={this.onShowSizeChange}

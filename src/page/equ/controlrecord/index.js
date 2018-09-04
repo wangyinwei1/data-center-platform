@@ -22,6 +22,8 @@ class Regional extends Component {
       page: 1,
       keywords: '',
       number: 10,
+      lastLoginStart: '',
+      lastLoginEnd: '',
     };
     getTable(params);
   }
@@ -56,7 +58,8 @@ class Regional extends Component {
     const {controlrecordStore} = this.props;
     const params = {
       ...controlrecordStore.tableParmas,
-      stLoginStart: dateStrings[0],
+      page: 1,
+      lastLoginStart: dateStrings[0],
       lastLoginEnd: dateStrings[1],
     };
     controlrecordStore.getTable(params);
@@ -67,7 +70,7 @@ class Regional extends Component {
       (toJS(controlrecordStore.tableData) &&
         toJS(controlrecordStore.tableData).varList) ||
       [];
-    const pagination = tableData || {};
+    const pagination = controlrecordStore.tableData || {};
     const columns = columnData();
     return (
       <div className={styles['controlrecord_wrap']}>

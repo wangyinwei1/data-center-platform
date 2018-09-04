@@ -3,6 +3,7 @@ import {action, observer, inject} from 'mobx-react';
 import {Form} from 'antd';
 import styles from './index.less';
 import classnames from 'classnames';
+import {shallowEqualImmutable} from 'react-immutable-render-mixin';
 //实例
 @inject('globalStore', 'layoutStore')
 @observer
@@ -17,10 +18,11 @@ class Regional extends Component {
   }
   monitorWindowWidth(globalStore) {
     const path = window.location.href;
+    const {globalStore: {collapsed}} = this.props;
 
     clearTimeout(this.panelTimer);
     this.panelTimer = setTimeout(() => {
-      if ($(window).width() < 1280) {
+      if (collapsed) {
         this.setState({
           widthClassName: 'panel_active_1280',
         });
@@ -34,6 +36,12 @@ class Regional extends Component {
         });
       }
     }, 100);
+  }
+  shouldComponentUpdate(nextProps, nextState) {
+    return (
+      !shallowEqualImmutable(this.props, nextProps) ||
+      !shallowEqualImmutable(this.state, nextState)
+    );
   }
   componentDidMount() {
     // this.setState({

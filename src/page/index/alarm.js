@@ -130,7 +130,7 @@ class Pie extends Component {
       page: 1,
       number: 10,
       keywords: '',
-      type: type,
+      type: type === 0 ? '' : type,
       sort: !this.state.isFsu ? 'F_AlarmGrade' : 'F_AlarmLevel',
       des: 1,
     };

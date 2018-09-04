@@ -77,7 +77,7 @@ class Edit extends Component {
             onChange={this.handleFormChange}
             label={'通道ID'}
             name={'F_ChannelID'}
-            disabled={disabled}
+            disabled={fields.virtual.value ? true : disabled}
             placeholder={'请输入设备名称'}
             rules={[{required: true, message: '请必须填写!'}]}
           />

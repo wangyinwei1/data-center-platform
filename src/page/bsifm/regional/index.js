@@ -176,6 +176,14 @@ class Regional extends Component {
   }
   //级联组件方法
   loadData(selectedOptions, index, callback) {
+    const text = selectedOptions[0].code;
+    var area = /^\d{4}((0?[1-9])|([1-9][0-9]))$/; //区下的编码匹配
+    const isArea = area.test(text);
+
+    if (isArea) {
+      callback();
+      return;
+    }
     this.c_loadData(selectedOptions, index, callback);
   }
   onTextChange(value) {

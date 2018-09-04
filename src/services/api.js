@@ -86,8 +86,8 @@ export function deviceversionInitEdit(params) {
 export function deviceversionEditSave(data) {
   return request.post(base + '/device_devtype/edit.do', data);
 }
-export function savegenera(params) {
-  return request.get(base + '/device_devtype/savegenera.do', {params});
+export function savegenera(data) {
+  return request.post(base + '/device_devtype/savegenera.do', data);
 }
 //devicetype
 export function getDevicetypeTable(params) {
@@ -99,8 +99,8 @@ export function devicetype_delete(data) {
 export function devicetype_search(params) {
   return request.get(base + '/device_devtype/generaList.do', {params});
 }
-export function editgenera(params) {
-  return request.get(base + '/device_devtype/editgenera.do', {params});
+export function editgenera(data) {
+  return request.post(base + '/device_devtype/editgenera.do', data);
 }
 //agreement
 export function getAgreementTable(params) {
@@ -585,10 +585,10 @@ export function realtimedata_search(params) {
 }
 //controlrecord
 export function getControlrecordTable(params) {
-  return request.get(base + '//device_controlist/control_list3.do', {params});
+  return request.get(base + '/device_controlist/control_list3.do', {params});
 }
 export function controlrecord_search(params) {
-  return request.get(base + '//device_controlist/control_list3.do', {params});
+  return request.get(base + '/device_controlist/control_list3.do', {params});
 }
 //passivedevicechangerecord
 export function getPassivedevicechangerecordTable(params) {

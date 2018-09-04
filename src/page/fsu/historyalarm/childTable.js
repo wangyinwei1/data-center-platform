@@ -25,15 +25,19 @@ class Regional extends Component {
     const {fsu_historyalarmStore} = this.props;
 
     const params = {
-      ...fsu_historyalarmStore.tableParmas,
+      ...fsu_historyalarmStore.c_tableParmas,
       page: current,
       number: pageSize,
     };
-    fsu_historyalarmStore.getTable(params);
+    fsu_historyalarmStore.getChildTable(params);
   }
   onPageChange(pageNumber) {
     const {fsu_historyalarmStore} = this.props;
-    this.c_onPageChange({pageNumber}, fsu_historyalarmStore);
+    const params = {
+      ...fsu_historyalarmStore.c_tableParmas,
+      page: pageNumber,
+    };
+    fsu_historyalarmStore.getChildTable(params);
   }
   onSearch(value) {
     const {fsu_historyalarmStore} = this.props;
@@ -41,7 +45,7 @@ class Regional extends Component {
       ...fsu_historyalarmStore.c_tableParmas,
       keywords: encodeURIComponent(value),
     };
-    fsu_historyalarmStore.childSearch(params);
+    fsu_historyalarmStore.getChildTable(params);
   }
   timeChange(dates, dateStrings) {
     const {fsu_historyalarmStore} = this.props;
@@ -75,6 +79,7 @@ class Regional extends Component {
           total={pagination.count}
           columns={columns}
           onShowSizeChange={this.onShowSizeChange}
+          useDefaultRowKey={true}
           loading={fsu_historyalarmStore.c_loading}
           onChange={this.onPageChange}
           data={data}

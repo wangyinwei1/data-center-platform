@@ -151,26 +151,24 @@ class Regional extends Component {
             rules={[{required: true, message: '请必须填写!'}]}
             children={[{value: 1, name: '正常'}, {value: 0, name: '冻结'}]}
           />
-          <FormSelect
-            {...fields}
-            onChange={this.handleFormChange}
-            label={'用户类型'}
-            disabled={disabled}
-            name={'userType'}
-            rules={[{required: false}]}
-            children={[{value: 0, name: 'WEB'}, {value: 1, name: 'App'}]}
-          />
-          {fields.userType.value === 1 && (
-            <FormInput
-              {...fields}
-              onChange={this.handleFormChange}
-              label={'APP用户ID'}
-              disabled={disabled}
-              className={'cl_select_373'}
-              name={'AppID'}
-              rules={[{required: false}]}
-            />
-          )}
+          {/* <FormSelect */}
+          {/*   {...fields} */}
+          {/*   onChange={this.handleFormChange} */}
+          {/*   label={'用户类型'} */}
+          {/*   disabled={disabled} */}
+          {/*   name={'userType'} */}
+          {/*   rules={[{required: false}]} */}
+          {/*   children={[{value: 0, name: 'WEB'}, {value: 1, name: 'App'}]} */}
+          {/* /> */}
+          {/* <FormInput */}
+          {/*   {...fields} */}
+          {/*   onChange={this.handleFormChange} */}
+          {/*   label={'应用ID'} */}
+          {/*   disabled={disabled} */}
+          {/*   className={'cl_select_373'} */}
+          {/*   name={'AppID'} */}
+          {/*   rules={[{required: true, message: '请必须填写!'}]} */}
+          {/* /> */}
         </Row>
         <Row className={styles['sub_title']}>用户权限&nbsp;:</Row>
         <Row>

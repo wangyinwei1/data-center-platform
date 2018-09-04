@@ -58,8 +58,15 @@ class Regional extends Component {
       isFsu,
     } = this.props;
     isFsu
-      ? fsuExecuteOperatio({F_SerialNo: item.F_SerialNo, operationType: type})
-      : executeOperation({F_AlarmID: item.F_AlarmID, operationType: type});
+      ? fsuExecuteOperatio({
+          F_SerialNo: item.F_SerialNo,
+          F_SuID: item.F_SuID,
+          operationType: type,
+        })
+      : executeOperation({
+          F_AlarmID: item.F_AlarmID,
+          operationType: type,
+        });
   }
   endClick(item) {
     this.operation('close', item);

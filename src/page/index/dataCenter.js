@@ -70,7 +70,7 @@ const Basic = props => {
               )}
             />
             <span className={styles['basic_title']}>{`节点编号 ${
-              api.nodeid || api.nodeid === 0 ? api.cpu : ''
+              api.nodeid || api.nodeid === 0 ? api.nodeid : ''
             }`}</span>
           </div>
           <div className={styles['cpu_info']}>
@@ -132,7 +132,7 @@ const Basic = props => {
             <span>利用率</span>
           </span>
           <span className={styles['dev_num']}>
-            {api.availability ? api.availability : '100%'}
+            {api.availability ? api.availability : 0}
           </span>
         </div>
         <div className={styles['dev_num_wrap']}>

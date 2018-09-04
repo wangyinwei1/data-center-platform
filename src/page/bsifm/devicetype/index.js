@@ -56,6 +56,7 @@ class Site extends Component {
     const {devicetypeStore} = this.props;
     this.setState({
       editShow: true,
+      type: 'new',
     });
   }
   initFromValue(mode, item) {
@@ -83,7 +84,7 @@ class Site extends Component {
     const {devicetypeStore} = this.props;
     const item = this.state.singleLineData;
     const params = {
-      USER_ID: item.F_UserID,
+      F_ID: item.F_ID,
     };
     this.c_onDeleteOk(devicetypeStore, params);
   }
@@ -115,7 +116,7 @@ class Site extends Component {
       const {devicetypeStore: {save, editSave}} = this.props;
       const params = {};
       this.state.type === 'modify' &&
-        (params.F_ProID = this.state.singleLineData.F_ProID);
+        (params.F_ID = this.state.singleLineData.F_ID);
       _.forIn(fields, (value, key) => {
         if (key === 'DevTypes') {
           params[key] = value.value.join(',');

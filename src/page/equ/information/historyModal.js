@@ -31,7 +31,7 @@ class Regional extends Component {
     this.allSelectClick = this.allSelectClick.bind(this);
     this.state = {
       allSelected: false,
-      stLoginStart: '',
+      lastLoginStart: '',
       lastLoginEnd: '',
       Channels: '',
       value: [],
@@ -42,14 +42,14 @@ class Regional extends Component {
     const {informationStore: {clearDeviceData}} = this.props;
     clearDeviceData();
     this.setState({
-      stLoginStart: '',
+      lastLoginStart: '',
       lastLoginEnd: '',
       Channels: '',
     });
   }
   onChange(dates, dateStrings) {
     this.setState({
-      stLoginStart: dateStrings[0],
+      lastLoginStart: dateStrings[0],
       lastLoginEnd: dateStrings[1],
     });
   }
@@ -103,7 +103,7 @@ class Regional extends Component {
     }
   }
   handleClick() {
-    if (!this.state.stLoginStart || !this.state.lastLoginEnd) {
+    if (!this.state.lastLoginStart || !this.state.lastLoginEnd) {
       message.error('请选择时间!');
       return;
     }
@@ -116,7 +116,7 @@ class Regional extends Component {
     const params = {
       F_DeviceID: informationStore.currentDevice,
       Channels: this.state.Channels,
-      stLoginStart: this.state.stLoginStart,
+      lastLoginStart: this.state.lastLoginStart,
       lastLoginEnd: this.state.lastLoginEnd,
     };
     this.setState({
