@@ -31,6 +31,7 @@ class Site extends Component {
     this.onEditOk = this.onEditOk.bind(this);
     this.onPageChange = this.onPageChange.bind(this);
     this.handleFormChange = this.handleFormChange.bind(this);
+    this.changeFileds = this.changeFileds.bind(this);
     this.state = {
       singleLineData: {},
       deleteShow: false,
@@ -181,6 +182,18 @@ class Site extends Component {
       };
     });
   }
+  changeFileds(fileString) {
+    this.setState(({fields}) => {
+      return {
+        fields: {
+          ...fields,
+          F_Protocol: {
+            value: fileString,
+          },
+        },
+      };
+    });
+  }
 
   render() {
     const {agreementStore} = this.props;
@@ -223,6 +236,7 @@ class Site extends Component {
             handleFormChange={this.handleFormChange}
             fields={this.state.fields}
             mode={this.state.type}
+            changeFileds={this.changeFileds}
           />
         </EditModal>
       </div>

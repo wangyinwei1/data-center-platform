@@ -4,6 +4,11 @@ import {login} from '../services/api.js';
 class Global {
   @observable serviceip = '';
   @observable collapsed = false;
+  @observable isTimeout = false;
+  @action
+  async changeIsTimeout(bOk) {
+    this.isTimeout = bOk;
+  }
 
   @action
   async saveIp_name({ip}) {

@@ -159,6 +159,19 @@ class Edit extends Component {
         <FormInput
           {...fields}
           onChange={this.handleFormChange}
+          label={'地址'}
+          disabled={
+            fields.F_ConnectType.value === 1 ||
+            fields.F_IsConcentrator.value === 1
+              ? true
+              : disabled
+          }
+          name={'adr'}
+          rules={[{required: false}]}
+        />
+        <FormInput
+          {...fields}
+          onChange={this.handleFormChange}
           label={'外部编号'}
           disabled={disabled}
           name={'F_OutDevID'}
@@ -177,7 +190,7 @@ class Edit extends Component {
         <FormInput
           {...fields}
           onChange={this.handleFormChange}
-          label={'维度数值'}
+          label={'纬度数值'}
           disabled={disabled}
           name={'F_Latitude'}
           placeholder={'请输入维度数值'}

@@ -103,7 +103,9 @@ class Regional extends Component {
         ? app.conID === record.conID
         : app.myConID === record.myConID;
       let obj = {};
-      key === 'delay' ? (obj['delayID'] = value) : (obj['condition'] = value);
+      key === 'delay'
+        ? (obj['alarmDelay'] = value)
+        : (obj['condition'] = value);
 
       let option = {
         ...app,

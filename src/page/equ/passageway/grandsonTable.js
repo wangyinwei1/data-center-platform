@@ -35,6 +35,11 @@ class Regional extends Component {
           pagination={false}
           loading={passagewayStore.g_loading}
           columns={columns}
+          rowClassName={(record, index) => {
+            const rowClassName = [];
+            record.statustwo === 0 && rowClassName.push('cl_off_state');
+            return rowClassName.join(' ');
+          }}
           data={tableData}
         />
       </div>

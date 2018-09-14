@@ -301,6 +301,7 @@ class Site extends Component {
           cascaderValue={this.state.cascaderValue}
           cascaderText={this.state.cascaderText}
           onChange={this.onCascaderChange}
+          type={'dev'}
         />
         <div className={styles['vchannel_ct']}>
           <div className={styles['min_width']}>

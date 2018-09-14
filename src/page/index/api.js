@@ -83,8 +83,12 @@ const Basic = props => {
               styles['basic_icon'],
             )}
           />
-          <span className={styles['basic_title']}>CPU</span>
-          <div className={styles['basic_num']}>
+          <span className={styles['basic_title']}>CPU(%)</span>
+          <div
+            className={classnames(
+              styles['basic_num'],
+              api.cpu > 80 && styles['error_num'],
+            )}>
             {api.cpu || api.cpu === 0 ? api.cpu : 0}
           </div>
         </div>
@@ -95,8 +99,12 @@ const Basic = props => {
               styles['basic_icon'],
             )}
           />
-          <span className={styles['basic_title']}>内存</span>
-          <div className={styles['basic_num']}>
+          <span className={styles['basic_title']}>内存(%)</span>
+          <div
+            className={classnames(
+              styles['basic_num'],
+              api.memory > 80 && styles['error_num'],
+            )}>
             {api.memory || api.memory === 0 ? api.memory : 0}
           </div>
         </div>

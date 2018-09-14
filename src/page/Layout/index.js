@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {action, observer, inject} from 'mobx-react';
-import {Row, Col, Layout, Menu} from 'antd';
+import {Row, Col, Layout, Menu, notification} from 'antd';
 import {toJS} from 'mobx';
 import classnames from 'classnames';
 import {Link} from 'react-router';
@@ -24,6 +24,7 @@ class BasicLayout extends Component {
     this.setOrGetOpenKeys = this.setOrGetOpenKeys.bind(this);
     this.state = {
       openKeys: [],
+      storage: [],
     };
   }
   monitorWindowWidth(globalStore, collapsed) {
@@ -34,13 +35,31 @@ class BasicLayout extends Component {
         globalStore.changeCollapsed(true);
       } else {
         this.setOrGetOpenKeys();
-        globalStore.changeCollapsed(collapsed);
+        globalStore.changeCollapsed(false);
       }
     }, 100);
   }
   componentWillUnmount() {
     $(window).off('resize.panel');
   }
+  componentDidUpdate() {
+    const {globalStore, layoutStore, location} = this.props;
+    if (globalStore.isTimeout) {
+      const path = location.pathname.replace('/', '');
+      let collapsed = false;
+      //获取菜单接口
+      layoutStore.getMenu().then(() => {
+        this.setOrGetOpenKeys();
+        //监听窗口变化影响导航是否收缩
+        this.monitorWindowWidth(globalStore, collapsed);
+        $(window).on('resize.leftnav', () => {
+          this.monitorWindowWidth(globalStore, collapsed);
+        });
+      });
+      globalStore.changeIsTimeout(false);
+    }
+  }
+
   componentDidMount() {
     const {globalStore, layoutStore, location} = this.props;
     const path = location.pathname.replace('/', '');
@@ -54,33 +73,46 @@ class BasicLayout extends Component {
         this.monitorWindowWidth(globalStore, collapsed);
       });
     });
-    if ('WebSocket' in window) {
-      console.log(window.location);
-      var ws = new WebSocket(
-        'ws://' + '172.29.7.71' + ':11111/collect/AlarmMsg',
-      );
-      ws.onopen = function() {
-        console.log('已连接...');
-        ws.send('username' + 'QQ872474447');
-      };
 
-      ws.onmessage = function(evt) {
-        console.log(evt);
-        // var msg = evt.data;
-        // console.log(msg);
-        // var result = eval('(' + msg + ')');
-        // console.log(result);
-        // if (result.Result == 'success') {
-        // } else if (result.Result == 'mssg') {
-        //   console.log(result.Msg);
-        // }
-        //
-        ws.onbeforeunload = function() {
-          ws.close();
+    const serviceip = localStorage.getItem('serviceip');
+
+    if (serviceip) {
+      if ('WebSocket' in window) {
+        const ws = new WebSocket(
+          'ws://' + serviceip + ':11111/collect/websocket',
+        );
+        ws.onopen = function() {
+          console.log('已连接...');
+          ws.send('username' + 'QQ872474447');
         };
-      };
-    } else {
-      console.log('暂不支持WebSocket!');
+
+        ws.onmessage = function(evt) {
+          const msg = evt.data;
+          const result = JSON.parse(msg);
+          if (result.Result == 'success') {
+            notification.open({
+              message: '设备上线/下线通知:',
+              // getContainer: () => {
+              //   return <div>1111</div>;
+              // },
+              placement: 'bottomRight',
+              description: `平台ID:${result.Data.platId} 节点ID:${
+                result.Data.nodeId
+              } 状态:${result.Data.status}`,
+            });
+          } else if (result.Result == 'mssg') {
+          }
+
+          ws.onbeforeunload = function() {
+            ws.close();
+          };
+        };
+        ws.onclose = function() {
+          console.log('连接已关闭...');
+        };
+      } else {
+        console.log('暂不支持WebSocket!');
+      }
     }
   }
   setOrGetOpenKeys(getOpenKeys, newPath) {
@@ -109,7 +141,7 @@ class BasicLayout extends Component {
       if (item.subMenu[0]) {
         const second = item.subMenu;
         _.map(second, sub => {
-          if (sub.MENU_ROUTE == path) {
+          if (sub.MENU_ROUTE === path) {
             openKeys = [item.MENU_ID];
             return;
           }
@@ -129,7 +161,7 @@ class BasicLayout extends Component {
         });
       }
     }
-    return openKeys;
+    return openKeys || [];
   }
   changeCollapsed(onOff) {
     const {globalStore} = this.props;
@@ -149,9 +181,11 @@ class BasicLayout extends Component {
   }
   setSelectedKeys(value) {
     const {layoutStore} = this.props;
+
     layoutStore.setSelectedKeys(value);
     //暂存openkeys
     const storage = this.setOrGetOpenKeys(true, value); //只寻找不设值
+
     const unionStorage = _.union(storage, this.state.storage);
     //只允许打开两个菜单
     const newStorage =
@@ -160,9 +194,17 @@ class BasicLayout extends Component {
             return i !== 0;
           })
         : unionStorage;
-    this.setState({
-      storage: newStorage,
-    });
+    //首页值为null特殊处理
+    if (value === 'shouye') {
+      this.setState({
+        openKeys: [],
+      });
+    } else {
+      this.setState({
+        storage: newStorage,
+        openKeys: newStorage,
+      });
+    }
   }
   handleClick(e) {
     e.stopPropagation();
@@ -182,6 +224,7 @@ class BasicLayout extends Component {
         : openKeys;
     this.setState({
       openKeys: newOpenKeys,
+      storage: newOpenKeys,
     });
   }
   render() {
@@ -223,6 +266,7 @@ class BasicLayout extends Component {
         currentLink = item;
       }
     });
+
     return (
       <div className={styles['layout_wrap']} id={'layout_wrap'}>
         <TopNav title={title} username={username} router={router} />

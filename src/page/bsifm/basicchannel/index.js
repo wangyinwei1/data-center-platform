@@ -456,7 +456,12 @@ class Regional extends Component {
         (!record.msgID && record.msgID !== 0) ||
         (!record.condition && record.condition !== 0)
       ) {
-        if (alarmTable.length === 1) {
+        if (
+          alarmTable.length === 1 &&
+          !record.conType &&
+          !record.msgID &&
+          !record.condition
+        ) {
           alarmTable = [];
         } else {
           hasAlarmError.push(index + 1);
@@ -478,14 +483,22 @@ class Regional extends Component {
       return false;
     }
     //过滤后端所需要的数据
+    let isNumber = true;
     const item = this.state.singleLineData;
-    const alarmData = _.map(alarmTable, item => {
+    const alarmData = _.map(alarmTable, app => {
+      if (isNaN(Number(app.alarmDelay))) {
+        message.error('告警延迟只能输入数字！');
+        isNumber = false;
+      }
+
       return {
-        conType: item.conType,
-        condition: item.condition,
-        msgID: item.msgID,
+        conType: app.conType,
+        condition: app.condition,
+        msgID: app.msgID,
+        alarmDelay: parseInt(app.alarmDelay),
       };
     });
+    if (!isNumber) return false;
 
     const params = {
       F_DeviceType: item.F_DeviceType,

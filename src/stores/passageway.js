@@ -122,7 +122,7 @@ class Passageway {
     //   Result: 'success',
     // };
     if (data.Result == 'success') {
-      this.getVirtualDevList({
+      await this.getVirtualDevList({
         typeID: params.deviceType,
         version: params.version,
       });
@@ -137,6 +137,7 @@ class Passageway {
     const data = await passageway_getDev(params);
     if (data.Result == 'success') {
       this.virtualDevList = data.Data;
+      return data.Data;
     } else {
       message.error(data.Msg);
     }
@@ -165,7 +166,7 @@ class Passageway {
               alarmMsg: '',
               newAddRow: true,
               //告警延迟
-              delayID: 0,
+              alarmDelay: 0,
             },
           ];
     } else {
@@ -226,11 +227,8 @@ class Passageway {
   async vchannelEdit(params) {
     const data = await vchannel_edit(params);
     if (data.Result == 'success') {
-      this.getVirtualDevList({
-        typeID: params.deviceType,
-        version: params.version,
-      });
       message.success(data.Msg);
+      return data;
     } else {
       message.error(data.Msg);
     }

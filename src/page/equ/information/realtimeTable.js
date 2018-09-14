@@ -18,6 +18,9 @@ class Regional extends Component {
     this.onPageChange = this.onPageChange.bind(this);
     this.onSearch = this.onSearch.bind(this);
     this.real = this.real.bind(this);
+    this.state = {
+      isRealtimeCall: false,
+    };
   }
   componentDidMount() {}
   //table分页
@@ -29,7 +32,9 @@ class Regional extends Component {
       page: current,
       number: pageSize,
     };
-    informationStore.getRealtimeTable(params);
+    this.state.isRealtimeCall
+      ? informationStore.getRealTimeCall(params)
+      : informationStore.getRealtimeTable(params);
   }
   onPageChange(pageNumber) {
     const {informationStore} = this.props;
@@ -37,7 +42,10 @@ class Regional extends Component {
       ...informationStore.r_tableParmas,
       page: pageNumber,
     };
-    informationStore.getRealtimeTable(params);
+
+    this.state.isRealtimeCall
+      ? informationStore.getRealTimeCall(params)
+      : informationStore.getRealtimeTable(params);
   }
   onSearch(value) {
     const {informationStore} = this.props;
@@ -45,24 +53,34 @@ class Regional extends Component {
       ...informationStore.r_tableParmas,
       keywords: encodeURIComponent(value),
     };
-    informationStore.realtimeSearch(params);
+    this.state.isRealtimeCall
+      ? informationStore.getRealTimeCall(params)
+      : informationStore.realtimeSearch(params);
   }
   real() {
     const {informationStore} = this.props;
     const params = {
       ...informationStore.r_tableParmas,
+      page: 1,
     };
     informationStore.getRealTimeCall(params);
+    this.setState({
+      isRealtimeCall: true,
+    });
+  }
+  componentWillUnmount() {
+    this.setState({
+      isRealtimeCall: false,
+    });
   }
   render() {
     const {informationStore} = this.props;
+    const isRealtimeCall = this.state.isRealtimeCall;
     const r_tableData = toJS(informationStore.r_tableData);
     const tableData = (r_tableData && r_tableData.varList) || [];
     const pagination = r_tableData || {};
     const columns = columnData();
-    const data = _.map(tableData, (item, index) => {
-      return {...item, num: index + 1};
-    });
+
     return (
       <div>
         <Toolbar
@@ -72,14 +90,22 @@ class Regional extends Component {
         />
         <Table
           loading={informationStore.r_loading}
-          pageIndex={pagination.page}
-          pageSize={pagination.number}
+          pageIndex={
+            isRealtimeCall
+              ? informationStore.r_tableParmas.page
+              : pagination.page
+          }
+          pageSize={
+            isRealtimeCall
+              ? informationStore.r_tableParmas.number
+              : pagination.number
+          }
           total={pagination.count}
           columns={columns}
           useDefaultRowKey={true}
           onShowSizeChange={this.onShowSizeChange}
           onChange={this.onPageChange}
-          data={data}
+          data={tableData}
         />
       </div>
     );

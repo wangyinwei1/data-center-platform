@@ -57,6 +57,9 @@ const formParams = {
       value: '',
       require: true,
     },
+    adr: {
+      value: '',
+    },
   },
 };
 const clearFormParams = {
@@ -117,6 +120,9 @@ const clearFormParams = {
     F_NetInTime: {
       value: '',
       require: true,
+    },
+    adr: {
+      value: '',
     },
   },
 };

@@ -74,12 +74,12 @@ class Regional extends Component {
           name={'F_CalculateType'}
           rules={[{required: true, message: '请必须填写!'}]}
           children={[
-            {name: '多通道拼接', value: '1'},
-            {name: '多通道匹配', value: '2'},
-            {name: '多通道计算', value: '3'},
-            {name: '逻辑运算', value: '4'},
-            {name: '单通道累计时长', value: '5'},
-            {name: '单通道累计次数', value: '6'},
+            {name: '多通道拼接', value: 1},
+            {name: '多通道匹配', value: 2},
+            {name: '多通道计算', value: 3},
+            {name: '逻辑运算', value: 4},
+            {name: '单通道累计时长', value: 5},
+            {name: '单通道累计次数', value: 6},
           ]}
         />
         <FormSelect

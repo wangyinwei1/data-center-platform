@@ -176,14 +176,14 @@ class Regional extends Component {
                   {
                     name: '最大值',
                     type: 'line',
-                    areaStyle: {normal: {color: '#a4cbff', opacity: 0.6}},
+                    areaStyle: {normal: {color: '#7ffbbc', opacity: 0.6}},
                     lineStyle: {normal: {opacity: 0}},
                     data: item.maxfs,
                   },
                   {
                     name: '最小值',
                     type: 'line',
-                    areaStyle: {normal: {color: '#7ffbbc', opacity: 0.6}},
+                    areaStyle: {normal: {color: '#a4cbff', opacity: 0.6}},
                     lineStyle: {normal: {opacity: 0}},
                     data: item.minfs,
                   },

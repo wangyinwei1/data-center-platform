@@ -117,6 +117,7 @@ class Information extends Component {
       sunBatchField: '',
       ...formParams,
       ...addLevelOne,
+      concentratorDev: '',
       ...addChildDevice,
     };
   }
@@ -294,6 +295,7 @@ class Information extends Component {
       formValue.rec.value = data.pd.rec;
       formValue.F_ReportType.value = data.pd.reportType;
       formValue.F_SimCardNO.value = data.pd.simCardNo;
+      formValue.adr.value = data.pd.adr || data.pd.adr === 0 ? data.pd.adr : '';
       return {
         fields: {
           ...fields,
@@ -554,6 +556,8 @@ class Information extends Component {
       _.forIn(fields, (value, key) => {
         if (key === 'F_IP' && fields['F_IsConcentrator'].value === 1) {
           params['F_ConcentratorIP'] = value.value;
+        } else if (key === 'adr') {
+          params[key] = parseInt(value.value);
         } else {
           params[key] = value.value;
         }
@@ -901,7 +905,15 @@ class Information extends Component {
   }
   onBatchOk() {
     const {informationStore: {fsuDevsEnabledOnOff, fsuDelectAll}} = this.props;
-    const batchIds = this.state.batchIds;
+    const batchIdsAll = this.state.batchIds;
+    const concentratorDev = this.state.concentratorDev;
+    const batchIds = batchIdsAll
+      .split(',')
+      .filter(item => {
+        return concentratorDev.indexOf(item) === -1;
+      })
+      .join(',');
+
     const sunBatchField = this.state.sunBatchField;
     let result = '';
     result = !batchIds && sunBatchField;
@@ -994,18 +1006,25 @@ class Information extends Component {
     const rowSelection = {
       onSelectAll: (selected, selectedRows, changeRows) => {
         if (selected) {
-          const notConcentratorDev = selectedRows.filter(item => {
-            return item.isConcentrator !== 1;
-          });
-          const devIDs = notConcentratorDev.map(item => {
+          const concentratorDev = selectedRows
+            .map(item => {
+              return item.isConcentrator === 1 && item.devID;
+            })
+            .filter(item => {
+              if (item) return item;
+            });
+
+          const devIDs = selectedRows.map(item => {
             return item.devID;
           });
           this.setState({
             batchIds: devIDs.join(','),
+            concentratorDev: concentratorDev.join(','),
           });
         } else {
           this.setState({
             batchIds: '',
+            concentratorDev: '',
           });
         }
       },
@@ -1071,6 +1090,7 @@ class Information extends Component {
                 rowClassName={(record, index) => {
                   const rowClassName = ['td_padding'];
                   record.statustwo === 0 &&
+                    record.isConcentrator === 0 &&
                     rowClassName.push('cl_online_state');
                   record.isConcentrator === 0 &&
                     rowClassName.push('cl_hidden_expand_icon');

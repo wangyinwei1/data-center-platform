@@ -75,6 +75,9 @@ const alarmFormParams = {
     msgID: {
       value: undefined,
     },
+    alarmDelay: {
+      value: '',
+    },
   },
 };
 const virtualParams = {

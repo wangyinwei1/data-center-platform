@@ -192,7 +192,12 @@ class Passageway extends Component {
         (!record.msgID && record.msgID !== 0) ||
         (!record.condition && record.condition !== 0)
       ) {
-        if (alarmTable.length === 1) {
+        if (
+          alarmTable.length === 1 &&
+          !record.conType &&
+          !record.msgID &&
+          !record.condition
+        ) {
           alarmTable = [];
         } else {
           hasAlarmError.push(index + 1);
@@ -213,15 +218,23 @@ class Passageway extends Component {
       );
       return false;
     }
+    let isNumber = true;
     //过滤后端所需要的数据
     const item = this.state.singleLineData;
-    const alarmData = _.map(alarmTable, item => {
+    const alarmData = _.map(alarmTable, app => {
+      if (isNaN(Number(app.alarmDelay))) {
+        message.error('告警延迟只能输入数字！');
+        isNumber = false;
+      }
+
       return {
-        conType: item.conType,
-        condition: item.condition,
-        msgID: item.msgID,
+        conType: app.conType,
+        condition: app.condition,
+        msgID: app.msgID,
+        alarmDelay: parseInt(app.alarmDelay),
       };
     });
+    if (!isNumber) return false;
 
     const {passagewayStore: {alarmBatchSave}} = this.props;
     const params = {
@@ -442,18 +455,45 @@ class Passageway extends Component {
       return;
     }
 
-    const {passagewayStore: {getEditVirtual}} = this.props;
+    const {
+      passagewayStore: {getEditVirtual, virtualDevList, virtualList},
+    } = this.props;
     const item = this.state.singleLineData;
     const params = {
       deviceType: item.typeID,
-      channelID: this.state.currentChannelID,
+      channelID: this.state.fields.F_ChannelID.value,
       version: item.version,
     };
     getEditVirtual(params).then(data => {
-      const relateChannelID = data.relateChannelID.split(',');
-      _.map(relateChannelID, item => {
+      const relateChannelList = data.relateChannelList
+        ? data.relateChannelList
+        : [];
+      const relateChannelID = data.relateChannelID
+        ? data.relateChannelID.split(',')
+        : '';
+
+      _.map(relateChannelList, item => {
+        const {passagewayStore: {virtualDevList}} = this.props;
         const obj = {};
-        obj[item] = {value: undefined};
+        const currentID = relateChannelID.filter(app => {
+          return app.indexOf(item.relateChannelID) != -1;
+        });
+        const currentDevId = currentID[0].substring(
+          0,
+          currentID[0].indexOf('.'),
+        );
+        const currnetDev = _.filter(virtualDevList, app => {
+          if (currentDevId) {
+            return parseInt(app.deviceID) === parseInt(currentDevId);
+          } else {
+            return (
+              parseInt(app.deviceID) === parseInt(this.state.currentDevice)
+            );
+          }
+        });
+        obj[item.relateChannelID] = {
+          value: currnetDev[0] ? currnetDev[0].deviceName : undefined,
+        };
 
         this.setState(({virtualFields}) => {
           return {
@@ -464,9 +504,11 @@ class Passageway extends Component {
           };
         });
       });
-      this.setState({
-        virtualShow: true,
-      });
+      _.keys(this.state.virtualFields)[0]
+        ? this.setState({
+            virtualShow: true,
+          })
+        : message.error('该虚拟属性没有相应内容！');
     });
   }
   onVirtualOk() {
@@ -484,12 +526,19 @@ class Passageway extends Component {
     } else {
       const {passagewayStore: {vchannelEdit}} = this.props;
       const item = this.state.currentVirtual;
+      const virtualFields = this.state.virtualFields;
+      const keys = _.keys(virtualFields);
+      const relateChannelID = _.map(keys, app => {
+        const value = virtualFields[app].value;
+        return `${value}.${app}`;
+      });
+
       const params = {
         Id_Version: `${item.deviceType}_${item.version}`,
         F_ChannelID: item.channelID,
         F_CalculateType: item.calculateType,
         F_Expression: item.expression,
-        F_RelateChannelID: item.relateChannelID,
+        F_RelateChannelID: relateChannelID ? relateChannelID.join(',') : '',
         F_RelateChannelName: item.relateChannelName,
         F_Fid: item.fid,
       };
@@ -604,7 +653,9 @@ class Passageway extends Component {
                 nesting={nesting}
                 rowClassName={(record, index) => {
                   const rowClassName = ['td_padding'];
-                  record.statustwo == 0 && rowClassName.push('cl_online_state');
+                  record.statustwo == 0 &&
+                    record.isConcentrator === 0 &&
+                    rowClassName.push('cl_online_state');
                   record.isConcentrator == 0 &&
                     rowClassName.push('cl_hidden_expand_icon');
                   return rowClassName.join(' ');

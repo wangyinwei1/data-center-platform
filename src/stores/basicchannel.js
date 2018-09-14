@@ -131,7 +131,7 @@ class Passageway {
                 alarmMsg: '',
                 newAddRow: true,
                 //告警延迟
-                delayID: 0,
+                alarmDelay: 0,
               },
             ];
     } else {

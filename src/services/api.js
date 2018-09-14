@@ -112,11 +112,11 @@ export function agreement_delete(data) {
 export function agreement_search(params) {
   return request.get(base + '/device_devtype/generaList.do', {params});
 }
-export function agreementSave(params) {
-  return request.get(base + '/device_protocol/save.do', {params});
+export function agreementSave(data) {
+  return request.post(base + '/device_protocol/save.do', data);
 }
-export function agreementEditSave(params) {
-  return request.get(base + '/device_protocol/edit.do', {params});
+export function agreementEditSave(data) {
+  return request.post(base + '/device_protocol/edit.do', data);
 }
 //alarminformation
 export function getAlarminformationTable(params) {

@@ -873,7 +873,7 @@ class Information extends Component {
                 columns={columns}
                 rowClassName={(record, index) => {
                   const rowClassName = ['td_padding'];
-                  record.statustwo == 0 && rowClassName.push('cl_online_state');
+                  record.statustwo == 0 && rowClassName.push('cl_basic_state');
                   record.isConcentrator == 0 &&
                     rowClassName.push('cl_hidden_expand_icon');
                   return rowClassName.join(' ');

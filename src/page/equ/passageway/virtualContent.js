@@ -33,13 +33,15 @@ class Regional extends Component {
         name: item.deviceName,
       };
     });
+    const keys = _.keys(fields);
+
     return (
       <Form layout="inline" className={styles['virtual_wrap']}>
         {_.map(toJS(editVirtualData.relateChannelList), (item, i) => {
           return (
             <Row key={i.toString(36) + i}>
               <div className={styles['virtualLabel']}>
-                关联通道:<span>{item.relateChannelName}</span> 关联名称:
+                关联通道:<span>{item.relateChannelName}</span> 关联设备:
               </div>
               <FormSelect
                 {...fields}

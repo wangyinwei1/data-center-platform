@@ -35,15 +35,15 @@ class DeleteModal extends Component {
     switch (mode) {
       case 'new':
         title = {
-          zh: '用户新增',
-          en: 'New users',
+          zh: '告警新增',
+          en: '',
         };
 
         break;
       case 'modify':
         title = {
-          zh: '用户修改',
-          en: 'User modification',
+          zh: '告警修改',
+          en: '',
         };
         break;
     }

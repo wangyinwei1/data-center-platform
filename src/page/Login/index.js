@@ -51,20 +51,28 @@ class Loginer extends Component {
         loginStore.userLogin(params).then(data => {
           if (data) {
             //保存serviceip
-            globalStore.saveIp_name({
-              ip: data.ip,
-            }),
-              //记住密码设置cookies
-              values.remember
-                ? Cookies.set('remember', {username, password}, {expires: 7})
-                : Cookies.remove('remember');
+            // globalStore.saveIp_name({
+            //   ip: data.ip,
+            // }),
+            localStorage.setItem('serviceip', data.ip);
+            const timeoutUrl = localStorage.getItem('timeoutUrl');
+
+            //记住密码设置cookies
+            values.remember
+              ? Cookies.set('remember', {username, password}, {expires: 7})
+              : Cookies.remove('remember');
             //保存用户名
             Cookies.set('cl_username', {username: values.username});
 
-            //setSelectedKeys
-            layoutStore.setSelectedKeys('shouye');
             //跳转路由
-            router.push('/shouye');
+
+            if (globalStore.isTimeout) {
+              router.goBack();
+            } else {
+              //setSelectedKeys
+              layoutStore.setSelectedKeys('shouye');
+              router.push('/shouye');
+            }
           } else {
             this.setBgImage();
           }
@@ -79,6 +87,7 @@ class Loginer extends Component {
   }
   render() {
     const {getFieldDecorator} = this.props.form;
+    const {globalStore} = this.props;
     const rememberCookies =
       Cookies.get('remember') && JSON.parse(Cookies.get('remember'));
     return (

@@ -1,4 +1,6 @@
 import axios from 'axios';
+import globalStore from '../stores/global.js';
+import {stores} from '../stores/index.js';
 import {message, notification} from 'antd';
 
 function checkStatus(response) {
@@ -43,10 +45,18 @@ const request = axios.create({
 request.interceptors.response.use(checkStatus, catchError);
 request.interceptors.response.use(res => {
   if (res.response && res.response.status == 401) {
+    const timeoutUrl = location.hash.replace(/#/, '');
+
+    localStorage.setItem('timeoutUrl', timeoutUrl);
     setTimeout(() => {
+      stores.globalStore.changeIsTimeout(true);
       message.error('登录超时,请重新登录！');
-      location.href = location.origin + '/collect/#/login';
-    }, 800);
+      if (process.env.NODE_ENV === 'production') {
+        location.href = location.origin + '/collect/#/login';
+      } else {
+        location.href = location.origin + '/#/login';
+      }
+    }, 50);
     return response;
   }
   return res.data;

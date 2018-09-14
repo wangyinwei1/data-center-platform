@@ -129,13 +129,18 @@ class Regional extends Component {
       onKeyPress,
       cascaderValue,
       loading,
+      type,
     } = this.props;
 
     return (
       <div className={styles['regional_wrap']} style={{position: 'relative'}}>
         <Row className={styles['regional_selection']}>
           <Col span={1} className={styles['title']}>
-            <label>区域选择&nbsp;:</label>
+            {type === 'dev' ? (
+              <label>设备类型&nbsp;:</label>
+            ) : (
+              <label>区域选择&nbsp;:</label>
+            )}
           </Col>
 
           <Col span={1} className={styles['value']}>

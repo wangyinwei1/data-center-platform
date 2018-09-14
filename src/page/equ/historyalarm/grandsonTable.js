@@ -34,6 +34,11 @@ class Regional extends Component {
         <Table
           pagination={false}
           loading={historyalarmStore.g_loading}
+          rowClassName={(record, index) => {
+            const rowClassName = [];
+            record.statustwo === 0 && rowClassName.push('cl_off_state');
+            return rowClassName.join(' ');
+          }}
           columns={columns}
           data={tableData}
         />

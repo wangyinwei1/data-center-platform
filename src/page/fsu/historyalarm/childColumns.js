@@ -24,10 +24,6 @@ const columns = () => {
       dataIndex: 'spName',
     },
     {
-      title: '开始时间',
-      dataIndex: 'startTime',
-    },
-    {
       title: '告警值',
       dataIndex: 'triggerVal',
     },
@@ -40,11 +36,19 @@ const columns = () => {
       dataIndex: 'alarmDesc',
     },
     {
-      title: '处理时间',
+      title: '开始时间',
+      dataIndex: 'startTime',
+    },
+    {
+      title: '确认时间',
       dataIndex: 'dealTime',
     },
     {
       title: '处理时间',
+      dataIndex: 'confirmTime',
+    },
+    {
+      title: '结束时间',
       dataIndex: 'endTime',
     },
   ];

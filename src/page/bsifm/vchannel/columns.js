@@ -44,6 +44,21 @@ const columns = ({deleteClick, editClick, detailClick, _this}) => {
       title: '计算模式',
       width: '10%',
       dataIndex: 'calculateType',
+      render: (text, record, index) => {
+        const type = [
+          {name: '多通道拼接', value: 1},
+          {name: '多通道匹配', value: 2},
+          {name: '多通道计算', value: 3},
+          {name: '逻辑运算', value: 4},
+          {name: '单通道累计时长', value: 5},
+          {name: '单通道累计次数', value: 6},
+        ];
+        const currentType = type.filter(item => {
+          return item.value === text;
+        });
+
+        return currentType[0] ? currentType[0].name : '';
+      },
     },
     {
       title: '关联通道',

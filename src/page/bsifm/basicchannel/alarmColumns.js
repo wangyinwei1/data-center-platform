@@ -11,9 +11,9 @@ const Option = Select.Option;
  * @return {array}
  */
 const conType = [
-  {F_StoreMode: 0, name: '无条件保存'},
-  {F_StoreMode: 1, name: '变动值'},
-  {F_StoreMode: 2, name: '变动率'},
+  {F_StoreMode: 1, name: '绝对值'},
+  {F_StoreMode: 2, name: '变动值'},
+  {F_StoreMode: 3, name: '变动率'},
 ];
 const menu = ({handleChange, _this, record}) => {
   return (
@@ -187,7 +187,7 @@ const columns = ({
     },
     {
       title: '告警延迟',
-      dataIndex: 'delayID',
+      dataIndex: 'alarmDelay',
       width: mode === 'detail' ? '23%' : '18%',
       render: (text, record, index) => {
         return (
@@ -198,7 +198,7 @@ const columns = ({
             }}
             placeholder={'请输入内容'}
             className={styles['con_input']}
-            value={record.delayID}
+            value={record.alarmDelay}
           />
         );
       },

@@ -66,6 +66,7 @@ class Site extends Component {
     deviceversionStore.getGoAdd();
     this.setState({
       editShow: true,
+      type: 'new',
     });
   }
   initFromValue(data, mode, item) {

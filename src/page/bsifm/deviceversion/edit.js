@@ -36,7 +36,7 @@ class DeleteModal extends Component {
       case 'new':
         title = {
           zh: '新增设备类型',
-          en: 'New area',
+          en: '',
         };
 
         break;

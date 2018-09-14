@@ -40,8 +40,12 @@ class Pie extends Component {
                   styles['basic_icon'],
                 )}
               />
-              <span className={styles['basic_title']}>CPU</span>
-              <div className={styles['basic_num']}>
+              <span className={styles['basic_title']}>CPU(%)</span>
+              <div
+                className={classnames(
+                  styles['basic_num'],
+                  servicesData.cpu > 80 && styles['error_num'],
+                )}>
                 {servicesData.cpu || servicesData.cpu === 0
                   ? servicesData.cpu
                   : 0}
@@ -54,8 +58,12 @@ class Pie extends Component {
                   styles['basic_icon'],
                 )}
               />
-              <span className={styles['basic_title']}>内存</span>
-              <div className={styles['basic_num']}>
+              <span className={styles['basic_title']}>内存(%)</span>
+              <div
+                className={classnames(
+                  styles['basic_num'],
+                  servicesData.memory > 80 && styles['error_num'],
+                )}>
                 {servicesData.memory || servicesData.memory === 0
                   ? servicesData.memory
                   : 0}

@@ -159,7 +159,9 @@ class Regional extends Component {
           loading={informationStore.g_loading}
           onRowDoubleClick={this.onRowDoubleClick}
           rowClassName={(record, index) => {
-            return 'td_padding';
+            const rowClassName = ['td_padding'];
+            record.statustwo === 0 && rowClassName.push('cl_off_state');
+            return rowClassName.join(' ');
           }}
           columns={columns}
           data={tableData}
