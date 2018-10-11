@@ -3,6 +3,9 @@ import {
   confirmAlarm,
   cancelAlarm,
   dealAlarm,
+  alarmDeviceDetailsList,
+  onlineDeviceList,
+  offlineDeviceList,
   endAlarm,
   queryAlarmList,
   queryFSUAlarmList,
@@ -21,6 +24,9 @@ class HomePage {
   @observable tableData = {};
   @observable tableParmas = {};
   @observable loading = false;
+  @observable a_tableData = {};
+  @observable a_tableParmas = {};
+  @observable a_loading = false;
   @observable servicesData = {};
   @observable apiData = [];
   @observable frontsData = [];
@@ -669,6 +675,48 @@ class HomePage {
     this.loading = false;
     if (data.Result == 'success') {
       this.alarmMenuList = data.Data.alarmMenuList;
+    } else {
+      message.error(data.Msg);
+    }
+  }
+  @action.bound
+  async offlineDeviceList(params) {
+    this.a_loading = true;
+    const data = await offlineDeviceList(params);
+    this.a_loading = false;
+    if (data.Result == 'success') {
+      params.number = data.Data.number;
+      params.page = data.Data.page;
+      this.a_tableParmas = params;
+      this.a_tableData = data.Data;
+    } else {
+      message.error(data.Msg);
+    }
+  }
+  @action.bound
+  async onlineDeviceList(params) {
+    this.a_loading = true;
+    const data = await onlineDeviceList(params);
+    this.a_loading = false;
+    if (data.Result == 'success') {
+      params.number = data.Data.number;
+      params.page = data.Data.page;
+      this.a_tableParmas = params;
+      this.a_tableData = data.Data;
+    } else {
+      message.error(data.Msg);
+    }
+  }
+  @action.bound
+  async alarmDeviceDetailsList(params) {
+    this.a_loading = true;
+    const data = await alarmDeviceDetailsList(params);
+    this.a_loading = false;
+    if (data.Result == 'success') {
+      params.number = data.Data.number;
+      params.page = data.Data.page;
+      this.a_tableParmas = params;
+      this.a_tableData = data.Data;
     } else {
       message.error(data.Msg);
     }

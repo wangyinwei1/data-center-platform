@@ -710,7 +710,7 @@ class Regional extends Component {
             />
             <Table
               pageIndex={pagination.page}
-              pageSize={pagination.showCount}
+              pageSize={pagination.number}
               loading={basicchannelStore.loading}
               onRowDoubleClick={this.onRowDoubleClick}
               total={pagination.allCount}

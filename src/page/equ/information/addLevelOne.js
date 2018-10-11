@@ -51,7 +51,7 @@ class AddChild extends Component {
           disabled={disabled}
           name={'F_PortName'}
           placeholder={'请输入端口名称'}
-          rules={[{required: false}]}
+          rules={[{required: true, message: '请必须填写!'}]}
         />
         <FormInput
           {...fields}

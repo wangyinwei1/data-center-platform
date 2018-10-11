@@ -40,15 +40,18 @@ class Pie extends Component {
                   styles['basic_icon'],
                 )}
               />
-              <span className={styles['basic_title']}>CPU(%)</span>
+              <span className={styles['basic_title']}>CPU</span>
               <div
                 className={classnames(
                   styles['basic_num'],
                   servicesData.cpu > 80 && styles['error_num'],
                 )}>
-                {servicesData.cpu || servicesData.cpu === 0
-                  ? servicesData.cpu
-                  : 0}
+                <span style={{position: 'relative'}}>
+                  {servicesData.cpu || servicesData.cpu === 0
+                    ? servicesData.cpu
+                    : 0}
+                  <span className={styles['percentage']}>%</span>
+                </span>
               </div>
             </div>
             <div className={styles['memory_info']}>
@@ -58,15 +61,18 @@ class Pie extends Component {
                   styles['basic_icon'],
                 )}
               />
-              <span className={styles['basic_title']}>内存(%)</span>
+              <span className={styles['basic_title']}>内存</span>
               <div
                 className={classnames(
                   styles['basic_num'],
                   servicesData.memory > 80 && styles['error_num'],
                 )}>
-                {servicesData.memory || servicesData.memory === 0
-                  ? servicesData.memory
-                  : 0}
+                <span style={{position: 'relative'}}>
+                  {servicesData.memory || servicesData.memory === 0
+                    ? servicesData.memory
+                    : 0}
+                  <span className={styles['percentage']}>%</span>
+                </span>
               </div>
             </div>
             <div className={styles['time_info']}>

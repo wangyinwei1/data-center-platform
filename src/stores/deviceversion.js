@@ -60,7 +60,7 @@ class Deviceversion {
     this.loading = true;
     const data = await getDeviceversionTable(params);
     this.loading = false;
-    params.showCount = data.pd.showCount;
+    params.number = data.pd.number;
     params.page = data.pd.page;
     this.tableParmas = params;
     this.tableData = data;
@@ -70,7 +70,7 @@ class Deviceversion {
     this.loading = true;
     const data = await getDeviceversionTable(params);
     this.loading = false;
-    params.showCount = data.pd.showCount;
+    params.number = data.pd.number;
     params.page = data.pd.page;
     this.tableParmas = params;
     this.tableData = data;

@@ -78,7 +78,6 @@ class Regional extends Component {
       <div>
         <Toolbar onSearch={this.onSearch} closeAdd={true} />
         <Table
-          classnames={'aaa'}
           pageIndex={pagination.page}
           pageSize={pagination.number}
           total={pagination.count}

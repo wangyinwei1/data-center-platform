@@ -132,7 +132,10 @@ const addLevelOne = {
       value: '',
       require: true,
     },
-    F_PortName: {value: ''},
+    F_PortName: {
+      value: '',
+      require: true,
+    },
     F_Rec: {value: ''},
   },
 };

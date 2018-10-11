@@ -232,6 +232,9 @@ export function getByDevice(params) {
 export function findDeviceData(params) {
   return request.get(base + '/device_hisdata/FindDeviceData.do', {params});
 }
+export function findDeviceDataList(params) {
+  return request.get(base + '/device_hisdata/FindDeviceDataList', {params});
+}
 export function getControlChannel(params) {
   return request.get(base + '/device_dev/getControlChannel.do', {params});
 }
@@ -276,8 +279,8 @@ export function editSun(data) {
 export function delectSun(data) {
   return request.post(base + '/device_dev/delect_sun.do', data);
 }
-export function onoroff(params) {
-  return request.get(base + '/device_dev/onoroff.do', {params});
+export function onoroff(data) {
+  return request.post(base + '/device_dev/onoroff.do', data);
 }
 export function initAdd(params) {
   return request.get(base + '/device_channel/initAdd.do', {params});
@@ -490,6 +493,9 @@ export function getFsuSp(params) {
 export function findStation(params) {
   return request.get(base + '/FSU_device/find_station.do', {params});
 }
+export function fsuDeviceRealTimeCall(params) {
+  return request.get(base + '/FSU_device/FsuDeviceRealTimeCall', {params});
+}
 export function fsuDevicemanagementSave(data) {
   return request.post(base + '/FSU_device/save_FSU2.do', data);
 }
@@ -677,6 +683,15 @@ export function getCountInfo(params) {
   return request.get(base + '/onlinemanager/countInfo', {params});
 }
 
+export function onlineDeviceList(params) {
+  return request.get(base + '/onlinemanager/onlineDeviceList', {params});
+}
+export function offlineDeviceList(params) {
+  return request.get(base + '/onlinemanager/offlineDeviceList', {params});
+}
+export function alarmDeviceDetailsList(params) {
+  return request.get(base + '/device_alarm/alarmDeviceDetailsList', {params});
+}
 export function queryFSUAlarmCountList(params) {
   return request.get(base + '/device_alarm/queryFSUAlarmCountList.do', {
     params,

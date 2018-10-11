@@ -16,6 +16,7 @@ const menu = ({
   detailClick,
   _this,
   record,
+  disableClick,
   addLevelOneClick,
 }) => {
   return (
@@ -38,6 +39,12 @@ const menu = ({
           <span>编辑</span>
         </div>
       </Menu.Item>
+      <Menu.Item key="c_disable" onClick={disableClick.bind(_this, record)}>
+        <div className={styles['disable']}>
+          <i className={classnames('icon iconfont icon-jinyong')} />
+          <span>{record.status === 1 ? '启用' : '禁用'}</span>
+        </div>
+      </Menu.Item>
       <Menu.Item key="c_delete" onClick={deleteClick.bind(_this, record)}>
         <div className={styles['delete']}>
           <i className={classnames('icon iconfont icon-shanchu')} />
@@ -52,10 +59,12 @@ const columns = ({
   realtimeClick,
   historyClick,
   controlClick,
+  disableClick,
   editClick,
   rumorClick,
   addLevelOneClick,
   detailClick,
+  getAlarmTable,
   _this,
 }) => {
   return [
@@ -104,8 +113,16 @@ const columns = ({
       className: 'information_th',
       dataIndex: 'alerm_count',
       render: (text, record, index) => {
-        if (record.isConcentrator === 1) return null;
-        return text;
+        return (
+          <a
+            className={styles['child_link']}
+            onClick={
+              record.isConcentrator !== 1 &&
+              (getAlarmTable ? getAlarmTable.bind(_this, record) : () => {})
+            }>
+            {record.isConcentrator === 1 ? null : text}
+          </a>
+        );
       },
     },
     {
@@ -189,6 +206,7 @@ const columns = ({
               deleteClick,
               detailClick,
               addLevelOneClick,
+              disableClick,
               _this,
               record,
             })}

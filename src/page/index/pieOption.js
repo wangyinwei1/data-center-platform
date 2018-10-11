@@ -6,6 +6,7 @@ const option = (allCount: {}, height) => {
       formatter: '{a} <br/>{b} ({d}%)',
     },
     legend: {
+      show: false,
       orient: 'vertical',
       left: '53%',
       top: '25%',

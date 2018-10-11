@@ -41,11 +41,11 @@ const columns = () => {
     },
     {
       title: '确认时间',
-      dataIndex: 'dealTime',
+      dataIndex: 'confirmTime',
     },
     {
       title: '处理时间',
-      dataIndex: 'confirmTime',
+      dataIndex: 'dealTime',
     },
     {
       title: '结束时间',

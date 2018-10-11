@@ -114,7 +114,7 @@ var devPlugins = [
 var productionPlugins = [
   // 定义生产环境
   new webpack.DefinePlugin({
-    'process.env.NODE_ENV': 'production',
+    'process.env.NODE_ENV': JSON.stringify('production'),
   }),
   // 复制
   new CopyWebpackPlugin([

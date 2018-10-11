@@ -63,7 +63,6 @@ class Edit extends Component {
           label={'设备名称'}
           name={'F_Name'}
           disabled={disabled}
-          placeholder={'请输入设备名称'}
           rules={[{required: true, message: '请必须填写!'}]}
         />
         <FormInput
@@ -79,7 +78,6 @@ class Edit extends Component {
           onChange={this.handleFormChange}
           disabled={disabled}
           label={'设备IP'}
-          placeholder={'请选择站点'}
           name={'F_SuIP'}
           rules={[
             {required: true, message: '请必须填写!'},
@@ -94,7 +92,6 @@ class Edit extends Component {
           onChange={this.handleFormChange}
           label={'端口'}
           disabled={disabled}
-          placeholder={'请选择设备类型'}
           name={'F_SuPort'}
           rules={[
             {required: true, message: '请必须填写!'},
@@ -125,7 +122,6 @@ class Edit extends Component {
           onChange={this.handleFormChange}
           disabled={disabled}
           label={'所属站点'}
-          placeholder={'请选择站点'}
           name={'F_StationID'}
           rules={[{required: true, message: '请必须填写!'}]}
           children={devBelongunit}
@@ -136,7 +132,6 @@ class Edit extends Component {
           label={'厂家信息'}
           disabled={disabled}
           name={'F_SuVendor'}
-          placeholder={'请输入设备端口'}
           rules={[{required: false}]}
         />
         <FormInput
@@ -145,7 +140,6 @@ class Edit extends Component {
           label={'硬件版本'}
           disabled={disabled}
           name={'F_SuHardVer'}
-          placeholder={'请输入设备端口'}
           rules={[{required: false}]}
         />
         <FormInput
@@ -154,7 +148,6 @@ class Edit extends Component {
           label={'软件版本'}
           disabled={disabled}
           name={'F_SuSoftVer'}
-          placeholder={'请输入外部编号'}
           rules={[{required: false}]}
         />
         <FormInput
@@ -163,7 +156,6 @@ class Edit extends Component {
           label={'型号'}
           disabled={disabled}
           name={'F_SuModel'}
-          placeholder={'请输入外部编号'}
           rules={[{required: false}]}
         />
       </Form>

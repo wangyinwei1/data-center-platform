@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {action, observer, inject} from 'mobx-react';
 import {toJS} from 'mobx';
 import styles from './index.less';
+import {message} from 'antd';
 import Table from '../../../components/Table';
 import {decorate as mixin} from 'react-mixin';
 import columnData from './grandsonColumns.js';
@@ -54,7 +55,7 @@ class Regional extends Component {
       F_DeviceID: item.subDeviceID,
     };
     informationStore.getRealtimeTable(params);
-    realtimeChange();
+    realtimeChange(item);
   }
   historyClick(item, e) {
     e.stopPropagation();
@@ -64,11 +65,15 @@ class Regional extends Component {
       F_DeviceID: item.subDeviceID,
     };
     informationStore.getByDevice(params);
-    historyChange();
+    historyChange(item);
   }
   controlClick(item, e) {
     e.stopPropagation();
     e.nativeEvent.stopImmediatePropagation();
+    if (item.statustwo === 0) {
+      message.error('离线设备不支持远程控制！');
+      return;
+    }
     const {informationStore, controlChange} = this.props;
     const params = {
       F_DeviceID: item.subDeviceID,

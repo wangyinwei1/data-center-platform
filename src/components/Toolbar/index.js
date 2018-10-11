@@ -83,6 +83,8 @@ class Regional extends Component {
       onClick,
       showValue,
       deviceStatus,
+      needRealtime,
+      realLoding,
       closeAdd,
       theme,
       channelType,
@@ -151,7 +153,11 @@ class Regional extends Component {
             )}
           {showValue &&
             showValue.indexOf('real') != -1 && (
-              <Button className={styles['real_btn']} onClick={this.real}>
+              <Button
+                className={styles['real_btn']}
+                disabled={!needRealtime}
+                loading={realLoding}
+                onClick={this.real}>
                 实时召测
               </Button>
             )}

@@ -56,7 +56,7 @@ class Site extends Component {
     const params = {
       page: 1,
       keywords: '',
-      showCount: 10,
+      number: 10,
     };
     getTable(params);
   }
@@ -225,7 +225,7 @@ class Site extends Component {
     const params = {
       page: 1,
       keywords: '',
-      showCount: 10,
+      number: 10,
     };
     getTable(params);
 
@@ -282,7 +282,7 @@ class Site extends Component {
             <div className={styles['table_wrap']}>
               <Table
                 pageIndex={pagination.page}
-                pageSize={pagination.showCount}
+                pageSize={pagination.number}
                 total={pagination.allCount}
                 columns={columns}
                 loading={deviceversionStore.loading}

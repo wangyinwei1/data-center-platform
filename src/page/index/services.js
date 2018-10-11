@@ -97,11 +97,11 @@ const rightItem = props => {
       info: data.ondate ? data.ondate : '-',
     },
     {
-      label: '内存',
+      label: '内存(%)',
       info: data.memory || data.memory === 0 ? data.memory : '-',
     },
     {
-      label: 'CPU',
+      label: 'CPU(%)',
       info: data.cpu || data.cpu === 0 ? data.cpu : '-',
     },
   ];

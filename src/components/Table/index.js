@@ -31,6 +31,7 @@ class Cl_Table extends Component {
       useDefaultRowKey,
       expandIconAsCell,
       rowSelection,
+      scroll,
     } = this.props;
     const onRow = onRowDoubleClick
       ? {
@@ -64,6 +65,7 @@ class Cl_Table extends Component {
           }}
           {...(nesting ? nesting : {})}
           columns={columns}
+          scroll={scroll}
           dataSource={data}
           loading={loading ? true : false}
           rowClassName={rowClassName}

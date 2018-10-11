@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {action, observer, inject} from 'mobx-react';
 import {Spin, Form, message} from 'antd';
 import styles from './index.less';
+import RealtimeAlarmTable from '../realtimealarm/childTable.js';
 import Cascader from '../../../components/Cascader';
 import {toJS} from 'mobx';
 import {decorate as mixin} from 'react-mixin';
@@ -24,7 +25,12 @@ import AddLevelOne from './addLevelOne.js';
 import AddChildDevice from './addChildDevice.js';
 import {formParams, addLevelOne, addChildDevice} from './tplJson.js';
 //实例
-@inject('regionalStore', 'informationStore', 'fsu_devicemanagementStore')
+@inject(
+  'regionalStore',
+  'informationStore',
+  'fsu_devicemanagementStore',
+  'fsu_realtimealarmStore',
+)
 @observer
 @mixin(cascader)
 class Information extends Component {
@@ -37,6 +43,7 @@ class Information extends Component {
     this.deleteClick = this.deleteClick.bind(this);
     this.editClick = this.editClick.bind(this);
     this.onDeleteOk = this.onDeleteOk.bind(this);
+    this.onDisableOk = this.onDisableOk.bind(this);
     this.onDeleteCancel = this.onDeleteCancel.bind(this);
     this.onSearch = this.onSearch.bind(this);
     this.onShowSizeChange = this.onShowSizeChange.bind(this);
@@ -45,11 +52,14 @@ class Information extends Component {
     this.onKeyPress = this.onKeyPress.bind(this);
     this.onPageChange = this.onPageChange.bind(this);
     this.onRealtimeOk = this.onRealtimeOk.bind(this);
+    this.onDisableCancel = this.onDisableCancel.bind(this);
     this.onRealtimeCancel = this.onRealtimeCancel.bind(this);
     this.expandedRowRender = this.expandedRowRender.bind(this);
     this.onExpand = this.onExpand.bind(this);
     this.realtimeChange = this.realtimeChange.bind(this);
     this.historyChange = this.historyChange.bind(this);
+    this.childDeleteChange = this.childDeleteChange.bind(this);
+    this.disableClick = this.disableClick.bind(this);
     this.rumorChange = this.rumorChange.bind(this);
     this.controlChange = this.controlChange.bind(this);
     this.onHistoryCancel = this.onHistoryCancel.bind(this);
@@ -75,7 +85,9 @@ class Information extends Component {
     this.onBatchDisableClick = this.onBatchDisableClick.bind(this);
     this.onBatchEnabledClick = this.onBatchEnabledClick.bind(this);
     this.onBatchOk = this.onBatchOk.bind(this);
+    this.onRealAlarmCancel = this.onRealAlarmCancel.bind(this);
     this.onBatchCancel = this.onBatchCancel.bind(this);
+    this.getAlarmTable = this.getAlarmTable.bind(this);
 
     this.state = {
       controlShow: false,
@@ -90,18 +102,25 @@ class Information extends Component {
       singleLineData: {},
       deleteShow: false,
       cascaderValue: [],
+      deleteContent: '此操作将禁用该设备, 是否继续?',
       editShow: false,
+      childTableTitle: '',
+      deleteType: '',
       editParams: {},
       type: 'new',
+      disabledShow: false,
       childType: 'new',
       sunType: 'new',
       areaName: '',
       expandedRows: [],
       selectedChildRowKey: [],
+      alarmTableVisible: false,
+      alarmTableTitle: '',
       currentDeviceID: '',
       batchIds: '',
       batchShow: false,
       batchField: '',
+      needRealtime: true,
       hintContent: '',
       ...formParams,
       ...addLevelOne,
@@ -138,6 +157,13 @@ class Information extends Component {
       sunBatchIds: '',
     });
   }
+  //禁用
+  disableClick(item) {
+    this.setState({
+      disabledShow: true,
+      singleLineData: item,
+    });
+  }
   componentDidMount() {
     const {fsu_devicemanagementStore} = this.props;
     this.initLoading(fsu_devicemanagementStore).then(() => {
@@ -158,6 +184,8 @@ class Information extends Component {
     fsu_devicemanagementStore.getRealtimeTable(params);
     this.setState({
       realtimeShow: true,
+      childTableTitle: item.name,
+      needRealtime: item.statustwo === 0 ? false : true,
     });
   }
   onRealtimeOk() {}
@@ -170,6 +198,10 @@ class Information extends Component {
   controlClick(item, e) {
     e.stopPropagation();
     e.nativeEvent.stopImmediatePropagation();
+    if (item.statustwo === 0) {
+      message.error('离线设备不支持远程控制！');
+      return;
+    }
     const {fsu_devicemanagementStore} = this.props;
     const params = {
       F_Suid: item.suID,
@@ -206,6 +238,11 @@ class Information extends Component {
       rumorShow: false,
     });
   }
+  onDisableCancel() {
+    this.setState({
+      disabledShow: false,
+    });
+  }
   //历史数据弹框
   historyClick(item, e) {
     e.stopPropagation();
@@ -223,11 +260,26 @@ class Information extends Component {
     fsu_devicemanagementStore.getFsuHisdataTable(params);
     this.setState({
       historyShow: true,
+      childTableTitle: item.name,
     });
   }
   onHistoryCancel() {
     this.setState({
       historyShow: false,
+    });
+  }
+  onDisableOk() {
+    const {
+      fsu_devicemanagementStore: {fsuDevsEnabledOnOff, getTable, tableParmas},
+    } = this.props;
+    const item = this.state.singleLineData;
+
+    fsuDevsEnabledOnOff({
+      strDevs: item.suID,
+      status: item.status === 0 ? 1 : 0,
+    });
+    this.setState({
+      disabledShow: false,
     });
   }
   //详情
@@ -241,6 +293,11 @@ class Information extends Component {
     const {fsu_devicemanagementStore: {goFind2, ztreeChild}} = this.props;
     goFind2({Area_ID: ztreeChild, suID: item.suID}).then(data => {
       this.initFromValue(data, 'detail');
+    });
+  }
+  onRealAlarmCancel() {
+    this.setState({
+      alarmTableVisible: false,
     });
   }
   initFromValue(data, mode) {
@@ -427,17 +484,51 @@ class Information extends Component {
   }
   //删除回调
   onDeleteOk() {
-    const {fsu_devicemanagementStore} = this.props;
-    const params = {F_Suid: this.state.singleLineData.suID};
-    this.c_onDeleteOk(fsu_devicemanagementStore, params);
+    if (this.state.deleteType === 'subDev') {
+      const {fsu_devicemanagementStore} = this.props;
+      const params = {F_Suid: this.state.singleLineData.suID};
+      this.c_onDeleteOk(fsu_devicemanagementStore, params);
+    } else {
+      const {
+        fsu_devicemanagementStore: {
+          delectConsport,
+          currentDevice,
+          getSportTable,
+        },
+      } = this.props;
+      const item = this.state.singleLineData;
+      delectConsport({F_Suid: currentDevice, F_DeviceID: item.deviceID}).then(
+        () => {
+          const F_Suid = {F_Suid: currentDevice};
+          getSportTable(F_Suid);
+          this.setState({
+            deleteShow: false,
+          });
+        },
+      );
+    }
   }
   onDeleteCancel() {
     this.c_onDeleteCancel();
   }
   deleteClick(item, e) {
-    this.setState({
-      deleteShow: true,
-      singleLineData: item,
+    const {fsu_devicemanagementStore} = this.props;
+    fsu_devicemanagementStore.getSportTable({F_Suid: item.suID}).then(data => {
+      if (data && data[0]) {
+        this.setState({
+          deleteContent: '该设备下拥有子设备,是否继续删除？',
+          deleteShow: true,
+          deleteType: 'subDev',
+          singleLineData: item,
+        });
+      } else {
+        this.setState({
+          deleteContent: '此操作将删除该条数据, 是否继续?',
+          deleteShow: true,
+          deleteType: 'subDev',
+          singleLineData: item,
+        });
+      }
     });
   }
   //编辑回调
@@ -630,6 +721,40 @@ class Information extends Component {
       currentDeviceID: item.deviceID,
     });
   }
+  childDeleteChange(item) {
+    const {fsu_devicemanagementStore} = this.props;
+    fsu_devicemanagementStore
+      .getGrandsonTable({
+        F_Suid: item.suID,
+        F_DeviceID: item.deviceID,
+      })
+      .then(data => {
+        if (data && data[0]) {
+          this.setState({
+            deleteContent: '该设备下拥有监控点,是否继续删除？',
+            deleteShow: true,
+            deleteType: 'monitor',
+            singleLineData: item,
+          });
+        } else {
+          this.setState({
+            deleteContent: '此操作将删除该条数据, 是否继续?',
+            deleteShow: true,
+            deleteType: 'monitor',
+            singleLineData: item,
+          });
+        }
+      });
+    // const {
+    //   fsu_devicemanagementStore: {delectConsport, currentDevice, getSportTable},
+    // } = this.props;
+    // delectConsport({F_Suid: currentDevice, F_DeviceID: item.deviceID}).then(
+    //   () => {
+    //     const F_Suid = {F_Suid: currentDevice};
+    //     getSportTable(F_Suid);
+    //   },
+    // );
+  }
   //嵌套表格
   expandedRowRender(record, i) {
     const {fsu_devicemanagementStore} = this.props;
@@ -648,6 +773,7 @@ class Information extends Component {
         sunDeleteChange={this.sunDeleteChange}
         sunDetailChange={this.sunDetailChange}
         currentPortChange={this.currentPortChange}
+        childDeleteChange={this.childDeleteChange}
       />
     );
   }
@@ -763,6 +889,23 @@ class Information extends Component {
       batchShow: false,
     });
   }
+  getAlarmTable(item, e, sub) {
+    e.stopPropagation();
+    e.nativeEvent.stopImmediatePropagation();
+    const {fsu_realtimealarmStore} = this.props;
+
+    const params = {
+      keywords: '',
+      page: 1,
+      ztreeChild: item.suID,
+      number: 10,
+    };
+    fsu_realtimealarmStore.getChildTable(params);
+    this.setState({
+      alarmTableVisible: true,
+      alarmTableTitle: item.name,
+    });
+  }
 
   render() {
     const {fsu_devicemanagementStore, zTreeLevel, regionalStore} = this.props;
@@ -774,9 +917,11 @@ class Information extends Component {
       realtimeClick: this.realtimeClick,
       historyClick: this.historyClick,
       controlClick: this.controlClick,
+      disableClick: this.disableClick,
       rumorClick: this.rumorClick,
       addLevelOneClick: this.addLevelOneClick,
       detailClick: this.detailClick,
+      getAlarmTable: this.getAlarmTable,
       _this: this,
     });
     const nesting = {
@@ -787,15 +932,15 @@ class Information extends Component {
     let modalTitle = '';
     switch (this.state.type) {
       case 'new':
-        modalTitle = '设备新增';
+        modalTitle = 'FSU设备新增';
 
         break;
       case 'modify':
-        modalTitle = '设备编辑';
+        modalTitle = 'FSU设备编辑';
 
         break;
       case 'detail':
-        modalTitle = '设备详情';
+        modalTitle = 'FSU设备详情';
 
         break;
     }
@@ -891,6 +1036,7 @@ class Information extends Component {
             isShow={this.state.deleteShow}
             onOk={this.onDeleteOk}
             onCancel={this.onDeleteCancel}
+            hintContent={this.state.deleteContent}
           />
           <BatchModal
             isShow={this.state.batchShow}
@@ -900,13 +1046,13 @@ class Information extends Component {
           />
           <Panel
             onCancel={this.onRealtimeCancel}
-            title={'实时数据'}
+            title={`实时数据/${this.state.childTableTitle}`}
             isShow={this.state.realtimeShow}>
-            <RealtimeTable />
+            <RealtimeTable needRealtime={this.state.needRealtime} />
           </Panel>
           <Panel
             onCancel={this.onHistoryCancel}
-            title={'历史数据'}
+            title={`历史数据/${this.state.childTableTitle}`}
             isShow={this.state.historyShow}>
             <HistoryModal />
           </Panel>
@@ -937,10 +1083,16 @@ class Information extends Component {
               handleFormChange={this.handleFormChange}
             />
           </ControlModal>
+          <DeleteModal
+            hintContent={'此操作将禁用该设备, 是否继续?'}
+            isShow={this.state.disabledShow}
+            onOk={this.onDisableOk}
+            onCancel={this.onDisableCancel}
+          />
           <ControlModal
             width={850}
             isShow={this.state.addLevelOneShow}
-            title={'端口新增'}
+            title={'子设备新增'}
             buttons={this.state.childType == 'detail' ? false : true}
             onOk={this.onAddLevelOneOk}
             onCancel={this.onAddLevelOneCancel}>
@@ -953,7 +1105,7 @@ class Information extends Component {
           <ControlModal
             width={900}
             isShow={this.state.addChildDeviceShow}
-            title={'子设备新增'}
+            title={'监控点新增'}
             buttons={this.state.sunType == 'detail' ? false : true}
             onOk={this.addChildDeviceOk}
             onCancel={this.addChildDeviceCancel}>
@@ -963,6 +1115,12 @@ class Information extends Component {
               handleFormChange={this.addChildDeviceChange}
             />
           </ControlModal>
+          <Panel
+            onCancel={this.onRealAlarmCancel}
+            title={this.state.alarmTableTitle}
+            isShow={this.state.alarmTableVisible}>
+            <RealtimeAlarmTable />
+          </Panel>
         </div>
       </div>
     );

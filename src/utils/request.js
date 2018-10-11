@@ -51,7 +51,7 @@ request.interceptors.response.use(res => {
     setTimeout(() => {
       stores.globalStore.changeIsTimeout(true);
       message.error('登录超时,请重新登录！');
-      if (process.env.NODE_ENV === 'production') {
+      if (process.env.NODE_ENV == 'production') {
         location.href = location.origin + '/collect/#/login';
       } else {
         location.href = location.origin + '/#/login';

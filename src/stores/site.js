@@ -24,7 +24,7 @@ class Site {
     this.loading = true;
     const data = await getSiteTable(params);
     this.loading = false;
-    params.showCount = data.pd.showCount;
+    params.number = data.pd.number;
     params.page = data.pd.page;
     this.tableParmas = params;
     this.tableData = data;
@@ -99,7 +99,7 @@ class Site {
   @action
   async search(params) {
     const data = await site_search(params);
-    params.showCount = data.pd.showCount;
+    params.number = data.pd.number;
     params.page = data.pd.page;
     this.tableParmas = params;
     this.tableData = data;

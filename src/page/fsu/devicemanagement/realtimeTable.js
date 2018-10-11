@@ -53,7 +53,7 @@ class Regional extends Component {
     fsu_devicemanagementStore.getRealTimeCall(params);
   }
   render() {
-    const {fsu_devicemanagementStore} = this.props;
+    const {fsu_devicemanagementStore, needRealtime} = this.props;
     const r_tableData = toJS(fsu_devicemanagementStore.r_tableData);
     const tableData = (r_tableData && r_tableData.Data) || [];
     const pagination = r_tableData || {};
@@ -64,6 +64,8 @@ class Regional extends Component {
           onSearch={this.onSearch}
           onClick={this.real}
           showValue={['real']}
+          needRealtime={needRealtime}
+          realLoding={fsu_devicemanagementStore.r_loading}
         />
         <Table
           loading={fsu_devicemanagementStore.r_loading}

@@ -33,10 +33,21 @@ class Regional extends Component {
         const width = $(window).width() - 46 - 24;
         const height = $('#layout_wrap #cl_alarm_item').height();
         const servicesHeight = $(this.servicesWrap).height();
+        const h_width = $(window).width();
+        const v_height = $(window).height();
+        let maxAlarmHeight = 0;
+        let maxServicesHeight = 0;
+        if (v_height > h_width) {
+          maxAlarmHeight = (v_height - 44 - 24) * 0.27;
+          maxServicesHeight = v_height - 44 - 24 - maxAlarmHeight - 12;
+        }
+
         this.setState({
           width,
-          alarmHeigh: height,
-          servicesHeight,
+          alarmHeigh: maxAlarmHeight ? maxAlarmHeight : height,
+          servicesHeight: maxServicesHeight
+            ? maxServicesHeight
+            : servicesHeight,
         });
       });
     });
@@ -45,7 +56,11 @@ class Regional extends Component {
     return (
       <div className={styles['index_bg']}>
         <div className={styles['alarm_state_wrap']}>
-          <div className={styles['state_quantity']}>
+          <div
+            className={styles['state_quantity']}
+            style={{
+              fontSize: this.state.alarmHeigh + 'px',
+            }}>
             <PieEcharts height={this.state.alarmHeigh} />
           </div>
           <div

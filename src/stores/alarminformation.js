@@ -22,7 +22,7 @@ class Site {
     const data = await getAlarminformationTable(params);
     this.loading = false;
     if (data.Result == 'success') {
-      params.showCount = data.Data.pd.showCount;
+      params.number = data.Data.pd.number;
       params.page = data.Data.pd.page;
       this.tableParmas = params;
       this.tableData = data.Data;
@@ -74,7 +74,7 @@ class Site {
     const data = await alarminformation_search(params);
     this.loading = false;
     if (data.Result == 'success') {
-      params.showCount = data.Data.pd.showCount;
+      params.number = data.Data.pd.number;
       params.page = data.Data.pd.page;
       this.tableParmas = params;
       this.tableData = data.Data;

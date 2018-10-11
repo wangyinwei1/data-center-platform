@@ -23,6 +23,10 @@ const columns = () => {
       dataIndex: 'value',
     },
     {
+      title: '单位',
+      dataIndex: 'spUnit',
+    },
+    {
       title: '采集时间',
       dataIndex: 'recordTime',
     },

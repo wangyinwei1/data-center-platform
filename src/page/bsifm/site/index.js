@@ -314,7 +314,7 @@ class Regional extends Component {
             <div className={styles['table_wrap']}>
               <Table
                 pageIndex={pagination.page}
-                pageSize={pagination.showCount}
+                pageSize={pagination.number}
                 onShowSizeChange={this.onShowSizeChange}
                 onChange={this.onPageChange}
                 total={pagination.allCount}

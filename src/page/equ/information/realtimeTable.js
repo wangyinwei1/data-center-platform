@@ -74,7 +74,7 @@ class Regional extends Component {
     });
   }
   render() {
-    const {informationStore} = this.props;
+    const {informationStore, needRealtime} = this.props;
     const isRealtimeCall = this.state.isRealtimeCall;
     const r_tableData = toJS(informationStore.r_tableData);
     const tableData = (r_tableData && r_tableData.varList) || [];
@@ -87,6 +87,8 @@ class Regional extends Component {
           onSearch={this.onSearch}
           onClick={this.real}
           showValue={['real']}
+          needRealtime={needRealtime}
+          realLoding={informationStore.r_loading}
         />
         <Table
           loading={informationStore.r_loading}

@@ -283,7 +283,7 @@ class Site extends Component {
   render() {
     const {zTreeLevel, vchannelStore} = this.props;
     const tableData = toJS(vchannelStore.tableData.varList) || [];
-    const pagination = toJS(vchannelStore.tableData.pd) || {};
+    const pagination = toJS(vchannelStore.tableData) || {};
     const columns = columnData({
       deleteClick: this.deleteClick,
       editClick: this.editClick,
@@ -309,8 +309,8 @@ class Site extends Component {
             <div className={styles['table_wrap']}>
               <Table
                 pageIndex={pagination.page}
-                pageSize={pagination.showCount}
-                total={pagination.allCount}
+                pageSize={pagination.number}
+                total={pagination.count}
                 loading={vchannelStore.loading}
                 columns={columns}
                 onShowSizeChange={this.onShowSizeChange}

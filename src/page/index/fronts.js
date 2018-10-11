@@ -37,11 +37,11 @@ const RightItem = props => {
       info: data.runStatus || data.runStatus === 0 ? data.runStatus : '-',
     },
     {
-      label: '内存',
+      label: '内存(%)',
       info: data.memory || data.memory === 0 ? data.memory : '-',
     },
     {
-      label: 'CPU',
+      label: 'CPU(%)',
       info: data.cpu || data.cpu === 0 ? data.cpu : '-',
     },
     {
@@ -130,14 +130,18 @@ class Pie extends Component {
             <div className={styles['front_max_height_left']}>
               <FtontServices data={common || []} title={'普通前置机'} />
               <div className={styles['dev_detail']}>
-                <div className={styles['dev_detail_bg']} />
-                <div className={styles['front_margin10']} />
+                {/* <div className={styles['dev_detail_bg']} /> */}
+                {/* <div className={styles['front_margin10']} /> */}
                 <div className={styles['dev_num_wrap']}>
                   <span className={styles['dev_title']}>
                     <span>上线设备数量</span>
                   </span>
                   <span className={styles['dev_num']}>
-                    <span>{common.onLineCount ? common.onLineCount : 0}</span>
+                    <span>
+                      {common[0] && common[0].onLineCount
+                        ? common[0].onLineCount
+                        : 0}
+                    </span>
                   </span>
                 </div>
                 <div className={styles['front_margin10']} />
@@ -146,7 +150,9 @@ class Pie extends Component {
                     <span>异常设备数量</span>
                   </span>
                   <span className={styles['dev_num']}>
-                    <span>{common.exeCount ? common.exeCount : 0}</span>
+                    <span>
+                      {common[0] && common[0].exeCount ? common[0].exeCount : 0}
+                    </span>
                   </span>
                 </div>
                 <div className={styles['front_margin10']} />

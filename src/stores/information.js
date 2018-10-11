@@ -24,6 +24,7 @@ import {
   delectSun,
   editSun,
   onoroff,
+  findDeviceDataList,
   batchOnoroff,
   batchDelectAll,
 } from '../services/api.js';
@@ -34,6 +35,8 @@ class Information {
   @observable tableParmas = {};
   @observable r_tableData = {};
   @observable r_tableParmas = {};
+  @observable hl_tableData = {};
+  @observable hl_tableParmas = {};
   @observable s_tableData = {};
   @observable s_tableParmas = {};
   @observable g_tableData = {};
@@ -42,6 +45,7 @@ class Information {
   @observable d_loading = false;
   @observable s_loading = false;
   @observable g_loading = false;
+  @observable hl_loading = false;
   @observable showIconIndex = [];
   @observable deviceMenu = [];
   @observable deviceData = [];
@@ -289,6 +293,17 @@ class Information {
     const data = await getByDevice(params);
     this.currentDevice = params.F_DeviceID;
     this.deviceMenu = data.varList;
+  }
+  @action.bound
+  async findDeviceDataList(params) {
+    this.d_loading = true;
+    const data = await findDeviceDataList(params);
+    this.d_loading = false;
+    if (data.Result == 'success') {
+      this.deviceData = data.varList;
+    } else {
+      message.error(data.Msg);
+    }
   }
   @action.bound
   async findDeviceData(params) {

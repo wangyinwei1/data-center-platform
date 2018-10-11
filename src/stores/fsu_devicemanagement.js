@@ -15,6 +15,7 @@ import {
   getFsuSunDeviceTable,
   getFsuSpTable,
   fsuDeviceControl,
+  fsuDeviceRealTimeCall,
   delFSU_Sun2,
   editFSU_Sp2,
   fsuDelectAll,
@@ -254,6 +255,7 @@ class Devicemanagement {
       this.currentDevice = params.F_Suid;
       this.s_tableParmas = params;
       this.s_tableData = data.Data;
+      return data.Data;
     } else {
       message.error(data.Msg);
     }
@@ -289,6 +291,7 @@ class Devicemanagement {
     this.g_loading = false;
     if (data.Result == 'success') {
       this.g_tableData = data.Data;
+      return data.Data;
     } else {
       message.error(data.Msg);
     }
@@ -296,7 +299,7 @@ class Devicemanagement {
   @action.bound
   async getRealTimeCall(params) {
     this.r_loading = true;
-    const data = await getFsuRealtimeTable(params);
+    const data = await fsuDeviceRealTimeCall(params);
     this.r_loading = false;
     if (data.Result == 'success') {
       params.page = data.Data.page;
@@ -327,8 +330,6 @@ class Devicemanagement {
     if (data.Result == 'success') {
       this.getTable(toJS(this.tableParmas));
       message.success('删除成功!');
-    } else {
-      message.error(data.Msg);
     }
     return data;
   }

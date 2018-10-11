@@ -73,15 +73,8 @@ class Regional extends Component {
     childEditClick(item);
   }
   deleteClick(item) {
-    const {
-      fsu_devicemanagementStore: {delectConsport, currentDevice, getSportTable},
-    } = this.props;
-    delectConsport({F_Suid: currentDevice, F_DeviceID: item.deviceID}).then(
-      () => {
-        const F_Suid = {F_Suid: currentDevice};
-        getSportTable(F_Suid);
-      },
-    );
+    const {childDeleteChange} = this.props;
+    childDeleteChange(item);
   }
   detailClick(item) {
     const {childDetailClick} = this.props;

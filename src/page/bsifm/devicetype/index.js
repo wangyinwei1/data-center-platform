@@ -47,7 +47,7 @@ class Site extends Component {
     const params = {
       page: 1,
       keywords: '',
-      showCount: 10,
+      number: 10,
     };
     getTable(params);
   }

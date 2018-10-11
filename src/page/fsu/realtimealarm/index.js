@@ -101,7 +101,7 @@ class Passageway extends Component {
     fsu_realtimealarmStore.getChildTable(params);
     this.setState({
       childTableVisible: true,
-      childTableTitle: item.devName,
+      childTableTitle: item.name,
     });
   }
   onCancel() {

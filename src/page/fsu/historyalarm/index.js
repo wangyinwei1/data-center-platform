@@ -101,9 +101,10 @@ class Passageway extends Component {
       lastLoginEnd: '',
     };
     fsu_historyalarmStore.getChildTable(params);
+
     this.setState({
       childTableVisible: true,
-      childTableTitle: item.devName,
+      childTableTitle: item.name,
     });
   }
   onCancel() {

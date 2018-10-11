@@ -147,6 +147,52 @@
       }
     }
   }
+  :global(.ant-layout-content) {
+    .his_common_btn {
+      width: auto;
+      &[disabled] {
+        background-color: #f5f5f5;
+        border-color: #d9d9d9;
+        text-shadow: none;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+        span {
+          color: rgba(0, 0, 0, 0.25);
+        }
+      }
+    }
+  }
+  .history_table_wrap {
+    .table_item {
+      padding-top: 10px;
+      width: 50%;
+      display: inline-block;
+      vertical-align: top;
+      .table_item_title {
+        .lable {
+          font-size: 16px;
+          font-weight: bold;
+          line-height: 32px;
+        }
+      }
+      .h_export_wrap {
+        float: right;
+        line-height: 32px;
+        cursor: pointer;
+      }
+      .export_table {
+        padding-right: 6px;
+      }
+      .table_item_list {
+      }
+      &:nth-child(2n + 1) {
+        padding-right: 6px;
+      }
+      &:nth-child(2n) {
+        padding-left: 6px;
+      }
+    }
+  }
   .delete_wrap {
     .delete_title {
       background-color: #f9f9f9;
@@ -246,6 +292,44 @@
   .icon_active {
     color: #ff9c00;
   }
+  .echartsOrList_wrap {
+    position: relative;
+    .history_list_wrap {
+      overflow: auto;
+      height: 319px;
+      padding: 0 12px;
+      padding-top: 40px;
+    }
+    .history_table_title {
+      top: 20px;
+      position: absolute;
+      left: 5px;
+      font-weight: bolder;
+      font-size: 18px;
+      color: #000;
+    }
+    .export_list {
+      cursor: pointer;
+    }
+    .switch_type {
+      position: absolute;
+      right: 32px;
+      top: 27px;
+      cursor: pointer;
+      z-index: 2;
+    }
+    .switch_list {
+      font-size: 19px;
+      right: 29px;
+      cursor: pointer;
+      top: 22px;
+    }
+    .export_his_table {
+      right: 4px;
+      font-size: 18px;
+      top: 22px;
+    }
+  }
   .statustwo {
     background-color: #ffd9d9;
   }
@@ -292,10 +376,18 @@
       color: #eb0a11 !important;
     }
   }
+  .history_table_th {
+    padding: 11px !important;
+  }
   .cl_online_state {
     // background-color: #ffd9d9;
     opacity: 0.8;
     color: #eb0a11;
+  }
+  .history_table_td {
+    td {
+      line-height: 16px !important;
+    }
   }
   .cl_basic_state {
     & + .ant-table-expanded-row {

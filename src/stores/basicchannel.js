@@ -57,7 +57,7 @@ class Passageway {
     this.loading = true;
     const data = await getBasicchannelTable(params);
     this.loading = false;
-    params.number = data.pd.showCount;
+    params.number = data.pd.number;
     params.page = data.pd.page;
     this.tableParmas = params;
     this.tableData = data;
@@ -270,7 +270,7 @@ class Passageway {
     this.loading = true;
     const data = await getBasicchannelTable(params);
     this.loading = false;
-    params.number = data.pd.showCount;
+    params.number = data.pd.number;
     params.page = data.pd.page;
     this.tableParmas = params;
     this.tableData = data;

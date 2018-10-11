@@ -29,7 +29,7 @@ class Vchannel {
     this.loading = true;
     const data = await getVchannelTable(params);
     this.loading = false;
-    params.showCount = data.Data.number;
+    params.number = data.Data.number;
     params.page = data.Data.page;
     if (data.Result == 'success') {
       this.tableParmas = params;
@@ -43,7 +43,7 @@ class Vchannel {
     this.loading = true;
     const data = await vchannel_search(params);
     this.loading = false;
-    params.showCount = data.Data.number;
+    params.number = data.Data.number;
     params.page = data.Data.page;
     this.tableParmas = params;
     this.tableData = data.Data;

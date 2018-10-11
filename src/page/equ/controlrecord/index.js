@@ -32,7 +32,7 @@ class Regional extends Component {
     const {controlrecordStore} = this.props;
 
     const params = {
-      ...controlrecordStore.c_tableParmas,
+      ...controlrecordStore.tableParmas,
       page: current,
       number: pageSize,
     };

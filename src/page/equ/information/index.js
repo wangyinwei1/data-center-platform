@@ -91,6 +91,7 @@ class Information extends Component {
       historyShow: false,
       realtimeShow: false,
       addLevelOneShow: false,
+      childTableTitle: '',
       addChildDeviceShow: false,
       alarmTableVisible: false,
       alarmTableTitle: '',
@@ -115,6 +116,7 @@ class Information extends Component {
       batchField: '',
       hintContent: '',
       sunBatchField: '',
+      needRealtime: true,
       ...formParams,
       ...addLevelOne,
       concentratorDev: '',
@@ -184,6 +186,8 @@ class Information extends Component {
     informationStore.getRealtimeTable(params);
     this.setState({
       realtimeShow: true,
+      childTableTitle: item.devName,
+      needRealtime: item.statustwo === 0 ? false : true,
     });
   }
   onRealtimeOk() {}
@@ -196,6 +200,10 @@ class Information extends Component {
   controlClick(item, e) {
     e.stopPropagation();
     e.nativeEvent.stopImmediatePropagation();
+    if (item.statustwo === 0) {
+      message.error('离线设备不支持远程控制！');
+      return;
+    }
     const {informationStore} = this.props;
     const params = {
       F_DeviceID: item.devID,
@@ -243,6 +251,7 @@ class Information extends Component {
     informationStore.getByDevice(params);
     this.setState({
       historyShow: true,
+      childTableTitle: item.devName,
     });
   }
   onHistoryCancel() {
@@ -614,14 +623,17 @@ class Information extends Component {
     this.clearSelected();
   }
   //孙集回调
-  realtimeChange() {
+  realtimeChange(item) {
     this.setState({
       realtimeShow: true,
+      needRealtime: item.statustwo === 0 ? false : true,
+      childTableTitle: item.subDeviceName,
     });
   }
-  historyChange() {
+  historyChange(item) {
     this.setState({
       historyShow: true,
+      childTableTitle: item.subDeviceName,
     });
   }
   controlChange() {
@@ -1125,13 +1137,13 @@ class Information extends Component {
           />
           <Panel
             onCancel={this.onRealtimeCancel}
-            title={'实时数据'}
+            title={`实时数据/${this.state.childTableTitle}`}
             isShow={this.state.realtimeShow}>
-            <RealtimeTable />
+            <RealtimeTable needRealtime={this.state.needRealtime} />
           </Panel>
           <Panel
             onCancel={this.onHistoryCancel}
-            title={'历史数据'}
+            title={`历史数据/${this.state.childTableTitle}`}
             isShow={this.state.historyShow}>
             <HistoryModal />
           </Panel>

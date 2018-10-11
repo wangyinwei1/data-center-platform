@@ -101,14 +101,14 @@ class Pie extends Component {
           ? getFsuAlarmNum({...params, sort: 'F_AlarmLevel'})
           : getAlarmNum({...params, sort: 'F_AlarmGrade'});
         this.switchAlarm();
-      }, 5000);
+      }, 500000);
     });
     this.alarmTimer = setInterval(() => {
       this.state.isFsu
         ? getFsuAlarmNum({...params, sort: 'F_AlarmLevel'})
         : getAlarmNum({...params, sort: 'F_AlarmGrade'});
       this.switchAlarm();
-    }, 5000);
+    }, 500000);
   }
   switchAlarm() {
     let direction = _.cloneDeep(this.state.direction);

@@ -144,7 +144,7 @@ class Passageway extends Component {
     };
     this.setState({
       childTableVisible: true,
-      childTableTitle: item.devName,
+      childTableTitle: item.devName || item.subDeviceName,
       currentDevice: item.devID || item.subDeviceID,
       singleLineData: item,
     });

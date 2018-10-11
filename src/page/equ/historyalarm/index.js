@@ -107,7 +107,7 @@ class Passageway extends Component {
     historyalarmStore.getChildTable(params);
     this.setState({
       childTableVisible: true,
-      childTableTitle: item.devName,
+      childTableTitle: item.devName || item.subDeviceName,
     });
   }
   onCancel() {

@@ -83,13 +83,16 @@ const Basic = props => {
               styles['basic_icon'],
             )}
           />
-          <span className={styles['basic_title']}>CPU(%)</span>
+          <span className={styles['basic_title']}>CPU</span>
           <div
             className={classnames(
               styles['basic_num'],
               api.cpu > 80 && styles['error_num'],
             )}>
-            {api.cpu || api.cpu === 0 ? api.cpu : 0}
+            <span style={{position: 'relative'}}>
+              {api.cpu || api.cpu === 0 ? api.cpu : 0}
+              <span className={styles['percentage']}>%</span>
+            </span>
           </div>
         </div>
         <div className={styles['memory_info']}>
@@ -99,13 +102,16 @@ const Basic = props => {
               styles['basic_icon'],
             )}
           />
-          <span className={styles['basic_title']}>内存(%)</span>
+          <span className={styles['basic_title']}>内存</span>
           <div
             className={classnames(
               styles['basic_num'],
               api.memory > 80 && styles['error_num'],
             )}>
-            {api.memory || api.memory === 0 ? api.memory : 0}
+            <span style={{position: 'relative'}}>
+              {api.memory || api.memory === 0 ? api.memory : 0}
+              <span className={styles['percentage']}>%</span>
+            </span>
           </div>
         </div>
         <div className={styles['time_info']}>
