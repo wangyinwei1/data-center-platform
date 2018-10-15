@@ -29,8 +29,6 @@ class Passageway extends Component {
     this.onPageChange = this.onPageChange.bind(this);
     this.getChildTable = this.getChildTable.bind(this);
     this.onCancel = this.onCancel.bind(this);
-    this.expandedRowRender = this.expandedRowRender.bind(this);
-    this.onExpand = this.onExpand.bind(this);
     this.state = {
       cascaderText: '',
       cascaderLoading: false,
@@ -116,48 +114,10 @@ class Passageway extends Component {
     });
   }
 
-  //嵌套表格
-  expandedRowRender(record, i) {
-    return <E_ChildTable getChildTable={this.getChildTable} />;
-  }
-  onExpand(expanded, record) {
-    const {historyalarmStore} = this.props;
-    const expandedRows = this.state.expandedRows;
-    //孙设备
-    if (expandedRows[0] && expandedRows[0] !== record.devID) {
-      historyalarmStore.c_expandedRowsChange([]);
-    }
-
-    this.stopOperation = true;
-    if (expanded) {
-      this.setState({expandedRows: [record.devID]});
-    } else {
-      this.setState({expandedRows: []});
-    }
-
-    historyalarmStore.getSportTable({F_DeviceID: record.devID});
-  }
   render() {
     const {historyalarmStore, regionalStore} = this.props;
     const tableData = toJS(historyalarmStore.tableData.varList) || [];
     const pagination = toJS(historyalarmStore.tableData) || {};
-    const showIconIndex = _.map(tableData, (item, index) => {
-      if (item.isConcentrator == 1) {
-        return index;
-      } else {
-        return false;
-      }
-    }).filter(item => {
-      return item || item === 0;
-    });
-    const nesting =
-      showIconIndex[0] || showIconIndex[0] === 0
-        ? {
-            expandedRowRender: this.expandedRowRender,
-            onExpand: this.onExpand,
-            expandedRowKeys: this.state.expandedRows,
-          }
-        : {};
     const columns = columnData({
       getChildTable: this.getChildTable,
       _this: this,
@@ -180,14 +140,9 @@ class Passageway extends Component {
             <Toolbar onSearch={this.onSearch} closeAdd={true} />
             <div className={styles['table_wrap']}>
               <Table
-                nesting={nesting}
                 rowClassName={(record, index) => {
                   const rowClassName = [];
-                  record.statustwo == 0 &&
-                    record.isConcentrator === 0 &&
-                    rowClassName.push('cl_online_state');
-                  record.isConcentrator == 0 &&
-                    rowClassName.push('cl_hidden_expand_icon');
+                  record.statustwo == 0 && rowClassName.push('cl_online_state');
                   return rowClassName.join(' ');
                 }}
                 pageIndex={pagination.page}

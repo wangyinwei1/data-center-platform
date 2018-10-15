@@ -30,6 +30,7 @@ class Devicemanagement {
   @observable tableData = {};
   @observable tableParmas = {};
   @observable r_tableData = {};
+  @observable his_grandsonMenu = [];
   @observable r_tableParmas = {};
   @observable h_tableData = {};
   @observable h_tableParmas = {};
@@ -44,10 +45,12 @@ class Devicemanagement {
   @observable deviceMenu = [];
   @observable deviceData = [];
   @observable currentDevice = '';
+  @observable currentDeviceMenu = undefined;
   @observable operateList = [];
   @observable controlChannel = [];
   @observable regulatChannel = [];
   @observable addData = [];
+  @observable his_subDevice = [];
   @observable detailData = [];
   @observable ztreeChild = 0;
   @observable expandedRows = [];
@@ -242,6 +245,26 @@ class Devicemanagement {
     if (data.Result == 'success') {
       this.r_tableParmas = params;
       this.r_tableData = data.Data;
+    } else {
+      message.error(data.Msg);
+    }
+  }
+  @action.bound
+  async getGrandsonMenu(params) {
+    const data = await getFsuSp(params);
+    if (data.Result == 'success') {
+      this.his_grandsonMenu = data.Data;
+      return data.Data;
+    } else {
+      message.error(data.Msg);
+    }
+  }
+  @action.bound
+  async getSubDevice(params) {
+    const data = await getFsuSunDevice(params);
+    if (data.Result == 'success') {
+      this.his_subDevice = data.Data;
+      return data.Data;
     } else {
       message.error(data.Msg);
     }

@@ -17,7 +17,6 @@ const menu = ({
   _this,
   record,
 }) => {
-  console.log(record.F_Status !== '已确认');
   return (
     <Menu className={styles['operation']}>
       {record.F_Status !== '待确认' &&

@@ -198,18 +198,34 @@
     position: relative;
   }
   .history_ct {
+    height: auto;
+    .sub_dev_wrap {
+      min-width: 190px;
+      margin-left: 10px;
+      display: inline-block;
+      vertical-align: top;
+    }
     .drop_down {
-      height: 36px;
+      display: inline-block;
+      vertical-align: top;
+      min-height: 36px;
       min-width: 290px;
+      max-width: -webkit-calc(~'100% - 650px');
+      max-width: -moz-calc(~'100% - 650px');
+      max-width: -ms-calc(~'100% - 650px');
+      max-width: -o-calc(~'100% - 650px');
+      max-width: calc(~'100% - 650px');
       margin-left: 10px;
       line-height: 36px;
+      position: relative;
+      height: auto;
     }
     :global {
       .ant-select-selection {
         border: 1px solid #d9d9d9;
         border-radius: 4px;
         background-color: #fff;
-        height: 36px;
+        height: auto;
         line-height: 36px;
         padding-bottom: 0;
         .ant-select-selection__rendered {

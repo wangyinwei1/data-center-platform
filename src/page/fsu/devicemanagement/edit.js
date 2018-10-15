@@ -68,7 +68,7 @@ class Edit extends Component {
         <FormInput
           {...fields}
           onChange={this.handleFormChange}
-          disabled={disabled}
+          disabled={mode === 'modify' ? true : disabled}
           label={'设备ID'}
           name={'F_SuID'}
           rules={[{required: true, message: '请必须填写!'}]}

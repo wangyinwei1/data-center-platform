@@ -313,19 +313,43 @@
     }
     .switch_type {
       position: absolute;
-      right: 32px;
-      top: 27px;
+      right: 46px;
+      top: 26px;
+      font-size: 15px;
       cursor: pointer;
       z-index: 2;
+      &:hover {
+        span {
+          display: block;
+        }
+      }
+      span {
+        position: absolute;
+        top: 20px;
+        left: 50%;
+        font-size: 12px;
+        font-weight: bolder;
+        width: 48px;
+        display: none;
+        transform: translateX(-50%);
+        color: #3e98c4;
+      }
     }
     .switch_list {
-      font-size: 19px;
-      right: 29px;
+      font-size: 20px;
+      right: 43px;
       cursor: pointer;
-      top: 22px;
+      top: 20px;
+      span {
+        top: 22px;
+      }
     }
     .export_his_table {
-      right: 4px;
+      span {
+        width: 48px;
+      }
+
+      right: 16px;
       font-size: 18px;
       top: 22px;
     }

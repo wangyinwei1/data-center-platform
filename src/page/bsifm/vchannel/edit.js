@@ -46,6 +46,12 @@ class DeleteModal extends Component {
           en: '',
         };
         break;
+      default:
+        title = {
+          zh: '虚拟通道详情',
+          en: '',
+        };
+        break;
     }
     return (
       <CommonModal

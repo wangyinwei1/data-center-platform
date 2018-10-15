@@ -70,15 +70,6 @@ class Edit extends Component {
           placeholder={'请输入设备名称'}
           rules={[{required: true, message: '请必须填写!'}]}
         />
-        <FormRadio
-          {...fields}
-          onChange={this.handleFormChange}
-          disabled={mode === 'modify' ? true : disabled}
-          label={'选择添加'}
-          name={'F_IsConcentrator'}
-          rules={[{required: true, message: '请必须填写!'}]}
-          children={[{value: 1, name: '集中器'}, {value: 0, name: '普通设备'}]}
-        />
         <FormSelect
           {...fields}
           onChange={this.handleFormChange}
@@ -93,7 +84,7 @@ class Edit extends Component {
           {...fields}
           onChange={this.handleFormChange}
           label={'设备类型'}
-          disabled={fields.F_IsConcentrator.value === 1 ? true : disabled}
+          disabled={disabled}
           placeholder={'请选择设备类型'}
           name={'Id_Version'}
           rules={[{required: true, message: '请必须填写!'}]}
@@ -112,7 +103,7 @@ class Edit extends Component {
           {...fields}
           onChange={this.handleFormChange}
           label={'链接方式'}
-          disabled={fields.F_IsConcentrator.value === 1 ? true : disabled}
+          disabled={disabled}
           name={'F_ConnectType'}
           rules={[{required: true, message: '请必须填写!'}]}
           children={[{value: 0, name: '被动'}, {value: 1, name: '主动'}]}
@@ -139,12 +130,7 @@ class Edit extends Component {
           {...fields}
           onChange={this.handleFormChange}
           label={'设备端口'}
-          disabled={
-            fields.F_ConnectType.value === 1 ||
-            fields.F_IsConcentrator.value === 1
-              ? true
-              : disabled
-          }
+          disabled={fields.F_ConnectType.value === 1 ? true : disabled}
           name={'F_Port'}
           placeholder={'请输入设备端口'}
           rules={[
@@ -160,12 +146,7 @@ class Edit extends Component {
           {...fields}
           onChange={this.handleFormChange}
           label={'地址'}
-          disabled={
-            fields.F_ConnectType.value === 1 ||
-            fields.F_IsConcentrator.value === 1
-              ? true
-              : disabled
-          }
+          disabled={fields.F_ConnectType.value === 1 ? true : disabled}
           name={'adr'}
           rules={[{required: false}]}
         />

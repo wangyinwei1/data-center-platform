@@ -122,6 +122,7 @@ class Regional extends Component {
               <Option value="">全部</Option>
               <Option value="0">离线</Option>
               <Option value="1">在线</Option>
+              <Option value="2">异常</Option>
             </Select>
           </div>
         )}

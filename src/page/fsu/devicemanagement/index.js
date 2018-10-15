@@ -248,16 +248,23 @@ class Information extends Component {
     e.stopPropagation();
     e.nativeEvent.stopImmediatePropagation();
     const {fsu_devicemanagementStore} = this.props;
+    // const params = {
+    //   ztreeChild: item.suID,
+    //   lastLoginStart: moment()
+    //     .subtract(3, 'months')
+    //     .format('YYYY-MM-DD'),
+    //   lastLoginEnd: moment().format('YYYY-MM-DD'),
+    //   page: 1,
+    //   number: 10,
+    // };
+    // fsu_devicemanagementStore.getFsuHisdataTable(params);
     const params = {
-      ztreeChild: item.suID,
-      lastLoginStart: moment()
-        .subtract(3, 'months')
-        .format('YYYY-MM-DD'),
-      lastLoginEnd: moment().format('YYYY-MM-DD'),
-      page: 1,
-      number: 10,
+      F_Suid: item.suID,
     };
-    fsu_devicemanagementStore.getFsuHisdataTable(params);
+    fsu_devicemanagementStore.getSubDevice(params).then(data => {
+      if (data[0]) {
+      }
+    });
     this.setState({
       historyShow: true,
       childTableTitle: item.name,
@@ -944,6 +951,36 @@ class Information extends Component {
 
         break;
     }
+    let grandsonTitle = '';
+    switch (this.state.sunType) {
+      case 'new':
+        grandsonTitle = '监控点新增';
+
+        break;
+      case 'modify':
+        grandsonTitle = '监控点编辑';
+
+        break;
+      case 'detail':
+        grandsonTitle = '监控点详情';
+
+        break;
+    }
+    let childTitle = '';
+    switch (this.state.childType) {
+      case 'new':
+        childTitle = '子设备新增';
+
+        break;
+      case 'modify':
+        childTitle = '子设备编辑';
+
+        break;
+      case 'detail':
+        childTitle = '子设备详情';
+
+        break;
+    }
     //自定义值
     const batchIds = this.state.batchIds;
     const selectedRowKeys = batchIds ? batchIds.split(',') : [];
@@ -986,6 +1023,7 @@ class Information extends Component {
         }
       },
     };
+
     return (
       <div className={styles['information_wrap']}>
         <Cascader
@@ -1092,7 +1130,7 @@ class Information extends Component {
           <ControlModal
             width={850}
             isShow={this.state.addLevelOneShow}
-            title={'子设备新增'}
+            title={childTitle}
             buttons={this.state.childType == 'detail' ? false : true}
             onOk={this.onAddLevelOneOk}
             onCancel={this.onAddLevelOneCancel}>
@@ -1105,7 +1143,7 @@ class Information extends Component {
           <ControlModal
             width={900}
             isShow={this.state.addChildDeviceShow}
-            title={'监控点新增'}
+            title={grandsonTitle}
             buttons={this.state.sunType == 'detail' ? false : true}
             onOk={this.addChildDeviceOk}
             onCancel={this.addChildDeviceCancel}>

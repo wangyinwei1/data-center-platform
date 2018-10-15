@@ -31,14 +31,6 @@ const menu = ({
           <span>编辑</span>
         </div>
       </Menu.Item>
-      {record.isConcentrator === 0 && (
-        <Menu.Item key="c_disable" onClick={disableClick.bind(_this, record)}>
-          <div className={styles['disable']}>
-            <i className={classnames('icon iconfont icon-jinyong')} />
-            <span>{record.status === 1 ? '启用' : '禁用'}</span>
-          </div>
-        </Menu.Item>
-      )}
       <Menu.Item key="c_delete" onClick={deleteClick.bind(_this, record)}>
         <div className={styles['delete']}>
           <i className={classnames('icon iconfont icon-shanchu')} />

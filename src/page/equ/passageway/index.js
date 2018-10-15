@@ -51,8 +51,6 @@ class Passageway extends Component {
     this.onVirtualCancel = this.onVirtualCancel.bind(this);
     this.onVirtualOk = this.onVirtualOk.bind(this);
     this.virtualFormChange = this.virtualFormChange.bind(this);
-    this.expandedRowRender = this.expandedRowRender.bind(this);
-    this.onExpand = this.onExpand.bind(this);
 
     this.state = {
       cascaderText: '',
@@ -174,8 +172,11 @@ class Passageway extends Component {
   test(fields) {
     let showError = {};
     //循环找到必填字段是否是空并作出警告
+    let idReg = /^[^\u3220-\uFA29]+$/;
     _.forIn(fields, (v, k) => {
-      if (!v.value && v.value !== 0 && v.require) {
+      if (k === 'F_ChannelID' && v.require && !idReg.test(v.value)) {
+        showError[k] = {showError: true, ...v};
+      } else if (!v.value && v.value !== 0 && v.require) {
         showError[k] = {showError: true, ...v};
       }
     });
@@ -572,27 +573,6 @@ class Passageway extends Component {
       };
     });
   }
-  //嵌套表格
-  expandedRowRender(record, i) {
-    return <E_ChildTable getChildTable={this.getChildTable} />;
-  }
-  onExpand(expanded, record) {
-    const {passagewayStore} = this.props;
-    const expandedRows = this.state.expandedRows;
-    //孙设备
-    if (expandedRows[0] && expandedRows[0] !== record.devID) {
-      passagewayStore.c_expandedRowsChange([]);
-    }
-
-    this.stopOperation = true;
-    if (expanded) {
-      this.setState({expandedRows: [record.devID]});
-    } else {
-      this.setState({expandedRows: []});
-    }
-
-    passagewayStore.getSportTable({F_DeviceID: record.devID});
-  }
   render() {
     const {passagewayStore, regionalStore} = this.props;
     const tableData = toJS(passagewayStore.tableData.varList) || [];
@@ -615,23 +595,6 @@ class Passageway extends Component {
         modalTitle = '设备通道详情';
         break;
     }
-    const showIconIndex = _.map(tableData, (item, index) => {
-      if (item.isConcentrator == 1) {
-        return index;
-      } else {
-        return false;
-      }
-    }).filter(item => {
-      return item || item === 0;
-    });
-    const nesting =
-      showIconIndex[0] || showIconIndex[0] === 0
-        ? {
-            expandedRowRender: this.expandedRowRender,
-            onExpand: this.onExpand,
-            expandedRowKeys: this.state.expandedRows,
-          }
-        : {};
     return (
       <div className={styles['information_wrap']}>
         <Remarks />
@@ -650,14 +613,9 @@ class Passageway extends Component {
             <Toolbar onSearch={this.onSearch} closeAdd={true} />
             <div className={styles['table_wrap']}>
               <Table
-                nesting={nesting}
                 rowClassName={(record, index) => {
                   const rowClassName = ['td_padding'];
-                  record.statustwo == 0 &&
-                    record.isConcentrator === 0 &&
-                    rowClassName.push('cl_online_state');
-                  record.isConcentrator == 0 &&
-                    rowClassName.push('cl_hidden_expand_icon');
+                  record.statustwo == 0 && rowClassName.push('cl_online_state');
                   return rowClassName.join(' ');
                 }}
                 pageIndex={pagination.page}

@@ -4,10 +4,6 @@ const formParams = {
       value: '',
       require: true,
     },
-    F_IsConcentrator: {
-      value: 0,
-      require: true,
-    },
     F_BelongUnitID: {
       value: undefined,
       require: true,
@@ -66,10 +62,6 @@ const clearFormParams = {
   fields: {
     F_DeviceName: {
       value: '',
-      require: true,
-    },
-    F_IsConcentrator: {
-      value: 0,
       require: true,
     },
     F_BelongUnitID: {

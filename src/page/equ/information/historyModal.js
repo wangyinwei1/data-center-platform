@@ -45,7 +45,6 @@ class EchartsOrList extends Component {
   render() {
     const {deviceData, loading, data, echartOptions} = this.props;
     const columns = columnData();
-    console.log(data);
     return (
       <div
         className={styles['echartsOrList_wrap']}
@@ -61,7 +60,10 @@ class EchartsOrList extends Component {
         }>
         {!this.state.showEcharts && (
           <div className={styles['history_table_title']}>
-            {data.F_ChannelName}
+            <span>{data.F_ChannelName}</span>{' '}
+            <span style={{fontSize: '14px', fontWeight: 'normal'}}>
+              {data.Unit ? '(' + '单位/' + data.Unit + ')' : ''}
+            </span>
           </div>
         )}
         {this.state.showEcharts ? (
@@ -70,8 +72,9 @@ class EchartsOrList extends Component {
               'icon iconfont icon-biaoge',
               styles['switch_type'],
             )}
-            onClick={this.switch}
-          />
+            onClick={this.switch}>
+            <span>切换列表</span>
+          </i>
         ) : (
           <i
             className={classnames(
@@ -79,8 +82,9 @@ class EchartsOrList extends Component {
               styles['switch_type'],
               styles['switch_list'],
             )}
-            onClick={this.switch}
-          />
+            onClick={this.switch}>
+            <span>切换图表</span>
+          </i>
         )}
         {!this.state.showEcharts && (
           <i
@@ -89,8 +93,9 @@ class EchartsOrList extends Component {
               styles['switch_type'],
               styles['export_his_table'],
             )}
-            onClick={this.export}
-          />
+            onClick={this.export}>
+            <span>导出表格</span>
+          </i>
         )}
         {this.state.showEcharts ? (
           <ReactEcharts option={echartOptions} style={{height: '319px'}} />
@@ -258,7 +263,7 @@ class Regional extends Component {
   export(item) {
     const {informationStore: {currentDevice}} = this.props;
     location.href =
-      '/collect/device_basechannel/toExcel.do?F_DeviceID=' +
+      '/collect/device_hisdata/toExcel.do?F_DeviceID=' +
       currentDevice +
       '&Channels=' +
       item.F_ChannelID +

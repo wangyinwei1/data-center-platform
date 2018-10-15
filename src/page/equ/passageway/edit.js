@@ -72,7 +72,7 @@ class Edit extends Component {
             name={'F_ChannelID'}
             disabled={fields.virtual.value ? true : disabled}
             rules={[
-              {eequired: true, message: '请必须填写!'},
+              {required: true, message: '请必须填写!'},
               {
                 pattern: /^[^\u3220-\uFA29]+$/,
                 message: '通道ID不能为中文!',
