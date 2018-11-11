@@ -36,16 +36,13 @@ class Regional extends Component {
   }
   common(params) {
     const {
-      home_pageStore: {
-        offlineDeviceList,
-        onlineDeviceList,
-        alarmDeviceDetailsList,
-      },
+      home_pageStore: {onlineDeviceList, alarmDeviceDetailsList},
       type,
     } = this.props;
-    type === 'offline' && offlineDeviceList(params);
-    type === 'online' && onlineDeviceList(params);
+    type === 'offline' && onlineDeviceList({status: 0, ...params});
+    type === 'online' && onlineDeviceList({status: 1, ...params});
     type === 'alarm' && alarmDeviceDetailsList(params);
+    type === 'errline' && onlineDeviceList({status: 2, ...params});
   }
 
   onSearch(value) {
@@ -53,6 +50,7 @@ class Regional extends Component {
     const params = {
       ...home_pageStore.a_tableParmas,
       keywords: encodeURIComponent(value),
+      page: 1,
     };
     this.common(params);
   }

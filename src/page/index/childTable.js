@@ -49,6 +49,7 @@ class Regional extends Component {
     const params = {
       ...home_pageStore.tableParmas,
       keywords: encodeURIComponent(value),
+      page: 1,
     };
     isFsu ? home_pageStore.fsuSearch(params) : home_pageStore.search(params);
   }
@@ -112,7 +113,7 @@ class Regional extends Component {
           theme={'darker'}
           rowClassName={(record, index) => {
             const rowClassName = ['td_padding'];
-            record.statustwo === 0 && rowClassName.push('cl_online_state');
+            record.onOff === 0 && rowClassName.push('cl_online_state');
             return rowClassName.join(' ');
           }}
           loading={home_pageStore.loading}

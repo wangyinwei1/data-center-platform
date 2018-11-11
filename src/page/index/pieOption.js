@@ -38,9 +38,13 @@ const option = (allCount: {}, height) => {
           name: `离线数量 : ${allCount.OffCount ? allCount.OffCount : 0}`,
           icon: 'rect',
         },
+        {
+          name: `异常数量 : ${allCount.ErrCount ? allCount.ErrCount : 0}`,
+          icon: 'rect',
+        },
       ],
     },
-    color: ['#65e6a5', '#fff', '#5c667d'],
+    color: ['#65e6a5', '#fff', '#5c667d', '#ff8a00'],
     series: [
       {
         name: '状态',
@@ -92,6 +96,11 @@ const option = (allCount: {}, height) => {
                 shadowOffsetX: 4,
               },
             },
+          },
+          {
+            value: allCount.ErrCount ? allCount.ErrCount : 0,
+            name: `异常数量 : ${allCount.ErrCount ? allCount.ErrCount : 0}`,
+            selected: true,
           },
         ],
       },

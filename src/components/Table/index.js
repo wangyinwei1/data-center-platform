@@ -76,7 +76,8 @@ class Cl_Table extends Component {
             typeof pagination === 'undefined'
               ? {
                   total,
-                  pageSize,
+                  pageSize: parseInt(pageSize),
+                  current: parseInt(pageIndex),
                   showQuickJumper: true,
                   showSizeChanger: true,
                   showTotal: total => {

@@ -41,6 +41,19 @@ const secondLevel = function(item) {
           </span>
         }>
         {_.map(item.subMenu, sub => {
+          if (
+            sub.MENU_ID == '397' &&
+            !JSON.parse(localStorage.getItem('isAdmin'))
+          ) {
+            return null;
+          }
+          if (
+            sub.MENU_ID == '391' &&
+            JSON.parse(localStorage.getItem('isNotArea'))
+          ) {
+            return null;
+          }
+
           if (exclusionPath.indexOf(sub.MENU_ROUTE) != -1) {
             return null;
           } else {

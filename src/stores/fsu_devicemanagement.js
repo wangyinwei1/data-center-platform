@@ -108,6 +108,11 @@ class Devicemanagement {
     }
   }
   @action.bound
+  async clearHisData(params) {
+    this.h_tableData = {};
+  }
+
+  @action.bound
   async fsuDevsEnabledOnOff(params) {
     const data = await fsuDevsEnabledOnOff(params);
     if (data.Result == 'success') {

@@ -65,7 +65,7 @@ const columns = ({
     {
       title: '设备名称',
       dataIndex: 'devName',
-      width: '15%',
+      width: '20%',
       className: 'information_th',
       render: (text, record, index) => {
         return (
@@ -108,7 +108,7 @@ const columns = ({
       title: '所属站点',
       dataIndex: 'stationName',
       className: 'information_th',
-      width: '25%',
+      width: '20%',
       render: (text, record, index) => {
         return <TextOverflow>{text}</TextOverflow>;
       },
@@ -198,20 +198,6 @@ const columns = ({
         );
       },
     },
-    // {
-    //   title: '连接方式',
-    //   dataIndex: '',
-    //   render: (text, record, index) => {
-    //     return record.connectType == 0 ? '被动' : '主动';
-    //   },
-    // },
-    // {
-    //   title: '状态',
-    //   dataIndex: '',
-    //   render: (text, record, index) => {
-    //     return record.statustwo == 0 ? '离线' : '在线';
-    //   },
-    // },
     {
       title: '操作',
       width: '5%',

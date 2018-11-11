@@ -299,7 +299,7 @@
         background: linear-gradient(to right, #dadfe9, #dadfe9);
       }
       .ant-layout-sider {
-        overflow-y: scroll;
+        overflow-y: auto;
         &::-webkit-scrollbar {
           width: 7px;
           height: 7px;
@@ -339,6 +339,15 @@
       .ant-menu-inline-collapsed > .ant-menu-item,
       .ant-menu-inline-collapsed > .ant-menu-submenu > .ant-menu-submenu-title {
         padding-left: 12px !important;
+        :local {
+          .menu_icon {
+            margin-right: 16px;
+
+            & + span {
+              display: none;
+            }
+          }
+        }
       }
       .ant-spin {
         color: #5deda4;

@@ -49,7 +49,7 @@ class Regional {
     var city = /^\d{3}[1-9]00\b/; //市下的编码匹配
     var province = /^\d{2}0{4}\b/; //省下的编码匹配
     var area = /^\d{4}((0?[1-9])|([1-9][0-9]))$/; //区下的编码匹配
-    var zone = /^\d{8}\b/; //省下的编码匹配
+    var zone = /^\d{8}\b/; //片区的编码匹配
     if (text === 0) {
       return 'country';
     } else if (province.test(text)) {

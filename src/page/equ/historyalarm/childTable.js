@@ -44,6 +44,7 @@ class Regional extends Component {
     const params = {
       ...historyalarmStore.c_tableParmas,
       keywords: encodeURIComponent(value),
+      page: 1,
     };
     historyalarmStore.childSearch(params);
   }

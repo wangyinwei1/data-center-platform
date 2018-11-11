@@ -51,6 +51,7 @@ class Regional extends Component {
     const params = {
       ...controlrecordStore.tableParmas,
       keywords: encodeURIComponent(value),
+      page: 1,
     };
     controlrecordStore.search(params);
   }

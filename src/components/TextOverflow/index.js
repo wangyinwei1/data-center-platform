@@ -70,7 +70,10 @@ class TextOverflow extends Component {
           verticalAlign: 'top',
         }}>
         {!this.state.isOpen && this.state.needTip ? (
-          <Tooltip placement="topLeft" title={this.props.children}>
+          <Tooltip
+            placement="topLeft"
+            overlayClassName={'overlay_classname'}
+            title={this.props.children}>
             {this.props.children}
           </Tooltip>
         ) : (

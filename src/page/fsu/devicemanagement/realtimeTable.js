@@ -42,6 +42,7 @@ class Regional extends Component {
     const params = {
       ...fsu_devicemanagementStore.r_tableParmas,
       keywords: encodeURIComponent(value),
+      page: 1,
     };
     fsu_devicemanagementStore.realtimeSearch(params);
   }

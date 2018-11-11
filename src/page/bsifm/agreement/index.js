@@ -49,6 +49,7 @@ class Site extends Component {
     const {agreementStore} = this.props;
     this.setState({
       editShow: true,
+      type: 'new',
     });
   }
   initFromValue(mode, item) {
@@ -159,6 +160,7 @@ class Site extends Component {
     const params = {
       ...agreementStore.tableParmas,
       keywords: encodeURIComponent(value),
+      page: 1,
     };
     agreementStore.search(params);
   }

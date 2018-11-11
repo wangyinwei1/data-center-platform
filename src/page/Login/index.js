@@ -55,6 +55,8 @@ class Loginer extends Component {
             //   ip: data.ip,
             // }),
             localStorage.setItem('serviceip', data.ip);
+            localStorage.setItem('isAdmin', data.isAdmin);
+            localStorage.setItem('isNotArea', data.isNotArea);
             const timeoutUrl = localStorage.getItem('timeoutUrl');
 
             //记住密码设置cookies
@@ -87,7 +89,7 @@ class Loginer extends Component {
   }
   render() {
     const {getFieldDecorator} = this.props.form;
-    const {globalStore} = this.props;
+    const {globalStore, loginStore} = this.props;
     const rememberCookies =
       Cookies.get('remember') && JSON.parse(Cookies.get('remember'));
     return (
@@ -148,6 +150,7 @@ class Loginer extends Component {
                         type="text"
                         placeholder="验证码"
                         onPressEnter={this.onPressEnter}
+                        autoComplete={'off'}
                       />,
                     )}
                   </Col>
@@ -166,6 +169,7 @@ class Loginer extends Component {
               <FormItem className={styles['login_button']}>
                 <Button
                   onClick={this.userLogin}
+                  loading={loginStore.isLogin}
                   ref={c => {
                     this.userLoginBtn = c;
                   }}>

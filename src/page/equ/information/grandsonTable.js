@@ -70,7 +70,7 @@ class Regional extends Component {
   controlClick(item, e) {
     e.stopPropagation();
     e.nativeEvent.stopImmediatePropagation();
-    if (item.statustwo === 0) {
+    if (item.onOff === 0) {
       message.error('离线设备不支持远程控制！');
       return;
     }
@@ -85,6 +85,10 @@ class Regional extends Component {
   rumorClick(item, e) {
     e.stopPropagation();
     e.nativeEvent.stopImmediatePropagation();
+    if (item.onOff === 0) {
+      message.error('离线设备不支持远程遥控！');
+      return;
+    }
     const {informationStore, rumorChange} = this.props;
     const params = {
       F_DeviceID: item.subDeviceID,
@@ -165,7 +169,7 @@ class Regional extends Component {
           onRowDoubleClick={this.onRowDoubleClick}
           rowClassName={(record, index) => {
             const rowClassName = ['td_padding'];
-            record.statustwo === 0 && rowClassName.push('cl_off_state');
+            record.onOff === 0 && rowClassName.push('cl_off_state');
             return rowClassName.join(' ');
           }}
           columns={columns}

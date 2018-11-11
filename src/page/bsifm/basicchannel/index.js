@@ -148,6 +148,7 @@ class Regional extends Component {
     const params = {
       ...basicchannelStore.tableParmas,
       keywords: encodeURIComponent(value),
+      page: 1,
     };
     basicchannelStore.search(params);
   }
@@ -551,7 +552,9 @@ class Regional extends Component {
         // key == 'F_ChannelName'
         //   ? (params[key] = encodeURIComponent(value.value))
         //   : (params[key] = value.value);
-        params[key] = value.value;
+        key == 'F_Ratio' && value.value
+          ? (params[key] = Number(value.value))
+          : (params[key] = value.value);
       });
       this.state.type == 'modify'
         ? edit(params).then(() => {
@@ -677,7 +680,7 @@ class Regional extends Component {
 
             basicchannelStore.getTable(basicchannelStore.tableParmas);
           } else {
-            message.error(`${info.file.name} 导入失败！`);
+            message.error(info.file.response.Msg);
           }
         } else if (info.file.status === 'error') {
           message.error(`${info.file.name} 导入失败！`);

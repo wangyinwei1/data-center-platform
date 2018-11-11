@@ -8,6 +8,9 @@ export function login(data) {
   return request.post(base + '/login_login', data);
 }
 
+export function logout() {
+  return request.post(base + '/logout');
+}
 export function getAsynArea() {
   return request.get(
     base + '/device_area/getAsynArea.do?sing=area&ztreeChild=0',
@@ -346,6 +349,9 @@ export function passageway_export(params) {
 export function passageway_getDev(params) {
   return request.get(base + '/device_dev/getDevListByDeviceType.do', {params});
 }
+export function findDeviceChannel(params) {
+  return request.get(base + '/device_channel/findDeviceChannel', {params});
+}
 export function passageway_getVirtual(params) {
   return request.get(
     base + '/device_vchannel/getVirtualChannelByChannleIDAndDeviceType.do',
@@ -399,6 +405,9 @@ export function getValuePropertyList(params) {
 }
 export function basechannelSave(data) {
   return request.post(base + '/device_basechannel/save.do', data);
+}
+export function copyAlarmCondition(data) {
+  return request.post(base + '/device_channel/copyAlarmCondition', data);
 }
 export function basechannelAlarmAdd(data) {
   return request.post(
@@ -684,10 +693,7 @@ export function getCountInfo(params) {
 }
 
 export function onlineDeviceList(params) {
-  return request.get(base + '/onlinemanager/onlineDeviceList', {params});
-}
-export function offlineDeviceList(params) {
-  return request.get(base + '/onlinemanager/offlineDeviceList', {params});
+  return request.get(base + '/onlinemanager/statusDeviceList', {params});
 }
 export function alarmDeviceDetailsList(params) {
   return request.get(base + '/device_alarm/alarmDeviceDetailsList', {params});

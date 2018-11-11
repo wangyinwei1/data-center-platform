@@ -163,6 +163,20 @@ class Regional extends Component {
               </Button>
             )}
           {showValue &&
+            showValue.indexOf('exportMonitorTpl') != -1 && (
+              <Button
+                className={styles['exportTpl_btn']}
+                onClick={this.exportTpl}>
+                <i
+                  className={classnames(
+                    'icon iconfont icon-xiazai',
+                    styles['common_icon'],
+                  )}
+                />
+                <span>下载监控点模板</span>
+              </Button>
+            )}
+          {showValue &&
             showValue.indexOf('batchDelete') != -1 && (
               <Button
                 className={styles['batch_btn']}

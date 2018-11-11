@@ -87,16 +87,16 @@ const columns = ({
       },
     },
     {
-      title: '端口',
-      dataIndex: 'suPort',
-      className: 'information_th',
-      width: '6%',
-    },
-    {
       title: 'IP',
       dataIndex: 'suIP',
       className: 'information_th',
       width: '11%',
+    },
+    {
+      title: '端口',
+      dataIndex: 'suPort',
+      className: 'information_th',
+      width: '6%',
     },
     {
       title: '所属区域',
@@ -179,20 +179,6 @@ const columns = ({
         );
       },
     },
-    // {
-    //   title: '连接方式',
-    //   dataIndex: '',
-    //   render: (text, record, index) => {
-    //     return record.connectType == 0 ? '被动' : '主动';
-    //   },
-    // },
-    // {
-    //   title: '状态',
-    //   dataIndex: '',
-    //   render: (text, record, index) => {
-    //     return record.statustwo == 0 ? '离线' : '在线';
-    //   },
-    // },
     {
       title: '操作',
       width: '5%',

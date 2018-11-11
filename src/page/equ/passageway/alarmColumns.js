@@ -102,6 +102,7 @@ const columns = ({
       dataIndex: 'msgID',
       width: mode === 'detail' ? '23%' : '19%',
       render: (text, record, index) => {
+        console.log(record);
         return (
           <Dropdown
             visible={record.msgVisible ? true : false}

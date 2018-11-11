@@ -47,15 +47,17 @@ class Regional extends Component {
       fsu_devicemanagementStore: {his_subDevice, getGrandsonMenu},
     } = this.props;
     const subDev = _.filter(his_subDevice, (item, i) => {
-      return item.deviceID === item.deviceID;
+      return item.deviceID === value;
     });
-    const params = {
-      F_DeviceID: subDev[0].deviceID,
-      F_Suid: subDev[0].suID,
-    };
-    getGrandsonMenu(params);
+    if (value) {
+      const params = {
+        F_DeviceID: subDev[0].deviceID,
+        F_Suid: subDev[0].suID,
+      };
+      getGrandsonMenu(params);
+    }
     this.setState({
-      subDeviceValue: value,
+      subDeviceValue: value || undefined,
       monitorValue: [],
       allSelected: false,
     });
@@ -110,12 +112,12 @@ class Regional extends Component {
     return isAll;
   }
   handleClick() {
-    const {fsu_devicemanagementStore} = this.props;
+    const {fsu_devicemanagementStore, currentSuID} = this.props;
     const params = {
-      ztreeChild: fsu_devicemanagementStore.h_tableParmas.ztreeChild,
       lastLoginStart: this.state.lastLoginStart,
       lastLoginEnd: this.state.lastLoginEnd,
       page: 1,
+      suID: currentSuID,
       deviceIDs: this.state.subDeviceValue || '',
       spIDs: this.state.monitorValue.join(','),
       number: 10,

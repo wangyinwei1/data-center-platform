@@ -18,6 +18,7 @@ class Regional extends Component {
     this.expandedRowRender = this.expandedRowRender.bind(this);
     this.onExpand = this.onExpand.bind(this);
     this.onRowDoubleClick = this.onRowDoubleClick.bind(this);
+    this.exportClick = this.exportClick.bind(this);
     this.state = {
       expandedRows: [],
     };
@@ -84,6 +85,11 @@ class Regional extends Component {
     const {childDetailClick} = this.props;
     childDetailClick(item);
   }
+  exportClick(item) {
+    const {childExportClick} = this.props;
+    childExportClick(item);
+  }
+
   addClick(item) {
     const {
       fsu_devicemanagementStore: {getGoAdd, ztreeChild, expandedRows},
@@ -100,6 +106,7 @@ class Regional extends Component {
     const columns = columnData({
       deleteClick: this.deleteClick,
       editClick: this.editClick,
+      exportClick: this.exportClick,
       detailClick: this.detailClick,
       addClick: this.addClick,
       _this: this,

@@ -22,6 +22,13 @@ class Pie extends Component {
   componentDidMount() {
     const {home_pageStore: {getCountInfo}} = this.props;
     getCountInfo();
+
+    this.alarmTimer = setInterval(() => {
+      !this.state.show && getCountInfo();
+    }, 5000);
+  }
+  componentWillUnmount() {
+    clearInterval(this.alarmTimer);
   }
   onCancel() {
     this.setState({
@@ -45,9 +52,10 @@ class Pie extends Component {
       number: 10,
       keywords: '',
     };
-    type === 'offline' && offlineDeviceList(params);
-    type === 'online' && onlineDeviceList(params);
+    type === 'offline' && onlineDeviceList({status: 0, ...params});
+    type === 'online' && onlineDeviceList({status: 1, ...params});
     type === 'alarm' && alarmDeviceDetailsList(params);
+    type === 'errline' && onlineDeviceList({status: 2, ...params});
   }
   render() {
     const {home_pageStore: {allCount}, height} = this.props;
@@ -88,6 +96,12 @@ class Pie extends Component {
             onClick={this.onlineClick.bind(this, 'offline')}>
             <i />
             <span>{`离线数量 :  ${count.OffCount ? count.OffCount : 0}`} </span>
+          </div>
+          <div
+            className={styles['err_num']}
+            onClick={this.onlineClick.bind(this, 'errline')}>
+            <i />
+            <span>{`异常数量 :  ${count.ErrCount ? count.ErrCount : 0}`} </span>
           </div>
         </div>
 

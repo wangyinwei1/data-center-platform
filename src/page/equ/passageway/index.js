@@ -110,6 +110,7 @@ class Passageway extends Component {
     const params = {
       ...passagewayStore.tableParmas,
       keywords: encodeURIComponent(value),
+      page: 1,
     };
     passagewayStore.search(params);
   }
@@ -197,7 +198,8 @@ class Passageway extends Component {
           alarmTable.length === 1 &&
           !record.conType &&
           !record.msgID &&
-          !record.condition
+          !record.condition &&
+          (!record.alarmDelay || record.alarmDelay === 0)
         ) {
           alarmTable = [];
         } else {
@@ -277,6 +279,9 @@ class Passageway extends Component {
         key == 'F_ChannelName'
           ? (params[key] = value.value)
           : (params[key] = value.value);
+        key == 'ratio' && value.value
+          ? (params[key] = Number(value.value))
+          : (params[key] = value.value);
       });
       this.state.type == 'modify'
         ? edit(params).then(() => {
@@ -309,6 +314,11 @@ class Passageway extends Component {
           obj['F_ShowPrecision'] = {...fields.F_ShowPrecision, value: 2};
         } else {
           obj['F_ShowPrecision'] = {...fields.F_ShowPrecision, value: 0};
+        }
+      }
+      if (key[0] === 'F_StoreMode') {
+        if (changedFields[key].value === 0) {
+          obj['F_Threshold'] = {...fields.F_Threshold, value: 0};
         }
       }
       if (key[0] === 'virtual') {
@@ -473,7 +483,7 @@ class Passageway extends Component {
         ? data.relateChannelID.split(',')
         : '';
 
-      _.map(relateChannelList, item => {
+      _.map(relateChannelList, (item, i) => {
         const {passagewayStore: {virtualDevList}} = this.props;
         const obj = {};
         const currentID = relateChannelID.filter(app => {
@@ -492,12 +502,13 @@ class Passageway extends Component {
             );
           }
         });
-        obj[item.relateChannelID] = {
-          value: currnetDev[0] ? currnetDev[0].deviceName : undefined,
+        obj[item.relateChannelID + '_clCode' + i] = {
+          value: currnetDev[0] ? currnetDev[0].deviceID : undefined,
         };
 
         this.setState(({virtualFields}) => {
           return {
+            currentVirtual: data,
             virtualFields: {
               ...virtualFields,
               ...obj,
@@ -531,7 +542,9 @@ class Passageway extends Component {
       const keys = _.keys(virtualFields);
       const relateChannelID = _.map(keys, app => {
         const value = virtualFields[app].value;
-        return `${value}.${app}`;
+        const channelId = app.substring(0, app.indexOf('_clCode'));
+
+        return `${value}.${channelId}`;
       });
 
       const params = {
@@ -615,7 +628,8 @@ class Passageway extends Component {
               <Table
                 rowClassName={(record, index) => {
                   const rowClassName = ['td_padding'];
-                  record.statustwo == 0 && rowClassName.push('cl_online_state');
+                  record.onOff == 0 && rowClassName.push('cl_online_state');
+                  record.onOff === 2 && rowClassName.push('cl_err_state');
                   return rowClassName.join(' ');
                 }}
                 pageIndex={pagination.page}
@@ -640,6 +654,7 @@ class Passageway extends Component {
             detailClick={this.childDetailClick}
             deleteClick={this.childDeleteClick}
             channelTypeChange={this.channelTypeChange}
+            currentDevice={this.state.currentDevice}
             onExportClick={this.onExportClick}
           />
         </Panel>
@@ -671,6 +686,7 @@ class Passageway extends Component {
           <EditContent
             fields={this.state.fields}
             mode={this.state.type}
+            currentDevice={this.state.currentDevice}
             isVchannel={this.state.isVchannel}
             editVirtual={this.editVirtual}
             handleFormChange={this.handleFormChange}

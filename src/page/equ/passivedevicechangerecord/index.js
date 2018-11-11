@@ -49,6 +49,7 @@ class Regional extends Component {
     const params = {
       ...passivedevicechangerecordStore.tableParmas,
       keywords: value,
+      page: 1,
     };
     passivedevicechangerecordStore.search(params);
   }

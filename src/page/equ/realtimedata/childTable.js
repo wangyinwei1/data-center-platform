@@ -42,6 +42,7 @@ class Regional extends Component {
     const params = {
       ...realtimedataStore.c_tableParmas,
       keywords: encodeURIComponent(value),
+      page: 1,
     };
     realtimedataStore.childSearch(params);
   }

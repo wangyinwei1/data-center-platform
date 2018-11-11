@@ -7,8 +7,10 @@ import {
   initAdd,
   passageway_save,
   passageway_edit,
+  copyAlarmCondition,
   passageway_initEdit,
   passageway_delete,
+  findDeviceChannel,
   getInitAlarmConditionsAdd,
   getAlarmTable,
   batchDeviceAlarmConditionAdd,
@@ -43,6 +45,7 @@ class Passageway {
   @observable g_tableParmas = {};
   @observable s_tableData = {};
   @observable s_tableParmas = {};
+  @observable devChannel = [];
   @observable s_loading = false;
   @observable g_loading = false;
   @observable c_expandedRows = [];
@@ -128,6 +131,25 @@ class Passageway {
       });
       this.editVirtualData = data.Data;
       return data.Data;
+    } else {
+      message.error(data.Msg);
+    }
+  }
+  @action.bound
+  async findDeviceChannel(params) {
+    const data = await findDeviceChannel(params);
+    if (data.Result == 'success') {
+      this.devChannel = data.channels;
+      return data.channels;
+    } else {
+      message.error(data.Msg);
+    }
+  }
+  @action.bound
+  async copyAlarmCondition(params) {
+    const data = await copyAlarmCondition(params);
+    if (data.Result == 'success') {
+      message.error(data.Msg);
     } else {
       message.error(data.Msg);
     }

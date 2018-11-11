@@ -41,6 +41,7 @@ class Regional extends Component {
     const params = {
       ...fsu_realtimealarmStore.c_tableParmas,
       keywords: encodeURIComponent(value),
+      page: 1,
     };
     fsu_realtimealarmStore.childSearch(params);
   }

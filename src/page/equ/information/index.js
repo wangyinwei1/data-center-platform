@@ -86,6 +86,7 @@ class Information extends Component {
       cascaderText: '',
       cascaderLoading: false,
       singleLineData: {},
+      isDisable: false,
       deleteShow: false,
       cascaderValue: [],
       editShow: false,
@@ -173,7 +174,7 @@ class Information extends Component {
     this.setState({
       realtimeShow: true,
       childTableTitle: item.devName,
-      needRealtime: item.statustwo === 0 ? false : true,
+      needRealtime: item.onOff === 0 ? false : true,
     });
   }
   onRealtimeOk() {}
@@ -186,7 +187,7 @@ class Information extends Component {
   controlClick(item, e) {
     e.stopPropagation();
     e.nativeEvent.stopImmediatePropagation();
-    if (item.statustwo === 0) {
+    if (item.onOff === 0) {
       message.error('离线设备不支持远程控制！');
       return;
     }
@@ -210,6 +211,10 @@ class Information extends Component {
   rumorClick(item, e) {
     e.stopPropagation();
     e.nativeEvent.stopImmediatePropagation();
+    if (item.onOff === 0) {
+      message.error('离线设备不支持远程遥控！');
+      return;
+    }
     const {informationStore} = this.props;
     const params = {
       F_DeviceID: item.devID,
@@ -293,8 +298,10 @@ class Information extends Component {
   }
   //禁用
   disableClick(item) {
+    const isDisable = item.status;
     this.setState({
       disabledShow: true,
+      isDisable: isDisable === 1 ? false : true,
       singleLineData: item,
     });
   }
@@ -565,9 +572,11 @@ class Information extends Component {
   //搜索
   onSearch(value) {
     const {informationStore} = this.props;
+
     const params = {
       ...informationStore.tableParmas,
       keywords: encodeURIComponent(value),
+      page: 1,
     };
     informationStore.search(params);
     this.setState({expandedRows: []});
@@ -714,11 +723,12 @@ class Information extends Component {
     });
   }
   selectChange(value) {
-    const status = {onOff: value};
+    const status = {status: value};
     const {informationStore: {getTable, tableParmas}} = this.props;
     const params = {
       ...tableParmas,
       ...status,
+      page: 1,
     };
     getTable(params);
     this.setState({expandedRows: []});
@@ -976,8 +986,8 @@ class Information extends Component {
                 columns={columns}
                 rowClassName={(record, index) => {
                   const rowClassName = ['td_padding'];
-                  record.statustwo === 0 &&
-                    rowClassName.push('cl_online_state');
+                  record.onOff === 0 && rowClassName.push('cl_online_state');
+                  record.onOff === 2 && rowClassName.push('cl_err_state');
                   return rowClassName.join(' ');
                 }}
                 onRowDoubleClick={this.onRowDoubleClick}
@@ -994,7 +1004,9 @@ class Information extends Component {
             onCancel={this.onDeleteCancel}
           />
           <DeleteModal
-            hintContent={'此操作将禁用该设备, 是否继续?'}
+            hintContent={`此操作将${
+              this.state.isDisable ? '禁用' : '启用'
+            }该设备, 是否继续?`}
             isShow={this.state.disabledShow}
             onOk={this.onDisableOk}
             onCancel={this.onDisableCancel}

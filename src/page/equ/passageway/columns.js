@@ -65,13 +65,6 @@ const columns = ({getChildTable, _this}) => {
       dataIndex: 'netInTime',
       width: '18%',
     },
-    // {
-    //   title: '状态',
-    //   dataIndex: '',
-    //   render: (text, record, index) => {
-    //     return record.statustwo == 0 ? '离线' : '在线';
-    //   },
-    // },
   ];
 };
 

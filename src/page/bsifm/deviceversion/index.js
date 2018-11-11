@@ -191,6 +191,7 @@ class Site extends Component {
     const params = {
       ...deviceversionStore.tableParmas,
       keywords: encodeURIComponent(value),
+      page: 1,
     };
     deviceversionStore.search(params);
   }

@@ -68,6 +68,7 @@ class Passageway extends Component {
     const params = {
       ...fsu_realtimealarmStore.tableParmas,
       keywords: encodeURIComponent(value),
+      page: 1,
     };
     fsu_realtimealarmStore.search(params);
   }
@@ -141,7 +142,8 @@ class Passageway extends Component {
                 columns={columns}
                 rowClassName={(record, index) => {
                   const rowClassName = [];
-                  record.statustwo == 0 && rowClassName.push('cl_online_state');
+                  record.onOff == 0 && rowClassName.push('cl_online_state');
+                  record.onOff === 2 && rowClassName.push('cl_err_state');
                   return rowClassName.join(' ');
                 }}
                 loading={fsu_realtimealarmStore.loading}

@@ -188,8 +188,11 @@ class Site extends Component {
   test(fields) {
     let showError = {};
     //循环找到必填字段是否是空并作出警告
+    let idReg = /^[^\u3220-\uFA29]+$/;
     _.forIn(fields, (v, k) => {
-      if (!v.value && v.value !== 0 && v.require) {
+      if (k === 'F_ChannelID' && v.require && !idReg.test(v.value)) {
+        showError[k] = {showError: true, ...v};
+      } else if (!v.value && v.value !== 0 && v.require) {
         showError[k] = {showError: true, ...v};
       }
     });
@@ -199,6 +202,7 @@ class Site extends Component {
   onEditCancel() {
     this.setState({
       editShow: false,
+      ...formParams,
     });
   }
   //搜索
@@ -207,6 +211,7 @@ class Site extends Component {
     const params = {
       ...vchannelStore.tableParmas,
       keywords: encodeURIComponent(value),
+      page: 1,
     };
     vchannelStore.search(params);
   }

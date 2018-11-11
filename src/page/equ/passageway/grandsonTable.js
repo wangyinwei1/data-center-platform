@@ -37,7 +37,7 @@ class Regional extends Component {
           columns={columns}
           rowClassName={(record, index) => {
             const rowClassName = [];
-            record.statustwo === 0 && rowClassName.push('cl_off_state');
+            record.onOff === 0 && rowClassName.push('cl_off_state');
             return rowClassName.join(' ');
           }}
           data={tableData}

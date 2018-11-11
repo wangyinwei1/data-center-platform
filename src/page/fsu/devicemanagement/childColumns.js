@@ -14,6 +14,7 @@ const menu = ({
   addClick,
   deleteClick,
   detailClick,
+  exportClick,
   _this,
   record,
 }) => {
@@ -37,6 +38,12 @@ const menu = ({
           <span>编辑</span>
         </div>
       </Menu.Item>
+      <Menu.Item key="c_export" onClick={exportClick.bind(_this, record)}>
+        <div className={styles['edit']}>
+          <i className={classnames('icon iconfont icon-daoru')} />
+          <span>导入</span>
+        </div>
+      </Menu.Item>
       <Menu.Item key="c_delete" onClick={deleteClick.bind(_this, record)}>
         <div className={styles['delete']}>
           <i className={classnames('icon iconfont icon-shanchu')} />
@@ -46,7 +53,14 @@ const menu = ({
     </Menu>
   );
 };
-const columns = ({editClick, deleteClick, addClick, detailClick, _this}) => {
+const columns = ({
+  editClick,
+  exportClick,
+  deleteClick,
+  addClick,
+  detailClick,
+  _this,
+}) => {
   return [
     {
       title: '子设备ID',
@@ -74,6 +88,7 @@ const columns = ({editClick, deleteClick, addClick, detailClick, _this}) => {
               editClick,
               deleteClick,
               detailClick,
+              exportClick,
               addClick,
               _this,
               record,

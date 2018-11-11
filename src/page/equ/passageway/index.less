@@ -22,10 +22,162 @@
   .statustwo {
     background-color: #ffd9d9;
   }
+  .channel_id {
+    .drop_down {
+      height: 100%;
+      min-height: 36px;
+      min-width: 420px;
+      max-width: -webkit-calc(~'100% - 450px');
+      max-width: -moz-calc(~'100% - 450px');
+      max-width: -ms-calc(~'100% - 450px');
+      max-width: -o-calc(~'100% - 450px');
+      max-width: calc(~'100% - 450px');
+      line-height: 36px;
+      position: relative;
+      &:focus {
+        border-color: #56eca1;
+        box-shadow: 0 0 0 2px rgba(86, 236, 161, 0.2);
+      }
+    }
+    :global {
+      .ant-select-selection {
+        border: 1px solid #d9d9d9;
+        border-radius: 4px;
+        background-color: #fff;
+        max-height: 168px;
+        height: 100%;
+        overflow-y: auto;
+        min-height: 36px;
+        line-height: 100%;
+        padding-bottom: 0;
+        .ant-select-selection__rendered {
+          line-height: 36px;
+          & > ul > li {
+            height: 28px;
+            line-height: 28px;
+          }
+        }
+      }
+      .ant-input,
+      .ant-calendar-picker,
+      .ant-btn {
+        display: inline-block;
+        vertical-align: top;
+      }
+      .ant-btn {
+        height: 36px;
+        line-height: 36px;
+        margin-left: 10px;
+      }
+      .ant-calendar-picker-input {
+        &:focus .ant-calendar-picker-input:not(.ant-input-disabled) {
+          border-color: #56eca1;
+          box-shadow: 0 0 0 2px rgba(86, 236, 161, 0.2);
+        }
+
+        &:hover {
+          border-color: #56eca1 !important;
+        }
+        height: 36px;
+      }
+    }
+  }
+  .control_ct {
+    padding: 20px;
+    padding-top: 40px;
+    padding-bottom: 0px;
+    .channel_id {
+      :global {
+        .ant-form-item-control-wrapper {
+          width: 420px;
+        }
+      }
+      width: 500px;
+    }
+    .search {
+      margin-top: 1px;
+      :global {
+        .ant-btn {
+          &.ant-btn-clicked {
+            &:after {
+              border-color: #40bc7e;
+            }
+          }
+          width: auto;
+          height: 36px;
+          line-height: 36px;
+          color: #fff;
+          span,
+          i {
+            color: #fff;
+          }
+          background-color: #50e399;
+          border-color: #50e399;
+          &:hover {
+            background-color: #7fffbe;
+            border-color: #7fffbe;
+          }
+          &:active {
+            background-color: #40bc7e;
+            border-color: #40bc7e;
+          }
+          &:focus {
+            background-color: #50e399;
+            border-color: #50e399;
+          }
+        }
+      }
+    }
+  }
   .sub_title {
-    padding: 10px 0 10px 11px;
+    position: relative;
+    padding: 12px 0 12px 11px;
     font-size: 14px;
     color: #999;
+
+    .alarm_operation {
+      position: absolute;
+      right: 0;
+      top: 5px;
+      .import_btn,
+      .copy_btn,
+      .tpl_btn,
+      .export_btn {
+        display: inline-block;
+        vertical-align: top;
+        border-radius: 17px;
+        margin-left: 10px;
+        width: auto;
+        background-color: #fff;
+        border-color: #fff;
+        padding: 0 2px;
+        span,
+        i {
+          color: #3c3c3c;
+        }
+        .common_icon {
+          padding-right: 5px;
+          font-size: 18px;
+        }
+        &:hover {
+          background-color: #fff;
+          border-color: #fff;
+        }
+        &:active {
+          background-color: #fff;
+          border-color: #fff;
+        }
+        &:focus {
+          background-color: #fff;
+          border-color: #fff;
+        }
+        &:global(.ant-btn-clicked) {
+          &:after {
+            border-color: #fff;
+          }
+        }
+      }
+    }
     span {
       font-size: 14px;
       color: #999;
@@ -145,6 +297,15 @@
         cursor: pointer;
         line-height: 58px;
         height: 58px;
+        position: relative;
+        width: 100%;
+        span {
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          width: 88%;
+          display: block;
+        }
       }
       .padding0 {
         td {

@@ -11,7 +11,7 @@ import LeftNav from './leftNav.js';
 import _ from 'lodash';
 const {Content} = Layout;
 
-@inject('globalStore', 'layoutStore')
+@inject('globalStore', 'layoutStore', 'home_pageStore')
 @observer
 class BasicLayout extends Component {
   constructor(props) {
@@ -41,6 +41,8 @@ class BasicLayout extends Component {
   }
   componentWillUnmount() {
     $(window).off('resize.panel');
+    clearTimeout(this.timer);
+    this.ws.close();
   }
   componentDidUpdate() {
     const {globalStore, layoutStore, location} = this.props;
@@ -75,12 +77,14 @@ class BasicLayout extends Component {
     });
 
     const serviceip = localStorage.getItem('serviceip');
+    const {
+      home_pageStore: {getCountInfo},
+      layoutStore: {selectedKeys},
+    } = this.props;
 
     if (serviceip) {
       if ('WebSocket' in window) {
-        const ws = new WebSocket(
-          'ws://' + serviceip + ':11111/collect/websocket',
-        );
+        const ws = new WebSocket('ws://' + serviceip + '/collect/websocket');
         ws.onopen = function() {
           console.log('已连接...');
           ws.send('username' + 'QQ872474447');
@@ -90,11 +94,9 @@ class BasicLayout extends Component {
           const msg = evt.data;
           const result = JSON.parse(msg);
           if (result.Result == 'success') {
+            selectedKeys === 'shouye' && getCountInfo();
             notification.open({
               message: '设备上线/下线通知:',
-              // getContainer: () => {
-              //   return <div>1111</div>;
-              // },
               placement: 'bottomRight',
               description: `平台ID:${result.Data.platId} 节点ID:${
                 result.Data.nodeId
@@ -110,6 +112,7 @@ class BasicLayout extends Component {
         ws.onclose = function() {
           console.log('连接已关闭...');
         };
+        this.ws = ws;
       } else {
         console.log('暂不支持WebSocket!');
       }

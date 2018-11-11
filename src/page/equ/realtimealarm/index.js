@@ -71,6 +71,7 @@ class Passageway extends Component {
     const params = {
       ...realtimealarmStore.tableParmas,
       keywords: encodeURIComponent(value),
+      page: 1,
     };
     realtimealarmStore.search(params);
   }
@@ -146,7 +147,8 @@ class Passageway extends Component {
                 columns={columns}
                 rowClassName={(record, index) => {
                   const rowClassName = [];
-                  record.statustwo == 0 && rowClassName.push('cl_online_state');
+                  record.onOff == 0 && rowClassName.push('cl_online_state');
+                  record.onOff === 2 && rowClassName.push('cl_err_state');
                   return rowClassName.join(' ');
                 }}
                 loading={realtimealarmStore.loading}

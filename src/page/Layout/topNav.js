@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import Cookies from 'js-cookie';
 import styles from './index.less';
 //实例
-@inject('globalStore')
+@inject('globalStore', 'loginStore')
 class TopNav extends Component {
   constructor(props) {
     super(props);
@@ -13,8 +13,13 @@ class TopNav extends Component {
   }
   exitLogin(e) {
     e.nativeEvent.stopImmediatePropagation();
-    Cookies.remove('cl_username');
-    this.props.router.push('/login');
+    const {loginStore: {loginOut}} = this.props;
+    loginOut().then(data => {
+      if (data) {
+        Cookies.remove('cl_username');
+        this.props.router.push('/login');
+      }
+    });
   }
   render() {
     const {title, username} = this.props;

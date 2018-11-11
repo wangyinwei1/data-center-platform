@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {action, observer, inject} from 'mobx-react';
-import {Spin, Form, message} from 'antd';
+import {Spin, Form, message, Upload} from 'antd';
 import styles from './index.less';
 import RealtimeAlarmTable from '../realtimealarm/childTable.js';
 import Cascader from '../../../components/Cascader';
@@ -42,6 +42,7 @@ class Information extends Component {
     this.add = this.add.bind(this);
     this.deleteClick = this.deleteClick.bind(this);
     this.editClick = this.editClick.bind(this);
+    this.selectChange = this.selectChange.bind(this);
     this.onDeleteOk = this.onDeleteOk.bind(this);
     this.onDisableOk = this.onDisableOk.bind(this);
     this.onDeleteCancel = this.onDeleteCancel.bind(this);
@@ -51,6 +52,7 @@ class Information extends Component {
     this.onEditOk = this.onEditOk.bind(this);
     this.onKeyPress = this.onKeyPress.bind(this);
     this.onPageChange = this.onPageChange.bind(this);
+    this.childExportClick = this.childExportClick.bind(this);
     this.onRealtimeOk = this.onRealtimeOk.bind(this);
     this.onDisableCancel = this.onDisableCancel.bind(this);
     this.onRealtimeCancel = this.onRealtimeCancel.bind(this);
@@ -74,6 +76,7 @@ class Information extends Component {
     this.addChildDeviceOk = this.addChildDeviceOk.bind(this);
     this.addChildShow = this.addChildShow.bind(this);
     this.childDetailClick = this.childDetailClick.bind(this);
+    this.onExportTplClick = this.onExportTplClick.bind(this);
     this.childEditClick = this.childEditClick.bind(this);
     this.sunEditChange = this.sunEditChange.bind(this);
     this.sunDeleteChange = this.sunDeleteChange.bind(this);
@@ -97,12 +100,14 @@ class Information extends Component {
       addChildDeviceShow: false,
       rumorShow: false,
       modalTitle: '',
+      currentSuID: '',
       cascaderText: '',
       cascaderLoading: false,
       singleLineData: {},
       deleteShow: false,
       cascaderValue: [],
       deleteContent: '此操作将禁用该设备, 是否继续?',
+      isDisable: false,
       editShow: false,
       childTableTitle: '',
       deleteType: '',
@@ -159,8 +164,10 @@ class Information extends Component {
   }
   //禁用
   disableClick(item) {
+    const isDisable = item.status;
     this.setState({
       disabledShow: true,
+      isDisable: isDisable === 1 ? false : true,
       singleLineData: item,
     });
   }
@@ -185,7 +192,7 @@ class Information extends Component {
     this.setState({
       realtimeShow: true,
       childTableTitle: item.name,
-      needRealtime: item.statustwo === 0 ? false : true,
+      needRealtime: item.onOff === 0 ? false : true,
     });
   }
   onRealtimeOk() {}
@@ -194,11 +201,21 @@ class Information extends Component {
       realtimeShow: false,
     });
   }
+  selectChange(value) {
+    const status = {status: value};
+    const {fsu_devicemanagementStore: {getTable, tableParmas}} = this.props;
+    const params = {
+      ...tableParmas,
+      ...status,
+      page: 1,
+    };
+    getTable(params);
+  }
   //控制
   controlClick(item, e) {
     e.stopPropagation();
     e.nativeEvent.stopImmediatePropagation();
-    if (item.statustwo === 0) {
+    if (item.onOff === 0) {
       message.error('离线设备不支持远程控制！');
       return;
     }
@@ -233,6 +250,9 @@ class Information extends Component {
         });
     });
   }
+  onExportTplClick() {
+    location.href = '/collect/FSU_device/downExcel';
+  }
   onRumorCancel() {
     this.setState({
       rumorShow: false,
@@ -261,12 +281,10 @@ class Information extends Component {
     const params = {
       F_Suid: item.suID,
     };
-    fsu_devicemanagementStore.getSubDevice(params).then(data => {
-      if (data[0]) {
-      }
-    });
+    fsu_devicemanagementStore.getSubDevice(params);
     this.setState({
       historyShow: true,
+      currentSuID: item.suID,
       childTableTitle: item.name,
     });
   }
@@ -274,6 +292,8 @@ class Information extends Component {
     this.setState({
       historyShow: false,
     });
+    const {fsu_devicemanagementStore} = this.props;
+    fsu_devicemanagementStore.clearHisData(); //离开情况列表
   }
   onDisableOk() {
     const {
@@ -604,6 +624,7 @@ class Information extends Component {
     const params = {
       ...fsu_devicemanagementStore.tableParmas,
       keywords: encodeURIComponent(value),
+      page: 1,
     };
     fsu_devicemanagementStore.search(params);
     this.clearSelected();
@@ -762,6 +783,12 @@ class Information extends Component {
     //   },
     // );
   }
+  async childExportClick(item) {
+    await this.setState({
+      singleLineData: item,
+    });
+    await $(this.upload).click();
+  }
   //嵌套表格
   expandedRowRender(record, i) {
     const {fsu_devicemanagementStore} = this.props;
@@ -778,6 +805,7 @@ class Information extends Component {
         childDeleteClick={this.childDeleteClick}
         sunEditChange={this.sunEditChange}
         sunDeleteChange={this.sunDeleteChange}
+        childExportClick={this.childExportClick}
         sunDetailChange={this.sunDetailChange}
         currentPortChange={this.currentPortChange}
         childDeleteChange={this.childDeleteChange}
@@ -1024,6 +1052,39 @@ class Information extends Component {
       },
     };
 
+    const item = this.state.singleLineData;
+    const props = {
+      name: 'file',
+      action: '/collect/FSU_device/readExcel',
+      headers: {
+        authorization: 'authorization-text',
+      },
+      data: {
+        suID: this.state.singleLineData.suID,
+        deviceID: this.state.singleLineData.deviceID,
+      },
+      showUploadList: false,
+      onChange(info) {
+        if (info.file.status !== 'uploading') {
+          console.log(info.file, info.fileList);
+        }
+        if (info.file.status === 'done') {
+          if (info.file.response && info.file.response.Result === 'success') {
+            message.success(`${info.file.name} 导入成功！`);
+            const params = {
+              F_Suid: item.suID,
+              F_DeviceID: item.deviceID,
+            };
+
+            fsu_devicemanagementStore.getGrandsonTable(params);
+          } else {
+            message.error(info.file.response.Msg);
+          }
+        } else if (info.file.status === 'error') {
+          message.error(`${info.file.name} 导入失败！`);
+        }
+      },
+    };
     return (
       <div className={styles['information_wrap']}>
         <Cascader
@@ -1040,9 +1101,18 @@ class Information extends Component {
           <div className={styles['set_min_width']}>
             <Toolbar
               onClick={this.add}
-              showValue={['batchDelete', 'batchDisable', 'batchEnabled', 'add']}
+              showValue={[
+                'batchDelete',
+                'exportMonitorTpl',
+                'batchDisable',
+                'batchEnabled',
+                'add',
+              ]}
               onBatchDeleteClick={this.onBatchDeleteClick}
               onBatchDisableClick={this.onBatchDisableClick}
+              deviceStatus={true}
+              onExportTplClick={this.onExportTplClick}
+              selectChange={this.selectChange}
               onBatchEnabledClick={this.onBatchEnabledClick}
               onSearch={this.onSearch}
             />
@@ -1056,7 +1126,8 @@ class Information extends Component {
                 columns={columns}
                 rowClassName={(record, index) => {
                   const rowClassName = ['td_padding'];
-                  record.statustwo == 0 && rowClassName.push('cl_basic_state');
+                  record.onOff == 0 && rowClassName.push('cl_basic_state');
+                  record.onOff == 2 && rowClassName.push('cl_err_state');
                   record.isConcentrator == 0 &&
                     rowClassName.push('cl_hidden_expand_icon');
                   return rowClassName.join(' ');
@@ -1092,7 +1163,7 @@ class Information extends Component {
             onCancel={this.onHistoryCancel}
             title={`历史数据/${this.state.childTableTitle}`}
             isShow={this.state.historyShow}>
-            <HistoryModal />
+            <HistoryModal currentSuID={this.state.currentSuID} />
           </Panel>
           <ControlModal
             width={730}
@@ -1122,7 +1193,9 @@ class Information extends Component {
             />
           </ControlModal>
           <DeleteModal
-            hintContent={'此操作将禁用该设备, 是否继续?'}
+            hintContent={`此操作将${
+              this.state.isDisable ? '禁用' : '启用'
+            }该设备, 是否继续?`}
             isShow={this.state.disabledShow}
             onOk={this.onDisableOk}
             onCancel={this.onDisableCancel}
@@ -1159,6 +1232,14 @@ class Information extends Component {
             isShow={this.state.alarmTableVisible}>
             <RealtimeAlarmTable />
           </Panel>
+          <Upload {...props}>
+            <span
+              style={{display: 'none'}}
+              ref={c => {
+                this.upload = c;
+              }}
+            />
+          </Upload>
         </div>
       </div>
     );

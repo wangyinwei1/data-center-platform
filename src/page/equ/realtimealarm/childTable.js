@@ -43,6 +43,7 @@ class Regional extends Component {
     const params = {
       ...realtimealarmStore.c_tableParmas,
       keywords: encodeURIComponent(value),
+      page: 1,
     };
     realtimealarmStore.childSearch(params);
   }
