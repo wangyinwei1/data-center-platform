@@ -4,6 +4,7 @@ import {
   getFsu_historyalarmTable,
   getFsu_historyalarmChildTable,
   fsu_historyalarmChild_search,
+  getFSUType,
 } from '../services/api.js';
 import {message} from 'antd';
 class Historyalarm {
@@ -14,8 +15,17 @@ class Historyalarm {
   @observable loading = false;
   @observable c_loading = false;
   @observable currentDevice = '';
+  @action.bound
+  async getFSUType(params) {
+    const data = await getFSUType(params);
+    if (data.result == 'success') {
+      this.fsuAddTypes = data.data;
+    } else {
+      message.error(data.Msg);
+    }
+  }
 
-  @action
+  @action.bound
   async getTable(params) {
     this.loading = true;
     const data = await getFsu_historyalarmTable(params);

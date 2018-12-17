@@ -23,6 +23,7 @@ class Edit extends Component {
   constructor(props) {
     super(props);
     this.handleFormChange = this.handleFormChange.bind(this);
+    this.closeAlarmCondition = this.closeAlarmCondition.bind(this);
     this.exportTpl = this.exportTpl.bind(this);
     this.export = this.export.bind(this);
     this.import = this.import.bind(this);
@@ -37,6 +38,11 @@ class Edit extends Component {
   handleFormChange(changedFields) {
     const {handleFormChange} = this.props;
     handleFormChange(changedFields);
+  }
+  closeAlarmCondition() {
+    this.setState({
+      show: false,
+    });
   }
   onAlarmCancel() {
     this.setState({
@@ -55,10 +61,11 @@ class Edit extends Component {
     });
   }
   exportTpl() {
-    location.href = '/collect/device_alarmcondition/downexcel';
+    location.href = '/collect/device_alarmCondition/downExcel';
   }
   export() {
     const {passagewayStore: {a_tableData}} = this.props;
+    const record = a_tableData;
     if (
       record.length === 1 &&
       !record[0].conType &&
@@ -66,6 +73,10 @@ class Edit extends Component {
       !record[0].condition &&
       (!record[0].alarmDelay || record[0].alarmDelay === 0)
     ) {
+      location.href =
+        '/collect/device_alarmCondition/exportExcel?alarmConditions=' +
+        encodeURIComponent(JSON.stringify(toJS([])));
+    } else {
       location.href =
         '/collect/device_alarmCondition/exportExcel?alarmConditions=' +
         encodeURIComponent(JSON.stringify(toJS(a_tableData)));
@@ -127,9 +138,9 @@ class Edit extends Component {
           console.log(info.file, info.fileList);
         }
         if (info.file.status === 'done') {
-          if (info.file.response && info.file.response.Result === 'success') {
+          if (info.file.response && info.file.response.result === 'success') {
             // message.success(`${info.file.name} 导入成功！`);
-            const importData = info.file.response.listAlarmCondition;
+            const importData = info.file.response.data;
             const record = toJS(a_tableData);
             let data = [];
             if (
@@ -144,9 +155,11 @@ class Edit extends Component {
               data = _.unionWith(record, importData, _.isEqual);
             }
             //导入数据合并
-            alarmDataChange(data);
+            alarmDataChange(data).then(() => {
+              message.success('导入成功！');
+            });
           } else {
-            message.error(info.file.response.Msg);
+            message.success(info.file.response.Msg);
           }
         } else if (info.file.status === 'error') {
           message.error(`${info.file.name} 导入失败！`);
@@ -419,7 +432,10 @@ class Edit extends Component {
             title={'告警复制'}
             width={670}
             onCancel={this.onAlarmCancel}>
-            <AlarmCondition currentDevice={currentDevice} />
+            <AlarmCondition
+              closeAlarmCondition={this.closeAlarmCondition}
+              currentDevice={currentDevice}
+            />
           </EditModal>
         </Row>
       </Form>

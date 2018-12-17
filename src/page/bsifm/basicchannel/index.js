@@ -263,16 +263,16 @@ class Regional extends Component {
     }
     //过滤后端所需要的数据
     const item = this.state.singleLineData;
-    const valueMeanData = _.map(valueMeanTable, item => {
-      return `${item.value}:${item.valueMean}`;
-    });
+    // const valueMeanData = _.map(valueMeanTable, item => {
+    //   return `${item.value}:${item.valueMean}`;
+    // });
 
     const params = {
       F_DeviceType: item.F_DeviceType,
       F_Version: item.F_Version,
       F_ChannelID: item.F_ChannelID,
       F_ChannelType: item.F_ChannelType,
-      values: valueMeanData.join(','),
+      values: valueMeanTable,
     };
     valueMeanSave(params).then(() => {
       this.setState({
@@ -773,6 +773,7 @@ class Regional extends Component {
             valueTypeClick={this.valueTypeClick}
             addVirtual={this.addVirtual}
             isVchannel={this.state.isVchannel}
+            currentDevice={this.state.singleLineData}
             handleFormChange={this.handleFormChange}
           />
         </EditModal>

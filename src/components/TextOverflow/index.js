@@ -22,35 +22,21 @@ class TextOverflow extends Component {
     let width = parseInt(parent.css('width')) - paddingLeft - paddingRight;
 
     if (inlay) {
-      width = width - 18;
       $(this.root).css({
         position: 'absolute',
         left: 0,
         top: '50%',
-        marginLeft: 22,
         transform: 'translateY(-50%)',
       });
     }
 
     const hideSpanWidth = parseInt($(this.hideSpan).css('width'));
 
-    $(this.root).css({width: width});
     parent.css({cursor: 'pointer'});
     if (hideSpanWidth >= width) {
       this.setState({
         needTip: true,
       });
-      $(this.root).addClass('text_overflow');
-      const {link} = this.props;
-      // !link &&
-      //   parent.on('click.parent', e => {
-      //     this.setState({
-      //       isOpen: !this.state.isOpen,
-      //     });
-      //     $(this.root).hasClass('text_overflow')
-      //       ? $(this.root).removeClass('text_overflow')
-      //       : $(this.root).addClass('text_overflow');
-      //   });
     }
   }
   componentWillUnmount() {
@@ -63,6 +49,7 @@ class TextOverflow extends Component {
         ref={c => {
           this.root = c;
         }}
+        className={'text_overflow'}
         style={{
           cursor: 'pointer',
           width: '100%',

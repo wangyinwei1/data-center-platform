@@ -31,7 +31,7 @@ class Edit extends Component {
   }
   render() {
     const {
-      fsu_devicemanagementStore: {detailData, addData},
+      fsu_devicemanagementStore: {fsuAddTypes, detailData, addData},
       fields,
       mode,
     } = this.props;
@@ -55,6 +55,12 @@ class Edit extends Component {
         name: item.F_Name,
       };
     });
+    const fusTypeArray = _.map(toJS(fsuAddTypes), item => {
+      return {
+        value: item.typeId,
+        name: item.typeName,
+      };
+    });
     return (
       <Form layout="inline" className={styles['edit_wrap']}>
         <FormInput
@@ -72,6 +78,18 @@ class Edit extends Component {
           label={'设备ID'}
           name={'F_SuID'}
           rules={[{required: true, message: '请必须填写!'}]}
+        />
+        <FormSelect
+          {...fields}
+          onChange={this.handleFormChange}
+          label={'设备类型'}
+          disabled={
+            !JSON.parse(localStorage.getItem('isAdmin')) ? true : disabled
+          }
+          placeholder={'请选择类型'}
+          name={'F_TypeID'}
+          rules={[{required: true, message: '请必须填写!'}]}
+          children={fusTypeArray}
         />
         <FormInput
           {...fields}

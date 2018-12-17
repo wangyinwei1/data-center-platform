@@ -3,6 +3,7 @@ import styles from './index.less';
 import classnames from 'classnames';
 import {Tooltip, Dropdown, Menu} from 'antd';
 import columnData from './childColumns.js';
+import TextOverflow from '../../../components/TextOverflow';
 /**
  * {anction表格的culumns}
  * @param {deleteClick} 删除按钮的回调
@@ -49,6 +50,9 @@ const columns = ({editClick, deleteClick, alarmClick, detailClick, _this}) => {
     {
       title: '通道名称',
       dataIndex: 'channelName',
+      render: (text, record, index) => {
+        return <TextOverflow>{text}</TextOverflow>;
+      },
     },
     {
       title: '通道类型',

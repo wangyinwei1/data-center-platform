@@ -34,6 +34,8 @@ class Pie extends Component {
     this.setState({
       show: false,
     });
+    const {home_pageStore: {getCountInfo}} = this.props;
+    getCountInfo();
   }
   onlineClick(type) {
     const {
@@ -70,6 +72,9 @@ class Pie extends Component {
         break;
       case 'offline':
         title = '离线设备';
+        break;
+      case 'errline':
+        title = '异常设备';
         break;
     }
 

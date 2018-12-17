@@ -65,7 +65,7 @@ const columns = ({
     {
       title: '设备名称',
       dataIndex: 'devName',
-      width: '20%',
+      width: '15%',
       className: 'information_th',
       render: (text, record, index) => {
         return (
@@ -87,9 +87,18 @@ const columns = ({
       },
     },
     {
+      title: '设备ID',
+      dataIndex: 'devID',
+      width: '10%',
+      className: 'information_th',
+      render: (text, record, index) => {
+        return <TextOverflow>{text}</TextOverflow>;
+      },
+    },
+    {
       title: '设备别名',
       dataIndex: 'rec',
-      width: '12%',
+      width: '8%',
       className: 'information_th',
       render: (text, record, index) => {
         return <TextOverflow>{text}</TextOverflow>;
@@ -108,7 +117,7 @@ const columns = ({
       title: '所属站点',
       dataIndex: 'stationName',
       className: 'information_th',
-      width: '20%',
+      width: '18%',
       render: (text, record, index) => {
         return <TextOverflow>{text}</TextOverflow>;
       },

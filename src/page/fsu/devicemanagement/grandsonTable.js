@@ -93,7 +93,7 @@ class Regional extends Component {
   componentDidMount() {
     $('.ant-table-expanded-row .ant-table-expanded-row > td:last-child').attr(
       'colspan',
-      8,
+      JSON.parse(localStorage.getItem('FsuTypeID')) === 3 ? 10 : 8,
     );
   }
   render() {

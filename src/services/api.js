@@ -325,6 +325,9 @@ export function alarmConditionDel(data) {
     data,
   );
 }
+export function copyAlarmCondition(data) {
+  return request.post(base + '/device_channel/copyAlarmCondition', data);
+}
 export function alarmConditionUpd(data) {
   return request.post(
     base + '/device_devalearminfo/AlarmConditionUpd.do',
@@ -398,6 +401,11 @@ export function basicchannel_toExcel(params) {
     params,
   });
 }
+export function base_findDeviceChannel(params) {
+  return request.get(base + '/device_basechannel/findDeviceChannel', {
+    params,
+  });
+}
 export function getValuePropertyList(params) {
   return request.get(base + '/device_basechannel/getValuePropertyList.do', {
     params,
@@ -406,8 +414,11 @@ export function getValuePropertyList(params) {
 export function basechannelSave(data) {
   return request.post(base + '/device_basechannel/save.do', data);
 }
-export function copyAlarmCondition(data) {
-  return request.post(base + '/device_channel/copyAlarmCondition', data);
+export function base_copyAlarmCondition(data) {
+  return request.post(
+    base + '/device_basechannel/copyBaseAlarmCondition',
+    data,
+  );
 }
 export function basechannelAlarmAdd(data) {
   return request.post(
@@ -495,6 +506,9 @@ export function getFsuDevicemanagementTable(params) {
 export function getFsuSunDevice(params) {
   return request.get(base + '/FSU_device/FsuSunDevice_list2.do', {params});
 }
+export function getSuStatus(params) {
+  return request.get(base + '/FSU_device/getSuStatus', {params});
+}
 
 export function getFsuSp(params) {
   return request.get(base + '/FSU_device/FsuSp_list2.do', {params});
@@ -511,26 +525,29 @@ export function fsuDevicemanagementSave(data) {
 export function findFSU2(params) {
   return request.get(base + '/FSU_device/find_FSU2.do', {params});
 }
+export function getFSUType(params) {
+  return request.get(base + '/FSU_device/getFSUType', {params});
+}
 export function delFSU2(data) {
   return request.post(base + '/FSU_device/delFSU2.do', data);
 }
-export function saveFSU_Sun2(data) {
-  return request.post(base + '/FSU_device/save_FSUSun2.do', data);
+export function fsuAddSunDev(data) {
+  return request.post(base + '/FSU_device/fsuAddSunDev', data);
 }
 export function editFSU2(data) {
   return request.post(base + '/FSU_device/edit_FSU2.do', data);
 }
-export function saveFSU_Sp2(data) {
-  return request.post(base + '/FSU_device/save_FSUSp2.do', data);
+export function fsuAddSpID(data) {
+  return request.post(base + '/FSU_device/fsuAddSpID', data);
 }
-export function editFSU_Sun2(data) {
-  return request.post(base + '/FSU_device/editFSU_Sun2.do', data);
+export function fsuUpdSunDev(data) {
+  return request.post(base + '/FSU_device/fsuUpdSunDev', data);
 }
 export function delFSU_Sun2(data) {
   return request.post(base + '/FSU_device/delFSUSun2.do', data);
 }
-export function editFSU_Sp2(data) {
-  return request.post(base + '/FSU_device/editFSU_Sp2.do', data);
+export function fsuUpdSpID(data) {
+  return request.post(base + '/FSU_device/fsuUpdSpID', data);
 }
 export function delFSU_Sp2(data) {
   return request.post(base + '/FSU_device/delFSUSp2.do', data);
@@ -708,4 +725,16 @@ export function fsuExecuteOperatio(data) {
 }
 export function executeOperation(data) {
   return request.post(base + '/device_alarm/executeOperation.do', data);
+}
+//fsuconfig
+export function getConfigFileList(params) {
+  return request.get(base + '/FSU_device/getConfigFileList', {
+    params,
+  });
+}
+export function deleteConfigFiles(data) {
+  return request.post(base + '/FSU_device/deleteConfigFiles', data);
+}
+export function sendConfigFileList(data) {
+  return request.post(base + '/FSU_device/sendConfigFileList', data);
 }

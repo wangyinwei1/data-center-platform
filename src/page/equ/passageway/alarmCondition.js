@@ -51,7 +51,12 @@ class AlarmCondition extends Component {
       channelIDs: this.state.Channels,
       alarmConditions,
     };
-    copyAlarmCondition(params);
+    copyAlarmCondition(params).then(data => {
+      if (data) {
+        const {closeAlarmCondition} = this.props;
+        closeAlarmCondition();
+      }
+    });
   }
   isAllSelected(value, devChannel) {
     let isAll = true;

@@ -20,6 +20,10 @@ const formParams = {
       value: '',
       require: true,
     },
+    F_TypeID: {
+      value: undefined,
+      require: true,
+    },
     F_Pwd: {
       value: '',
       require: true,
@@ -43,24 +47,78 @@ const formParams = {
   },
 };
 
+const addFsuLevelOne = {
+  oneFields: {
+    F_DeviceID: {
+      value: '',
+      require: true,
+    },
+    deviceName: {
+      value: '',
+      require: true,
+    },
+    roomName: {
+      value: '',
+    },
+    deviceType: {
+      value: 0,
+    },
+    deviceSubType: {
+      value: 0,
+    },
+    model: {
+      value: '',
+    },
+    brand: {
+      value: '',
+    },
+    ratedCapacity: {
+      value: '',
+    },
+    version: {
+      value: '',
+    },
+    devDescribe: {
+      value: '',
+    },
+  },
+};
 const addLevelOne = {
   oneFields: {
     F_DeviceID: {
       value: '',
       require: true,
     },
-    F_DeviceName: {
+    deviceName: {
       value: '',
       require: true,
     },
   },
 };
-const addChildDevice = {
+const addChildFsuDevice = {
   childDevicefields: {
-    F_SpUnit: {
+    spUnit: {
       value: '',
     },
-    F_Type: {
+    nmAlarmID: {
+      value: '',
+    },
+    describe: {
+      value: '',
+    },
+    relativeVal: {
+      value: '',
+    },
+    absoluteVal: {
+      value: '',
+    },
+    threshold: {
+      value: '',
+    },
+    alarmLevel: {
+      value: '',
+    },
+    spType: {
       value: undefined,
       require: true,
     },
@@ -68,7 +126,7 @@ const addChildDevice = {
       require: true,
       value: undefined,
     },
-    F_SpName: {
+    spName: {
       value: '',
       require: true,
     },
@@ -78,4 +136,32 @@ const addChildDevice = {
     },
   },
 };
-export {formParams, addLevelOne, addChildDevice};
+const addChildDevice = {
+  childDevicefields: {
+    spUnit: {
+      value: '',
+    },
+    spType: {
+      value: undefined,
+      require: true,
+    },
+    F_OptionID: {
+      require: true,
+      value: undefined,
+    },
+    spName: {
+      value: '',
+    },
+    F_SpID: {
+      value: '',
+      require: true,
+    },
+  },
+};
+export {
+  formParams,
+  addLevelOne,
+  addChildFsuDevice,
+  addFsuLevelOne,
+  addChildDevice,
+};

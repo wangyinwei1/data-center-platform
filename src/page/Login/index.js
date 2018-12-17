@@ -54,6 +54,7 @@ class Loginer extends Component {
             // globalStore.saveIp_name({
             //   ip: data.ip,
             // }),
+            localStorage.setItem('FsuTypeID', data.FsuTypeID);
             localStorage.setItem('serviceip', data.ip);
             localStorage.setItem('isAdmin', data.isAdmin);
             localStorage.setItem('isNotArea', data.isNotArea);
@@ -65,6 +66,7 @@ class Loginer extends Component {
               : Cookies.remove('remember');
             //保存用户名
             Cookies.set('cl_username', {username: values.username});
+            globalStore.changeOvertime(false);
 
             //跳转路由
 
@@ -72,6 +74,7 @@ class Loginer extends Component {
               router.goBack();
             } else {
               //setSelectedKeys
+
               layoutStore.setSelectedKeys('shouye');
               router.push('/shouye');
             }

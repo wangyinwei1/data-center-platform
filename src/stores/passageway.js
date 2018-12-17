@@ -149,9 +149,11 @@ class Passageway {
   async copyAlarmCondition(params) {
     const data = await copyAlarmCondition(params);
     if (data.Result == 'success') {
-      message.error(data.Msg);
+      message.success(data.Msg);
+      return true;
     } else {
       message.error(data.Msg);
+      return false;
     }
   }
   @action.bound

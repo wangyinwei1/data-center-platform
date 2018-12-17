@@ -12,7 +12,8 @@ import Table from '../../../components/Table';
 import columnData from './columns.js';
 import DeleteModal from '../../../components/DeleteModal';
 import BatchModal from '../../../components/DeleteModal';
-import EditModal from './edit.js';
+import EditModal from '../../../components/EditModal';
+import EditContent from './edit.js';
 import moment from 'moment';
 import Panel from '../../../components/Panel';
 import RealtimeTable from './realtimeTable.js';
@@ -22,14 +23,23 @@ import ControlModal from './controlModal.js';
 import ControlContent from './controlContent.js';
 import RumorContent from './rumorContent.js';
 import AddLevelOne from './addLevelOne.js';
+import FsuStatusEcharts from './FsuStatusEcharts.js';
+import DownConfig from './downConfig.js';
 import AddChildDevice from './addChildDevice.js';
-import {formParams, addLevelOne, addChildDevice} from './tplJson.js';
+import {
+  formParams,
+  addLevelOne,
+  addFsuLevelOne,
+  addChildFsuDevice,
+  addChildDevice,
+} from './tplJson.js';
 //实例
 @inject(
   'regionalStore',
   'informationStore',
   'fsu_devicemanagementStore',
   'fsu_realtimealarmStore',
+  'fsuconfigStore',
 )
 @observer
 @mixin(cascader)
@@ -40,16 +50,19 @@ class Information extends Component {
     this.onTextChange = this.onTextChange.bind(this);
     this.onCascaderChange = this.onCascaderChange.bind(this);
     this.add = this.add.bind(this);
+    this.downDevChange = this.downDevChange.bind(this);
     this.deleteClick = this.deleteClick.bind(this);
     this.editClick = this.editClick.bind(this);
-    this.selectChange = this.selectChange.bind(this);
+    this.typesChange = this.typesChange.bind(this);
     this.onDeleteOk = this.onDeleteOk.bind(this);
     this.onDisableOk = this.onDisableOk.bind(this);
     this.onDeleteCancel = this.onDeleteCancel.bind(this);
+    this.fsuStatusClick = this.fsuStatusClick.bind(this);
     this.onSearch = this.onSearch.bind(this);
     this.onShowSizeChange = this.onShowSizeChange.bind(this);
     this.onEditCancel = this.onEditCancel.bind(this);
     this.onEditOk = this.onEditOk.bind(this);
+    this.closeDownShowChange = this.closeDownShowChange.bind(this);
     this.onKeyPress = this.onKeyPress.bind(this);
     this.onPageChange = this.onPageChange.bind(this);
     this.childExportClick = this.childExportClick.bind(this);
@@ -90,7 +103,9 @@ class Information extends Component {
     this.onBatchOk = this.onBatchOk.bind(this);
     this.onRealAlarmCancel = this.onRealAlarmCancel.bind(this);
     this.onBatchCancel = this.onBatchCancel.bind(this);
+    this.onFsuStatusCancel = this.onFsuStatusCancel.bind(this);
     this.getAlarmTable = this.getAlarmTable.bind(this);
+    this.onDownShowCancel = this.onDownShowCancel.bind(this);
 
     this.state = {
       controlShow: false,
@@ -119,11 +134,13 @@ class Information extends Component {
       areaName: '',
       expandedRows: [],
       selectedChildRowKey: [],
+      downShow: false,
       alarmTableVisible: false,
       alarmTableTitle: '',
       currentDeviceID: '',
       batchIds: '',
       batchShow: false,
+      fsuStatusShow: false,
       batchField: '',
       needRealtime: true,
       hintContent: '',
@@ -145,12 +162,14 @@ class Information extends Component {
   }
   onCascaderChange(value, selectedOptions) {
     this.c_onCascaderChang(value, selectedOptions);
+
     const params = {
       page: 1,
       sing: selectedOptions[0].sing,
       keywords: '',
       number: 10,
       ztreeChild: selectedOptions[0].code,
+      F_FsuTypeID: localStorage.getItem('FsuTypeID'),
     };
     const {fsu_devicemanagementStore} = this.props;
     fsu_devicemanagementStore.getTable(params);
@@ -173,7 +192,15 @@ class Information extends Component {
   }
   componentDidMount() {
     const {fsu_devicemanagementStore} = this.props;
-    this.initLoading(fsu_devicemanagementStore).then(() => {
+    const params = {
+      page: 1,
+      sing: 'area',
+      keywords: '',
+      number: 10,
+      F_FsuTypeID: localStorage.getItem('FsuTypeID'),
+    };
+    fsu_devicemanagementStore.getFSUType();
+    this.initLoading(fsu_devicemanagementStore, params).then(() => {
       const tableData = toJS(fsu_devicemanagementStore.tableData.varList);
     });
   }
@@ -200,6 +227,30 @@ class Information extends Component {
     this.setState({
       realtimeShow: false,
     });
+    const {fsu_devicemanagementStore: {getTable, tableParmas}} = this.props;
+    const params = {
+      ...tableParmas,
+      F_FsuTypeID: localStorage.getItem('FsuTypeID'),
+    };
+    getTable(params);
+  }
+  typesChange(value) {
+    const status = {status: value};
+    const {
+      fsu_devicemanagementStore: {getTable, expandedRowsChange, tableParmas},
+    } = this.props;
+    const params = {
+      ...tableParmas,
+      page: 1,
+      F_FsuTypeID: value,
+    };
+    localStorage.setItem('FsuTypeID', value);
+    getTable(params).then(() => {
+      this.setState({
+        expandedRows: [],
+      });
+      expandedRowsChange([]);
+    });
   }
   selectChange(value) {
     const status = {status: value};
@@ -208,6 +259,7 @@ class Information extends Component {
       ...tableParmas,
       ...status,
       page: 1,
+      F_FsuTypeID: localStorage.getItem('FsuTypeID'),
     };
     getTable(params);
   }
@@ -326,6 +378,12 @@ class Information extends Component {
     this.setState({
       alarmTableVisible: false,
     });
+    const {fsu_devicemanagementStore: {getTable, tableParmas}} = this.props;
+    const params = {
+      ...tableParmas,
+      F_FsuTypeID: localStorage.getItem('FsuTypeID'),
+    };
+    getTable(params);
   }
   initFromValue(data, mode) {
     this.setState(({fields}) => {
@@ -341,6 +399,7 @@ class Information extends Component {
       formValue.F_SuHardVer.value = data.pd.suHardVer;
       formValue.F_SuSoftVer.value = data.pd.suSoftVer;
       formValue.F_StationID.value = data.pd.stationID;
+      formValue.F_TypeID.value = data.pd.typeID;
       return {
         fields: {
           ...fields,
@@ -353,11 +412,24 @@ class Information extends Component {
   }
   //添加功能
   add() {
-    const {fsu_devicemanagementStore: {getGoAdd, ztreeChild}} = this.props;
+    const {
+      fsu_devicemanagementStore: {getGoAdd, getFSUType, ztreeChild},
+    } = this.props;
+    getFSUType();
     getGoAdd({Area_ID: ztreeChild}).then(() => {
-      this.setState({
-        editShow: true,
-        type: 'new',
+      this.setState(({fields}) => {
+        let formValue = _.cloneDeep([fields])[0];
+        formValue.F_TypeID.value = JSON.parse(
+          localStorage.getItem('FsuTypeID'),
+        );
+        return {
+          fields: {
+            ...fields,
+            ...formValue,
+          },
+          editShow: true,
+          type: 'new',
+        };
       });
     });
   }
@@ -427,18 +499,26 @@ class Information extends Component {
       });
     }
   }
-  addLevelOneClick(item) {
+  async addLevelOneClick(item) {
     const {fsu_devicemanagementStore: {currentDeviceChange}} = this.props;
     currentDeviceChange(item.suID);
-    this.setState({
-      ...addLevelOne,
+    const field =
+      JSON.parse(localStorage.getItem('FsuTypeID')) === 3
+        ? addFsuLevelOne
+        : addLevelOne;
+    await this.setState({
+      ...field,
       addLevelOneShow: true,
       childType: 'new',
     });
   }
   onAddLevelOneCancel() {
+    const field =
+      JSON.parse(localStorage.getItem('FsuTypeID')) === 3
+        ? addFsuLevelOne
+        : addLevelOne;
     this.setState({
-      ...addLevelOne,
+      ...field,
       addLevelOneShow: false,
     });
   }
@@ -497,14 +577,22 @@ class Information extends Component {
     }
   }
   addChildDeviceCancel() {
+    const field =
+      JSON.parse(localStorage.getItem('FsuTypeID')) === 3
+        ? addChildFsuDevice
+        : addChildDevice;
+
     this.setState({
-      ...addChildDevice,
+      ...field,
       addChildDeviceShow: false,
     });
   }
   //点击编辑
   editClick(item) {
-    const {fsu_devicemanagementStore: {goFind2, ztreeChild}} = this.props;
+    const {
+      fsu_devicemanagementStore: {goFind2, getFSUType, ztreeChild},
+    } = this.props;
+    getFSUType();
     goFind2({Area_ID: ztreeChild, suID: item.suID}).then(data => {
       this.initFromValue(data, 'modify');
     });
@@ -637,6 +725,7 @@ class Information extends Component {
       ...fsu_devicemanagementStore.tableParmas,
       page: current,
       number: pageSize,
+      F_FsuTypeID: localStorage.getItem('FsuTypeID'),
     };
     fsu_devicemanagementStore.getTable(params);
     this.clearSelected();
@@ -668,7 +757,12 @@ class Information extends Component {
     });
   }
   addChildShow(item, selectedChildRowKey) {
+    const field =
+      JSON.parse(localStorage.getItem('FsuTypeID')) === 3
+        ? addChildFsuDevice
+        : addChildDevice;
     this.setState({
+      ...field,
       addChildDeviceShow: true,
       sunType: 'new',
       currentDeviceID: item.deviceID,
@@ -678,9 +772,23 @@ class Information extends Component {
   //子集点击设值
   getRowData(item, mode) {
     this.setState(({oneFields}) => {
-      let formValue = _.cloneDeep([oneFields])[0];
+      let value =
+        JSON.parse(localStorage.getItem('FsuTypeID')) === 3
+          ? addFsuLevelOne.oneFields
+          : addLevelOne.oneFields;
+      let formValue = _.cloneDeep([value])[0];
       formValue.F_DeviceID.value = item.deviceID;
-      formValue.F_DeviceName.value = item.deviceName;
+      formValue.deviceName.value = item.deviceName;
+      if (JSON.parse(localStorage.getItem('FsuTypeID')) === 3) {
+        formValue.roomName.value = item.roomName;
+        formValue.model.value = item.model;
+        formValue.brand.value = item.brand;
+        formValue.ratedCapacity.value = item.ratedCapacity;
+        formValue.version.value = item.version;
+        formValue.deviceType.value = item.deviceType;
+        formValue.deviceSubType.value = item.deviceSubType;
+        formValue.devDescribe.value = item.devDescribe;
+      }
       return {
         oneFields: {
           ...oneFields,
@@ -702,12 +810,24 @@ class Information extends Component {
   getSunRowData(item, mode) {
     const {fsu_devicemanagementStore: {expandedRows}} = this.props;
     this.setState(({childDevicefields}) => {
-      let formValue = _.cloneDeep([childDevicefields])[0];
-      formValue.F_SpUnit.value = item.spUnit;
-      formValue.F_Type.value = item.type;
+      let value =
+        JSON.parse(localStorage.getItem('FsuTypeID')) === 3
+          ? addChildFsuDevice.childDevicefields
+          : addChildDevice.childDevicefields;
+      let formValue = _.cloneDeep([value])[0];
+      formValue.spUnit.value = item.spUnit;
+      formValue.spType.value = item.spType;
       formValue.F_OptionID.value = item.optionID;
-      formValue.F_SpName.value = item.spName;
+      formValue.spName.value = item.spName;
       formValue.F_SpID.value = item.spID;
+      if (JSON.parse(localStorage.getItem('FsuTypeID')) === 3) {
+        formValue.alarmLevel.value = item.alarmLevel;
+        formValue.threshold.value = item.threshold;
+        formValue.absoluteVal.value = item.absoluteVal;
+        formValue.relativeVal.value = item.relativeVal;
+        formValue.describe.value = item.describe;
+        formValue.nmAlarmID.value = item.nmAlarmID;
+      }
       return {
         childDevicefields: {
           ...childDevicefields,
@@ -854,15 +974,6 @@ class Information extends Component {
       };
     });
   }
-  selectChange(value) {
-    const status = {status: value};
-    const {fsu_devicemanagementStore: {getTable, tableParmas}} = this.props;
-    const params = {
-      ...tableParmas,
-      ...status,
-    };
-    getTable(params);
-  }
   //批量操作
   onBatchDeleteClick() {
     const batchIds = this.state.batchIds;
@@ -941,7 +1052,43 @@ class Information extends Component {
       alarmTableTitle: item.name,
     });
   }
+  fsuStatusClick(item) {
+    if (item.onOff === 0) {
+      message.error('该设备为离线设备获取不到FSU运行状态！');
+      return;
+    }
+    const {fsu_devicemanagementStore} = this.props;
+    const params = {
+      suID: item.suID,
+    };
+    fsu_devicemanagementStore.getSuStatus(params);
+    this.setState({
+      fsuStatusShow: true,
+    });
+  }
+  onFsuStatusCancel() {
+    this.setState({
+      fsuStatusShow: false,
+    });
+  }
 
+  downDevChange() {
+    const {fsuconfigStore: {getTable}} = this.props;
+    getTable();
+    this.setState({
+      downShow: true,
+    });
+  }
+  onDownShowCancel() {
+    this.setState({
+      downShow: false,
+    });
+  }
+  closeDownShowChange() {
+    this.setState({
+      downShow: false,
+    });
+  }
   render() {
     const {fsu_devicemanagementStore, zTreeLevel, regionalStore} = this.props;
     const tableData = toJS(fsu_devicemanagementStore.tableData.varList) || [];
@@ -954,6 +1101,7 @@ class Information extends Component {
       controlClick: this.controlClick,
       disableClick: this.disableClick,
       rumorClick: this.rumorClick,
+      fsuStatusClick: this.fsuStatusClick,
       addLevelOneClick: this.addLevelOneClick,
       detailClick: this.detailClick,
       getAlarmTable: this.getAlarmTable,
@@ -1101,18 +1249,15 @@ class Information extends Component {
           <div className={styles['set_min_width']}>
             <Toolbar
               onClick={this.add}
-              showValue={[
-                'batchDelete',
-                'exportMonitorTpl',
-                'batchDisable',
-                'batchEnabled',
-                'add',
-              ]}
+              downDevChange={this.downDevChange}
+              showValue={['exportMonitorTpl', 'downDev', 'batchOption', 'add']}
+              fsuAddTypes={fsu_devicemanagementStore.fsuAddTypes}
               onBatchDeleteClick={this.onBatchDeleteClick}
               onBatchDisableClick={this.onBatchDisableClick}
               deviceStatus={true}
               onExportTplClick={this.onExportTplClick}
               selectChange={this.selectChange}
+              typesChange={this.typesChange}
               onBatchEnabledClick={this.onBatchEnabledClick}
               onSearch={this.onSearch}
             />
@@ -1186,12 +1331,20 @@ class Information extends Component {
             title={modalTitle}
             onOk={this.onEditOk}
             onCancel={this.onEditCancel}>
-            <EditModal
+            <EditContent
               fields={this.state.fields}
               mode={this.state.type}
               handleFormChange={this.handleFormChange}
             />
           </ControlModal>
+          <EditModal
+            isShow={this.state.fsuStatusShow}
+            title={'FSU运行状态'}
+            width={670}
+            onCancel={this.onFsuStatusCancel}>
+            <FsuStatusEcharts />
+          </EditModal>
+
           <DeleteModal
             hintContent={`此操作将${
               this.state.isDisable ? '禁用' : '启用'
@@ -1226,6 +1379,16 @@ class Information extends Component {
               handleFormChange={this.addChildDeviceChange}
             />
           </ControlModal>
+          <EditModal
+            isShow={this.state.downShow}
+            title={'下发配置文件'}
+            width={670}
+            onCancel={this.onDownShowCancel}>
+            <DownConfig
+              selectedDevice={this.state.batchIds}
+              closeDownShowChange={this.closeDownShowChange}
+            />
+          </EditModal>
           <Panel
             onCancel={this.onRealAlarmCancel}
             title={this.state.alarmTableTitle}

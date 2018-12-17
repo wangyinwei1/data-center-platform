@@ -15,16 +15,19 @@ class Regional extends Component {
     this.onPageChange = this.onPageChange.bind(this);
     this.onSearch = this.onSearch.bind(this);
     this.timeChange = this.timeChange.bind(this);
+    this.typesChange = this.typesChange.bind(this);
   }
   componentDidMount() {
-    const {fsu_controlrecordStore: {getTable}} = this.props;
+    const {fsu_controlrecordStore: {getTable, getFSUType}} = this.props;
     const params = {
       page: 1,
       keywords: '',
       number: 10,
       lastLoginStart: '',
       lastLoginEnd: '',
+      F_FsuTypeID: localStorage.getItem('FsuTypeID'),
     };
+    getFSUType();
     getTable(params);
   }
   //table分页
@@ -34,6 +37,7 @@ class Regional extends Component {
     const params = {
       ...fsu_controlrecordStore.tableParmas,
       page: current,
+      F_FsuTypeID: localStorage.getItem('FsuTypeID'),
       number: pageSize,
     };
     fsu_controlrecordStore.getTable(params);
@@ -42,6 +46,7 @@ class Regional extends Component {
     const {fsu_controlrecordStore} = this.props;
     const params = {
       ...fsu_controlrecordStore.tableParmas,
+      F_FsuTypeID: localStorage.getItem('FsuTypeID'),
       page: pageNumber,
     };
     fsu_controlrecordStore.getTable(params);
@@ -50,6 +55,7 @@ class Regional extends Component {
     const {fsu_controlrecordStore} = this.props;
     const params = {
       ...fsu_controlrecordStore.tableParmas,
+      F_FsuTypeID: localStorage.getItem('FsuTypeID'),
       keywords: encodeURIComponent(value),
       page: 1,
     };
@@ -60,10 +66,21 @@ class Regional extends Component {
     const params = {
       ...fsu_controlrecordStore.tableParmas,
       page: 1,
+      F_FsuTypeID: localStorage.getItem('FsuTypeID'),
       lastLoginStart: dateStrings[0],
       lastLoginEnd: dateStrings[1],
     };
     fsu_controlrecordStore.getTable(params);
+  }
+  typesChange(value) {
+    const {fsu_controlrecordStore: {getTable, tableParmas}} = this.props;
+    const params = {
+      ...tableParmas,
+      page: 1,
+      F_FsuTypeID: value,
+    };
+    localStorage.setItem('FsuTypeID', value);
+    getTable(params);
   }
   render() {
     const {fsu_controlrecordStore} = this.props;
@@ -79,6 +96,8 @@ class Regional extends Component {
           showValue={['time']}
           timeChange={this.timeChange}
           onSearch={this.onSearch}
+          fsuAddTypes={fsu_controlrecordStore.fsuAddTypes}
+          typesChange={this.typesChange}
           closeAdd={true}
         />
         <div className={styles['controlrecord_ct']}>

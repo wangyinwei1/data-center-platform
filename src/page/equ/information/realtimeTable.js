@@ -54,9 +54,7 @@ class Regional extends Component {
       keywords: encodeURIComponent(value),
       page: 1,
     };
-    this.state.isRealtimeCall
-      ? informationStore.getRealTimeCall(params)
-      : informationStore.realtimeSearch(params);
+    informationStore.realtimeSearch(params);
   }
   real() {
     const {informationStore} = this.props;

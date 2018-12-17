@@ -1,11 +1,43 @@
 :local {
   .edit_wrap {
+    &.darker {
+      height: 100%;
+      .edit_title {
+        background-color: #2f364b;
+        color: #fff;
+      }
+    }
     .edit_title {
       background-color: #f9f9f9;
       height: 40px;
       line-height: 40px;
       padding-left: 20px;
       color: #4a4a4a;
+    }
+  }
+}
+:global {
+  .index_modal_darker {
+    .ant-modal {
+      height: 84%;
+    }
+    .ant-modal-content {
+      .ant-modal-body {
+        height: 100%;
+      }
+      height: 100%;
+      background: -moz-linear-gradient(45deg, #343c54 0%, #30485c 100%);
+      background: -webkit-gradient(45deg, #343c54 0%, #30485c 100%);
+      background: -webkit-linear-gradient(45deg, #343c54 0%, #30485c 100%);
+      background: -o-linear-gradient(45deg, #343c54 0%, #30485c 100%);
+      background: -ms-linear-gradient(45deg, #343c54 0%, #30485c 100%);
+      background: linear-gradient(45deg, #343c54 0%, #30485c 100%);
+      .ant-modal-footer {
+        padding-bottom: 0px;
+      }
+      .ant-modal-close .ant-modal-close-x {
+        color: #fff;
+      }
     }
   }
 }

@@ -273,6 +273,7 @@
     .detail,
     .disable,
     .add_child,
+    .fsu_status,
     .edit {
       i,
       span {
@@ -284,6 +285,62 @@
       }
     }
   }
+  .all_selected:after {
+    color: #56eca1 !important;
+  }
+  .control_ct {
+    padding: 20px;
+    padding-top: 20px;
+    padding-bottom: 0px;
+    .be_careful {
+      line-height: 24px;
+      padding-bottom: 5px;
+      font-size: 12px;
+      color: #eb0a11;
+    }
+    .channel_id {
+      :global {
+        .ant-form-item-control-wrapper {
+          width: 380px;
+        }
+      }
+      width: 500px;
+    }
+    .search {
+      margin-top: 1px;
+      :global {
+        .ant-btn {
+          &.ant-btn-clicked {
+            &:after {
+              border-color: #40bc7e;
+            }
+          }
+          width: auto;
+          height: 36px;
+          line-height: 36px;
+          color: #fff;
+          span,
+          i {
+            color: #fff;
+          }
+          background-color: #50e399;
+          border-color: #50e399;
+          &:hover {
+            background-color: #7fffbe;
+            border-color: #7fffbe;
+          }
+          &:active {
+            background-color: #40bc7e;
+            border-color: #40bc7e;
+          }
+          &:focus {
+            background-color: #50e399;
+            border-color: #50e399;
+          }
+        }
+      }
+    }
+  }
   .information_ct {
     :global {
       .cl_g_border {
@@ -292,6 +349,7 @@
       .information_th {
         position: relative;
         .ant-table-row-expand-icon {
+          z-index: 2;
           position: absolute;
           left: 0;
           top: 50%;

@@ -8,17 +8,19 @@ import {
   findFSU2,
   delFSU2,
   fsuDevicemanagementSave,
-  saveFSU_Sun2,
+  fsuAddSunDev,
   editFSU2,
-  saveFSU_Sp2,
-  editFSU_Sun2,
+  fsuAddSpID,
+  getSuStatus,
+  fsuUpdSunDev,
   getFsuSunDeviceTable,
   getFsuSpTable,
   fsuDeviceControl,
   fsuDeviceRealTimeCall,
   delFSU_Sun2,
-  editFSU_Sp2,
+  fsuUpdSpID,
   fsuDelectAll,
+  getFSUType,
   fsuDevsEnabledOnOff,
   delFSU_Sp2,
   getFsuRealtimeTable,
@@ -39,6 +41,8 @@ class Devicemanagement {
   @observable g_tableData = [];
   @observable loading = false;
   @observable r_loading = false;
+  @observable status_loading = false;
+  @observable fsuStatusData = {};
   @observable s_loading = false;
   @observable h_loading = false;
   @observable g_loading = false;
@@ -70,6 +74,15 @@ class Devicemanagement {
     if (data.Result == 'success') {
       this.getTable(toJS(this.tableParmas));
       message.success(data.Msg);
+    } else {
+      message.error(data.Msg);
+    }
+  }
+  @action.bound
+  async getFSUType(params) {
+    const data = await getFSUType(params);
+    if (data.result == 'success') {
+      this.fsuAddTypes = data.data;
     } else {
       message.error(data.Msg);
     }
@@ -124,38 +137,38 @@ class Devicemanagement {
   }
   @action.bound
   async saveConsport(params) {
-    const data = await saveFSU_Sun2(params);
-    if (data.Result == 'success') {
-      message.success(data.Msg);
+    const data = await fsuAddSunDev(params);
+    if (data.result == 'success') {
+      message.success(data.msg);
     } else {
-      message.error(data.Msg);
+      message.error(data.msg);
     }
   }
   @action.bound
   async editConsport(params) {
-    const data = await editFSU_Sun2(params);
-    if (data.Result == 'success') {
-      message.success(data.Msg);
+    const data = await fsuUpdSunDev(params);
+    if (data.result == 'success') {
+      message.success(data.msg);
     } else {
-      message.error(data.Msg);
+      message.error(data.msg);
     }
   }
   @action.bound
   async saveSun(params) {
-    const data = await saveFSU_Sp2(params);
-    if (data.Result == 'success') {
-      message.success(data.Msg);
+    const data = await fsuAddSpID(params);
+    if (data.result == 'success') {
+      message.success(data.msg);
     } else {
       message.error(data.Msg);
     }
   }
   @action.bound
   async editSun(params) {
-    const data = await editFSU_Sp2(params);
-    if (data.Result == 'success') {
-      message.success(data.Msg);
+    const data = await fsuUpdSpID(params);
+    if (data.result == 'success') {
+      message.success(data.msg);
     } else {
-      message.error(data.Msg);
+      message.error(data.msg);
     }
   }
   @action.bound
@@ -269,6 +282,7 @@ class Devicemanagement {
     const data = await getFsuSunDevice(params);
     if (data.Result == 'success') {
       this.his_subDevice = data.Data;
+      this.his_subDevice = data.Data;
       return data.Data;
     } else {
       message.error(data.Msg);
@@ -286,6 +300,19 @@ class Devicemanagement {
       return data.Data;
     } else {
       message.error(data.Msg);
+    }
+  }
+  @action.bound
+  async getSuStatus(params) {
+    this.status_loading = true;
+    const data = await getSuStatus(params);
+
+    this.status_loading = false;
+    if (data.result == 'success') {
+      this.fsuStatusData = data.data;
+      return data.data;
+    } else {
+      message.error(data.msg);
     }
   }
   // @action.bound

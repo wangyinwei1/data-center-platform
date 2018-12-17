@@ -41,7 +41,11 @@ const columns = ({
     },
     {
       title: '设备类型',
+      width: '15%',
       dataIndex: 'F_TypeName',
+      render: (text, record, index) => {
+        return <TextOverflow>{text}</TextOverflow>;
+      },
     },
     {
       title: '软件版本',

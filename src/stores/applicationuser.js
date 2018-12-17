@@ -8,6 +8,7 @@ import {
   applicationuserSave,
   applicationuserInitEdit,
   applicationuserEditSave,
+  getFSUType,
 } from '../services/api.js';
 import {message} from 'antd';
 class Site {
@@ -16,12 +17,22 @@ class Site {
   @observable addData = {};
   @observable editData = {};
   @observable loading = false;
+  @observable fsuTypes = [];
 
   @action.bound
   async getGoAdd(params) {
     const data = await applicationuserInitAdd(params);
     this.addData = data;
     return data;
+  }
+  @action.bound
+  async getFSUType(params) {
+    const data = await getFSUType(params);
+    if (data.result == 'success') {
+      this.fsuTypes = data.data;
+    } else {
+      message.error(data.Msg);
+    }
   }
   @action.bound
   async getEidtData(params) {

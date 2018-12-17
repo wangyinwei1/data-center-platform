@@ -15,6 +15,8 @@ import {
   getApiInfo,
   getDataInfo,
   getDispatchInfo,
+  getFsu_realtimealarmChildTable,
+  getRealtimealarmChildTable,
   executeOperation,
   getCountInfo,
   getFrontInfo,
@@ -27,6 +29,9 @@ class HomePage {
   @observable a_tableData = {};
   @observable a_tableParmas = {};
   @observable a_loading = false;
+  @observable c_tableData = {};
+  @observable c_tableParmas = {};
+  @observable c_loading = false;
   @observable servicesData = {};
   @observable apiData = [];
   @observable frontsData = [];
@@ -122,6 +127,35 @@ class HomePage {
       params.page = data.Data.pd.page;
       this.tableParmas = params;
       this.tableData = data.Data;
+    } else {
+      message.error(data.Msg);
+    }
+  }
+  @action.bound
+  async getBasicAlarmTable(params, notOnce) {
+    this.c_loading = true;
+    const data = await getRealtimealarmChildTable(params);
+    this.c_loading = false;
+    if (data.Result == 'success') {
+      params.number = data.Data.number;
+      params.page = data.Data.page;
+      this.c_tableParmas = params;
+      this.c_tableData = data.Data;
+    } else {
+      message.error(data.Msg);
+    }
+  }
+  @action.bound
+  async getFsuAlarmTable(params) {
+    this.c_loading = true;
+    const data = await getFsu_realtimealarmChildTable(params);
+    this.c_loading = false;
+    if (data.Result == 'success') {
+      this.currentDevice = params.ztreeChild;
+      params.number = data.Data.number;
+      params.page = data.Data.page;
+      this.c_tableParmas = params;
+      this.c_tableData = data.Data;
     } else {
       message.error(data.Msg);
     }

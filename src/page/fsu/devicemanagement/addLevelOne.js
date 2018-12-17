@@ -41,7 +41,6 @@ class AddChild extends Component {
           label={'设备ID'}
           name={'F_DeviceID'}
           disabled={mode === 'modify' ? true : disabled}
-          placeholder={'请输入端口号'}
           rules={[{required: true, message: '请必须填写!'}]}
         />
         <FormInput
@@ -49,10 +48,61 @@ class AddChild extends Component {
           onChange={this.handleFormChange}
           label={'设备名称'}
           disabled={disabled}
-          name={'F_DeviceName'}
-          placeholder={'请输入端口名称'}
+          name={'deviceName'}
           rules={[{required: true, message: '请必须填写!'}]}
         />
+        {JSON.parse(localStorage.getItem('FsuTypeID')) === 3 && (
+          <Row>
+            <FormInput
+              {...fields}
+              onChange={this.handleFormChange}
+              label={'机房名称'}
+              disabled={disabled}
+              name={'roomName'}
+              rules={[{required: false, message: '请必须填写!'}]}
+            />
+            <FormInput
+              {...fields}
+              onChange={this.handleFormChange}
+              label={'模型'}
+              disabled={disabled}
+              name={'model'}
+              rules={[{required: false, message: '请必须填写!'}]}
+            />
+            <FormInput
+              {...fields}
+              onChange={this.handleFormChange}
+              label={'品牌'}
+              disabled={disabled}
+              name={'brand'}
+              rules={[{required: false, message: '请必须填写!'}]}
+            />
+            <FormInput
+              {...fields}
+              onChange={this.handleFormChange}
+              label={'额定功率'}
+              disabled={disabled}
+              name={'ratedCapacity'}
+              rules={[{required: false, message: '请必须填写!'}]}
+            />
+            <FormInput
+              {...fields}
+              onChange={this.handleFormChange}
+              label={'版本'}
+              disabled={disabled}
+              name={'version'}
+              rules={[{required: false, message: '请必须填写!'}]}
+            />
+            <FormInput
+              {...fields}
+              onChange={this.handleFormChange}
+              label={'设备描述'}
+              disabled={disabled}
+              name={'devDescribe'}
+              rules={[{required: false, message: '请必须填写!'}]}
+            />
+          </Row>
+        )}
       </Form>
     );
   }

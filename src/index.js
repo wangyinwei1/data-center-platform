@@ -28,6 +28,7 @@ import {
   Layout,
   Regional,
   Site,
+  Fsuconfig,
   Deviceversion,
   Agreement,
   Alarminformation,
@@ -92,6 +93,7 @@ render(
             />
             <Route path="/bsifm-applicationuser" component={Applicationuser} />
             <Route path="/bsifm-valuetype" component={Valuetype} />
+            <Route path="/bsifm-fsuconfig" component={Fsuconfig} />
             {/* <Route path="/systemuser" component={} /> */}
             {/* <Route path="/bsifm-alarmcondition" component={Alarminformation} /> */}
             {/* <Route path="/bsifm-channeltype" component={channel} /> */}

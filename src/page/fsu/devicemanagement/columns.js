@@ -18,6 +18,7 @@ const menu = ({
   record,
   disableClick,
   addLevelOneClick,
+  fsuStatusClick,
 }) => {
   return (
     <Menu className={styles['operation']}>
@@ -45,6 +46,12 @@ const menu = ({
           <span>{record.status === 1 ? '启用' : '禁用'}</span>
         </div>
       </Menu.Item>
+      <Menu.Item key="c_status" onClick={fsuStatusClick.bind(_this, record)}>
+        <div className={styles['fsu_status']}>
+          <i className={classnames('icon iconfont icon-bianji')} />
+          <span>状态</span>
+        </div>
+      </Menu.Item>
       <Menu.Item key="c_delete" onClick={deleteClick.bind(_this, record)}>
         <div className={styles['delete']}>
           <i className={classnames('icon iconfont icon-shanchu')} />
@@ -61,6 +68,7 @@ const columns = ({
   controlClick,
   disableClick,
   editClick,
+  fsuStatusClick,
   rumorClick,
   addLevelOneClick,
   detailClick,
@@ -192,6 +200,7 @@ const columns = ({
               deleteClick,
               detailClick,
               addLevelOneClick,
+              fsuStatusClick,
               disableClick,
               _this,
               record,

@@ -21,6 +21,15 @@
     height: -o-calc(~'100% - 97px');
     height: calc(~'100% - 97px');
   }
+  .child_link {
+    color: #eb0a11;
+    cursor: pointer;
+    display: block;
+    &:hover {
+      color: #eb0a11;
+      text-decoration: underline;
+    }
+  }
   .index_bg {
     position: relative;
     padding: 12px;
@@ -1082,6 +1091,18 @@
   .alarm_table_wrap {
     position: relative;
   }
+  .alarm_left_wrap {
+    height: -webkit-calc(~'100% - 40px');
+    height: -moz-calc(~'100% - 40px');
+    height: -ms-calc(~'100% - 40px');
+    height: -o-calc(~'100% - 40px');
+    height: calc(~'100% - 40px');
+    overflow-y: auto;
+    .scrollCommonDark();
+    position: relative;
+    padding: 12px;
+    padding-bottom: 6px;
+  }
   .icon_active {
     color: #ff9c00;
     font-size: 16px;
@@ -1142,5 +1163,14 @@
     height: -ms-calc(~'73% - 12px');
     height: -o-calc(~'73% -12px');
     height: calc(~'73% - 12px');
+  }
+}
+:global {
+  .index_alarm_num {
+    :local {
+      .edit_title {
+        background-color: #2f364b;
+      }
+    }
   }
 }

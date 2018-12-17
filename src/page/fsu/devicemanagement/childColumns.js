@@ -3,6 +3,7 @@ import styles from './index.less';
 import classnames from 'classnames';
 import {Tooltip, Dropdown, Menu, Icon} from 'antd';
 import columnData from './childColumns.js';
+import TextOverflow from '../../../components/TextOverflow';
 /**
  * {anction表格的culumns}
  * @param {deleteClick} 删除按钮的回调
@@ -61,22 +62,7 @@ const columns = ({
   detailClick,
   _this,
 }) => {
-  return [
-    {
-      title: '子设备ID',
-      dataIndex: 'deviceID',
-      width: '30%',
-    },
-    {
-      title: '子设备名称',
-      dataIndex: 'deviceName',
-      width: '30%',
-    },
-    {
-      title: '创建时间',
-      dataIndex: 'createTime',
-      width: '30%',
-    },
+  let options = [
     {
       title: '操作',
       width: '8%',
@@ -106,6 +92,65 @@ const columns = ({
       },
     },
   ];
+  JSON.parse(localStorage.getItem('FsuTypeID')) === 3
+    ? options.unshift(
+        {
+          title: '子设备ID',
+          width: '15%',
+          dataIndex: 'deviceID',
+        },
+        {
+          title: '子设备名称',
+          dataIndex: 'deviceName',
+          width: '15%',
+          render: (text, record, index) => {
+            return <TextOverflow>{text}</TextOverflow>;
+          },
+        },
+        {
+          title: '机房名称',
+          width: '15%',
+          dataIndex: 'roomName',
+        },
+        {
+          title: '模型',
+          width: '15%',
+          dataIndex: 'model',
+        },
+        {
+          title: '品牌',
+          width: '15%',
+          dataIndex: 'brand',
+        },
+        {
+          title: '额定功率',
+          width: '15%',
+          dataIndex: 'ratedCapacity',
+        },
+        {
+          title: '描述',
+          width: '15%',
+          dataIndex: 'devDescribe',
+        },
+      )
+    : options.unshift(
+        {
+          title: '子设备ID',
+          dataIndex: 'deviceID',
+          width: '30%',
+        },
+        {
+          title: '子设备名称',
+          dataIndex: 'deviceName',
+          width: '30%',
+        },
+        {
+          title: '创建时间',
+          dataIndex: 'createTime',
+          width: '30%',
+        },
+      );
+  return options;
 };
 
 export default columns;

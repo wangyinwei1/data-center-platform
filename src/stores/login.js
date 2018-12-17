@@ -27,6 +27,7 @@ class Login {
         ip: data.serviceip,
         username: data.username,
         isAdmin: data.admin,
+        FsuTypeID: data.FsuTypeID,
         isNotArea: data.Area === '片区' || !data.Area,
       };
     } else {

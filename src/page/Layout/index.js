@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {action, observer, inject} from 'mobx-react';
-import {Row, Col, Layout, Menu, notification} from 'antd';
+import {Row, Col, Layout, Menu, notification, Button} from 'antd';
 import {toJS} from 'mobx';
 import classnames from 'classnames';
 import {Link} from 'react-router';
@@ -42,7 +42,7 @@ class BasicLayout extends Component {
   componentWillUnmount() {
     $(window).off('resize.panel');
     clearTimeout(this.timer);
-    this.ws.close();
+    this.ws && this.ws.close();
   }
   componentDidUpdate() {
     const {globalStore, layoutStore, location} = this.props;
@@ -93,16 +93,51 @@ class BasicLayout extends Component {
         ws.onmessage = function(evt) {
           const msg = evt.data;
           const result = JSON.parse(msg);
-          if (result.Result == 'success') {
+          console.log(result);
+          if (result.Type == 'module') {
             selectedKeys === 'shouye' && getCountInfo();
             notification.open({
-              message: '设备上线/下线通知:',
+              message: '模块上线/下线通知:',
               placement: 'bottomRight',
-              description: `平台ID:${result.Data.platId} 节点ID:${
-                result.Data.nodeId
-              } 状态:${result.Data.status}`,
+              description: `平台ID:${result.platId} 节点ID:${
+                result.nodeId
+              } 状态:${result.status}`,
             });
-          } else if (result.Result == 'mssg') {
+          } else if (result.Type == 'AlarmMsg') {
+            notification.open({
+              message: '告警通知:',
+              placement: 'bottomRight',
+              description: (
+                <div>
+                  <Row>
+                    <span>设备ID:</span>
+                    <span> {result.deviceID}</span>
+                  </Row>
+                  <Row>
+                    <span>通道ID:</span>
+                    <span> {result.channelID}</span>
+                  </Row>
+                  <Row>
+                    <span>告警ID:</span>
+                    <span> {result.alarmMsg}</span>
+                  </Row>
+                  <Row>
+                    <span>告警时间:</span>
+                    <span> {result.startTime}</span>
+                  </Row>
+                  <Row>
+                    <span>告警值</span>
+                    <span> {result.value}</span>
+                  </Row>
+                </div>
+              ),
+            });
+          } else if (result.Type == 'DeviceStatus') {
+            notification.open({
+              message: '设备上线/下线通知',
+              placement: 'bottomRight',
+              description: `设备ID:${result.deviceID} 状态:${result.status}`,
+            });
           }
 
           ws.onbeforeunload = function() {

@@ -22,6 +22,8 @@ import {
   basechannelDelete,
   getBaseAlarmConditions,
   getInitBasechannelAlarm,
+  base_findDeviceChannel,
+  base_copyAlarmCondition,
   basechannelAlarmDel,
   basechannelAlarmUpd,
   basechannelAlarmAdd,
@@ -49,6 +51,7 @@ class Passageway {
   @observable virtualData = {};
   @observable detailData = {};
   @observable alarmList = [];
+  @observable devChannel = [];
   @observable virtualList = [];
   @observable channelList = [];
 
@@ -63,10 +66,6 @@ class Passageway {
     this.tableData = data;
   }
 
-  @action.bound
-  async alarmDataChange(data) {
-    this.a_tableData = data;
-  }
   @action.bound
   async valueTypeChange(data) {
     this.v_tableData = data;
@@ -89,6 +88,16 @@ class Passageway {
     return data;
   }
   @action.bound
+  async base_findDeviceChannel(params) {
+    const data = await base_findDeviceChannel(params);
+    if (data.Result == 'success') {
+      this.devChannel = data.channels;
+      return data.channels;
+    } else {
+      message.error(data.Msg);
+    }
+  }
+  @action.bound
   async getValuePropertyList(params) {
     this.v_loading = true;
     const data = await getValuePropertyList(params);
@@ -108,6 +117,10 @@ class Passageway {
     } else {
       message.error(data.Msg);
     }
+  }
+  @action.bound
+  async alarmDataChange(data) {
+    this.a_tableData = data;
   }
   @action.bound
   async getAlarmTable(params, detail) {
@@ -136,6 +149,17 @@ class Passageway {
             ];
     } else {
       message.error(data.Msg);
+    }
+  }
+  @action.bound
+  async base_copyAlarmCondition(params) {
+    const data = await base_copyAlarmCondition(params);
+    if (data.Result == 'success') {
+      message.success(data.Msg);
+      return true;
+    } else {
+      message.error(data.Msg);
+      return false;
     }
   }
   @action.bound

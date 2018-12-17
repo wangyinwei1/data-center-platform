@@ -182,6 +182,8 @@ class Information extends Component {
     this.setState({
       realtimeShow: false,
     });
+    const {informationStore: {getTable, tableParmas}} = this.props;
+    getTable(tableParmas);
   }
   //控制
   controlClick(item, e) {
@@ -760,6 +762,8 @@ class Information extends Component {
     this.setState({
       alarmTableVisible: false,
     });
+    const {informationStore: {getTable, tableParmas}} = this.props;
+    getTable(tableParmas);
   }
   //批量操作
   onBatchDeleteClick() {

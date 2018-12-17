@@ -4,6 +4,7 @@ import {
   getFsu_historicaldataTable,
   getFsu_historicaldataChildTable,
   fsu_historicaldataChild_search,
+  getFSUType,
 } from '../services/api.js';
 import {message} from 'antd';
 class Historyalarm {

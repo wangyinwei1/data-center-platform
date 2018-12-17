@@ -64,7 +64,7 @@ class Regional extends Component {
     confirmAlarm({F_AlarmID: item.AlarmID});
   }
   render() {
-    const {realtimealarmStore} = this.props;
+    const {realtimealarmStore, theme} = this.props;
     const c_tableData = toJS(realtimealarmStore.c_tableData);
     const tableData = (c_tableData && c_tableData.varList) || [];
     const pagination = c_tableData || {};
@@ -77,12 +77,13 @@ class Regional extends Component {
     });
     return (
       <div>
-        <Toolbar onSearch={this.onSearch} closeAdd={true} />
+        <Toolbar onSearch={this.onSearch} theme={theme} closeAdd={true} />
         <Table
           pageIndex={pagination.page}
           pageSize={pagination.number}
           total={pagination.count}
           columns={columns}
+          theme={theme}
           loading={realtimealarmStore.c_loading}
           onShowSizeChange={this.onShowSizeChange}
           onChange={this.onPageChange}

@@ -1,5 +1,5 @@
 import {observable, action} from 'mobx';
-import {getFsu_controlrecordTable} from '../services/api.js';
+import {getFsu_controlrecordTable, getFSUType} from '../services/api.js';
 import {message} from 'antd';
 class fsuControlrecord {
   @observable tableData = {};
@@ -19,6 +19,15 @@ class fsuControlrecord {
       params.page = data.Data.page;
       this.tableParmas = params;
       this.tableData = data.Data;
+    } else {
+      message.error(data.Msg);
+    }
+  }
+  @action.bound
+  async getFSUType(params) {
+    const data = await getFSUType(params);
+    if (data.result == 'success') {
+      this.fsuAddTypes = data.data;
     } else {
       message.error(data.Msg);
     }

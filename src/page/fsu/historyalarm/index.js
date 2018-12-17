@@ -26,6 +26,7 @@ class Passageway extends Component {
     this.onKeyPress = this.onKeyPress.bind(this);
     this.onPageChange = this.onPageChange.bind(this);
     this.getChildTable = this.getChildTable.bind(this);
+    this.typesChange = this.typesChange.bind(this);
     this.onCancel = this.onCancel.bind(this);
     this.state = {
       cascaderText: '',
@@ -52,6 +53,7 @@ class Passageway extends Component {
       sing: selectedOptions[0].sing,
       keywords: '',
       number: 10,
+      F_FsuTypeID: localStorage.getItem('FsuTypeID'),
       ztreeChild: selectedOptions[0].code,
     };
     const {fsu_historyalarmStore} = this.props;
@@ -59,7 +61,15 @@ class Passageway extends Component {
   }
   componentDidMount() {
     const {fsu_historyalarmStore} = this.props;
-    this.initLoading(fsu_historyalarmStore);
+    const params = {
+      page: 1,
+      sing: 'area',
+      keywords: '',
+      number: 10,
+      F_FsuTypeID: localStorage.getItem('FsuTypeID'),
+    };
+    fsu_historyalarmStore.getFSUType();
+    this.initLoading(fsu_historyalarmStore, params);
   }
   //搜索
   onSearch(value) {
@@ -67,6 +77,7 @@ class Passageway extends Component {
     const params = {
       ...fsu_historyalarmStore.tableParmas,
       keywords: encodeURIComponent(value),
+      F_FsuTypeID: localStorage.getItem('FsuTypeID'),
       page: 1,
     };
     fsu_historyalarmStore.search(params);
@@ -78,6 +89,7 @@ class Passageway extends Component {
     const params = {
       ...fsu_historyalarmStore.tableParmas,
       page: current,
+      F_FsuTypeID: localStorage.getItem('FsuTypeID'),
       number: pageSize,
     };
     fsu_historyalarmStore.getTable(params);
@@ -114,6 +126,16 @@ class Passageway extends Component {
     });
   }
 
+  typesChange(value) {
+    const {fsu_historyalarmStore: {getTable, tableParmas}} = this.props;
+    const params = {
+      ...tableParmas,
+      page: 1,
+      F_FsuTypeID: value,
+    };
+    localStorage.setItem('FsuTypeID', value);
+    getTable(params);
+  }
   render() {
     const {fsu_historyalarmStore, regionalStore} = this.props;
     const tableDada = toJS(fsu_historyalarmStore.tableData.varList) || [];
@@ -136,7 +158,12 @@ class Passageway extends Component {
         />
         <div className={styles['information_ct']}>
           <div className={styles['min_width']}>
-            <Toolbar onSearch={this.onSearch} closeAdd={true} />
+            <Toolbar
+              onSearch={this.onSearch}
+              closeAdd={true}
+              fsuAddTypes={fsu_historyalarmStore.fsuAddTypes}
+              typesChange={this.typesChange}
+            />
             <div className={styles['table_wrap']}>
               <Table
                 pageIndex={pagination.page}

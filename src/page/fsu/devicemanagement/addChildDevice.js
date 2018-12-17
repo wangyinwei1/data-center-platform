@@ -43,7 +43,7 @@ class AddChild extends Component {
           onChange={this.handleFormChange}
           disabled={disabled}
           label={'类型'}
-          name={'F_Type'}
+          name={'spType'}
           placeholder={'请选择类型'}
           width={385}
           rules={[{required: true, message: '请必须填写!'}]}
@@ -87,20 +87,81 @@ class AddChild extends Component {
           disabled={disabled}
           label={'监控点名称'}
           width={385}
-          name={'F_SpName'}
+          name={'spName'}
           placeholder={'请输入地址'}
           rules={[{required: true, message: '请必须填写!'}]}
         />
-        <FormInput
-          {...fields}
-          onChange={this.handleFormChange}
-          disabled={disabled}
-          label={'监控点单位'}
-          width={385}
-          name={'F_SpUnit'}
-          placeholder={'请输入标识'}
-          rules={[{required: false}]}
-        />
+        {JSON.parse(localStorage.getItem('FsuTypeID')) !== 3 && (
+          <FormInput
+            {...fields}
+            onChange={this.handleFormChange}
+            disabled={disabled}
+            label={'监控点单位'}
+            width={385}
+            name={'spUnit'}
+            placeholder={'请输入标识'}
+            rules={[{required: false}]}
+          />
+        )}
+        {JSON.parse(localStorage.getItem('FsuTypeID')) === 3 && (
+          <Row>
+            <FormInput
+              {...fields}
+              onChange={this.handleFormChange}
+              label={'告警等级'}
+              disabled={disabled}
+              name={'alarmLevel'}
+              width={385}
+              rules={[{required: false, message: '请必须填写!'}]}
+            />
+            <FormInput
+              {...fields}
+              onChange={this.handleFormChange}
+              label={'阈值'}
+              disabled={disabled}
+              width={385}
+              name={'threshold'}
+              rules={[{required: false, message: '请必须填写!'}]}
+            />
+            <FormInput
+              {...fields}
+              onChange={this.handleFormChange}
+              width={385}
+              label={'绝对值'}
+              disabled={disabled}
+              name={'absoluteVal'}
+              rules={[{required: false, message: '请必须填写!'}]}
+            />
+            <FormInput
+              {...fields}
+              onChange={this.handleFormChange}
+              label={'相对值'}
+              width={385}
+              disabled={disabled}
+              name={'relativeVal'}
+              rules={[{required: false, message: '请必须填写!'}]}
+            />
+            <FormInput
+              {...fields}
+              onChange={this.handleFormChange}
+              label={'设备描述'}
+              width={385}
+              disabled={disabled}
+              name={'describe'}
+              rules={[{required: false, message: '请必须填写!'}]}
+            />
+            <FormInput
+              {...fields}
+              onChange={this.handleFormChange}
+              disabled={disabled}
+              label={'监控点单位'}
+              width={385}
+              name={'spUnit'}
+              placeholder={'请输入标识'}
+              rules={[{required: false}]}
+            />
+          </Row>
+        )}
       </Form>
     );
   }
