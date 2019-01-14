@@ -301,6 +301,9 @@ export function getPassagewayTable(params) {
 export function getPassagewayChildTable(params) {
   return request.get(base + '/device_channel/list2.do', {params});
 }
+export function allDeciceList(params) {
+  return request.get(base + '/device_dev/allDeciceList', {params});
+}
 export function passagewayChild_search(params) {
   return request.get(base + '/device_channel/list2.do', {params});
 }

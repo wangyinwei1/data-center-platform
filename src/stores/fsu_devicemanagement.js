@@ -312,7 +312,7 @@ class Devicemanagement {
       this.fsuStatusData = data.data;
       return data.data;
     } else {
-      message.error(data.msg);
+      message.error(data.Msg);
     }
   }
   // @action.bound

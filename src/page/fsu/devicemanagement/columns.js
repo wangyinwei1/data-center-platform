@@ -17,6 +17,8 @@ const menu = ({
   _this,
   record,
   disableClick,
+  exportMonitor,
+  exportSub,
   addLevelOneClick,
   fsuStatusClick,
 }) => {
@@ -48,8 +50,22 @@ const menu = ({
       </Menu.Item>
       <Menu.Item key="c_status" onClick={fsuStatusClick.bind(_this, record)}>
         <div className={styles['fsu_status']}>
-          <i className={classnames('icon iconfont icon-bianji')} />
+          <i className={classnames('icon iconfont icon-shebeizhuangtai')} />
           <span>状态</span>
+        </div>
+      </Menu.Item>
+      <Menu.Item key="c_exportSub" onClick={exportSub.bind(_this, record)}>
+        <div className={styles['export_sub']}>
+          <i className={classnames('icon iconfont icon-daochu2')} />
+          <span>导出子设备</span>
+        </div>
+      </Menu.Item>
+      <Menu.Item
+        key="c_exportMonitor"
+        onClick={exportMonitor.bind(_this, record)}>
+        <div className={styles['export_monitor']}>
+          <i className={classnames('icon iconfont icon-daochu2')} />
+          <span>导出监控点</span>
         </div>
       </Menu.Item>
       <Menu.Item key="c_delete" onClick={deleteClick.bind(_this, record)}>
@@ -69,6 +85,8 @@ const columns = ({
   disableClick,
   editClick,
   fsuStatusClick,
+  exportMonitor,
+  exportSub,
   rumorClick,
   addLevelOneClick,
   detailClick,
@@ -108,7 +126,7 @@ const columns = ({
     },
     {
       title: '所属区域',
-      dataIndex: 'stationName',
+      dataIndex: 'station',
       className: 'information_th',
       width: '25%',
       render: (text, record, index) => {
@@ -200,6 +218,8 @@ const columns = ({
               deleteClick,
               detailClick,
               addLevelOneClick,
+              exportMonitor,
+              exportSub,
               fsuStatusClick,
               disableClick,
               _this,

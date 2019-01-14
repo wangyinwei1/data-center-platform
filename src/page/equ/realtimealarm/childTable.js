@@ -67,6 +67,7 @@ class Regional extends Component {
     const {realtimealarmStore, theme} = this.props;
     const c_tableData = toJS(realtimealarmStore.c_tableData);
     const tableData = (c_tableData && c_tableData.varList) || [];
+    console.log(tableData);
     const pagination = c_tableData || {};
     const columns = columnData({
       endClick: this.endClick,
@@ -88,6 +89,7 @@ class Regional extends Component {
           onShowSizeChange={this.onShowSizeChange}
           onChange={this.onPageChange}
           data={tableData}
+          useDefaultRowKey={true}
         />
       </div>
     );

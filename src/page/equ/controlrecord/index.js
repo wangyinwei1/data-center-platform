@@ -15,6 +15,10 @@ class Regional extends Component {
     this.onPageChange = this.onPageChange.bind(this);
     this.onSearch = this.onSearch.bind(this);
     this.timeChange = this.timeChange.bind(this);
+    this.onTimeOk = this.onTimeOk.bind(this);
+    this.state = {
+      timeParams: {},
+    };
   }
   componentDidMount() {
     const {controlrecordStore: {getTable}} = this.props;
@@ -56,14 +60,20 @@ class Regional extends Component {
     controlrecordStore.search(params);
   }
   timeChange(dates, dateStrings) {
-    const {controlrecordStore} = this.props;
     const params = {
-      ...controlrecordStore.tableParmas,
       page: 1,
       lastLoginStart: dateStrings[0],
       lastLoginEnd: dateStrings[1],
     };
-    controlrecordStore.getTable(params);
+    this.timeParams = params;
+  }
+  onTimeOk() {
+    const {controlrecordStore} = this.props;
+    let obj = {
+      ...controlrecordStore.tableParmas,
+      ...this.timeParams,
+    };
+    controlrecordStore.getTable(obj);
   }
   render() {
     const {controlrecordStore} = this.props;
@@ -80,6 +90,7 @@ class Regional extends Component {
           timeChange={this.timeChange}
           onSearch={this.onSearch}
           closeAdd={true}
+          onTimeOk={this.onTimeOk}
         />
         <div className={styles['controlrecord_ct']}>
           <div className={styles['min_width']}>

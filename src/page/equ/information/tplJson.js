@@ -4,7 +4,7 @@ const formParams = {
       value: '',
       require: true,
     },
-    F_BelongUnitID: {
+    F_StationID: {
       value: undefined,
       require: true,
     },
@@ -64,7 +64,7 @@ const clearFormParams = {
       value: '',
       require: true,
     },
-    F_BelongUnitID: {
+    F_StationID: {
       value: undefined,
       require: true,
     },

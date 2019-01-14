@@ -59,6 +59,7 @@ class Edit extends Component {
         name: item.F_TypeName,
       };
     });
+    console.log(fields);
     return (
       <Form layout="inline" className={styles['edit_wrap']}>
         <FormInput
@@ -76,7 +77,7 @@ class Edit extends Component {
           disabled={disabled}
           label={'站点选择'}
           placeholder={'请选择站点'}
-          name={'F_BelongUnitID'}
+          name={'F_StationID'}
           rules={[{required: true, message: '请必须填写!'}]}
           children={devBelongunit}
         />
@@ -117,7 +118,7 @@ class Edit extends Component {
           placeholder={'请输入设备IP'}
           rules={[
             {
-              required: true,
+              required: fields.F_IP.require,
               message: '请必须填写!',
             },
             {
@@ -134,7 +135,7 @@ class Edit extends Component {
           name={'F_Port'}
           placeholder={'请输入设备端口'}
           rules={[
-            {required: true, message: '请必须填写!'},
+            {required: fields.F_Port.require, message: '请必须填写!'},
 
             {
               pattern: /^([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-5]{2}[0-3][0-5])$/,

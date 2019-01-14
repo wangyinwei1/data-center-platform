@@ -151,8 +151,9 @@ class Regional extends Component {
               最近一个月: [moment().subtract(1, 'months'), moment()],
               最近三个月: [moment().subtract(3, 'months'), moment()],
             }}
+            showTime
             onChange={this.onChange}
-            format={'YYYY-MM-DD'}
+            format={'YYYY-MM-DD HH:mm:ss'}
           />
 
           <Select

@@ -200,6 +200,7 @@ class Site extends Component {
     const {alarminformationStore} = this.props;
     const tableData = toJS(alarminformationStore.tableData.varList) || [];
     const pagination = toJS(alarminformationStore.tableData.pd) || {};
+    console.log(tableData);
     const columns = columnData({
       deleteClick: this.deleteClick,
       editClick: this.editClick,

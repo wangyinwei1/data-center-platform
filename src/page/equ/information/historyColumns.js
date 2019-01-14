@@ -12,9 +12,8 @@ const columns = () => {
     {
       title: '时间',
       className: 'history_table_th',
-
       width: '50%',
-      dataIndex: 'RecordTime',
+      dataIndex: 'recordTime',
     },
     {
       title: '采集值',

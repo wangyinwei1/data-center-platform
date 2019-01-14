@@ -23,6 +23,7 @@ import {
   getGrandsonTable,
   passageway_getDev,
   vchannel_edit,
+  allDeciceList,
 } from '../services/api.js';
 import {message} from 'antd';
 class Passageway {
@@ -47,6 +48,7 @@ class Passageway {
   @observable s_tableParmas = {};
   @observable devChannel = [];
   @observable s_loading = false;
+  @observable allDeciceList = [];
   @observable g_loading = false;
   @observable c_expandedRows = [];
   @action.bound
@@ -76,7 +78,6 @@ class Passageway {
       message.error(data.Msg);
     }
   }
-
   @action.bound
   async getTable(params) {
     this.loading = true;
@@ -89,6 +90,15 @@ class Passageway {
       this.tableData = data.Data;
     } else {
       message.error(data.Msg);
+    }
+  }
+  @action.bound
+  async getAllDecice(params) {
+    const data = await allDeciceList(params);
+    if (data.result == 'success') {
+      this.allDeciceList = data.data;
+    } else {
+      message.error(data.msg);
     }
   }
 

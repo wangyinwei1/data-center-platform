@@ -4,6 +4,7 @@ import {toJS} from 'mobx';
 import styles from './index.less';
 import {Form, Button, Select, Row, Col} from 'antd';
 import classnames from 'classnames';
+import {FormSelect} from '../../../components/FormItem';
 const FormItem = Form.Item;
 const Option = Select.Option;
 
@@ -16,15 +17,32 @@ class AlarmCondition extends Component {
     super(props);
     this.handleClick = this.handleClick.bind(this);
     this.onSelect = this.onSelect.bind(this);
+    this.handleFormChange = this.handleFormChange.bind(this);
     this.state = {
       F_ChannelID: '',
       controlValue: '',
       value: [],
       Channels: '',
       allSelected: false,
+      selectedDevId: undefined,
     };
   }
+  async handleFormChange(value) {
+    await this.setState({
+      selectedDevId: value,
+    });
+    const {passagewayStore: {findDeviceChannel}} = this.props;
+    const params = {
+      deviceId: this.state.selectedDevId,
+    };
+
+    await findDeviceChannel(params);
+  }
   handleClick() {
+    if (!this.state.selectedDevId) {
+      message.error('设备不能为空!');
+      return;
+    }
     if (!this.state.Channels) {
       message.error('通道不能为空!');
       return;
@@ -47,7 +65,7 @@ class AlarmCondition extends Component {
       alarmConditions = a_tableData;
     }
     const params = {
-      deviceId: currentDevice,
+      deviceId: this.state.selectedDevId,
       channelIDs: this.state.Channels,
       alarmConditions,
     };
@@ -108,7 +126,7 @@ class AlarmCondition extends Component {
     }
   }
   render() {
-    const {passagewayStore: {devChannel}} = this.props;
+    const {passagewayStore: {devChannel, allDeciceList}} = this.props;
     const children = _.map(devChannel, (item, i) => {
       return <Option key={item.channelID}>{item.channelName}</Option>;
     });
@@ -119,15 +137,46 @@ class AlarmCondition extends Component {
         全选
       </Option>,
     );
+    const deviceList = _.map(toJS(allDeciceList), item => {
+      return <Option key={item.devID}>{item.devName}</Option>;
+    });
+
+    const fields = this.state.fields;
+    const disabled = false;
     return (
       <Form className={styles['control_ct']}>
         <Row>
           <Col span={1} className={styles['channel_id']}>
-            <FormItem label="通道名称">
+            {/* <FormSelect */}
+            {/*   {...fields} */}
+            {/*   onChange={this.handleFormChange} */}
+            {/*   disabled={disabled} */}
+            {/*   label={'请选择设备'} */}
+            {/*   name={'deviceId'} */}
+            {/*   rules={[{required: true, message: '请必须填写!'}]} */}
+            {/*   children={deciceList} */}
+            {/* /> */}
+            <FormItem
+              label="设备名称"
+              className={classnames(
+                styles['copy_float'],
+                styles['copy_dev_wrap'],
+              )}>
+              <Select
+                onChange={this.handleFormChange}
+                disabled={disabled}
+                placeholder={'请选择设备'}
+                name={'deviceId'}
+                className={styles['copy_dev']}>
+                {deviceList}
+              </Select>
+            </FormItem>
+            <FormItem label="通道名称" className={styles['copy_float']}>
               <Select
                 mode="multiple"
                 className={styles['drop_down']}
                 allowClear
+                disabled={this.state.selectedDevId ? false : true}
                 optionFilterProp="children"
                 placeholder={'请选择设备通道'}
                 value={this.state.value}

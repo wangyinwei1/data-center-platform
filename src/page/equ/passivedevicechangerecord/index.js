@@ -15,6 +15,10 @@ class Regional extends Component {
     this.onPageChange = this.onPageChange.bind(this);
     this.onSearch = this.onSearch.bind(this);
     this.timeChange = this.timeChange.bind(this);
+    this.onTimeOk = this.onTimeOk.bind(this);
+    this.state = {
+      timeParams: {},
+    };
   }
   componentDidMount() {
     const {passivedevicechangerecordStore: {getTable}} = this.props;
@@ -54,13 +58,21 @@ class Regional extends Component {
     passivedevicechangerecordStore.search(params);
   }
   timeChange(dates, dateStrings) {
-    const {passivedevicechangerecordStore} = this.props;
     const params = {
-      ...passivedevicechangerecordStore.tableParmas,
-      stLoginStart: dateStrings[0],
+      lastLoginStart: dateStrings[0],
       lastLoginEnd: dateStrings[1],
     };
-    passivedevicechangerecordStore.getTable(params);
+
+    this.timeParams = params || {};
+  }
+  onTimeOk() {
+    const {passivedevicechangerecordStore} = this.props;
+    let obj = {
+      page: 1,
+      ...passivedevicechangerecordStore.tableParmas,
+      ...this.timeParams,
+    };
+    passivedevicechangerecordStore.getTable(obj);
   }
   render() {
     const {passivedevicechangerecordStore} = this.props;
@@ -78,6 +90,7 @@ class Regional extends Component {
         <Toolbar
           showValue={['time']}
           timeChange={this.timeChange}
+          onTimeOk={this.onTimeOk}
           onSearch={this.onSearch}
           closeAdd={true}
         />

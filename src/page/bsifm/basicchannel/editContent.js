@@ -420,7 +420,7 @@ class Edit extends Component {
                     styles['common_icon'],
                   )}
                 />
-                <span>批量导入</span>
+                <span>导入</span>
               </Button>
               <Button className={styles['export_btn']} onClick={this.export}>
                 <i
@@ -429,7 +429,7 @@ class Edit extends Component {
                     styles['common_icon'],
                   )}
                 />
-                <span>批量导出</span>
+                <span>导出</span>
               </Button>
             </div>
           </Row>
@@ -448,7 +448,7 @@ class Edit extends Component {
             isShow={this.state.show}
             title={'告警复制'}
             width={670}
-            onCancel={this.onAlarmCancel}>
+            onCancel={this.closeAlarmCondition}>
             <AlarmCondition
               closeAlarmCondition={this.closeAlarmCondition}
               currentDevice={currentDevice}

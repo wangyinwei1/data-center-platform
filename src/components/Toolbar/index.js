@@ -38,11 +38,16 @@ class Regional extends Component {
     this.exportTpl = this.exportTpl.bind(this);
     this.batchClick = this.batchClick.bind(this);
     this.typesChange = this.typesChange.bind(this);
+    this.onTimeOk = this.onTimeOk.bind(this);
   }
   componentDidMount() {}
   add() {
     const {onClick} = this.props;
     onClick && onClick();
+  }
+  onTimeOk() {
+    const {onTimeOk} = this.props;
+    onTimeOk && onTimeOk();
   }
   downDev() {
     const {downDevChange} = this.props;
@@ -154,6 +159,9 @@ class Regional extends Component {
                 }}
                 className={'cl_time'}
                 onChange={this.onTimeChange}
+                onOk={this.onTimeOk}
+                showTime
+                format={'YYYY-MM-DD HH:mm:ss'}
               />
             </div>
           )}

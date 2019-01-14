@@ -73,6 +73,7 @@ class Information extends Component {
 
     this.state = {
       disabledShow: false,
+      devStatus: '',
       controlShow: false,
       historyShow: false,
       realtimeShow: false,
@@ -129,6 +130,7 @@ class Information extends Component {
       keywords: '',
       number: 10,
       ztreeChild: selectedOptions[0].code,
+      status: this.state.devStatus,
     };
     const {informationStore} = this.props;
     informationStore.getTable(params);
@@ -183,7 +185,7 @@ class Information extends Component {
       realtimeShow: false,
     });
     const {informationStore: {getTable, tableParmas}} = this.props;
-    getTable(tableParmas);
+    getTable({...tableParmas, status: this.state.devStatus});
   }
   //控制
   controlClick(item, e) {
@@ -270,9 +272,8 @@ class Information extends Component {
         formValue.F_Port.require = true;
       }
       formValue.Id_Version.require = true;
-      formValue.F_Port.require = true;
       formValue.F_ConnectType.require = true;
-      formValue.F_BelongUnitID.value = data.pd.belongUnitID;
+      formValue.F_StationID.value = data.pd.stationID || undefined;
       formValue.F_CollectSpan.value = data.pd.collectSpan;
       formValue.Id_Version.value = data.pd.Id_Version;
       formValue.F_HeartSpan.value = data.pd.heartSpan;
@@ -325,7 +326,7 @@ class Information extends Component {
     }).then(() => {
       const F_DeviceID = {F_DeviceID: currentDevice};
       item.devID
-        ? getTable(tableParmas)
+        ? getTable({...tableParmas, status: this.state.devStatus})
         : this.state.selectedChildRowKey[0] === this.state.currentPort &&
           getGrandsonTable({
             ...F_DeviceID,
@@ -578,6 +579,7 @@ class Information extends Component {
     const params = {
       ...informationStore.tableParmas,
       keywords: encodeURIComponent(value),
+      status: this.state.devStatus,
       page: 1,
     };
     informationStore.search(params);
@@ -592,6 +594,7 @@ class Information extends Component {
       ...informationStore.tableParmas,
       page: current,
       number: pageSize,
+      status: this.state.devStatus,
     };
     informationStore.getTable(params);
     this.clearSelected();
@@ -733,7 +736,10 @@ class Information extends Component {
       page: 1,
     };
     getTable(params);
-    this.setState({expandedRows: []});
+    this.setState({
+      expandedRows: [],
+      devStatus: value,
+    });
   }
   onRowDoubleClick(item, index, e) {
     const {informationStore: {goFind2, ztreeChild}} = this.props;
@@ -763,7 +769,7 @@ class Information extends Component {
       alarmTableVisible: false,
     });
     const {informationStore: {getTable, tableParmas}} = this.props;
-    getTable(tableParmas);
+    getTable({...tableParmas, status: this.state.devStatus});
   }
   //批量操作
   onBatchDeleteClick() {

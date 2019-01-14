@@ -72,6 +72,8 @@ class Information extends Component {
     this.expandedRowRender = this.expandedRowRender.bind(this);
     this.onExpand = this.onExpand.bind(this);
     this.realtimeChange = this.realtimeChange.bind(this);
+    this.exportMonitor = this.exportMonitor.bind(this);
+    this.exportSub = this.exportSub.bind(this);
     this.historyChange = this.historyChange.bind(this);
     this.childDeleteChange = this.childDeleteChange.bind(this);
     this.disableClick = this.disableClick.bind(this);
@@ -118,6 +120,7 @@ class Information extends Component {
       currentSuID: '',
       cascaderText: '',
       cascaderLoading: false,
+      devStatus: '',
       singleLineData: {},
       deleteShow: false,
       cascaderValue: [],
@@ -169,6 +172,7 @@ class Information extends Component {
       keywords: '',
       number: 10,
       ztreeChild: selectedOptions[0].code,
+      status: this.state.devStatus,
       F_FsuTypeID: localStorage.getItem('FsuTypeID'),
     };
     const {fsu_devicemanagementStore} = this.props;
@@ -230,6 +234,7 @@ class Information extends Component {
     const {fsu_devicemanagementStore: {getTable, tableParmas}} = this.props;
     const params = {
       ...tableParmas,
+      status: this.state.devStatus,
       F_FsuTypeID: localStorage.getItem('FsuTypeID'),
     };
     getTable(params);
@@ -243,6 +248,7 @@ class Information extends Component {
       ...tableParmas,
       page: 1,
       F_FsuTypeID: value,
+      status: this.state.devStatus,
     };
     localStorage.setItem('FsuTypeID', value);
     getTable(params).then(() => {
@@ -262,6 +268,9 @@ class Information extends Component {
       F_FsuTypeID: localStorage.getItem('FsuTypeID'),
     };
     getTable(params);
+    this.setState({
+      devStatus: value,
+    });
   }
   //控制
   controlClick(item, e) {
@@ -381,6 +390,7 @@ class Information extends Component {
     const {fsu_devicemanagementStore: {getTable, tableParmas}} = this.props;
     const params = {
       ...tableParmas,
+      status: this.state.devStatus,
       F_FsuTypeID: localStorage.getItem('FsuTypeID'),
     };
     getTable(params);
@@ -398,8 +408,8 @@ class Information extends Component {
       formValue.F_SuModel.value = data.pd.suModel;
       formValue.F_SuHardVer.value = data.pd.suHardVer;
       formValue.F_SuSoftVer.value = data.pd.suSoftVer;
-      formValue.F_StationID.value = data.pd.stationID;
-      formValue.F_TypeID.value = data.pd.typeID;
+      formValue.F_StationID.value = data.pd.stationID || undefined;
+      formValue.F_TypeID.value = data.pd.typeID || undefined;
       return {
         fields: {
           ...fields,
@@ -725,6 +735,7 @@ class Information extends Component {
       ...fsu_devicemanagementStore.tableParmas,
       page: current,
       number: pageSize,
+      status: this.state.devStatus,
       F_FsuTypeID: localStorage.getItem('FsuTypeID'),
     };
     fsu_devicemanagementStore.getTable(params);
@@ -1089,6 +1100,13 @@ class Information extends Component {
       downShow: false,
     });
   }
+  exportMonitor(item) {
+    location.href = '/collect/FSU_device/exportFSUSp?F_Suid=' + item.suID;
+  }
+  exportSub(item) {
+    location.href =
+      '/collect/FSU_device/exportFSUSundevice?F_Suid=' + item.suID;
+  }
   render() {
     const {fsu_devicemanagementStore, zTreeLevel, regionalStore} = this.props;
     const tableData = toJS(fsu_devicemanagementStore.tableData.varList) || [];
@@ -1096,6 +1114,8 @@ class Information extends Component {
     const columns = columnData({
       deleteClick: this.deleteClick,
       editClick: this.editClick,
+      exportMonitor: this.exportMonitor,
+      exportSub: this.exportSub,
       realtimeClick: this.realtimeClick,
       historyClick: this.historyClick,
       controlClick: this.controlClick,

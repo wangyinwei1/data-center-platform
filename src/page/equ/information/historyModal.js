@@ -102,7 +102,7 @@ class EchartsOrList extends Component {
         ) : (
           <div className={styles['history_list_wrap']}>
             <Table
-              loading={loading}
+              loading={false}
               columns={columns}
               pagination={false}
               rowClassName={(record, index) => {
@@ -131,7 +131,7 @@ class Regional extends Component {
     this.onSelect = this.onSelect.bind(this);
     this.allSelectClick = this.allSelectClick.bind(this);
     this.exportChange = this.exportChange.bind(this);
-    this.switchClick = this.switchClick.bind(this);
+    // this.switchClick = this.switchClick.bind(this);
     this.export = this.export.bind(this);
     this.state = {
       allSelected: false,
@@ -233,33 +233,33 @@ class Regional extends Component {
       informationStore.findDeviceDataList(params);
     }
   }
-  switchClick() {
-    if (!this.state.lastLoginStart || !this.state.lastLoginEnd) {
-      message.error('请选择时间!');
-      return;
-    }
-    if (!this.state.Channels) {
-      message.error('请选择通道!');
-      return;
-    }
-    this.setState(({isChart}) => {
-      return {
-        isChart: !isChart,
-      };
-    });
-    const {informationStore} = this.props;
-    const params = {
-      F_DeviceID: informationStore.currentDevice,
-      Channels: this.state.Channels,
-      lastLoginStart: this.state.lastLoginStart,
-      lastLoginEnd: this.state.lastLoginEnd,
-    };
-    if (!this.state.isChart) {
-      informationStore.findDeviceData(params);
-    } else {
-      informationStore.findDeviceDataList(params);
-    }
-  }
+  // switchClick() {
+  //   if (!this.state.lastLoginStart || !this.state.lastLoginEnd) {
+  //     message.error('请选择时间!');
+  //     return;
+  //   }
+  //   if (!this.state.Channels) {
+  //     message.error('请选择通道!');
+  //     return;
+  //   }
+  //   this.setState(({isChart}) => {
+  //     return {
+  //       isChart: !isChart,
+  //     };
+  //   });
+  //   const {informationStore} = this.props;
+  //   const params = {
+  //     F_DeviceID: informationStore.currentDevice,
+  //     Channels: this.state.Channels,
+  //     lastLoginStart: this.state.lastLoginStart,
+  //     lastLoginEnd: this.state.lastLoginEnd,
+  //   };
+  //   if (!this.state.isChart) {
+  //     informationStore.findDeviceData(params);
+  //   } else {
+  //     informationStore.findDeviceDataList(params);
+  //   }
+  // }
   export(item) {
     const {informationStore: {currentDevice}} = this.props;
     location.href =
@@ -346,6 +346,8 @@ class Regional extends Component {
               最近一个月: [moment().subtract(1, 'months'), moment()],
               最近三个月: [moment().subtract(3, 'months'), moment()],
             }}
+            showTime
+            format="YYYY-MM-DD HH:mm:ss"
             onChange={this.onChange}
           />
           <Select

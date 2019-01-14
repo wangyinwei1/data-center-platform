@@ -56,7 +56,7 @@ const columns = ({getChildTable, _this}) => {
     },
     {
       title: '所属区域',
-      dataIndex: 'stationName',
+      dataIndex: 'station',
       width: '30%',
       render: (text, record, index) => {
         return (

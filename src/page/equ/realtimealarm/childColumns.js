@@ -80,7 +80,7 @@ const columns = ({endClick, handleClick, cancelClick, confirmClick, _this}) => {
   return [
     {
       title: '告警编号',
-      dataIndex: 'AlarmID',
+      dataIndex: 'alarmID',
       width: '15%',
       render: (text, record, index) => {
         return <TextOverflow>{text}</TextOverflow>;
@@ -89,24 +89,24 @@ const columns = ({endClick, handleClick, cancelClick, confirmClick, _this}) => {
     {
       title: '通道名称',
       width: '13%',
-      dataIndex: 'ChannelName',
+      dataIndex: 'channelName',
       render: (text, record, index) => {
         return <TextOverflow>{text}</TextOverflow>;
       },
     },
     {
       title: '告警值',
-      dataIndex: 'Value',
+      dataIndex: 'value',
       width: '8%',
     },
     {
       title: '告警时间',
-      dataIndex: 'StartTime',
+      dataIndex: 'startTime',
       width: '18%',
     },
     {
       title: '告警信息',
-      dataIndex: 'AlarmMsg',
+      dataIndex: 'alarmMsg',
       width: '16%',
       render: (text, record, index) => {
         return <TextOverflow>{text}</TextOverflow>;
@@ -114,13 +114,13 @@ const columns = ({endClick, handleClick, cancelClick, confirmClick, _this}) => {
     },
     {
       title: '告警等级',
-      dataIndex: 'AlarmGrade',
+      dataIndex: 'alarmGrade',
       width: '9%',
     },
     {
       title: '状态',
       width: '8%',
-      dataIndex: 'Status',
+      dataIndex: 'status',
     },
     {
       title: '操作',
