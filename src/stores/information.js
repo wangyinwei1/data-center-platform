@@ -6,9 +6,7 @@ import {
   getRealtimeTable,
   getRealTimeCall,
   getSportTable,
-  getByDevice,
   getGrandsonTable,
-  findDeviceData,
   getOperateList,
   getControlChannel,
   postDeviceControl,
@@ -24,7 +22,6 @@ import {
   delectSun,
   editSun,
   onoroff,
-  findDeviceDataList,
   batchOnoroff,
   batchDelectAll,
 } from '../services/api.js';
@@ -95,10 +92,6 @@ class Information {
     } else {
       message.error(data.Msg);
     }
-  }
-  @action.bound
-  async clearDeviceData(params) {
-    this.deviceData = [];
   }
   @action.bound
   async postDeviceControl(params) {
@@ -178,8 +171,8 @@ class Information {
     if (data.Result == 'success') {
       this.currentDevice = params.F_DeviceID;
       this.controlChannel = data.Data;
-      const channelId = data.Data[0].channelId;
-      params.F_ChannelID = channelId;
+      const channelID = data.Data[0].channelID;
+      params.F_ChannelID = channelID;
       const isShow = await this.getOperateList(params);
       return isShow;
     } else {
@@ -205,10 +198,10 @@ class Information {
     this.loading = true;
     const data = await getInformationTable(params);
     this.loading = false;
+    this.ztreeChild = params.ztreeChild;
+    params.number = data.Data.number;
+    params.page = data.Data.page;
     if (data.Result == 'success') {
-      this.ztreeChild = params.ztreeChild;
-      params.number = data.Data.number;
-      params.page = data.Data.page;
       const showIconIndex = _.map(data.Data.varList, (item, index) => {
         if (item.isConcentrator === 1) {
           return index;
@@ -295,28 +288,6 @@ class Information {
     this.deviceMenu = data.varList;
   }
   @action.bound
-  async findDeviceDataList(params) {
-    this.d_loading = true;
-    const data = await findDeviceDataList(params);
-    this.d_loading = false;
-    if (data.Result == 'success') {
-      this.deviceData = data.varList;
-    } else {
-      message.error(data.Msg);
-    }
-  }
-  @action.bound
-  async findDeviceData(params) {
-    this.d_loading = true;
-    const data = await findDeviceData(params);
-    this.d_loading = false;
-    if (data.Result == 'success') {
-      this.deviceData = data.varList;
-    } else {
-      message.error(data.Msg);
-    }
-  }
-  @action.bound
   async getGrandsonTable(params) {
     this.g_loading = true;
     const data = await getGrandsonTable(params);
@@ -362,7 +333,7 @@ class Information {
       this.getTable(this.tableParmas);
       message.success('删除成功!');
     } else {
-      // message.error(data.Msg);
+      message.error(data.Msg);
     }
     return data;
   }

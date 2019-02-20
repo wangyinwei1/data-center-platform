@@ -24,7 +24,6 @@ import {
   fsuDevsEnabledOnOff,
   delFSU_Sp2,
   getFsuRealtimeTable,
-  getFsuHisdataTable,
 } from '../services/api.js';
 import _ from 'lodash';
 import {message} from 'antd';
@@ -81,8 +80,8 @@ class Devicemanagement {
   @action.bound
   async getFSUType(params) {
     const data = await getFSUType(params);
-    if (data.result == 'success') {
-      this.fsuAddTypes = data.data;
+    if (data.Result == 'success') {
+      this.fsuAddTypes = data.Data;
     } else {
       message.error(data.Msg);
     }
@@ -96,10 +95,6 @@ class Devicemanagement {
     } else {
       message.error(data.Msg);
     }
-  }
-  @action.bound
-  async clearDeviceData(params) {
-    this.deviceData = [];
   }
   @action.bound
   async postDeviceControl(params) {
@@ -138,26 +133,26 @@ class Devicemanagement {
   @action.bound
   async saveConsport(params) {
     const data = await fsuAddSunDev(params);
-    if (data.result == 'success') {
-      message.success(data.msg);
+    if (data.Result == 'success') {
+      message.success(data.Msg);
     } else {
-      message.error(data.msg);
+      message.error(data.Msg);
     }
   }
   @action.bound
   async editConsport(params) {
     const data = await fsuUpdSunDev(params);
-    if (data.result == 'success') {
-      message.success(data.msg);
+    if (data.Result == 'success') {
+      message.success(data.Msg);
     } else {
-      message.error(data.msg);
+      message.error(data.Msg);
     }
   }
   @action.bound
   async saveSun(params) {
     const data = await fsuAddSpID(params);
-    if (data.result == 'success') {
-      message.success(data.msg);
+    if (data.Result == 'success') {
+      message.success(data.Msg);
     } else {
       message.error(data.Msg);
     }
@@ -165,10 +160,10 @@ class Devicemanagement {
   @action.bound
   async editSun(params) {
     const data = await fsuUpdSpID(params);
-    if (data.result == 'success') {
-      message.success(data.msg);
+    if (data.Result == 'success') {
+      message.success(data.Msg);
     } else {
-      message.error(data.msg);
+      message.error(data.Msg);
     }
   }
   @action.bound
@@ -206,8 +201,8 @@ class Devicemanagement {
       this.controlChannel = data.Data;
       const deviceID = data.Data[0].deviceID;
       params.F_DeviceID = deviceID;
-      const isShow = await this.getOperateList(params);
-      return isShow;
+      // const isShow = await this.getOperateList(params);
+      return data.Data[0];
     } else {
       message.error(data.Msg);
       return false;
@@ -231,12 +226,17 @@ class Devicemanagement {
     this.loading = true;
     const data = await getFsuDevicemanagementTable(params);
     this.loading = false;
+    this.ztreeChild = params.ztreeChild;
+    params.number = data.Data.number;
+    params.page = data.Data.page;
+    this.tableParmas = params;
     if (data.Result == 'success') {
-      this.ztreeChild = params.ztreeChild;
-      params.number = data.Data.number;
-      params.page = data.Data.page;
-      this.tableParmas = params;
       this.tableData = data.Data;
+      //fsu类型小于1提示没有数据之类的提示（从后端获取）
+      const fsuTypeID = localStorage.getItem('FsuTypeID');
+      if (fsuTypeID < 1 || !fsuTypeID) {
+        message.error(data.Msg);
+      }
     } else {
       message.error(data.Msg);
     }
@@ -264,28 +264,7 @@ class Devicemanagement {
       this.r_tableParmas = params;
       this.r_tableData = data.Data;
     } else {
-      message.error(data.Msg);
-    }
-  }
-  @action.bound
-  async getGrandsonMenu(params) {
-    const data = await getFsuSp(params);
-    if (data.Result == 'success') {
-      this.his_grandsonMenu = data.Data;
-      return data.Data;
-    } else {
-      message.error(data.Msg);
-    }
-  }
-  @action.bound
-  async getSubDevice(params) {
-    const data = await getFsuSunDevice(params);
-    if (data.Result == 'success') {
-      this.his_subDevice = data.Data;
-      this.his_subDevice = data.Data;
-      return data.Data;
-    } else {
-      message.error(data.Msg);
+      // message.error(data.Msg);
     }
   }
   @action.bound
@@ -300,6 +279,7 @@ class Devicemanagement {
       return data.Data;
     } else {
       message.error(data.Msg);
+      this.s_tableData = [];
     }
   }
   @action.bound
@@ -308,36 +288,12 @@ class Devicemanagement {
     const data = await getSuStatus(params);
 
     this.status_loading = false;
-    if (data.result == 'success') {
-      this.fsuStatusData = data.data;
+    if (data.Result == 'success') {
+      this.fsuStatusData = data.Data;
       return data.data;
     } else {
       message.error(data.Msg);
     }
-  }
-  // @action.bound
-  // async getByDevice(params) {
-  //   const data = await getByDevice(params);
-  //   this.curunentDevice = params.F_DeviceID;
-  //   this.deviceMenu = data.varList;
-  // }
-  @action.bound
-  async getFsuHisdataTable(params) {
-    this.h_loading = true;
-    const data = await getFsuHisdataTable(params);
-    if (data.Result == 'success') {
-      this.h_loading = false;
-      this.curunentDevice = params.F_DeviceID;
-      this.h_tableParmas = params;
-      this.h_tableData = data.Data;
-    } else {
-      message.error(data.Msg);
-    }
-  }
-  @action.bound
-  async findDeviceData(params) {
-    const data = await findDeviceData(params);
-    this.deviceData = data.varList;
   }
   @action.bound
   async getGrandsonTable(params) {
@@ -349,6 +305,7 @@ class Devicemanagement {
       return data.Data;
     } else {
       message.error(data.Msg);
+      this.g_tableData = [];
     }
   }
   @action.bound
@@ -385,7 +342,10 @@ class Devicemanagement {
     if (data.Result == 'success') {
       this.getTable(toJS(this.tableParmas));
       message.success('删除成功!');
+    } else {
+      message.error(data.Msg);
     }
+
     return data;
   }
   @action

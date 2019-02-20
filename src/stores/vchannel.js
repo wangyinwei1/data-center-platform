@@ -31,8 +31,8 @@ class Vchannel {
     this.loading = false;
     params.number = data.Data.number;
     params.page = data.Data.page;
+    this.tableParmas = params;
     if (data.Result == 'success') {
-      this.tableParmas = params;
       this.tableData = data.Data;
     } else {
       message.error(data.Msg);
@@ -139,9 +139,11 @@ class Vchannel {
   @action
   async delete(params) {
     const data = await vchannel_delete(params);
-    if (data.result == 'success' || data.Result == 'success') {
+    if (data.Result == 'success') {
       this.getTable(this.tableParmas);
       message.success('删除成功!');
+    } else {
+      message.error(data.Msg);
     }
     return data;
   }

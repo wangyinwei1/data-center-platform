@@ -49,25 +49,24 @@ class Regional extends Component {
   }
   endClick(item) {
     const {realtimealarmStore: {endAlarm}} = this.props;
-    endAlarm({F_AlarmID: item.AlarmID});
+    endAlarm({F_AlarmID: item.alarmID});
   }
   handleClick(item) {
     const {realtimealarmStore: {dealAlarm}} = this.props;
-    dealAlarm({F_AlarmID: item.AlarmID});
+    dealAlarm({F_AlarmID: item.alarmID});
   }
   cancelClick(item) {
     const {realtimealarmStore: {cancelAlarm}} = this.props;
-    cancelAlarm({F_AlarmID: item.AlarmID});
+    cancelAlarm({F_AlarmID: item.alarmID});
   }
   confirmClick(item) {
     const {realtimealarmStore: {confirmAlarm}} = this.props;
-    confirmAlarm({F_AlarmID: item.AlarmID});
+    confirmAlarm({F_AlarmID: item.alarmID});
   }
   render() {
     const {realtimealarmStore, theme} = this.props;
     const c_tableData = toJS(realtimealarmStore.c_tableData);
     const tableData = (c_tableData && c_tableData.varList) || [];
-    console.log(tableData);
     const pagination = c_tableData || {};
     const columns = columnData({
       endClick: this.endClick,

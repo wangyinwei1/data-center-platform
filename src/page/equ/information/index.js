@@ -25,7 +25,12 @@ import AddLevelOne from './addLevelOne.js';
 import AddChildDevice from './addChildDevice.js';
 import {formParams, addLevelOne, addChildDevice} from './tplJson.js';
 //实例
-@inject('regionalStore', 'informationStore', 'realtimealarmStore')
+@inject(
+  'regionalStore',
+  'informationStore',
+  'realtimealarmStore',
+  'historymodalStore',
+)
 @observer
 @mixin(cascader)
 class Information extends Component {
@@ -239,11 +244,11 @@ class Information extends Component {
   historyClick(item, e) {
     e.stopPropagation();
     e.nativeEvent.stopImmediatePropagation();
-    const {informationStore} = this.props;
+    const {historymodalStore} = this.props;
     const params = {
       F_DeviceID: item.devID,
     };
-    informationStore.getByDevice(params);
+    historymodalStore.getByDevice(params);
     this.setState({
       historyShow: true,
       childTableTitle: item.devName,
@@ -996,7 +1001,11 @@ class Information extends Component {
                 columns={columns}
                 rowClassName={(record, index) => {
                   const rowClassName = ['td_padding'];
-                  record.onOff === 0 && rowClassName.push('cl_online_state');
+                  record.onOff === 0 &&
+                    (record.status == 1
+                      ? rowClassName.push('cl_disabled_state')
+                      : rowClassName.push('cl_offline_state'));
+                  record.onOff === 1 && rowClassName.push('cl_online_state');
                   record.onOff === 2 && rowClassName.push('cl_err_state');
                   return rowClassName.join(' ');
                 }}

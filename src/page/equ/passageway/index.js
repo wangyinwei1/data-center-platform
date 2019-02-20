@@ -69,6 +69,7 @@ class Passageway extends Component {
       virtualShow: false,
       currentChannelID: '',
       currentVirtual: {},
+      item: [],
       expandedRows: [],
     };
   }
@@ -146,6 +147,7 @@ class Passageway extends Component {
       childTableTitle: item.devName || item.subDeviceName,
       currentDevice: item.devID || item.subDeviceID,
       singleLineData: item,
+      item: item,
     });
     passagewayStore.getChildTable(params);
   }
@@ -628,7 +630,11 @@ class Passageway extends Component {
               <Table
                 rowClassName={(record, index) => {
                   const rowClassName = ['td_padding'];
-                  record.onOff == 0 && rowClassName.push('cl_online_state');
+                  record.onOff === 0 &&
+                    (record.status == 1
+                      ? rowClassName.push('cl_disabled_state')
+                      : rowClassName.push('cl_offline_state'));
+                  record.onOff === 1 && rowClassName.push('cl_online_state');
                   record.onOff === 2 && rowClassName.push('cl_err_state');
                   return rowClassName.join(' ');
                 }}
@@ -690,6 +696,7 @@ class Passageway extends Component {
             isVchannel={this.state.isVchannel}
             editVirtual={this.editVirtual}
             handleFormChange={this.handleFormChange}
+            item={this.state.item}
           />
         </ClModal>
       </div>

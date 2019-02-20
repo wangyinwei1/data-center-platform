@@ -4,6 +4,7 @@ import {toJS} from 'mobx';
 import styles from './index.less';
 import Table from '../../../components/Table';
 import columnData from './columns.js';
+import moment from 'moment';
 import Toolbar from '../../../components/Toolbar';
 //实例
 @inject('controlrecordStore')
@@ -26,8 +27,12 @@ class Regional extends Component {
       page: 1,
       keywords: '',
       number: 10,
-      lastLoginStart: '',
-      lastLoginEnd: '',
+      lastLoginStart: moment()
+        .startOf('day')
+        .format('YYYY-MM-DD HH:mm:ss'),
+      lastLoginEnd: moment()
+        .endOf('day')
+        .format('YYYY-MM-DD HH:mm:ss'),
     };
     getTable(params);
   }

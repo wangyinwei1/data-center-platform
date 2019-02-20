@@ -2,12 +2,15 @@ import {observable, action} from 'mobx';
 import {
   passageway_search,
   getPassagewayTable,
+  findCongenerDeviceList,
   getPassagewayChildTable,
   passagewayChild_search,
   initAdd,
+  getBasicchannelTable,
   passageway_save,
   passageway_edit,
   copyAlarmCondition,
+  copyAlarmCondition2,
   passageway_initEdit,
   passageway_delete,
   findDeviceChannel,
@@ -43,12 +46,14 @@ class Passageway {
   @observable editVirtualData = {};
   @observable virtualDevList = [];
   @observable g_tableData = {};
+  @observable typeChannelList = [];
   @observable g_tableParmas = {};
   @observable s_tableData = {};
   @observable s_tableParmas = {};
   @observable devChannel = [];
   @observable s_loading = false;
   @observable allDeciceList = [];
+  @observable allCongenerDevList = [];
   @observable g_loading = false;
   @observable c_expandedRows = [];
   @action.bound
@@ -82,11 +87,11 @@ class Passageway {
   async getTable(params) {
     this.loading = true;
     const data = await getPassagewayTable(params);
+    this.loading = false;
+    params.number = data.Data.number;
+    params.page = data.Data.page;
+    this.tableParmas = params;
     if (data.Result == 'success') {
-      this.loading = false;
-      params.number = data.Data.number;
-      params.page = data.Data.page;
-      this.tableParmas = params;
       this.tableData = data.Data;
     } else {
       message.error(data.Msg);
@@ -95,11 +100,25 @@ class Passageway {
   @action.bound
   async getAllDecice(params) {
     const data = await allDeciceList(params);
-    if (data.result == 'success') {
-      this.allDeciceList = data.data;
+    if (data.Result == 'success') {
+      this.allDeciceList = data.Data;
     } else {
-      message.error(data.msg);
+      message.error(data.Msg);
     }
+  }
+  @action.bound
+  async findCongenerDeviceList(params) {
+    const data = await findCongenerDeviceList(params);
+    if (data.Result == 'success') {
+      this.allCongenerDevList = data.Data;
+    } else {
+      message.error(data.Msg);
+    }
+  }
+  @action.bound
+  async getBasicchannelTable(params) {
+    const data = await getBasicchannelTable(params);
+    this.typeChannelList = data.varList;
   }
 
   @action.bound
@@ -156,8 +175,10 @@ class Passageway {
     }
   }
   @action.bound
-  async copyAlarmCondition(params) {
-    const data = await copyAlarmCondition(params);
+  async copyAlarmCondition(params, isChannel) {
+    const data = isChannel
+      ? await copyAlarmCondition(params)
+      : await copyAlarmCondition2(params);
     if (data.Result == 'success') {
       message.success(data.Msg);
       return true;

@@ -58,6 +58,7 @@ class Pie extends Component {
     type === 'online' && onlineDeviceList({status: 1, ...params});
     type === 'alarm' && alarmDeviceDetailsList(params);
     type === 'errline' && onlineDeviceList({status: 2, ...params});
+    type === 'disable' && onlineDeviceList({status: 4, ...params});
   }
   render() {
     const {home_pageStore: {allCount}, height} = this.props;
@@ -75,6 +76,9 @@ class Pie extends Component {
         break;
       case 'errline':
         title = '异常设备';
+        break;
+      case 'disable':
+        title = '禁用设备';
         break;
     }
 
@@ -107,6 +111,14 @@ class Pie extends Component {
             onClick={this.onlineClick.bind(this, 'errline')}>
             <i />
             <span>{`异常数量 :  ${count.ErrCount ? count.ErrCount : 0}`} </span>
+          </div>
+          <div
+            className={styles['disable_num']}
+            onClick={this.onlineClick.bind(this, 'disable')}>
+            <i />
+            <span>
+              {`禁用数量 :  ${count.forbiddenCount ? count.forbiddenCount : 0}`}
+            </span>
           </div>
         </div>
 

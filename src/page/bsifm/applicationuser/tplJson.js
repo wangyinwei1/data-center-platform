@@ -32,19 +32,19 @@ const formParams = {
     },
     cityCode: {
       value: undefined,
-      require: false,
+      require: true,
     },
     countyCode: {
       value: undefined,
-      require: false,
+      require: true,
     },
     countyCode: {
       value: undefined,
-      require: false,
+      require: true,
     },
     districtCode: {
       value: undefined,
-      require: false,
+      require: true,
     },
     F_FsuTypeID: {
       value: undefined,
@@ -62,15 +62,15 @@ const clearCity = {
   fields: {
     cityCode: {
       value: undefined,
-      require: false,
+      require: true,
     },
     countyCode: {
       value: undefined,
-      require: false,
+      require: true,
     },
     districtCode: {
       value: undefined,
-      require: false,
+      require: true,
     },
   },
 };
@@ -78,11 +78,11 @@ const clearCounty = {
   fields: {
     countyCode: {
       value: undefined,
-      require: false,
+      require: true,
     },
     districtCode: {
       value: undefined,
-      require: false,
+      require: true,
     },
   },
 };

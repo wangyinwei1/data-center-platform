@@ -21,10 +21,10 @@ class Site {
     this.loading = true;
     const data = await getAlarminformationTable(params);
     this.loading = false;
+    params.number = data.Data.pd.number;
+    params.page = data.Data.pd.page;
+    this.tableParmas = params;
     if (data.Result == 'success') {
-      params.number = data.Data.pd.number;
-      params.page = data.Data.pd.page;
-      this.tableParmas = params;
       this.tableData = data.Data;
     } else {
       message.error(data.Msg);

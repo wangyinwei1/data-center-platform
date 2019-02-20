@@ -1,23 +1,25 @@
 import {observable, action, toJS} from 'mobx';
 import {
-  confirmAlarm,
-  cancelAlarm,
-  dealAlarm,
   alarmDeviceDetailsList,
   onlineDeviceList,
   offlineDeviceList,
-  endAlarm,
   queryAlarmList,
   queryFSUAlarmList,
   queryAlarmCountList,
   queryFSUAlarmCountList,
-  fsuExecuteOperatio,
+  fsuConfirmAlarm,
+  fsuCancelAlarm,
+  fsuEndAlarm,
+  fsuDealAlarm,
+  endAlarm,
+  dealAlarm,
+  cancelAlarm,
+  confirmAlarm,
   getApiInfo,
   getDataInfo,
   getDispatchInfo,
   getFsu_realtimealarmChildTable,
   getRealtimealarmChildTable,
-  executeOperation,
   getCountInfo,
   getFrontInfo,
 } from '../services/api.js';
@@ -42,7 +44,21 @@ class HomePage {
   @observable alarmFsuMenuList = [];
   @action.bound
   async fsuExecuteOperatio(params) {
-    const data = await fsuExecuteOperatio(params);
+    let data = null;
+    switch (params.operationType) {
+      case 'close':
+        data = await fsuEndAlarm(params);
+        break;
+      case 'pending':
+        data = await fsuDealAlarm(params);
+        break;
+      case 'wrong':
+        data = await fsuCancelAlarm(params);
+        break;
+      case 'affirm':
+        data = await fsuConfirmAlarm(params);
+        break;
+    }
     if (data.Result == 'success') {
       message.success(data.Msg);
       this.getFsuTable(this.tableParmas);
@@ -52,6 +68,7 @@ class HomePage {
   }
   @action.bound
   async getDispatchInfo(params) {
+    console.log(params);
     this.s_loading = true;
     const data = await getDispatchInfo(params);
     this.s_loading = false;
@@ -74,7 +91,6 @@ class HomePage {
     this.s_loading = false;
     if (data.Result == 'success') {
       this.frontsData = data.Data;
-      // message.success(data.Msg);
     } else {
       message.error(data.Msg);
     }
@@ -108,7 +124,21 @@ class HomePage {
 
   @action.bound
   async executeOperation(params) {
-    const data = await executeOperation(params);
+    let data = null;
+    switch (params.operationType) {
+      case 'close':
+        data = await endAlarm(params);
+        break;
+      case 'pending':
+        data = await dealAlarm(params);
+        break;
+      case 'wrong':
+        data = await cancelAlarm(params);
+        break;
+      case 'affirm':
+        data = await confirmAlarm(params);
+        break;
+    }
     if (data.Result == 'success') {
       this.getTable(this.tableParmas);
       message.success(data.Msg);
@@ -122,10 +152,10 @@ class HomePage {
     this.loading = true;
     const data = await queryAlarmList(params);
     this.loading = false;
+    params.number = data.Data.pd.number;
+    params.page = data.Data.pd.page;
+    this.tableParmas = params;
     if (data.Result == 'success') {
-      params.number = data.Data.pd.number;
-      params.page = data.Data.pd.page;
-      this.tableParmas = params;
       this.tableData = data.Data;
     } else {
       message.error(data.Msg);

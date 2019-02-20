@@ -238,27 +238,27 @@ class Passageway {
   @action.bound
   async save(params) {
     const data = await basechannelSave(params);
-    if (data.result == 'success') {
-      message.success(data.msg);
+    if (data.Result == 'success') {
+      message.success(data.Msg);
     } else {
-      message.error(data.msg);
+      message.error(data.Msg);
     }
   }
   async edit(params) {
     const data = await basechannelEdit(params);
-    if (data.result == 'success') {
-      message.success(data.msg);
+    if (data.Result == 'success') {
+      message.success(data.Msg);
     } else {
-      message.error(data.msg);
+      message.error(data.Msg);
     }
   }
   async delete(params) {
     const data = await basechannelDelete(params);
-    if (data.result == 'success') {
+    if (data.Result == 'success') {
       this.getTable(this.tableParmas);
-      message.success(data.msg);
+      message.success(data.Msg);
     } else {
-      message.error(data.msg);
+      message.error(data.Msg);
     }
   }
   async toExcel(params) {

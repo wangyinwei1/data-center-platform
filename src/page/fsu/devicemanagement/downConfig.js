@@ -99,7 +99,7 @@ class AlarmCondition extends Component {
   }
   render() {
     const {fsuconfigStore: {tableData}} = this.props;
-    const children = _.map(tableData.data, (item, i) => {
+    const children = _.map(tableData, (item, i) => {
       return <Option key={item.ConfigFileName}>{item.ConfigFileName}</Option>;
     });
     children.unshift(
@@ -112,7 +112,6 @@ class AlarmCondition extends Component {
     return (
       <Form className={styles['control_ct']}>
         <Row className={styles['be_careful']}>
-          {' '}
           注意：下发FSU配置文件对离线设备无效！
         </Row>
         <Row>

@@ -46,10 +46,21 @@
           }
           &:hover {
             & > td {
-              &:first-child {
-                border-left: 4px solid #5deda4;
-              }
-              background-color: transparent;
+              // &:first-child {
+              //   border-left: 4px solid #5deda4;
+              // }
+              background-color: #f2fff5;
+              color: #30d581;
+            }
+          }
+        }
+        .ant-table-tbody > tr.ant-table-expanded-row {
+          &:hover {
+            & > td {
+              // &:first-child {
+              //   border-left: 4px solid #5deda4;
+              // }
+              background-color: #fafafa;
             }
           }
         }
@@ -84,6 +95,13 @@
           }
           table > tbody > tr > td {
             background-color: #f6f6f6;
+          }
+          table > tbody > tr {
+            &:hover {
+              & > td {
+                background-color: #f2fff5;
+              }
+            }
           }
         }
         .ant-table-expanded-row > td:last-child {

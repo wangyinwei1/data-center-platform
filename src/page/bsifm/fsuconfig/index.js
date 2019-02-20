@@ -57,7 +57,7 @@ class Site extends Component {
 
   render() {
     const {fsuconfigStore} = this.props;
-    const tableData = toJS(fsuconfigStore.tableData.data) || [];
+    const tableData = toJS(fsuconfigStore.tableData) || [];
     const columns = columnData({
       deleteClick: this.deleteClick,
       editClick: this.editClick,
@@ -75,11 +75,11 @@ class Site extends Component {
           console.log(info.file, info.fileList);
         }
         if (info.file.status === 'done') {
-          if (info.file.response && info.file.response.result === 'success') {
+          if (info.file.response && info.file.response.Result === 'success') {
             message.success(`${info.file.name} 导入成功！`);
             fsuconfigStore.getTable();
           } else {
-            message.error(info.file.response.msg);
+            message.error(info.file.response.Msg);
           }
         } else if (info.file.status === 'error') {
           message.error(`${info.file.name} 导入失败！`);

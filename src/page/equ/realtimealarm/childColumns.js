@@ -20,8 +20,8 @@ const menu = ({
 }) => {
   return (
     <Menu className={styles['operation']}>
-      {record.Status !== '待确认' &&
-        record.Status !== '已处理' && (
+      {record.status !== '待确认' &&
+        record.status !== '已处理' && (
           <Menu.Item key="handle" onClick={handleClick.bind(_this, record)}>
             <div className={styles['handle']}>
               <i
@@ -34,9 +34,9 @@ const menu = ({
             </div>
           </Menu.Item>
         )}
-      {record.Status !== '已处理' &&
-        record.Status !== '待处理' &&
-        record.Status !== '已确认' && (
+      {record.status !== '已处理' &&
+        record.status !== '待处理' &&
+        record.status !== '已确认' && (
           <Menu.Item key="confirm" onClick={confirmClick.bind(_this, record)}>
             <div className={styles['confirm']}>
               <i
@@ -49,7 +49,7 @@ const menu = ({
             </div>
           </Menu.Item>
         )}
-      {record.Status !== '已处理' && (
+      {record.status !== '已处理' && (
         <Menu.Item key="cancel" onClick={cancelClick.bind(_this, record)}>
           <div className={styles['cancel']}>
             <i

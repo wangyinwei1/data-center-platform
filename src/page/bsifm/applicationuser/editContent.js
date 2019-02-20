@@ -213,7 +213,7 @@ class Regional extends Component {
             getAreaSonList={getAreaSonList}
             name={'cityCode'}
             className={currentClass}
-            rules={[{required: false, message: '请必须填写!'}]}
+            rules={[{required: true, message: '请必须填写!'}]}
             children={cityList}
           />
           <FormSelect
@@ -224,7 +224,7 @@ class Regional extends Component {
             getAreaSonList={getAreaSonList}
             name={'countyCode'}
             className={currentClass}
-            rules={[{required: false, message: '请必须填写!'}]}
+            rules={[{required: true, message: '请必须填写!'}]}
             children={countyList}
           />
           <CustomSelect
@@ -234,7 +234,7 @@ class Regional extends Component {
             disabled={fields.countyCode.value ? false : true}
             className={currentClass}
             name={'districtCode'}
-            rules={[{required: false, message: '请必须填写!'}]}
+            rules={[{required: true, message: '请必须填写!'}]}
             children={districtList}
           />
           {/* <FormSelect */}

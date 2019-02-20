@@ -28,6 +28,7 @@ class EchartsOrList extends Component {
     this.export = this.export.bind(this);
     this.state = {
       showEcharts: true,
+      tableLoading: false,
     };
   }
   export() {
@@ -43,10 +44,11 @@ class EchartsOrList extends Component {
     });
   }
   render() {
-    const {deviceData, loading, data, echartOptions} = this.props;
+    const {deviceData, loading, data, isFsu, echartOptions} = this.props;
     const columns = columnData();
     return (
       <div
+        ref={c => (this.echartsWrap = c)}
         className={styles['echartsOrList_wrap']}
         style={
           deviceData.length <= 1
@@ -60,9 +62,13 @@ class EchartsOrList extends Component {
         }>
         {!this.state.showEcharts && (
           <div className={styles['history_table_title']}>
-            <span>{data.F_ChannelName}</span>{' '}
+            <span>
+              {isFsu ? `${data.deviceName}/${data.spName}` : data.F_ChannelName}
+            </span>
             <span style={{fontSize: '14px', fontWeight: 'normal'}}>
-              {data.Unit ? '(' + '单位/' + data.Unit + ')' : ''}
+              {isFsu
+                ? data.spUnit ? '(' + '单位/' + data.spUnit + ')' : ''
+                : data.unit ? '(' + '单位/' + data.unit + ')' : ''}
             </span>
           </div>
         )}
@@ -100,19 +106,33 @@ class EchartsOrList extends Component {
         {this.state.showEcharts ? (
           <ReactEcharts option={echartOptions} style={{height: '319px'}} />
         ) : (
-          <div className={styles['history_list_wrap']}>
-            <Table
-              loading={false}
-              columns={columns}
-              pagination={false}
-              rowClassName={(record, index) => {
-                const rowClassName = ['history_table_td'];
-                return rowClassName.join(' ');
-              }}
-              scroll={{x: '100%', y: 234}}
-              useDefaultRowKey={true}
-              data={data.tableList}
-            />
+          <div className={styles['history_list_wrap']} onClick={this.export}>
+            {!data.tableList ? (
+              <div className={styles['too_much_data']}>
+                <i
+                  className={classnames(
+                    'icon iconfont icon-xiazai',
+                    styles['table_download'],
+                  )}
+                />
+                <span className={styles['table_detail']}>
+                  数据量太多，请点击下载文件查看,谢谢！
+                </span>
+              </div>
+            ) : (
+              <Table
+                loading={false}
+                columns={columns}
+                pagination={false}
+                rowClassName={(record, index) => {
+                  const rowClassName = ['history_table_td'];
+                  return rowClassName.join(' ');
+                }}
+                scroll={{x: '100%', y: 234}}
+                useDefaultRowKey={true}
+                data={data.tableList}
+              />
+            )}
           </div>
         )}
       </div>
@@ -121,7 +141,7 @@ class EchartsOrList extends Component {
 }
 
 //实例
-@inject('informationStore')
+@inject('historymodalStore')
 @observer
 class Regional extends Component {
   constructor(props) {
@@ -131,7 +151,7 @@ class Regional extends Component {
     this.onSelect = this.onSelect.bind(this);
     this.allSelectClick = this.allSelectClick.bind(this);
     this.exportChange = this.exportChange.bind(this);
-    // this.switchClick = this.switchClick.bind(this);
+    this.onSubDevChange = this.onSubDevChange.bind(this);
     this.export = this.export.bind(this);
     this.state = {
       allSelected: false,
@@ -139,12 +159,12 @@ class Regional extends Component {
       lastLoginEnd: '',
       Channels: '',
       value: [],
+      subDeviceValue: undefined,
       searchContent: false,
-      isChart: true,
     };
   }
   componentWillUnmount() {
-    const {informationStore: {clearDeviceData}} = this.props;
+    const {historymodalStore: {clearDeviceData}} = this.props;
     clearDeviceData();
     this.setState({
       lastLoginStart: '',
@@ -156,6 +176,24 @@ class Regional extends Component {
     this.setState({
       lastLoginStart: dateStrings[0],
       lastLoginEnd: dateStrings[1],
+    });
+  }
+  onSubDevChange(value, option) {
+    const {historymodalStore: {his_subDevice, getGrandsonMenu}} = this.props;
+    const subDev = _.filter(his_subDevice, (item, i) => {
+      return item.deviceID === value;
+    });
+    if (value) {
+      const params = {
+        F_DeviceID: subDev[0].deviceID,
+        F_Suid: subDev[0].suID,
+      };
+      getGrandsonMenu(params);
+    }
+    this.setState({
+      subDeviceValue: value || undefined,
+      value: [],
+      allSelected: false,
     });
   }
   onSelect(value, option) {
@@ -170,8 +208,8 @@ class Regional extends Component {
         allSelected: false,
       });
     } else {
-      const {informationStore} = this.props;
-      const deviceMenu = toJS(informationStore.deviceMenu);
+      const {historymodalStore} = this.props;
+      const deviceMenu = toJS(historymodalStore.deviceMenu);
       const isAll =
         value.length === deviceMenu.length &&
         this.isAllSelected(value, deviceMenu);
@@ -185,18 +223,25 @@ class Regional extends Component {
   isAllSelected(value, deviceMenu) {
     let isAll = true;
     _.map(deviceMenu, item => {
-      if (value.indexOf(item.F_ChannelID) === -1) isAll = false;
+      if (
+        value.indexOf(item.F_ChannelID) === -1 ||
+        value.indexOf(item.spID) === -1
+      ) {
+        isAll = false;
+      }
     });
     return isAll;
   }
   allSelectClick() {
     const selected = this.state.allSelected;
     if (!selected) {
-      const {informationStore} = this.props;
-      const deviceMenu = toJS(informationStore.deviceMenu);
+      const {historymodalStore, isFsu} = this.props;
+      const deviceMenu = isFsu
+        ? toJS(historymodalStore.his_grandsonMenu)
+        : toJS(historymodalStore.deviceMenu);
       let result = [];
       _.map(deviceMenu, item => {
-        result.push(item.F_ChannelID);
+        !isFsu ? result.push(item.F_ChannelID) : result.push(item.spID);
       });
       this.setState({
         allSelected: !this.state.allSelected,
@@ -212,130 +257,143 @@ class Regional extends Component {
       message.error('请选择时间!');
       return;
     }
-    if (!this.state.Channels) {
+    const {historymodalStore, isFsu} = this.props;
+    if (!isFsu && !this.state.Channels) {
       message.error('请选择通道!');
       return;
     }
 
-    const {informationStore} = this.props;
+    const needParams = isFsu
+      ? {
+          suID: historymodalStore.currentDevice,
+          deviceIDs: this.state.subDeviceValue || '',
+          spIDs: this.state.value.join(','),
+        }
+      : {
+          F_DeviceID: historymodalStore.currentDevice,
+          Channels: this.state.Channels,
+        };
+
     const params = {
-      F_DeviceID: informationStore.currentDevice,
-      Channels: this.state.Channels,
+      ...needParams,
       lastLoginStart: this.state.lastLoginStart,
       lastLoginEnd: this.state.lastLoginEnd,
     };
     this.setState({
       searchContent: true,
     });
-    if (this.state.isChart) {
-      informationStore.findDeviceData(params);
-    } else {
-      informationStore.findDeviceDataList(params);
-    }
+    isFsu
+      ? historymodalStore.getFsuHisdataTable(params)
+      : historymodalStore.findDeviceData(params);
   }
-  // switchClick() {
-  //   if (!this.state.lastLoginStart || !this.state.lastLoginEnd) {
-  //     message.error('请选择时间!');
-  //     return;
-  //   }
-  //   if (!this.state.Channels) {
-  //     message.error('请选择通道!');
-  //     return;
-  //   }
-  //   this.setState(({isChart}) => {
-  //     return {
-  //       isChart: !isChart,
-  //     };
-  //   });
-  //   const {informationStore} = this.props;
-  //   const params = {
-  //     F_DeviceID: informationStore.currentDevice,
-  //     Channels: this.state.Channels,
-  //     lastLoginStart: this.state.lastLoginStart,
-  //     lastLoginEnd: this.state.lastLoginEnd,
-  //   };
-  //   if (!this.state.isChart) {
-  //     informationStore.findDeviceData(params);
-  //   } else {
-  //     informationStore.findDeviceDataList(params);
-  //   }
-  // }
   export(item) {
-    const {informationStore: {currentDevice}} = this.props;
-    location.href =
-      '/collect/device_hisdata/toExcel.do?F_DeviceID=' +
-      currentDevice +
-      '&Channels=' +
-      item.F_ChannelID +
-      '&lastLoginStart=' +
-      this.state.lastLoginStart +
-      '&lastLoginEnd=' +
-      this.state.lastLoginEnd;
+    const {historymodalStore: {currentDevice}, isFsu} = this.props;
+    if (!isFsu) {
+      location.href =
+        '/collect/device_hisdata/toExcel.do?F_DeviceID=' +
+        currentDevice +
+        '&Channels=' +
+        item.channelID +
+        '&lastLoginStart=' +
+        this.state.lastLoginStart +
+        '&lastLoginEnd=' +
+        this.state.lastLoginEnd;
+    } else {
+      location.href =
+        '/collect/FSU_hisdata/toExcel?suID=' +
+        currentDevice +
+        '&deviceIDs=' +
+        item.deviceID +
+        '&spIDs=' +
+        item.spID +
+        '&lastLoginStart=' +
+        this.state.lastLoginStart +
+        '&lastLoginEnd=' +
+        this.state.lastLoginEnd;
+    }
   }
   exportChange(item) {
     this.export(item);
   }
 
   render() {
-    const {informationStore} = this.props;
-    const deviceMenu = toJS(informationStore.deviceMenu);
-    const children = _.map(deviceMenu, (item, i) => {
-      return <Option key={item.F_ChannelID}>{item.F_ChannelName}</Option>;
-    });
-    children.unshift(
-      <Option
-        className={classnames(this.state.allSelected && styles['all_selected'])}
-        key={'all'}>
-        全选
-      </Option>,
-    );
-    const deviceData = toJS(informationStore.deviceData);
-    const echartArr =
-      this.state.isChart &&
-      _.map(deviceData, (item, i) => {
-        let echartOptions = _.cloneDeep(options())[0];
-
-        echartOptions.title.text = item.F_ChannelName;
-        echartOptions.xAxis[0].data = item.F_RecordTime;
-        item.Unit && (echartOptions.yAxis[0].name = '单位/' + item.Unit);
-        echartOptions.legend.data = ['最大值', '最小值', '平均值'];
-        echartOptions.color = ['#7ffbbc', '#a4cbff', '#ffd800'];
-        echartOptions.listData = item.value;
-        echartOptions.series = [
-          {
-            name: '最大值',
-            type: 'line',
-            areaStyle: {normal: {color: '#7ffbbc', opacity: 0.6}},
-            lineStyle: {normal: {opacity: 0}},
-            data: item.maxfs,
-          },
-          {
-            name: '最小值',
-            type: 'line',
-            areaStyle: {normal: {color: '#a4cbff', opacity: 0.6}},
-            lineStyle: {normal: {opacity: 0}},
-            data: item.minfs,
-          },
-          {
-            name: '平均值',
-            type: 'line',
-            areaStyle: {normal: {color: '#ffd800', opacity: 0.6}},
-            lineStyle: {normal: {opacity: 0}},
-            data: item.averages,
-          },
-        ];
-
-        return (
-          <EchartsOrList
-            data={item}
-            loading={informationStore.d_loading}
-            deviceData={deviceData}
-            echartOptions={echartOptions}
-            key={i.toString(36) + i}
-            exportChange={this.exportChange}
-          />
-        );
+    const {historymodalStore, isFsu} = this.props;
+    const deviceMenu = toJS(historymodalStore.deviceMenu);
+    const his_grandsonMenu = toJS(historymodalStore.his_grandsonMenu);
+    let sunDev = [];
+    const his_subDevice = toJS(historymodalStore.his_subDevice);
+    if (isFsu) {
+      sunDev = _.map(his_subDevice, (item, i) => {
+        return <Option key={item.deviceID}>{item.deviceName}</Option>;
       });
+    }
+    const children = _.map(isFsu ? his_grandsonMenu : deviceMenu, (item, i) => {
+      return (
+        <Option key={isFsu ? item['spID'] : item['F_ChannelID']}>
+          {isFsu ? item['spName'] : item['F_ChannelName']}
+        </Option>
+      );
+    });
+    children &&
+      children.unshift(
+        <Option
+          className={classnames(
+            this.state.allSelected && styles['all_selected'],
+          )}
+          key={'all'}>
+          全选
+        </Option>,
+      );
+    const deviceData = toJS(historymodalStore.deviceData);
+    const echartArr = _.map(deviceData, (item, i) => {
+      let echartOptions = _.cloneDeep(options())[0];
+
+      echartOptions.title.text = isFsu
+        ? `${item.deviceName}/${item.spName}`
+        : item.channelName;
+      echartOptions.xAxis[0].data = item.recordTime;
+      isFsu
+        ? item.spUnit && (echartOptions.yAxis[0].name = '单位/' + item.spUnit)
+        : item.Unit && (echartOptions.yAxis[0].name = '单位/' + item.unit);
+      echartOptions.legend.data = ['最大值', '最小值', '平均值'];
+      echartOptions.color = ['#7ffbbc', '#a4cbff', '#ffd800'];
+      echartOptions.listData = item.value;
+      echartOptions.series = [
+        {
+          name: '最大值',
+          type: 'line',
+          areaStyle: {normal: {color: '#7ffbbc', opacity: 0.6}},
+          lineStyle: {normal: {opacity: 0}},
+          data: item.maxfs,
+        },
+        {
+          name: '最小值',
+          type: 'line',
+          areaStyle: {normal: {color: '#a4cbff', opacity: 0.6}},
+          lineStyle: {normal: {opacity: 0}},
+          data: item.minfs,
+        },
+        {
+          name: '平均值',
+          type: 'line',
+          areaStyle: {normal: {color: '#ffd800', opacity: 0.6}},
+          lineStyle: {normal: {opacity: 0}},
+          data: item.averages,
+        },
+      ];
+
+      return (
+        <EchartsOrList
+          data={item}
+          loading={historymodalStore.d_loading}
+          deviceData={deviceData}
+          echartOptions={echartOptions}
+          key={i.toString(36) + i}
+          exportChange={this.exportChange}
+          isFsu={isFsu}
+        />
+      );
+    });
 
     return (
       <div className={styles['history_wrap']}>
@@ -350,12 +408,26 @@ class Regional extends Component {
             format="YYYY-MM-DD HH:mm:ss"
             onChange={this.onChange}
           />
+          {isFsu && (
+            <Select
+              className={styles['sub_dev_wrap']}
+              allowClear
+              optionFilterProp="children"
+              placeholder={'请选择子设备'}
+              value={this.state.subDeviceValue}
+              onChange={this.onSubDevChange}>
+              {sunDev}
+            </Select>
+          )}
           <Select
             mode="multiple"
             className={styles['drop_down']}
             allowClear
+            disabled={
+              isFsu ? (this.state.subDeviceValue ? false : true) : false
+            }
             optionFilterProp="children"
-            placeholder={'请选择设备通道'}
+            placeholder={isFsu ? '请选择监控点' : '请选择设备通道'}
             value={this.state.value}
             onChange={this.onSelect}>
             {children}
@@ -366,15 +438,11 @@ class Regional extends Component {
             搜索
           </Button>
         </div>
-        <Spin spinning={this.state.isChart && informationStore.d_loading}>
+        <Spin spinning={historymodalStore.d_loading}>
           <div className={styles['echart_wrap']}>
             {deviceData[0] ? (
-              this.state.isChart ? (
-                echartArr
-              ) : (
-                <div className={styles['history_table_wrap']}>{listTable}</div>
-              )
-            ) : this.state.searchContent && !informationStore.d_loading ? (
+              echartArr
+            ) : this.state.searchContent && !historymodalStore.d_loading ? (
               <div className={styles['nodata']}>
                 <i className={classnames('icon iconfont icon-zanwushuju')} />
                 <span>暂无数据</span>

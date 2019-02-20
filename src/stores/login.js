@@ -9,10 +9,10 @@ class Login {
   @action
   async loginOut() {
     const data = await logout();
-    if (data.result === 'success') {
+    if (data.Result === 'success') {
       return true;
     } else {
-      message.error(data.msg);
+      message.error(data.Msg);
       return false;
     }
   }
@@ -22,7 +22,7 @@ class Login {
     const data = await login(params);
     this.isLogin = false;
 
-    if (data.result === 'success') {
+    if (data.Result === 'success') {
       return {
         ip: data.serviceip,
         username: data.username,
@@ -31,7 +31,7 @@ class Login {
         isNotArea: data.Area === '片区' || !data.Area,
       };
     } else {
-      message.error(data.msg);
+      message.error(data.Msg);
       return false;
     }
   }

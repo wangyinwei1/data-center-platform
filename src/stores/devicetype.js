@@ -36,21 +36,23 @@ class Site {
   @action
   async delete(params) {
     const data = await devicetype_delete(params);
-    if (data.result == 'success') {
+    if (data.Result == 'success') {
       this.getTable(this.tableParmas);
-      message.success(data.msg);
+      message.success(data.Msg);
+    } else {
+      message.error(data.Msg);
     }
     return data;
   }
   @action.bound
   async editSave(params) {
     const data = await editgenera(params);
-    if (data.result == 'success') {
+    if (data.Result == 'success') {
       this.getTable(this.tableParmas);
-      message.success(data.msg);
+      message.success(data.Msg);
       return true;
     } else {
-      message.error(data.msg);
+      message.error(data.Msg);
       return false;
     }
     return data;
@@ -58,12 +60,12 @@ class Site {
   @action.bound
   async save(params) {
     const data = await savegenera(params);
-    if (data.result == 'success') {
+    if (data.Result == 'success') {
       this.getTable(this.tableParmas);
-      message.success(data.msg);
+      message.success(data.Msg);
       return true;
     } else {
-      message.error(data.msg);
+      message.error(data.Msg);
       return false;
     }
     return data;

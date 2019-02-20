@@ -139,7 +139,7 @@ class Edit extends Component {
           console.log(info.file, info.fileList);
         }
         if (info.file.status === 'done') {
-          if (info.file.response && info.file.response.result === 'success') {
+          if (info.file.response && info.file.response.Result === 'success') {
             // message.success(`${info.file.name} 导入成功！`);
             const importData = info.file.response.data;
             const record = toJS(a_tableData);

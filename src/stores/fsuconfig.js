@@ -7,7 +7,7 @@ import {
 import {message} from 'antd';
 
 class Fsuconfig {
-  @observable tableData = {};
+  @observable tableData = [];
   @observable tableParmas = {};
   @observable loading = false;
   @action.bound
@@ -15,30 +15,30 @@ class Fsuconfig {
     this.loading = true;
     const data = await getConfigFileList(params);
     this.loading = false;
-    if (data.result === 'success') {
-      this.tableParmas = params;
-      this.tableData = data;
+    this.tableParmas = params;
+    if (data.Result === 'success') {
+      this.tableData = data.Data;
     } else {
-      message.error(data.msg);
+      message.error(data.Msg);
     }
   }
   @action.bound
   async deleteConfigFiles(params) {
     const data = await deleteConfigFiles(params);
-    if (data.result === 'success') {
-      message.success(data.msg);
+    if (data.Result === 'success') {
+      message.success(data.Msg);
     } else {
-      message.error(data.msg);
+      message.error(data.Msg);
     }
   }
   @action.bound
   async sendConfigFileList(params) {
     const data = await sendConfigFileList(params);
-    if (data.result === 'success') {
-      message.success(data.msg);
+    if (data.Result === 'success') {
+      message.success(data.Msg);
       return true;
     } else {
-      message.error(data.msg);
+      message.error(data.Msg);
       return false;
     }
   }

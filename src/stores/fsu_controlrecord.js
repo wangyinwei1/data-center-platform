@@ -14,10 +14,10 @@ class fsuControlrecord {
     this.loading = true;
     const data = await getFsu_controlrecordTable(params);
     this.loading = false;
+    params.number = data.Data.number;
+    params.page = data.Data.page;
+    this.tableParmas = params;
     if (data.Result == 'success') {
-      params.number = data.Data.number;
-      params.page = data.Data.page;
-      this.tableParmas = params;
       this.tableData = data.Data;
     } else {
       message.error(data.Msg);
@@ -26,8 +26,8 @@ class fsuControlrecord {
   @action.bound
   async getFSUType(params) {
     const data = await getFSUType(params);
-    if (data.result == 'success') {
-      this.fsuAddTypes = data.data;
+    if (data.Result == 'success') {
+      this.fsuAddTypes = data.Data;
     } else {
       message.error(data.Msg);
     }

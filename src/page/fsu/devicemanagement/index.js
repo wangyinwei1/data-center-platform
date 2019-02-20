@@ -17,7 +17,7 @@ import EditContent from './edit.js';
 import moment from 'moment';
 import Panel from '../../../components/Panel';
 import RealtimeTable from './realtimeTable.js';
-import HistoryModal from './historyModal.js';
+import HistoryModal from './../../equ/information/historyModal.js';
 import ChildTable from './childTable.js';
 import ControlModal from './controlModal.js';
 import ControlContent from './controlContent.js';
@@ -37,6 +37,7 @@ import {
 @inject(
   'regionalStore',
   'informationStore',
+  'historymodalStore',
   'fsu_devicemanagementStore',
   'fsu_realtimealarmStore',
   'fsuconfigStore',
@@ -328,21 +329,11 @@ class Information extends Component {
   historyClick(item, e) {
     e.stopPropagation();
     e.nativeEvent.stopImmediatePropagation();
-    const {fsu_devicemanagementStore} = this.props;
-    // const params = {
-    //   ztreeChild: item.suID,
-    //   lastLoginStart: moment()
-    //     .subtract(3, 'months')
-    //     .format('YYYY-MM-DD'),
-    //   lastLoginEnd: moment().format('YYYY-MM-DD'),
-    //   page: 1,
-    //   number: 10,
-    // };
-    // fsu_devicemanagementStore.getFsuHisdataTable(params);
+    const {historymodalStore} = this.props;
     const params = {
       F_Suid: item.suID,
     };
-    fsu_devicemanagementStore.getSubDevice(params);
+    historymodalStore.getSubDevice(params);
     this.setState({
       historyShow: true,
       currentSuID: item.suID,
@@ -952,11 +943,10 @@ class Information extends Component {
 
     if (expanded) {
       this.setState({expandedRows: [record.suID]});
+      fsu_devicemanagementStore.getSportTable({F_Suid: record.suID});
     } else {
       this.setState({expandedRows: []});
     }
-
-    fsu_devicemanagementStore.getSportTable({F_Suid: record.suID});
   }
   //得到编辑所有value
   handleFormChange(changedFields) {
@@ -1291,8 +1281,12 @@ class Information extends Component {
                 columns={columns}
                 rowClassName={(record, index) => {
                   const rowClassName = ['td_padding'];
-                  record.onOff == 0 && rowClassName.push('cl_basic_state');
+                  record.onOff === 0 &&
+                    (record.status == 1
+                      ? rowClassName.push('cl_f_disabled_state')
+                      : rowClassName.push('cl_basic_state'));
                   record.onOff == 2 && rowClassName.push('cl_err_state');
+                  record.onOff === 1 && rowClassName.push('cl_online_state');
                   record.isConcentrator == 0 &&
                     rowClassName.push('cl_hidden_expand_icon');
                   return rowClassName.join(' ');
@@ -1328,7 +1322,7 @@ class Information extends Component {
             onCancel={this.onHistoryCancel}
             title={`历史数据/${this.state.childTableTitle}`}
             isShow={this.state.historyShow}>
-            <HistoryModal currentSuID={this.state.currentSuID} />
+            <HistoryModal isFsu={true} currentSuID={this.state.currentSuID} />
           </Panel>
           <ControlModal
             width={730}

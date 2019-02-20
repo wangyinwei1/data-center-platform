@@ -234,6 +234,12 @@
     }
   }
   .history_ct {
+    .sub_dev_wrap {
+      min-width: 190px;
+      margin-left: 10px;
+      display: inline-block;
+      vertical-align: top;
+    }
     .drop_down {
       height: 100%;
       min-height: 36px;
@@ -357,8 +363,33 @@
   .statustwo {
     background-color: #ffd9d9;
   }
+  .device_name {
+  }
   .icon_passive {
     color: #5dccff;
+  }
+  .too_much_data {
+    background: #fafafa;
+    border: 1px dashed #d9d9d9;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    padding-top: 70px;
+  }
+  .table_download {
+    text-align: center;
+    width: 100%;
+    display: inline-block;
+    font-size: 48px;
+    color: #50e399;
+  }
+
+  .table_detail {
+    text-align: center;
+    font-size: 14px;
+    line-height: 24px;
+    width: 100%;
+    display: inline-block;
   }
   .operation {
     .delete,
@@ -403,30 +434,68 @@
   .history_table_th {
     padding: 11px !important;
   }
+  .cl_offline_state,
+  .cl_basic_state {
+    td {
+      &:first-child {
+        border-left-color: #7f8699 !important;
+      }
+    }
+  }
   .cl_online_state {
-    // background-color: #ffd9d9;
-    color: #eb0a11;
+    td {
+      &:first-child {
+        border-left-color: #36b1ff !important;
+      }
+    }
+  }
+  .cl_disabled_state,
+  .cl_f_disabled_state {
+    td {
+      &:first-child {
+        border-left-color: #ddd !important;
+      }
+    }
+    // color: #ddd;
   }
   .cl_err_state {
-    color: #ff8a00;
+    td {
+      &:first-child {
+        border-left-color: #ff8a00 !important;
+      }
+    }
   }
   .history_table_td {
     td {
       line-height: 16px !important;
     }
   }
-  .cl_basic_state {
-    & + .ant-table-expanded-row {
-      td,
-      th {
-        color: #eb0a11;
-      }
-
-      .ant-table-placeholder {
-        color: #eb0a11;
-      }
-    }
-    // background-color: #ffd9d9;
-    color: #eb0a11;
-  }
+  // .cl_f_disabled_state {
+  //   & + .ant-table-expanded-row {
+  //     td,
+  //     th {
+  //       color: #ddd;
+  //     }
+  //
+  //     .ant-table-placeholder {
+  //       color: #ddd;
+  //     }
+  //   }
+  //   // background-color: #ffd9d9;
+  //   color: #ddd;
+  // }
+  // .cl_basic_state {
+  //   & + .ant-table-expanded-row {
+  //     td,
+  //     th {
+  //       color: #eb0a11;
+  //     }
+  //
+  //     .ant-table-placeholder {
+  //       color: #eb0a11;
+  //     }
+  //   }
+  //   // background-color: #ffd9d9;
+  //   color: #eb0a11;
+  // }
 }

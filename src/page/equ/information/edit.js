@@ -59,7 +59,6 @@ class Edit extends Component {
         name: item.F_TypeName,
       };
     });
-    console.log(fields);
     return (
       <Form layout="inline" className={styles['edit_wrap']}>
         <FormInput

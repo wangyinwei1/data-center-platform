@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {action, observer, inject} from 'mobx-react';
 import {toJS} from 'mobx';
 import styles from './index.less';
-import {Form, Input, Button, Select, Row, Col} from 'antd';
+import {Form, message, Input, Button, Select, Row, Col} from 'antd';
 const FormItem = Form.Item;
 const Option = Select.Option;
 
@@ -18,8 +18,8 @@ class ControlContent extends Component {
     this.channelChange = this.channelChange.bind(this);
     this.inputChange = this.inputChange.bind(this);
     this.state = {
-      F_ChannelID: '',
       controlValue: '',
+      F_DeviceID: '',
       value: '',
     };
   }
@@ -44,7 +44,7 @@ class ControlContent extends Component {
     };
     getOperateList(params);
     this.setState({
-      F_Suid: value,
+      F_DeviceID: value,
       controlValue: '',
     });
   }
@@ -57,9 +57,24 @@ class ControlContent extends Component {
         controlChannel,
       },
     } = this.props;
+    const devID =
+      this.state.F_DeviceID ||
+      (toJS(controlChannel)[0] && toJS(controlChannel)[0].deviceID);
+    const spID =
+      this.state.controlValue ||
+      (toJS(operateList)[0] && toJS(operateList)[0].spID);
+
+    if (!spID) {
+      message.error('监控点不能为空!');
+      return;
+    }
+    if (!devID) {
+      message.error('子设备不能为空!');
+      return;
+    }
     const params = {
-      F_DeviceID: this.state.F_DeviceID || toJS(controlChannel)[0].deviceID,
-      F_Spid: this.state.controlValue || toJS(operateList)[0].spID,
+      F_DeviceID: devID,
+      F_Spid: spID,
       F_Suid: currentDevice,
       value: this.state.value || '',
     };
@@ -76,7 +91,7 @@ class ControlContent extends Component {
             <FormItem label="子设备名称">
               <Select
                 value={
-                  this.state.F_ChannelID || toJS(controlChannel)[0].deviceID
+                  this.state.F_DeviceID || toJS(controlChannel)[0].deviceID
                 }
                 placeholder="请选择设备!"
                 onChange={this.channelChange}>

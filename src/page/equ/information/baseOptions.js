@@ -16,6 +16,7 @@ const option = () => {
       },
       legend: {
         data: [],
+        top: 30,
       },
       toolbox: {
         right: 12,

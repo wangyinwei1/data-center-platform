@@ -304,6 +304,9 @@ export function getPassagewayChildTable(params) {
 export function allDeciceList(params) {
   return request.get(base + '/device_dev/allDeciceList', {params});
 }
+export function findCongenerDeviceList(params) {
+  return request.get(base + '/device_dev/findCongenerDeviceList', {params});
+}
 export function passagewayChild_search(params) {
   return request.get(base + '/device_channel/list2.do', {params});
 }
@@ -330,6 +333,9 @@ export function alarmConditionDel(data) {
 }
 export function copyAlarmCondition(data) {
   return request.post(base + '/device_channel/copyAlarmCondition', data);
+}
+export function copyAlarmCondition2(data) {
+  return request.post(base + '/device_channel/copyAlarmCondition2', data);
 }
 export function alarmConditionUpd(data) {
   return request.post(
@@ -722,12 +728,6 @@ export function queryFSUAlarmCountList(params) {
   return request.get(base + '/device_alarm/queryFSUAlarmCountList.do', {
     params,
   });
-}
-export function fsuExecuteOperatio(data) {
-  return request.post(base + '/device_alarm/fsuExecuteOperation.do', data);
-}
-export function executeOperation(data) {
-  return request.post(base + '/device_alarm/executeOperation.do', data);
 }
 //fsuconfig
 export function getConfigFileList(params) {

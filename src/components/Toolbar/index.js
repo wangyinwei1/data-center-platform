@@ -39,15 +39,22 @@ class Regional extends Component {
     this.batchClick = this.batchClick.bind(this);
     this.typesChange = this.typesChange.bind(this);
     this.onTimeOk = this.onTimeOk.bind(this);
+    this.onOpenChange = this.onOpenChange.bind(this);
   }
   componentDidMount() {}
   add() {
     const {onClick} = this.props;
     onClick && onClick();
   }
+  onOpenChange(status) {
+    const {onTimeOk} = this.props;
+    !this.isClose && !status && onTimeOk && onTimeOk();
+    this.isClose = false;
+  }
   onTimeOk() {
     const {onTimeOk} = this.props;
     onTimeOk && onTimeOk();
+    this.isClose = true;
   }
   downDev() {
     const {downDevChange} = this.props;
@@ -152,14 +159,16 @@ class Regional extends Component {
             <div className={styles['device_time']}>
               <RangePicker
                 ranges={{
-                  当天: [moment(), moment()],
+                  当天: [moment().startOf('day'), moment().endOf('day')],
                   最近一周: [moment().subtract(1, 'weeks'), moment()],
                   最近一个月: [moment().subtract(1, 'months'), moment()],
                   最近三个月: [moment().subtract(3, 'months'), moment()],
                 }}
+                defaultValue={[moment().startOf('day'), moment().endOf('day')]}
                 className={'cl_time'}
                 onChange={this.onTimeChange}
                 onOk={this.onTimeOk}
+                onOpenChange={this.onOpenChange}
                 showTime
                 format={'YYYY-MM-DD HH:mm:ss'}
               />

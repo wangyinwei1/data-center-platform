@@ -5,6 +5,7 @@ import styles from './index.less';
 import Table from '../../../components/Table';
 import columnData from './columns.js';
 import Toolbar from '../../../components/Toolbar';
+import moment from 'moment';
 //实例
 @inject('fsu_controlrecordStore')
 @observer
@@ -27,8 +28,12 @@ class Regional extends Component {
       page: 1,
       keywords: '',
       number: 10,
-      lastLoginStart: '',
-      lastLoginEnd: '',
+      lastLoginStart: moment()
+        .startOf('day')
+        .format('YYYY-MM-DD HH:mm:ss'),
+      lastLoginEnd: moment()
+        .endOf('day')
+        .format('YYYY-MM-DD HH:mm:ss'),
       F_FsuTypeID: localStorage.getItem('FsuTypeID'),
     };
     getFSUType();

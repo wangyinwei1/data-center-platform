@@ -27,6 +27,7 @@ class Regional extends Component {
   //table分页
   onShowSizeChange(current, pageSize) {
     const {home_pageStore} = this.props;
+    console.log(11111111);
 
     const params = {
       ...home_pageStore.a_tableParmas,
@@ -62,6 +63,7 @@ class Regional extends Component {
     type === 'online' && onlineDeviceList({status: 1, ...params});
     type === 'alarm' && alarmDeviceDetailsList(params);
     type === 'errline' && onlineDeviceList({status: 2, ...params});
+    type === 'disable' && onlineDeviceList({status: 4, ...params});
   }
 
   onSearch(value) {

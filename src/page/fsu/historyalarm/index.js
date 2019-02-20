@@ -5,6 +5,7 @@ import styles from './index.less';
 import Cascader from '../../../components/Cascader';
 import {toJS} from 'mobx';
 import {decorate as mixin} from 'react-mixin';
+import moment from 'moment';
 import {cascader} from '../../bsifm/common';
 import Toolbar from '../../../components/Toolbar';
 import Table from '../../../components/Table';
@@ -110,8 +111,12 @@ class Passageway extends Component {
       ztreeChild: item.suID,
       number: 10,
       sing: 'device',
-      lastLoginStart: '',
-      lastLoginEnd: '',
+      lastLoginStart: moment()
+        .startOf('day')
+        .format('YYYY-MM-DD HH:mm:ss'),
+      lastLoginEnd: moment()
+        .endOf('day')
+        .format('YYYY-MM-DD HH:mm:ss'),
     };
     fsu_historyalarmStore.getChildTable(params);
 
@@ -175,7 +180,11 @@ class Passageway extends Component {
                 useDefaultRowKey={true}
                 rowClassName={(record, index) => {
                   const rowClassName = [];
-                  record.onOff == 0 && rowClassName.push('cl_online_state');
+                  record.onOff === 0 &&
+                    (record.status == 1
+                      ? rowClassName.push('cl_disabled_state')
+                      : rowClassName.push('cl_offline_state'));
+                  record.onOff === 1 && rowClassName.push('cl_online_state');
                   record.onOff === 2 && rowClassName.push('cl_err_state');
                   return rowClassName.join(' ');
                 }}

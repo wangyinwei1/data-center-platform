@@ -67,9 +67,11 @@ class Regional {
   @action
   async delete(params) {
     const data = await regional_delete(params);
-    if (data.result == 'success') {
+    if (data.Result == 'success') {
       this.getTable(this.tableParmas);
       message.success('删除成功!');
+    } else {
+      message.error(data.Msg);
     }
     return data;
   }
@@ -120,12 +122,12 @@ class Regional {
   async save(params) {
     const data = await save(params);
 
-    if (data.result == 'success') {
+    if (data.Result == 'success') {
       this.getTable(this.tableParmas);
       message.success('保存成功!');
       return true;
     } else {
-      message.error(data.msg);
+      message.error(data.Msg);
       return false;
     }
   }
@@ -133,12 +135,12 @@ class Regional {
   async edit(params) {
     const data = await regionalEdit(params);
 
-    if (data.result == 'success') {
+    if (data.Result == 'success') {
       this.getTable(this.tableParmas);
       message.success('保存成功!');
       return true;
     } else {
-      message.error(data.msg);
+      message.error(data.Msg);
       return false;
     }
   }

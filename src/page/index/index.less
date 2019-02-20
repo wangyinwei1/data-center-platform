@@ -64,6 +64,7 @@
       .online_num,
       .off_num,
       .err_num,
+      .disable_num,
       .alarm_num {
         i {
           width: 10px;
@@ -72,9 +73,19 @@
           margin-right: 12/14em;
         }
       }
+      .online_num {
+        i {
+          background-color: #36b1ff;
+        }
+      }
       .err_num {
         i {
           background-color: #ff8a00;
+        }
+      }
+      .disable_num {
+        i {
+          background-color: #ddd;
         }
       }
       .off_num {
@@ -84,7 +95,7 @@
       }
       .alarm_num {
         i {
-          background-color: #fff;
+          background-color: #ff0000;
         }
       }
     }

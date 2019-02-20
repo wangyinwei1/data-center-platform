@@ -12,6 +12,7 @@ import Table from '../../../components/Table';
 import columnData from './columns.js';
 import Panel from '../../../components/Panel';
 import ChildTable from './childTable.js';
+import moment from 'moment';
 import E_ChildTable from './e_childTable.js';
 //实例
 @inject('regionalStore', 'historyalarmStore')
@@ -100,8 +101,12 @@ class Passageway extends Component {
       page: 1,
       F_DeviceID: sub === 'sub' ? item.subDeviceID : item.devID,
       number: 10,
-      lastLoginStart: '',
-      lastLoginEnd: '',
+      lastLoginStart: moment()
+        .startOf('day')
+        .format('YYYY-MM-DD HH:mm:ss'),
+      lastLoginEnd: moment()
+        .endOf('day')
+        .format('YYYY-MM-DD HH:mm:ss'),
     };
     historyalarmStore.getChildTable(params);
     this.setState({
@@ -143,7 +148,11 @@ class Passageway extends Component {
               <Table
                 rowClassName={(record, index) => {
                   const rowClassName = [];
-                  record.onOff == 0 && rowClassName.push('cl_online_state');
+                  record.onOff === 0 &&
+                    (record.status == 1
+                      ? rowClassName.push('cl_disabled_state')
+                      : rowClassName.push('cl_offline_state'));
+                  record.onOff === 1 && rowClassName.push('cl_online_state');
                   record.onOff === 2 && rowClassName.push('cl_err_state');
                   return rowClassName.join(' ');
                 }}

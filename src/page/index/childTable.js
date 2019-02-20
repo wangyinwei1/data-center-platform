@@ -61,7 +61,7 @@ class Regional extends Component {
     isFsu
       ? fsuExecuteOperatio({
           F_SerialNo: item.F_SerialNo,
-          F_SuID: item.F_SuID,
+          F_Suid: item.F_SuID,
           operationType: type,
         })
       : executeOperation({

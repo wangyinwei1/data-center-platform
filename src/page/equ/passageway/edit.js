@@ -28,11 +28,13 @@ class Edit extends Component {
     this.export = this.export.bind(this);
     this.import = this.import.bind(this);
     this.copeToChannel = this.copeToChannel.bind(this);
+    this.copeToDev = this.copeToDev.bind(this);
     this.onAlarmCancel = this.onAlarmCancel.bind(this);
     this.state = {
       detailShow: false,
       importShow: false,
       show: false,
+      isChannel: false,
     };
   }
   handleFormChange(changedFields) {
@@ -49,6 +51,19 @@ class Edit extends Component {
       show: false,
     });
   }
+  copeToDev() {
+    const {passagewayStore, item, currentDevice} = this.props;
+    const params = {
+      typeID: item.typeID,
+      version: item.version,
+    };
+    passagewayStore.findCongenerDeviceList(params).then(data => {
+      this.setState({
+        show: true,
+        isChannel: false,
+      });
+    });
+  }
   copeToChannel() {
     const {passagewayStore, currentDevice} = this.props;
     const params = {
@@ -57,9 +72,8 @@ class Edit extends Component {
     passagewayStore.getAllDecice({}).then(data => {
       this.setState({
         show: true,
+        isChannel: true,
       });
-      // passagewayStore.findDeviceChannel(params).then(() => {
-      // });
     });
   }
   exportTpl() {
@@ -99,6 +113,7 @@ class Edit extends Component {
       fields,
       editVirtual,
       isVchannel,
+      item,
       currentDevice,
       mode,
     } = this.props;
@@ -140,7 +155,7 @@ class Edit extends Component {
           console.log(info.file, info.fileList);
         }
         if (info.file.status === 'done') {
-          if (info.file.response && info.file.response.result === 'success') {
+          if (info.file.response && info.file.response.Result === 'success') {
             // message.success(`${info.file.name} 导入成功！`);
             const importData = info.file.response.data;
             const record = toJS(a_tableData);
@@ -387,6 +402,15 @@ class Edit extends Component {
                 />
                 <span>下载模板</span>
               </Button>
+              <Button className={styles['copy_btn']} onClick={this.copeToDev}>
+                <i
+                  className={classnames(
+                    'icon iconfont icon-fuzhi',
+                    styles['common_icon'],
+                  )}
+                />
+                <span>复制到其他设备</span>
+              </Button>
               <Button
                 className={styles['copy_btn']}
                 onClick={this.copeToChannel}>
@@ -437,6 +461,8 @@ class Edit extends Component {
             <AlarmCondition
               closeAlarmCondition={this.closeAlarmCondition}
               currentDevice={currentDevice}
+              isChannel={this.state.isChannel}
+              item={item}
             />
           </EditModal>
         </Row>

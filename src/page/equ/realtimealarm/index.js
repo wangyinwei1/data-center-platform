@@ -147,7 +147,11 @@ class Passageway extends Component {
                 columns={columns}
                 rowClassName={(record, index) => {
                   const rowClassName = [];
-                  record.onOff == 0 && rowClassName.push('cl_online_state');
+                  record.onOff === 0 &&
+                    (record.status == 1
+                      ? rowClassName.push('cl_disabled_state')
+                      : rowClassName.push('cl_offline_state'));
+                  record.onOff === 1 && rowClassName.push('cl_online_state');
                   record.onOff === 2 && rowClassName.push('cl_err_state');
                   return rowClassName.join(' ');
                 }}

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {action, observer, inject} from 'mobx-react';
 import {toJS} from 'mobx';
 import styles from './index.less';
-import {Form, Button, Select, Row, Col} from 'antd';
+import {Form, Button, message, Select, Row, Col} from 'antd';
 import classnames from 'classnames';
 import {FormSelect} from '../../../components/FormItem';
 const FormItem = Form.Item;
@@ -18,12 +18,14 @@ class AlarmCondition extends Component {
     this.handleClick = this.handleClick.bind(this);
     this.onSelect = this.onSelect.bind(this);
     this.handleFormChange = this.handleFormChange.bind(this);
+    this.channelChange = this.channelChange.bind(this);
     this.state = {
       F_ChannelID: '',
       controlValue: '',
       value: [],
       Channels: '',
       allSelected: false,
+      selectedChannelId: '',
       selectedDevId: undefined,
     };
   }
@@ -38,19 +40,31 @@ class AlarmCondition extends Component {
 
     await findDeviceChannel(params);
   }
+  channelChange(value) {
+    this.setState({
+      selectedChannelId: value,
+    });
+  }
   handleClick() {
-    if (!this.state.selectedDevId) {
+    const {
+      passagewayStore: {copyAlarmCondition, a_tableData},
+      currentDevice,
+      isChannel,
+    } = this.props;
+    if (isChannel && !this.state.selectedDevId) {
       message.error('设备不能为空!');
       return;
     }
     if (!this.state.Channels) {
+      isChannel
+        ? message.error('通道不能为空!')
+        : message.error('设备不能为空!');
+      return;
+    }
+    if (!isChannel && !this.state.selectedChannelId) {
       message.error('通道不能为空!');
       return;
     }
-    const {
-      passagewayStore: {copyAlarmCondition, a_tableData},
-      currentDevice,
-    } = this.props;
     let alarmConditions = [];
     let record = toJS(a_tableData);
     if (
@@ -64,12 +78,18 @@ class AlarmCondition extends Component {
     } else {
       alarmConditions = a_tableData;
     }
-    const params = {
-      deviceId: this.state.selectedDevId,
-      channelIDs: this.state.Channels,
-      alarmConditions,
-    };
-    copyAlarmCondition(params).then(data => {
+    const params = isChannel
+      ? {
+          deviceId: this.state.selectedDevId,
+          channelIDs: this.state.Channels,
+          alarmConditions,
+        }
+      : {
+          deviceIDs: this.state.Channels,
+          channelID: this.state.selectedChannelId,
+          alarmConditions,
+        };
+    copyAlarmCondition(params, isChannel).then(data => {
       if (data) {
         const {closeAlarmCondition} = this.props;
         closeAlarmCondition();
@@ -79,24 +99,37 @@ class AlarmCondition extends Component {
   isAllSelected(value, devChannel) {
     let isAll = true;
     _.map(devChannel, item => {
-      if (value.indexOf(item.channelID) === -1) isAll = false;
+      if (
+        value.indexOf(item.devID) === -1 ||
+        value.indexOf(item.channelID) === -1
+      )
+        isAll = false;
     });
     return isAll;
   }
   allSelectClick() {
     const selected = this.state.allSelected;
     if (!selected) {
-      const {passagewayStore} = this.props;
+      const {passagewayStore, item, isChannel} = this.props;
       const devChannel = toJS(passagewayStore.devChannel);
+      const allCongenerDevList = toJS(passagewayStore.allCongenerDevList);
       let result = [];
-      _.map(devChannel, item => {
-        result.push(item.channelID);
+      _.map(isChannel ? devChannel : allCongenerDevList, item => {
+        result.push(isChannel ? item.channelID : JSON.stringify(item.devID));
       });
       this.setState({
         allSelected: !this.state.allSelected,
         Channels: result.join(','),
         value: result,
       });
+      !isChannel &&
+        passagewayStore.getBasicchannelTable({
+          page: 1,
+          keywords: '',
+          number: 0,
+          F_TypeID: item.typeID,
+          F_Version: item.version,
+        });
     } else {
       $(`.${styles['drop_down']} .ant-select-selection__clear`).click();
     }
@@ -113,23 +146,55 @@ class AlarmCondition extends Component {
         allSelected: false,
       });
     } else {
-      const {passagewayStore} = this.props;
+      const {passagewayStore, isChannel, item} = this.props;
       const devChannel = toJS(passagewayStore.devChannel);
-      const isAll =
-        value.length === devChannel.length &&
-        this.isAllSelected(value, devChannel);
+      const allCongenerDevList = toJS(passagewayStore.allCongenerDevList);
+      let isAll = null;
+      if (isChannel) {
+        isAll =
+          value.length === devChannel.length &&
+          this.isAllSelected(value, devChannel);
+      } else {
+        isAll =
+          value.length === allCongenerDevList.length &&
+          this.isAllSelected(value, allCongenerDevList);
+      }
+
       this.setState({
         Channels: value.join(','),
         allSelected: isAll,
         value,
       });
+      !isChannel &&
+        passagewayStore.getBasicchannelTable({
+          page: 1,
+          keywords: '',
+          number: 0,
+          F_TypeID: item.typeID,
+          F_Version: item.version,
+        });
     }
   }
   render() {
-    const {passagewayStore: {devChannel, allDeciceList}} = this.props;
-    const children = _.map(devChannel, (item, i) => {
-      return <Option key={item.channelID}>{item.channelName}</Option>;
-    });
+    const {
+      passagewayStore: {
+        devChannel,
+        typeChannelList,
+        allDeciceList,
+        allCongenerDevList,
+      },
+      isChannel,
+    } = this.props;
+    const children = _.map(
+      isChannel ? devChannel : allCongenerDevList,
+      (item, i) => {
+        return (
+          <Option key={isChannel ? item.channelID : JSON.stringify(item.devID)}>
+            {isChannel ? item.channelName : item.devName}
+          </Option>
+        );
+      },
+    );
     children.unshift(
       <Option
         className={classnames(this.state.allSelected && styles['all_selected'])}
@@ -140,6 +205,9 @@ class AlarmCondition extends Component {
     const deviceList = _.map(toJS(allDeciceList), item => {
       return <Option key={item.devID}>{item.devName}</Option>;
     });
+    const channelList = _.map(toJS(typeChannelList), item => {
+      return <Option key={item.F_ChannelID}>{item.F_ChannelName}</Option>;
+    });
 
     const fields = this.state.fields;
     const disabled = false;
@@ -147,43 +215,74 @@ class AlarmCondition extends Component {
       <Form className={styles['control_ct']}>
         <Row>
           <Col span={1} className={styles['channel_id']}>
-            {/* <FormSelect */}
-            {/*   {...fields} */}
-            {/*   onChange={this.handleFormChange} */}
-            {/*   disabled={disabled} */}
-            {/*   label={'请选择设备'} */}
-            {/*   name={'deviceId'} */}
-            {/*   rules={[{required: true, message: '请必须填写!'}]} */}
-            {/*   children={deciceList} */}
-            {/* /> */}
-            <FormItem
-              label="设备名称"
-              className={classnames(
-                styles['copy_float'],
-                styles['copy_dev_wrap'],
-              )}>
-              <Select
-                onChange={this.handleFormChange}
-                disabled={disabled}
-                placeholder={'请选择设备'}
-                name={'deviceId'}
-                className={styles['copy_dev']}>
-                {deviceList}
-              </Select>
-            </FormItem>
-            <FormItem label="通道名称" className={styles['copy_float']}>
-              <Select
-                mode="multiple"
-                className={styles['drop_down']}
-                allowClear
-                disabled={this.state.selectedDevId ? false : true}
-                optionFilterProp="children"
-                placeholder={'请选择设备通道'}
-                value={this.state.value}
-                onChange={this.onSelect}>
-                {children}
-              </Select>
-            </FormItem>
+            {!isChannel && (
+              <Row>
+                <FormItem label="设备名称" className={styles['copy_float']}>
+                  <Select
+                    mode="multiple"
+                    className={styles['drop_down']}
+                    allowClear
+                    disabled={
+                      isChannel
+                        ? this.state.selectedDevId ? false : true
+                        : false
+                    }
+                    optionFilterProp="children"
+                    placeholder={isChannel ? '请选择设备通道' : '请选择设备'}
+                    value={this.state.value[0] ? this.state.value : undefined}
+                    onChange={this.onSelect}>
+                    {children}
+                  </Select>
+                </FormItem>
+                <FormItem
+                  label="通道名称"
+                  className={classnames(
+                    styles['copy_float'],
+                    styles['copy_dev_wrap'],
+                    styles['padding'],
+                  )}>
+                  <Select
+                    onChange={this.channelChange}
+                    disabled={disabled}
+                    placeholder={'请选择通道'}
+                    className={styles['copy_dev']}>
+                    {channelList}
+                  </Select>
+                </FormItem>
+              </Row>
+            )}
+            {isChannel && (
+              <Row>
+                <FormItem
+                  label="设备名称"
+                  className={classnames(
+                    styles['copy_float'],
+                    styles['copy_dev_wrap'],
+                  )}>
+                  <Select
+                    onChange={this.handleFormChange}
+                    disabled={disabled}
+                    placeholder={'请选择设备'}
+                    name={'deviceId'}
+                    className={styles['copy_dev']}>
+                    {deviceList}
+                  </Select>
+                </FormItem>
+                <FormItem label="通道名称" className={styles['copy_float']}>
+                  <Select
+                    mode="multiple"
+                    className={styles['drop_down']}
+                    allowClear
+                    disabled={this.state.selectedDevId ? false : true}
+                    optionFilterProp="children"
+                    placeholder={'请选择设备通道'}
+                    value={this.state.value}
+                    onChange={this.onSelect}>
+                    {children}
+                  </Select>
+                </FormItem>
+              </Row>
+            )}
           </Col>
           <Col span={1} className={styles['search']}>
             <Button onClick={this.handleClick}>复制到其他通道</Button>
