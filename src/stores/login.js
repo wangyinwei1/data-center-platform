@@ -28,6 +28,7 @@ class Login {
         username: data.username,
         isAdmin: data.admin,
         FsuTypeID: data.FsuTypeID,
+        AppID: data.AppID,
         isNotArea: data.Area === '片区' || !data.Area,
       };
     } else {

@@ -30,6 +30,7 @@ import {formParams, addLevelOne, addChildDevice} from './tplJson.js';
   'informationStore',
   'realtimealarmStore',
   'historymodalStore',
+  'layoutStore',
 )
 @observer
 @mixin(cascader)
@@ -88,6 +89,7 @@ class Information extends Component {
       alarmTableVisible: false,
       alarmTableTitle: '',
       rumorShow: false,
+      searchValue: '',
       modalTitle: '',
       cascaderText: '',
       cascaderLoading: false,
@@ -141,9 +143,27 @@ class Information extends Component {
     informationStore.getTable(params);
     this.clearSelected();
   }
+  componentWillUnmount() {
+    const {layoutStore} = this.props;
+    layoutStore.recordReforePath('');
+  }
   componentDidMount() {
-    const {informationStore} = this.props;
-    this.initLoading(informationStore).then(() => {
+    const {informationStore, layoutStore, location} = this.props;
+    const fromSitemonitoring = layoutStore.beforePath === 'sitemonitoring';
+    let id;
+    fromSitemonitoring ? (id = location.query.id) : '';
+    //刷新之后设置为空
+    const params = {
+      page: 1,
+      sing: 'area',
+      keywords: id ? id : '',
+      number: 10,
+    };
+    id &&
+      this.setState({
+        searchValue: id,
+      });
+    this.initLoading(informationStore, params).then(() => {
       const tableData = toJS(informationStore.tableData.varList);
     });
   }
@@ -588,7 +608,7 @@ class Information extends Component {
       page: 1,
     };
     informationStore.search(params);
-    this.setState({expandedRows: []});
+    this.setState({expandedRows: [], searchValue: value});
     this.clearSelected();
   }
   //table分页
@@ -990,6 +1010,7 @@ class Information extends Component {
               onBatchDisableClick={this.onBatchDisableClick}
               onBatchEnabledClick={this.onBatchEnabledClick}
               onSearch={this.onSearch}
+              searchValue={this.state.searchValue}
             />
             <div className={styles['table_wrap']}>
               <Table

@@ -3,6 +3,7 @@ import {
   alarmDeviceDetailsList,
   onlineDeviceList,
   offlineDeviceList,
+  createWorkOrder,
   queryAlarmList,
   queryFSUAlarmList,
   queryAlarmCountList,
@@ -68,7 +69,6 @@ class HomePage {
   }
   @action.bound
   async getDispatchInfo(params) {
-    console.log(params);
     this.s_loading = true;
     const data = await getDispatchInfo(params);
     this.s_loading = false;
@@ -91,6 +91,16 @@ class HomePage {
     this.s_loading = false;
     if (data.Result == 'success') {
       this.frontsData = data.Data;
+    } else {
+      message.error(data.Msg);
+    }
+  }
+  @action.bound
+  async createWorkOrder(params) {
+    const data = await createWorkOrder(params);
+
+    if (data.Result == 'success') {
+      message.success(data.Msg);
     } else {
       message.error(data.Msg);
     }

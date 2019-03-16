@@ -41,6 +41,7 @@ import {
   'fsu_devicemanagementStore',
   'fsu_realtimealarmStore',
   'fsuconfigStore',
+  'layoutStore',
 )
 @observer
 @mixin(cascader)
@@ -136,6 +137,7 @@ class Information extends Component {
       childType: 'new',
       sunType: 'new',
       areaName: '',
+      searchValue: '',
       expandedRows: [],
       selectedChildRowKey: [],
       downShow: false,
@@ -195,15 +197,27 @@ class Information extends Component {
       singleLineData: item,
     });
   }
+  componentWillUnmount() {
+    const {layoutStore} = this.props;
+    layoutStore.recordReforePath('');
+  }
   componentDidMount() {
-    const {fsu_devicemanagementStore} = this.props;
+    const {fsu_devicemanagementStore, layoutStore, location} = this.props;
+    const fromSitemonitoring = layoutStore.beforePath === 'sitemonitoring';
+    let id;
+    fromSitemonitoring ? (id = location.query.id) : '';
+
     const params = {
       page: 1,
       sing: 'area',
-      keywords: '',
+      keywords: id ? id : '',
       number: 10,
       F_FsuTypeID: localStorage.getItem('FsuTypeID'),
     };
+    id &&
+      this.setState({
+        searchValue: id,
+      });
     fsu_devicemanagementStore.getFSUType();
     this.initLoading(fsu_devicemanagementStore, params).then(() => {
       const tableData = toJS(fsu_devicemanagementStore.tableData.varList);
@@ -484,7 +498,16 @@ class Information extends Component {
         ...F_DeviceID,
       };
       _.forIn(fields, (value, key) => {
-        params[key] = value.value;
+        if (key === 'Id_Version') {
+          if (value.value.indexOf('_') !== -1) {
+            let Id_Version = value.value.split('_');
+
+            params['deviceType'] = Id_Version[0];
+            params['version'] = Id_Version[1];
+          }
+        } else {
+          params[key] = value.value;
+        }
       });
       this.state.childType == 'modify'
         ? editConsport(params).then(() => {
@@ -501,8 +524,12 @@ class Information extends Component {
     }
   }
   async addLevelOneClick(item) {
-    const {fsu_devicemanagementStore: {currentDeviceChange}} = this.props;
+    const {
+      fsu_devicemanagementStore: {currentDeviceChange, getDeviceTypes},
+    } = this.props;
     currentDeviceChange(item.suID);
+
+    getDeviceTypes();
     const field =
       JSON.parse(localStorage.getItem('FsuTypeID')) === 3
         ? addFsuLevelOne
@@ -716,6 +743,9 @@ class Information extends Component {
       page: 1,
     };
     fsu_devicemanagementStore.search(params);
+    this.setState({
+      searchValue: value,
+    });
     this.clearSelected();
   }
   //table分页
@@ -786,8 +816,7 @@ class Information extends Component {
         formValue.model.value = item.model;
         formValue.brand.value = item.brand;
         formValue.ratedCapacity.value = item.ratedCapacity;
-        formValue.version.value = item.version;
-        formValue.deviceType.value = item.deviceType;
+        formValue.Id_Version.value = item.deviceType + '_' + item.version;
         formValue.deviceSubType.value = item.deviceSubType;
         formValue.devDescribe.value = item.devDescribe;
       }
@@ -803,9 +832,13 @@ class Information extends Component {
     });
   }
   childDetailClick(item) {
+    const {fsu_devicemanagementStore: {getDeviceTypes}} = this.props;
+    getDeviceTypes();
     this.getRowData(item, 'detail');
   }
   childEditClick(item) {
+    const {fsu_devicemanagementStore: {getDeviceTypes}} = this.props;
+    getDeviceTypes();
     this.getRowData(item, 'modify');
   }
   //子集点击设值
@@ -1257,6 +1290,19 @@ class Information extends Component {
         />
         <div className={styles['information_ct']}>
           <div className={styles['set_min_width']}>
+            {/* <Toolbar */}
+            {/*   onClick={this.add} */}
+            {/*   showValue={['exportMonitorTpl', 'batchOption', 'add']} */}
+            {/*   fsuAddTypes={fsu_devicemanagementStore.fsuAddTypes} */}
+            {/*   onBatchDeleteClick={this.onBatchDeleteClick} */}
+            {/*   onBatchDisableClick={this.onBatchDisableClick} */}
+            {/*   deviceStatus={true} */}
+            {/*   onExportTplClick={this.onExportTplClick} */}
+            {/*   selectChange={this.selectChange} */}
+            {/*   typesChange={this.typesChange} */}
+            {/*   onBatchEnabledClick={this.onBatchEnabledClick} */}
+            {/*   onSearch={this.onSearch} */}
+            {/* /> */}
             <Toolbar
               onClick={this.add}
               downDevChange={this.downDevChange}
@@ -1270,6 +1316,7 @@ class Information extends Component {
               typesChange={this.typesChange}
               onBatchEnabledClick={this.onBatchEnabledClick}
               onSearch={this.onSearch}
+              searchValue={this.state.searchValue}
             />
             <div className={styles['table_wrap']}>
               <Table

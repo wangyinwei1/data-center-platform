@@ -61,11 +61,28 @@ class BasicLayout extends Component {
       globalStore.changeIsTimeout(false);
     }
   }
+  apiRender() {
+    const {
+      home_pageStore: {getCountInfo, getFsuAlarmNum, getAlarmNum},
+    } = this.props;
+
+    const params = {
+      page: 1,
+      number: 10,
+      keywords: '',
+      type: '',
+      des: 1,
+    };
+    getCountInfo();
+    getFsuAlarmNum({...params, sort: 'F_AlarmLevel'});
+    getAlarmNum({...params, sort: 'F_AlarmGrade'});
+  }
 
   componentDidMount() {
     const {globalStore, layoutStore, location} = this.props;
     const path = location.pathname.replace('/', '');
     let collapsed = false;
+    const _this = this;
     //获取菜单接口
     layoutStore.getMenu().then(() => {
       this.setOrGetOpenKeys();
@@ -78,7 +95,7 @@ class BasicLayout extends Component {
 
     const serviceip = localStorage.getItem('serviceip');
     const {
-      home_pageStore: {getCountInfo},
+      home_pageStore: {getCountInfo, getFsuAlarmNum, getAlarmNum},
       layoutStore: {selectedKeys},
     } = this.props;
 
@@ -87,15 +104,13 @@ class BasicLayout extends Component {
         const ws = new WebSocket('ws://' + serviceip + '/collect/websocket');
         ws.onopen = function() {
           console.log('已连接...');
-          ws.send('username' + 'QQ872474447');
+          ws.send('username' + new Date().getTime() + 'QQ872474447');
         };
 
         ws.onmessage = function(evt) {
           const msg = evt.data;
           const result = JSON.parse(msg);
-          console.log(result);
           if (result.Type == 'module') {
-            selectedKeys === 'shouye' && getCountInfo();
             notification.open({
               message: '模块上线/下线通知:',
               placement: 'bottomRight',
@@ -139,6 +154,7 @@ class BasicLayout extends Component {
               description: `设备ID:${result.deviceID} 状态:${result.status}`,
             });
           }
+          location.pathname.indexOf('shouye') != -1 && _this.apiRender();
 
           ws.onbeforeunload = function() {
             ws.close();
@@ -332,14 +348,14 @@ class BasicLayout extends Component {
                     <Link
                       to={`/${currentLink[1]}`}
                       className={classnames(
-                        currentLink[1] === path && styles['active'],
+                        currentLink[1].indexOf(path) !== -1 && styles['active'],
                       )}>
                       基础设备
                     </Link>
                     <Link
                       to={`/${currentLink[0]}`}
                       className={classnames(
-                        currentLink[0] === path && styles['active'],
+                        currentLink[0].indexOf(path) !== -1 && styles['active'],
                       )}>
                       FSU设备
                     </Link>

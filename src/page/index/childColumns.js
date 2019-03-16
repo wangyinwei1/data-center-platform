@@ -108,6 +108,9 @@ const columns = ({endClick, handleClick, cancelClick, confirmClick, _this}) => {
       width: '5%',
       className: 'information_th',
       dataIndex: 'F_Value',
+      render: (text, record, index) => {
+        return <TextOverflow>{text}</TextOverflow>;
+      },
     },
     {
       title: '时间',
@@ -193,6 +196,9 @@ const columns = ({endClick, handleClick, cancelClick, confirmClick, _this}) => {
       width: '6%',
       dataIndex: 'F_ChannelID',
       className: 'information_th',
+      render: (text, record, index) => {
+        return <TextOverflow>{text}</TextOverflow>;
+      },
     },
     {
       title: '状态',

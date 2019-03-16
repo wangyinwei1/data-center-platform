@@ -23,12 +23,12 @@ class Pie extends Component {
     const {home_pageStore: {getCountInfo}} = this.props;
     getCountInfo();
 
-    this.alarmTimer = setInterval(() => {
-      !this.state.show && getCountInfo();
-    }, 5000);
+    // this.alarmTimer = setInterval(() => {
+    //   !this.state.show && getCountInfo();
+    // }, 5000);
   }
   componentWillUnmount() {
-    clearInterval(this.alarmTimer);
+    // clearInterval(this.alarmTimer);
   }
   onCancel() {
     this.setState({

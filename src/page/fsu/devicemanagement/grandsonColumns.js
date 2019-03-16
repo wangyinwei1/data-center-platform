@@ -88,6 +88,9 @@ const columns = ({
           colSpan: 1,
           width: '15%',
           className: 'information_th',
+          render: (text, record, index) => {
+            return <TextOverflow>{text}</TextOverflow>;
+          },
         },
         {
           title: '告警等级',
@@ -123,6 +126,9 @@ const columns = ({
           colSpan: 1,
           width: '15%',
           className: 'information_th',
+          render: (text, record, index) => {
+            return <TextOverflow>{text}</TextOverflow>;
+          },
         },
       )
     : options.unshift(

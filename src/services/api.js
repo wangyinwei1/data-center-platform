@@ -512,6 +512,9 @@ export function historyalarm_search(params) {
 export function getFsuDevicemanagementTable(params) {
   return request.get(base + '/FSU_device/list2.do', {params});
 }
+export function getDeviceTypes(params) {
+  return request.get(base + '/device_dev/getDeviceTypes', {params});
+}
 export function getFsuSunDevice(params) {
   return request.get(base + '/FSU_device/FsuSunDevice_list2.do', {params});
 }
@@ -738,6 +741,44 @@ export function getConfigFileList(params) {
 export function deleteConfigFiles(data) {
   return request.post(base + '/FSU_device/deleteConfigFiles', data);
 }
+export function createWorkOrder(data) {
+  return request.post(base + '/workOrder/createWorkOrder', data);
+}
 export function sendConfigFileList(data) {
   return request.post(base + '/FSU_device/sendConfigFileList', data);
+}
+//inspection
+export function confimWorkOrder(data) {
+  return request.post(base + '/workOrder/auditingWorkOrder', data);
+}
+
+export function findInspectionInfoByBelongId(params) {
+  return request.get(base + '/inspection/findInspectionInfoByBelongId', {
+    params,
+  });
+}
+export function getListWorkOrder(params) {
+  return request.get(base + '/workOrder/listWorkOrder', {
+    params,
+  });
+}
+export function stationMonitorById(params) {
+  return request.get(base + '/monitor/stationMonitorById', {
+    params,
+  });
+}
+export function getVideoInfo(params) {
+  return request.get(base + '/monitor/videoInfo', {
+    params,
+  });
+}
+export function getImage(params) {
+  return request.get(base + '/workOrder/image', {
+    params,
+  });
+}
+export function getStationAlarm(params) {
+  return request.get(base + '/monitor/stationAlarm', {
+    params,
+  });
 }

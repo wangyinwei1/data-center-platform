@@ -134,9 +134,12 @@ class Regional extends Component {
       fsuAddTypes,
       realLoding,
       closeAdd,
+      searchValue,
       theme,
       channelType,
     } = this.props;
+    const hasSearchValue = _.has(this.props, 'searchValue');
+
     const channelTypeData = [
       {F_ID: '', F_TypeName: '全部'},
       {F_ID: 1, F_TypeName: '遥测'},
@@ -174,7 +177,14 @@ class Regional extends Component {
               />
             </div>
           )}
-        {onSearch && <Search onSearch={onSearch} theme={theme} />}
+        {onSearch && (
+          <Search
+            onSearch={onSearch}
+            value={searchValue}
+            hasSearchValue={hasSearchValue}
+            theme={theme}
+          />
+        )}
         {deviceStatus && (
           <div
             className={classnames(

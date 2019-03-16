@@ -27,7 +27,6 @@ class Regional extends Component {
   //table分页
   onShowSizeChange(current, pageSize) {
     const {home_pageStore} = this.props;
-    console.log(11111111);
 
     const params = {
       ...home_pageStore.a_tableParmas,

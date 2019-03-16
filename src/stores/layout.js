@@ -5,6 +5,8 @@ class Layout {
   @observable menu = [];
   @observable menuLoading = false;
   @observable selectedKeys = '';
+  //记录跳转之前的路径
+  @observable beforePath = '';
 
   @action
   async getMenu() {
@@ -18,6 +20,10 @@ class Layout {
   @action
   async setSelectedKeys(value) {
     this.selectedKeys = value;
+  }
+  @action
+  async recordReforePath(value) {
+    this.beforePath = value;
   }
 }
 

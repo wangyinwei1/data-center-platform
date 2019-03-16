@@ -28,3 +28,7 @@ export Fsu_Realtimedata from './fsu/realtimedata';
 export Fsu_Historicaldata from './fsu/historicaldata';
 export Fsu_Controlrecord from './fsu/controlrecord';
 export Fsuconfig from './bsifm/fsuconfig';
+export Other_Inspection from './other/inspection';
+export Other_Workorders from './other/workorders';
+export Site_Monitoring from './sitemonitoring';
+export Site_Monitoring_Detail from './sitemonitoring/detail.js';

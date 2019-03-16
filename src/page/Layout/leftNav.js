@@ -7,11 +7,16 @@ import styles from './index.less';
 import _ from 'lodash';
 const {SubMenu} = Menu;
 const {Content, Footer, Sider} = Layout;
+const outreach = ['energy-consumption'];
 const menuIcon = {
   '420': 'icon-shouye',
   '390': 'icon-jichuxinxiguanli',
   '419': 'icon-shebeiguanli',
   '412': 'icon-shouye',
+  '426': 'icon-nenghao',
+  '427': 'icon-cebianlanxunjianjilu',
+  '428': 'icon-liebiao',
+  '429': 'icon-jizhan',
 };
 const exclusionPath = [
   'equ-agreement',
@@ -69,23 +74,45 @@ const secondLevel = function(item) {
   }
 };
 const firstLevel = function(item) {
-  return (
-    <Menu.Item key={item.MENU_ROUTE || item.MENU_ID}>
-      <Link to={`/${item.MENU_ROUTE}`}>
-        <i
-          className={classnames(
-            'icon iconfont',
-            menuIcon[item.MENU_ID],
-            styles['menu_icon'],
-          )}
-        />
-        <span>{item.MENU_NAME}</span>
-      </Link>
-    </Menu.Item>
-  );
+  if (outreach.indexOf(item.MENU_ROUTE) !== -1) {
+    return (
+      <Menu.Item key={item.MENU_ROUTE || item.MENU_ID}>
+        <a
+          href={
+            'http://172.17.3.52:8080/ECP/main/index?noLanding=true&user=shiyonghu'
+          }
+          target={'_blank'}>
+          <i
+            className={classnames(
+              'icon iconfont',
+              menuIcon[item.MENU_ID],
+              styles['menu_icon'],
+            )}
+          />
+          <span>{item.MENU_NAME}</span>
+        </a>
+      </Menu.Item>
+    );
+  } else {
+    return (
+      <Menu.Item key={item.MENU_ROUTE || item.MENU_ID}>
+        <Link to={`/${item.MENU_ROUTE}`}>
+          <i
+            className={classnames(
+              'icon iconfont',
+              menuIcon[item.MENU_ID],
+              styles['menu_icon'],
+            )}
+          />
+          <span>{item.MENU_NAME}</span>
+        </Link>
+      </Menu.Item>
+    );
+  }
 };
 
 //实例
+@inject('sitemonitoringStore')
 @observer
 class BasicLayout extends Component {
   constructor(props) {
@@ -100,7 +127,34 @@ class BasicLayout extends Component {
     changeCollapsed(onOff);
   }
   handleClick(value) {
+    if (outreach.indexOf(value.key) !== -1) return;
+
     const keyPath = value.keyPath;
+    if (
+      value.key === 'sitemonitoring' &&
+      location.pathname.indexOf('sitemonitoring') === -1
+    ) {
+      const {
+        sitemonitoringStore: {getList, changeSelectedKey},
+        location,
+      } = this.props;
+      let params = {
+        page: 1,
+        sing: 'area',
+        keywords: '',
+        number: 999,
+      };
+
+      // getList(params).then(data => {
+      //   data[0] && changeSelectedKey(data[0].F_ID);
+      //
+      //   // if (data[0]) {
+      //   //   router.push(`/sitemonitoring/${data[0].F_ID}`);
+      //   // } else {
+      //   //   router.push(`/sitemonitoring/null`);
+      // });
+    }
+
     const {changeTopNavTitle, setSelectedKeys} = this.props;
     //改变Key值
     setSelectedKeys(value.key);
@@ -131,6 +185,12 @@ class BasicLayout extends Component {
         path = selectedKeys;
 
         break;
+    }
+    if (selectedKeys.indexOf('fsu-devicemanagement') != -1) {
+      path = 'equ-information';
+    }
+    if (selectedKeys.indexOf('equ-information') != -1) {
+      path = 'equ-information';
     }
     let isClose = true;
     if (selectedKeys === 'shouye') {

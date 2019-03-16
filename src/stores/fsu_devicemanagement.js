@@ -16,6 +16,7 @@ import {
   getFsuSunDeviceTable,
   getFsuSpTable,
   fsuDeviceControl,
+  getDeviceTypes,
   fsuDeviceRealTimeCall,
   delFSU_Sun2,
   fsuUpdSpID,
@@ -46,6 +47,7 @@ class Devicemanagement {
   @observable h_loading = false;
   @observable g_loading = false;
   @observable deviceMenu = [];
+  @observable deviceTypes = [];
   @observable deviceData = [];
   @observable currentDevice = '';
   @observable currentDeviceMenu = undefined;
@@ -336,6 +338,17 @@ class Devicemanagement {
     }
   }
 
+  @action.bound
+  async getDeviceTypes(params) {
+    const data = await getDeviceTypes(params);
+    if (data.Result == 'success') {
+      this.deviceTypes = data.Data;
+    } else {
+      message.error(data.Msg);
+    }
+
+    return data;
+  }
   @action
   async delete(params) {
     const data = await delFSU2(params);

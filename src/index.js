@@ -53,6 +53,9 @@ import {
   Fsu_Devicemanagement,
   Menu,
   Devicetype,
+  Other_Inspection,
+  Other_Workorders,
+  Site_Monitoring,
   Index,
 } from './page';
 render(
@@ -66,6 +69,9 @@ render(
           {/* <Route path="/resetmm" component={Resetmm} /> */}
           <Route path="/index" component={Layout}>
             <Route path="/shouye" component={Index} />
+            <Route path="/inspection" component={Other_Inspection} />
+            <Route path="/workorders" component={Other_Workorders} />
+            <Route path="/sitemonitoring" component={Site_Monitoring} />
 
             {/* fsu */}
             <Route

@@ -106,9 +106,9 @@ class EchartsOrList extends Component {
         {this.state.showEcharts ? (
           <ReactEcharts option={echartOptions} style={{height: '319px'}} />
         ) : (
-          <div className={styles['history_list_wrap']} onClick={this.export}>
+          <div className={styles['history_list_wrap']}>
             {!data.tableList ? (
-              <div className={styles['too_much_data']}>
+              <div className={styles['too_much_data']} onClick={this.export}>
                 <i
                   className={classnames(
                     'icon iconfont icon-xiazai',

@@ -13,6 +13,7 @@ class Pie extends Component {
   constructor(props) {
     super(props);
     this.switchAlarm = this.switchAlarm.bind(this);
+    this.switchAlarmApi = this.switchAlarmApi.bind(this);
     this.onCancel = this.onCancel.bind(this);
     this.state = {
       isFsu: false,
@@ -102,13 +103,34 @@ class Pie extends Component {
     this.openSetInterval(params);
   }
   openSetInterval(params) {
-    const {home_pageStore: {getFsuAlarmNum, getAlarmNum}} = this.props;
+    const {
+      home_pageStore: {getFsuAlarmNum, getAlarmNum, getCountInfo},
+    } = this.props;
     this.alarmTimer = setInterval(() => {
       this.switchAlarm();
       this.state.isFsu
         ? getFsuAlarmNum({...params, sort: 'F_AlarmLevel'})
         : getAlarmNum({...params, sort: 'F_AlarmGrade'});
+      getCountInfo();
     }, 5000);
+  }
+  switchAlarmApi() {
+    const {
+      home_pageStore: {getFsuAlarmNum, getAlarmNum, getCountInfo},
+    } = this.props;
+    clearInterval(this.alarmTimer);
+    const params = {
+      page: 1,
+      number: 10,
+      keywords: '',
+      type: '',
+      des: 1,
+    };
+    this.switchAlarm();
+    !this.state.isFsu
+      ? getFsuAlarmNum({...params, sort: 'F_AlarmLevel'})
+      : getAlarmNum({...params, sort: 'F_AlarmGrade'});
+    getCountInfo();
   }
   switchAlarm() {
     let direction = _.cloneDeep(this.state.direction);
@@ -207,7 +229,7 @@ class Pie extends Component {
                       ALARM
                     </span>
                     <span
-                      onClick={this.switchAlarm}
+                      onClick={this.switchAlarmApi}
                       className={styles['switch_alarm']}>
                       {app.switchName}
                     </span>

@@ -1175,8 +1175,57 @@
     height: -o-calc(~'73% -12px');
     height: calc(~'73% - 12px');
   }
+  .workOrders_wrap {
+    padding: 20px 20px;
+    .workorders_button {
+      margin: 0 auto;
+    }
+    .workorders_input {
+      background-color: #4c596f;
+      border: 1px solid #4c596f;
+      color: #fff;
+      &:hover {
+        background-color: #4c596f;
+      }
+      &:focus {
+        box-shadow: 0 0 0 2px rgba(47, 54, 75, 0.2);
+      }
+    }
+    :global {
+      .ant-form-item .ant-form-item-label {
+        width: 80px;
+        label {
+          color: #fff;
+        }
+      }
+      .ant-form-item .ant-form-item-control-wrapper {
+        width: 220px;
+      }
+
+      .ant-form-item .ant-select-selection {
+        &:hover {
+          background-color: #4c596f;
+        }
+        &:focus {
+          box-shadow: 0 0 0 2px rgba(47, 54, 75, 0.2);
+        }
+        border-radius: 4px;
+        background-color: #4c596f;
+        border: 1px solid #4c596f;
+        color: #fff;
+        .ant-select-arrow {
+          color: #fff;
+        }
+      }
+    }
+  }
 }
 :global {
+  .workorders_modal {
+    .ant-modal {
+      height: auto !important;
+    }
+  }
   .index_alarm_num {
     :local {
       .edit_title {

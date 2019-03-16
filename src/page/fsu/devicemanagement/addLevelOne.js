@@ -12,7 +12,7 @@ import {Form, Button, Input, Row, Col} from 'antd';
 const FormItem = Form.Item;
 
 //实例
-@inject('informationStore')
+@inject('fsu_devicemanagementStore')
 @observer
 class AddChild extends Component {
   constructor(props) {
@@ -29,10 +29,17 @@ class AddChild extends Component {
     handleFormChange(changedFields);
   }
   render() {
-    const {fields, mode} = this.props;
+    const {fields, mode, fsu_devicemanagementStore: {deviceTypes}} = this.props;
     let disabled = false;
     mode == 'detail' && (disabled = true);
 
+    const fsuDeviceTypes = _.map(toJS(deviceTypes), item => {
+      return {
+        value: `${item.typeID}_${item.version}`,
+        name: item.typeName,
+      };
+    });
+    console.log(fields);
     return (
       <Form layout="inline" className={styles['edit_wrap']}>
         <FormInput
@@ -51,8 +58,30 @@ class AddChild extends Component {
           name={'deviceName'}
           rules={[{required: true, message: '请必须填写!'}]}
         />
+        {JSON.parse(localStorage.getItem('FsuTypeID')) !== 3 && (
+          <FormSelect
+            {...fields}
+            onChange={this.handleFormChange}
+            label={'设备类型'}
+            disabled={disabled}
+            placeholder={'请选择设备类型'}
+            name={'Id_Version'}
+            rules={[{required: true, message: '请必须填写!'}]}
+            children={fsuDeviceTypes}
+          />
+        )}
         {JSON.parse(localStorage.getItem('FsuTypeID')) === 3 && (
-          <Row>
+          <Row className={styles['type3_wrap']}>
+            <FormSelect
+              {...fields}
+              onChange={this.handleFormChange}
+              label={'设备类型'}
+              disabled={disabled}
+              placeholder={'请选择设备类型'}
+              name={'Id_Version'}
+              rules={[{required: true, message: '请必须填写!'}]}
+              children={fsuDeviceTypes}
+            />
             <FormInput
               {...fields}
               onChange={this.handleFormChange}
@@ -83,14 +112,6 @@ class AddChild extends Component {
               label={'额定功率'}
               disabled={disabled}
               name={'ratedCapacity'}
-              rules={[{required: false, message: '请必须填写!'}]}
-            />
-            <FormInput
-              {...fields}
-              onChange={this.handleFormChange}
-              label={'版本'}
-              disabled={disabled}
-              name={'version'}
               rules={[{required: false, message: '请必须填写!'}]}
             />
             <FormInput

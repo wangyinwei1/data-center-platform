@@ -87,6 +87,7 @@ const cascader = {
       const ztreeChild = data[0] && data[0].code;
       params.ztreeChild = ztreeChild;
     }
+    console.log(data);
     //设置初始值
     if (data.length > 1) {
       this.setState({

@@ -57,11 +57,12 @@ const addFsuLevelOne = {
       value: '',
       require: true,
     },
+    Id_Version: {
+      value: undefined,
+      require: true,
+    },
     roomName: {
       value: '',
-    },
-    deviceType: {
-      value: 0,
     },
     deviceSubType: {
       value: 0,
@@ -73,9 +74,6 @@ const addFsuLevelOne = {
       value: '',
     },
     ratedCapacity: {
-      value: '',
-    },
-    version: {
       value: '',
     },
     devDescribe: {
@@ -91,6 +89,10 @@ const addLevelOne = {
     },
     deviceName: {
       value: '',
+      require: true,
+    },
+    Id_Version: {
+      value: undefined,
       require: true,
     },
   },

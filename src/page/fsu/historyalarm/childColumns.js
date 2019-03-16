@@ -3,6 +3,7 @@ import styles from './index.less';
 import classnames from 'classnames';
 import {Tooltip} from 'antd';
 import columnData from './childColumns.js';
+import TextOverflow from '../../../components/TextOverflow';
 /**
  * {anction表格的culumns}
  * @param {deleteClick} 删除按钮的回调
@@ -14,6 +15,10 @@ const columns = () => {
     {
       title: 'FSU编号',
       dataIndex: 'suID',
+      with: '8%',
+      render: (text, record, index) => {
+        return <TextOverflow>{record.suID}</TextOverflow>;
+      },
     },
     {
       title: '子设备名称',
@@ -50,6 +55,10 @@ const columns = () => {
     {
       title: '结束时间',
       dataIndex: 'endTime',
+    },
+    {
+      title: '告警历时',
+      dataIndex: 'timeLong',
     },
   ];
 };
