@@ -40,6 +40,14 @@ class Regional extends Component {
     this.typesChange = this.typesChange.bind(this);
     this.onTimeOk = this.onTimeOk.bind(this);
     this.onOpenChange = this.onOpenChange.bind(this);
+    this.realtimeMonitorPointChange = this.realtimeMonitorPointChange.bind(
+      this,
+    );
+    this.realtimeSubDevChange = this.realtimeSubDevChange.bind(this);
+    this.state = {
+      subDevValue: undefined,
+      monitorPointValue: undefined,
+    };
   }
   componentDidMount() {}
   add() {
@@ -110,6 +118,16 @@ class Regional extends Component {
     const {timeChange} = this.props;
     timeChange && timeChange(dates, dateStrings);
   }
+  realtimeSubDevChange(value) {
+    this.setState({subDevValue: value});
+    const {realtimeSubDevChange} = this.props;
+    realtimeSubDevChange && realtimeSubDevChange(value);
+  }
+  realtimeMonitorPointChange(value) {
+    this.setState({monitorPointValue: value});
+    const {realtimeMonitorPointChange} = this.props;
+    realtimeMonitorPointChange && realtimeMonitorPointChange(value);
+  }
   batchClick(item) {
     const value = item.key;
     switch (value) {
@@ -136,6 +154,8 @@ class Regional extends Component {
       closeAdd,
       searchValue,
       theme,
+      realtimeSubDev,
+      realtimeMonitorPointMenu,
       channelType,
     } = this.props;
     const hasSearchValue = _.has(this.props, 'searchValue');
@@ -155,8 +175,51 @@ class Regional extends Component {
         <Menu.Item key="3">批量禁用</Menu.Item>
       </Menu>
     );
+
     return (
       <div className={styles['action_bar']}>
+        {showValue &&
+          showValue.indexOf('realtimeSubDev') != -1 &&
+          (realtimeSubDev && (
+            <div className={styles['subdev']}>
+              <Select
+                value={this.state.subDevValue}
+                placeholder={'请选择子设备'}
+                onChange={this.realtimeSubDevChange}>
+                {_.map(realtimeSubDev || [], (item, i) => {
+                  return (
+                    <Option key={i.toString(36) + i} value={item.deviceID}>
+                      {item.deviceName}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </div>
+          ))}
+        {showValue &&
+          showValue.indexOf('realtimeMonitorPoint') != -1 &&
+          (realtimeSubDev && (
+            <div className={styles['subdev']}>
+              <Select
+                defaultValue={2}
+                placeholder={'请选择监控点'}
+                onChange={this.realtimeMonitorPointChange}>
+                {_.map(
+                  [
+                    {F_ID: 1, F_TypeName: '遥测'},
+                    {F_ID: 3, F_TypeName: '遥信'},
+                  ],
+                  (item, i) => {
+                    return (
+                      <Option key={i.toString(36) + i} value={item.F_ID}>
+                        {item.F_TypeName}
+                      </Option>
+                    );
+                  },
+                )}
+              </Select>
+            </div>
+          ))}
         {showValue &&
           showValue.indexOf('time') != -1 && (
             <div className={styles['device_time']}>

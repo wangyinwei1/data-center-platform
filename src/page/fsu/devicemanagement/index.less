@@ -4,7 +4,7 @@
     height: 100%;
   }
   .edit_wrap {
-    padding: 20px 20px 0 20px;
+    padding: 20px 20px 10px 20px;
   }
   .information_ct {
     .scrollCommon();
@@ -21,6 +21,86 @@
     height: -ms-calc(~'100% - 68px');
     height: -o-calc(~'100% - 68px');
     height: calc(~'100% - 68px');
+  }
+  .sub_title {
+    position: relative;
+    padding: 12px 0 12px 11px;
+    font-size: 14px;
+    color: #999;
+
+    span {
+      font-size: 14px;
+      color: #999;
+      display: inline-block;
+      vertical-align: top;
+    }
+  }
+  .alarm_operation {
+    .alarm_row {
+      text-align: center;
+    }
+    .msg_search {
+      &:hover {
+        background-color: transparent;
+      }
+      .alarm_row {
+        & > div {
+          margin-bottom: 0px;
+        }
+      }
+    }
+
+    overflow: auto;
+    max-height: 240px;
+  }
+  .con_input {
+    width: 100%;
+    text-align: center;
+    border: none;
+    &:focus {
+      box-shadow: none;
+    }
+  }
+  .alarm_delete {
+    margin-right: 8px;
+  }
+  .alarm_placeholder {
+    color: #a6a6a6;
+  }
+  .alarm_btn_wrap {
+    .alarm_add {
+      padding: 0;
+      &:global(.ant-btn-clicked) {
+        &:after {
+          border-color: #40bc7e;
+        }
+      }
+      width: 34px;
+      span,
+      i {
+        line-height: 30px;
+        height: 34px;
+        font-size: 20px;
+        width: 34px;
+        text-align: center;
+        color: #fff;
+        display: block;
+      }
+      background-color: #50e399;
+      border-color: #50e399;
+      &:hover {
+        background-color: #7fffbe;
+        border-color: #7fffbe;
+      }
+      &:active {
+        background-color: #40bc7e;
+        border-color: #40bc7e;
+      }
+      &:focus {
+        background-color: #50e399;
+        border-color: #50e399;
+      }
+    }
   }
   .more {
     cursor: pointer;
@@ -104,7 +184,6 @@
       width: 294px;
     }
     .fsu_operation {
-      margin-right: 10px;
       display: inline-block;
       vertical-align: top;
       :global {
@@ -149,6 +228,7 @@
       width: 342px;
     }
     .search {
+      margin-left: 10px;
       display: inline-block;
       vertical-align: top;
       margin-top: 1px;

@@ -66,7 +66,6 @@ class Regional extends Component {
   }
 
   getChecked(item) {
-    console.log(item);
     this.setState({
       checkedShow: true,
       inspectionData: item,

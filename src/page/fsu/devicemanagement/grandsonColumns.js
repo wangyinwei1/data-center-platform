@@ -10,7 +10,25 @@ import TextOverflow from '../../../components/TextOverflow';
  * @param {editClick} 切换按钮的回调
  * @return {array}
  */
-const menu = ({editClick, deleteClick, detailClick, _this, record}) => {
+const menu = ({
+  editClick,
+  deleteClick,
+  detailClick,
+  remoteControlClick,
+  _this,
+  record,
+}) => {
+  let remoteName = '';
+  switch (record.spType) {
+    case 2:
+    case 4:
+      remoteName = '告警量设置';
+      break;
+
+    case 6:
+      remoteName = '遥调';
+      break;
+  }
   return (
     <Menu className={styles['operation']}>
       <Menu.Item key="c_detail" onClick={detailClick.bind(_this, record)}>
@@ -25,6 +43,18 @@ const menu = ({editClick, deleteClick, detailClick, _this, record}) => {
           <span>编辑</span>
         </div>
       </Menu.Item>
+      {JSON.parse(localStorage.getItem('FsuTypeID')) === 2 &&
+        (record.spType === 6 || record.spType === 2 || record.spType === 4) && (
+          <Menu.Item
+            key="c_remoteControl"
+            onClick={remoteControlClick.bind(_this, record)}>
+            <div className={styles['edit']}>
+              <i className={classnames('icon iconfont icon-bianji')} />
+              <span>{remoteName}</span>
+            </div>
+          </Menu.Item>
+        )}
+
       <Menu.Item key="c_delete" onClick={deleteClick.bind(_this, record)}>
         <div className={styles['delete']}>
           <i className={classnames('icon iconfont icon-shanchu')} />
@@ -41,7 +71,7 @@ const columns = ({
   realtimeClick,
   detailClick,
   controlClick,
-  rumorClick,
+  remoteControlClick,
   _this,
 }) => {
   let options = [
@@ -57,6 +87,7 @@ const columns = ({
               editClick,
               deleteClick,
               detailClick,
+              remoteControlClick,
               _this,
               record,
             })}

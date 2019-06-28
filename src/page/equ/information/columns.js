@@ -74,7 +74,7 @@ const columns = ({
               <i
                 className={classnames(
                   'icon iconfont',
-                  record.connectType == 0
+                  record.connectType === 0
                     ? `icon-beidong ${styles['icon_passive']}`
                     : `icon-zhudong ${styles['icon_active']}`,
                   styles['connectType'],

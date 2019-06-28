@@ -86,7 +86,7 @@ class AlarmCondition extends Component {
       });
     } else {
       const {fsuconfigStore} = this.props;
-      const tableData = toJS(fsuconfigStore.tableData.data);
+      const tableData = toJS(fsuconfigStore.tableData);
       const isAll =
         value.length === tableData.length &&
         this.isAllSelected(value, tableData);

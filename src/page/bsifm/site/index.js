@@ -90,8 +90,8 @@ class Regional extends Component {
         F_AreaName: fields.region.value,
         F_ParentAreaID: fields.county.value,
         F_Name: fields.F_Name.value,
-        F_Leader: fields.F_Leader.value,
-        F_Tel: fields.F_Tel.value,
+        // F_Leader: fields.F_Leader.value,
+        // F_Tel: fields.F_Tel.value,
         F_Address: fields.F_Address.value,
       };
       fields.region.code
@@ -177,8 +177,8 @@ class Regional extends Component {
       formValue.region.value =
         (data.area.regionCode && parseInt(data.area.regionCode)) || undefined;
       formValue.F_Name.value = (data.pd && data.pd.F_Name) || '';
-      formValue.F_Leader.value = (data.pd && data.pd.F_Leader) || '';
-      formValue.F_Tel.value = (data.pd && data.pd.F_Tel) || '';
+      // formValue.F_Leader.value = (data.pd && data.pd.F_Leader) || '';
+      // formValue.F_Tel.value = (data.pd && data.pd.F_Tel) || '';
       formValue.F_Address.value = (data.pd && data.pd.F_Address) || '';
       formValue.F_AreaName.value = (data.pd && data.pd.F_AreaName) || '';
       return {

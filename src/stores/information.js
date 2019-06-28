@@ -199,9 +199,9 @@ class Information {
     const data = await getInformationTable(params);
     this.loading = false;
     this.ztreeChild = params.ztreeChild;
-    params.number = data.Data.number;
-    params.page = data.Data.page;
     if (data.Result == 'success') {
+      params.number = data.Data.number;
+      params.page = data.Data.page;
       const showIconIndex = _.map(data.Data.varList, (item, index) => {
         if (item.isConcentrator === 1) {
           return index;

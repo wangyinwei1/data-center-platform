@@ -20,12 +20,12 @@ const formParams = {
       value: '',
       require: true,
     },
-    F_Leader: {
-      value: '',
-    },
-    F_Tel: {
-      value: '',
-    },
+    // F_Leader: {
+    //   value: '',
+    // },
+    // F_Tel: {
+    //   value: '',
+    // },
     F_Address: {
       value: '',
     },

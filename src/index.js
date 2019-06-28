@@ -32,6 +32,7 @@ import {
   Deviceversion,
   Agreement,
   Alarminformation,
+  SubDeviceType,
   Controlrecord,
   Information,
   Historyalarm,
@@ -50,8 +51,10 @@ import {
   Fsu_Realtimedata,
   Fsn_Realtimealarm,
   Fsu_Historyalarm,
+  Fsu_Alarminformation,
   Fsu_Devicemanagement,
   Menu,
+  FSuTypeMenu,
   Devicetype,
   Other_Inspection,
   Other_Workorders,
@@ -83,6 +86,10 @@ render(
             <Route path="/fsu-realtimedata" component={Fsu_Realtimedata} />
             <Route path="/fsu-historicaldata" component={Fsu_Historicaldata} />
             <Route path="/fsu-realtimealarm" component={Fsn_Realtimealarm} />
+            <Route
+              path="/fsu-alarminformation"
+              component={Fsu_Alarminformation}
+            />
 
             <Route path="/bsifm-regional" component={Regional} />
             <Route path="/bsifm-site" component={Site} />
@@ -100,6 +107,9 @@ render(
             <Route path="/bsifm-applicationuser" component={Applicationuser} />
             <Route path="/bsifm-valuetype" component={Valuetype} />
             <Route path="/bsifm-fsuconfig" component={Fsuconfig} />
+            <Route path="/bsifm-subdevicetype" component={SubDeviceType} />
+
+            <Route path="/fsu-baseConfig" component={FSuTypeMenu} />
             {/* <Route path="/systemuser" component={} /> */}
             {/* <Route path="/bsifm-alarmcondition" component={Alarminformation} /> */}
             {/* <Route path="/bsifm-channeltype" component={channel} /> */}

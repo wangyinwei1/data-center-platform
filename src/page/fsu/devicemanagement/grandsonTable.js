@@ -18,7 +18,7 @@ class Regional extends Component {
     this.editClick = this.editClick.bind(this);
     this.realtimeClick = this.realtimeClick.bind(this);
     this.historyClick = this.historyClick.bind(this);
-    this.rumorClick = this.rumorClick.bind(this);
+    this.remoteControlClick = this.remoteControlClick.bind(this);
     this.controlClick = this.controlClick.bind(this);
     this.onRowDoubleClick = this.onRowDoubleClick.bind(this);
     this.state = {
@@ -78,16 +78,17 @@ class Regional extends Component {
       data && controlChange();
     });
   }
-  rumorClick(item, e) {
-    e.stopPropagation();
-    e.nativeEvent.stopImmediatePropagation();
-    const {fsu_devicemanagementStore, rumorChange} = this.props;
+  remoteControlClick(item, e) {
+    const {fsu_devicemanagementStore, remoteControlClick} = this.props;
     const params = {
-      F_DeviceID: item.subDeviceID,
+      deviceID: item.deviceID,
+      spID: item.spID,
+      suID: item.suID,
     };
-    fsu_devicemanagementStore.getRegulatChannel(params).then(data => {
-      data && rumorChange();
-    });
+    remoteControlClick(item);
+    // fsu_devicemanagementStore.getRegulatChannel(params).then(data => {
+    //   data && rumorClick();
+    // });
   }
 
   componentDidMount() {
@@ -107,7 +108,7 @@ class Regional extends Component {
       realtimeClick: this.realtimeClick,
       historyClick: this.historyClick,
       controlClick: this.controlClick,
-      rumorClick: this.rumorClick,
+      remoteControlClick: this.remoteControlClick,
       _this: this,
     });
     return (

@@ -87,12 +87,13 @@ class Site extends Component {
     });
   }
   initFromValue(data, mode, item) {
+    console.log(item);
     this.setState(({fields}) => {
       let formValue = _.cloneDeep([fields])[0];
       formValue.F_ChannelID.value = item.channelID || '';
       formValue.F_CalculateType.value = item.calculateType || undefined;
       formValue.Id_Version.value =
-        `${item.deviceType}_${item.version}` || undefined;
+        `${item.typeID}_${item.version}` || undefined;
       formValue.F_Expression.value = item.expression || '';
       formValue.F_RelateChannelName.value =
         item.relateChannelID.split(',').filter(item => {

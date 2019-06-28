@@ -32,10 +32,10 @@ class Regional extends Component {
       realtimeChange,
       historyChange,
       controlChange,
-      rumorChange,
       sunEditChange,
       sunDeleteChange,
       sunDetailChange,
+      remoteControlClick,
       sunDisableChange,
     } = this.props;
 
@@ -44,7 +44,7 @@ class Regional extends Component {
         historyChange={historyChange}
         controlChange={controlChange}
         realtimeChange={realtimeChange}
-        rumorChange={rumorChange}
+        remoteControlClick={remoteControlClick}
         sunEditChange={sunEditChange}
         sunDeleteChange={sunDeleteChange}
         sunDetailChange={sunDetailChange}
@@ -89,6 +89,10 @@ class Regional extends Component {
     const {childExportClick} = this.props;
     childExportClick(item);
   }
+  telemeteryClick(item) {
+    const {telemeteryClick} = this.props;
+    telemeteryClick(item);
+  }
 
   addClick(item) {
     const {
@@ -107,6 +111,7 @@ class Regional extends Component {
       deleteClick: this.deleteClick,
       editClick: this.editClick,
       exportClick: this.exportClick,
+      telemeteryClick: this.telemeteryClick,
       detailClick: this.detailClick,
       addClick: this.addClick,
       _this: this,

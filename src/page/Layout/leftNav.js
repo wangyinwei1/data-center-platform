@@ -7,7 +7,7 @@ import styles from './index.less';
 import _ from 'lodash';
 const {SubMenu} = Menu;
 const {Content, Footer, Sider} = Layout;
-const outreach = ['energy-consumption'];
+const outreach = ['energy-consumption', 'large-screen'];
 const menuIcon = {
   '420': 'icon-shouye',
   '390': 'icon-jichuxinxiguanli',
@@ -17,6 +17,7 @@ const menuIcon = {
   '427': 'icon-cebianlanxunjianjilu',
   '428': 'icon-liebiao',
   '429': 'icon-jizhan',
+  '430': 'icon-shishishuju',
 };
 const exclusionPath = [
   'equ-agreement',
@@ -75,11 +76,25 @@ const secondLevel = function(item) {
 };
 const firstLevel = function(item) {
   if (outreach.indexOf(item.MENU_ROUTE) !== -1) {
+    const index = outreach.indexOf(item.MENU_ROUTE);
+    let url = 'javascript:void(0);';
+    switch (index) {
+      case 0:
+        url = localStorage.getItem('ECPUrl');
+        break;
+
+      case 1:
+        url = localStorage.getItem('screenUrl');
+        break;
+    }
+
     return (
       <Menu.Item key={item.MENU_ROUTE || item.MENU_ID}>
         <a
           href={
-            'http://172.17.3.52:8080/ECP/main/index?noLanding=true&user=shiyonghu'
+            url
+
+            // 'http://172.17.3.52:8080/ECP/main/index?noLanding=true&user=shiyonghu'
           }
           target={'_blank'}>
           <i
@@ -180,6 +195,12 @@ class BasicLayout extends Component {
         break;
       case 'fsu-realtimealarm':
         path = 'equ-realtimealarm';
+        break;
+      case 'fsu-alarminformation':
+        path = 'bsifm-alarminformation';
+        break;
+      case 'bsifm-devicetype':
+        path = 'bsifm-deviceversion';
         break;
       default:
         path = selectedKeys;

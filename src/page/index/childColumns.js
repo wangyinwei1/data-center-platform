@@ -147,7 +147,7 @@ const columns = ({endClick, handleClick, cancelClick, confirmClick, _this}) => {
             <i
               className={classnames(
                 'icon iconfont',
-                record.connectType == 0
+                record.F_ConnectType == 0
                   ? `icon-beidong ${styles['icon_passive']}`
                   : `icon-zhudong ${styles['icon_active']}`,
                 styles['connectType'],

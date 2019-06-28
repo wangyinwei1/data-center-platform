@@ -56,6 +56,7 @@ class ControlContent extends Component {
         operateList,
         controlChannel,
       },
+      item,
     } = this.props;
     const devID =
       this.state.F_DeviceID ||
@@ -76,14 +77,25 @@ class ControlContent extends Component {
       F_DeviceID: devID,
       F_Spid: spID,
       F_Suid: currentDevice,
-      value: this.state.value || '',
     };
+    if (JSON.parse(localStorage.getItem('FsuTypeID')) === 2) {
+      params['surID'] = item.surID;
+      const current = _.filter(toJS(controlChannel), app => {
+        return app.deviceID === devID;
+      });
+      params['devicerID'] = current[0] ? current[0].devicerID : '';
+    }
+    if (JSON.parse(localStorage.getItem('FsuTypeID')) !== 2) {
+      params['value'] = this.state.value || '';
+    }
+
     postDeviceControl(params);
   }
   render() {
     const {
       fsu_devicemanagementStore: {operateList, controlChannel},
     } = this.props;
+    let FsuTypeID = JSON.parse(localStorage.getItem('FsuTypeID'));
     return (
       <Form className={styles['control_ct']}>
         <Row style={{width: '100%'}}>
@@ -127,14 +139,16 @@ class ControlContent extends Component {
               </Select>
             </FormItem>
           </Col>
-          <Col className={styles['fsu_operation']}>
-            <FormItem label="操作">
-              <Input
-                placeholder={'输入0到9的数字'}
-                onChange={this.inputChange}
-              />
-            </FormItem>
-          </Col>
+          {FsuTypeID !== 2 && (
+            <Col className={styles['fsu_operation']}>
+              <FormItem label="操作">
+                <Input
+                  placeholder={'输入0到9的数字'}
+                  onChange={this.inputChange}
+                />
+              </FormItem>
+            </Col>
+          )}
           <Col className={styles['search']}>
             <Button onClick={this.handleClick}>操作</Button>
           </Col>

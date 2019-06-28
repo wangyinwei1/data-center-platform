@@ -190,6 +190,12 @@ class BasicLayout extends Component {
       case 'fsu-realtimealarm':
         path = 'equ-realtimealarm';
         break;
+      case 'fsu-alarminformation':
+        path = 'bsifm-alarminformation';
+        break;
+      case 'bsifm-devicetype':
+        path = 'bsifm-deviceversion';
+        break;
     }
     _.map(menu, item => {
       if (item.subMenu[0]) {
@@ -312,6 +318,7 @@ class BasicLayout extends Component {
       ['fsu-realtimealarm', 'equ-realtimealarm'],
       ['fsu-historyalarm', 'equ-historyalarm'],
       ['fsu-controlrecord', 'equ-controlrecord'],
+      ['fsu-alarminformation', 'bsifm-alarminformation'],
     ];
 
     let currentLink = [];

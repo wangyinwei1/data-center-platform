@@ -4,6 +4,10 @@ const formParams = {
       value: undefined,
       require: true,
     },
+    F_CommunicatID: {
+      value: undefined,
+      require: true,
+    },
     F_Name: {
       value: undefined,
       require: true,
@@ -19,6 +23,14 @@ const formParams = {
     },
     F_HardVersion: {
       value: '',
+    },
+    F_ReportType: {
+      value: 0,
+      require: true,
+    },
+    F_ConnectType: {
+      value: 0,
+      require: true,
     },
   },
 };

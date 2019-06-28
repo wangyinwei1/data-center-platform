@@ -16,6 +16,7 @@ const menu = ({
   deleteClick,
   detailClick,
   exportClick,
+  telemeteryClick,
   _this,
   record,
 }) => {
@@ -39,6 +40,14 @@ const menu = ({
           <span>编辑</span>
         </div>
       </Menu.Item>
+      {/* <Menu.Item */}
+      {/*   key="c_telemetery" */}
+      {/*   onClick={telemeteryClick.bind(_this, record)}> */}
+      {/*   <div className={styles['edit']}> */}
+      {/*     <i className={classnames('icon iconfont icon-bianji')} /> */}
+      {/*     <span>遥测</span> */}
+      {/*   </div> */}
+      {/* </Menu.Item> */}
       <Menu.Item key="c_export" onClick={exportClick.bind(_this, record)}>
         <div className={styles['edit']}>
           <i className={classnames('icon iconfont icon-daoru')} />
@@ -60,6 +69,8 @@ const columns = ({
   deleteClick,
   addClick,
   detailClick,
+  telemeteryClick,
+
   _this,
 }) => {
   let options = [
@@ -75,6 +86,7 @@ const columns = ({
               deleteClick,
               detailClick,
               exportClick,
+              telemeteryClick,
               addClick,
               _this,
               record,

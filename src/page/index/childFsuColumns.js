@@ -141,6 +141,9 @@ const columns = ({
       dataIndex: 'F_StartTime',
       width: '7%',
       render: (text, record, index) => {
+        if (!text) {
+          return '';
+        }
         const value = text.split(' ');
         return (
           <div className={styles['list_time']}>

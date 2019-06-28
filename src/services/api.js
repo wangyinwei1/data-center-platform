@@ -143,6 +143,25 @@ export function alarminformationSave(data) {
 export function alarminformationEditSave(data) {
   return request.post(base + '/device_alarmF_MsgID/edit.do', data);
 }
+//fsu_alarminformation
+export function getFsuAlarminformationTable(params) {
+  return request.get(base + '/fsuAlarmInfo/alarmInfoList', {params});
+}
+export function fsu_alarminformation_delete(data) {
+  return request.post(base + '/fsuAlarmInfo/delete', data);
+}
+export function fsuAlarminformation_search(params) {
+  return request.get(base + '/fsuAlarmInfo/alarmInfoList', {params});
+}
+export function getFsuAlarmInfo(params) {
+  return request.get(base + '/fsuAlarmInfo/alarmInfo', {params});
+}
+export function fsuAlarminformationSave(data) {
+  return request.post(base + '/fsuAlarmInfo/save', data);
+}
+export function fsuAlarminformationUpdate(data) {
+  return request.post(base + '/fsuAlarmInfo/update', data);
+}
 //applicationuser
 export function getApplicationuserTable(params) {
   return request.get(base + '/user/listUsers.do', {params});
@@ -512,8 +531,45 @@ export function historyalarm_search(params) {
 export function getFsuDevicemanagementTable(params) {
   return request.get(base + '/FSU_device/list2.do', {params});
 }
+export function remoteOperationSp(data) {
+  return request.post(base + '/FSU_device/remoteOperationSp', data);
+}
+export function getTelemetrySp(params) {
+  return request.get(base + '/FSU_device/telemetrySp', {params});
+}
+export function getSpInfo(params) {
+  return request.get(base + '/FSU_device/spInfo', {params});
+}
+export function getFsuAlarmConditionList(params) {
+  return request.get(base + '/FSU_device/fsuAlarmConditionList', {params});
+}
+export function getAlarmInfoList(params) {
+  return request.get(base + '/fsuAlarmInfo/alarmInfoList', {params});
+}
+export function getFsuPortInfo(params) {
+  return request.get(base + '/FSU_device/fsuPortInfo', {params});
+}
+export function fsuRestart(data) {
+  return request.post(base + '/FSU_device/fsuRestart', data);
+}
+export function fsuSetTime(data) {
+  return request.post(base + '/FSU_device/fsuSetTime', data);
+}
+export function getSpRemoteSettingInfo(params) {
+  return request.get(base + '/FSU_device/spRemoteSettingInfo', {params});
+}
+
+export function getRemoteSettingSpInfo(params) {
+  return request.get(base + '/FSU_device/remoteSettingSpInfo', {params});
+}
+export function getTelemetrySpList(params) {
+  return request.get(base + '/FSU_device/telemetrySpList', {params});
+}
+export function saveFSUAlarmCondition(data) {
+  return request.post(base + '/FSU_device/saveFSUAlarmCondition', data);
+}
 export function getDeviceTypes(params) {
-  return request.get(base + '/device_dev/getDeviceTypes', {params});
+  return request.get(base + '/fsuBaseConfig/deviceTypeList', {params});
 }
 export function getFsuSunDevice(params) {
   return request.get(base + '/FSU_device/FsuSunDevice_list2.do', {params});
@@ -779,6 +835,38 @@ export function getImage(params) {
 }
 export function getStationAlarm(params) {
   return request.get(base + '/monitor/stationAlarm', {
+    params,
+  });
+}
+//devicesubtype
+export function findDeviceSubType(params) {
+  return request.get(base + '/FSU_device/findDeviceSubType', {
+    params,
+  });
+}
+export function deviceSubTypeInfo(params) {
+  return request.get(base + '/FSU_device/deviceSubTypeInfo', {
+    params,
+  });
+}
+
+export function saveDeviceSubType(data) {
+  return request.post(base + '/FSU_device/saveDeviceSubType', data);
+}
+export function editDeviceSubType(data) {
+  return request.post(base + '/FSU_device/editDeviceSubType', data);
+}
+export function deleteDeviceSubType(data) {
+  return request.post(base + '/FSU_device/deleteDeviceSubType', data);
+}
+//basicConfig
+export function getDeviceTypeList(params) {
+  return request.get(base + '/fsuBaseConfig/deviceTypeList', {
+    params,
+  });
+}
+export function getSpTypeList(params) {
+  return request.get(base + '/fsuBaseConfig/spTypeList', {
     params,
   });
 }

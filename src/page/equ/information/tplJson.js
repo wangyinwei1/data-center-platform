@@ -12,14 +12,6 @@ const formParams = {
       value: undefined,
       require: true,
     },
-    F_ReportType: {
-      value: 0,
-      require: true,
-    },
-    F_ConnectType: {
-      value: 0,
-      require: true,
-    },
     F_IP: {
       value: '',
       require: true,

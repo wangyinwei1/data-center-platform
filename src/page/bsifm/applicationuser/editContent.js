@@ -40,11 +40,7 @@ class Regional extends Component {
 
     let data = {};
     let disabled = false,
-      currentClass = 'cl_regional_select_157',
-      provinceDisable = false,
-      cityDisable = false,
-      areaDisable = false,
-      zoneDisable = false;
+      currentClass = 'cl_regional_select_157';
     switch (mode) {
       case 'new':
         data = addData;
@@ -198,7 +194,6 @@ class Regional extends Component {
             {...fields}
             onChange={this.handleFormChange}
             label={'区域ID'}
-            disabled={provinceDisable}
             name={'proCode'}
             rules={[{required: true, message: '请必须填写!'}]}
             className={currentClass}

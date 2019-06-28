@@ -57,15 +57,12 @@ const addFsuLevelOne = {
       value: '',
       require: true,
     },
-    Id_Version: {
+    deviceSubType: {
       value: undefined,
       require: true,
     },
     roomName: {
       value: '',
-    },
-    deviceSubType: {
-      value: 0,
     },
     model: {
       value: '',
@@ -91,8 +88,8 @@ const addLevelOne = {
       value: '',
       require: true,
     },
-    Id_Version: {
-      value: undefined,
+    deviceSubType: {
+      value: 234234,
       require: true,
     },
   },
@@ -143,6 +140,9 @@ const addChildDevice = {
     spUnit: {
       value: '',
     },
+    threshold: {
+      value: '',
+    },
     spType: {
       value: undefined,
       require: true,
@@ -153,17 +153,84 @@ const addChildDevice = {
     },
     spName: {
       value: '',
+      require: true,
     },
     F_SpID: {
       value: '',
       require: true,
     },
+    // sVal: {
+    //   value: '',
+    // },
+    // intervalTime: {
+    //   value: '',
+    // },
+    // sLimit: {
+    //   value: '',
+    // },
+    // sHLimit: {
+    //   value: '',
+    // },
+    // lLimit: {
+    //   value: '',
+    // },
+    // hLimit: {
+    //   value: '',
+    // },
+    // sLLimit: {
+    //   value: '',
+    // },
+    // bDelay: {
+    //   value: '',
+    // },
+    // eDelay: {
+    //   value: '',
+    // },
   },
 };
+const remoteControlFields = {
+  remoteControlFields: {
+    sVal: {
+      value: '',
+    },
+    hLimit: {
+      value: '',
+    },
+    intervalTime: {
+      value: '',
+    },
+    sHLimit: {
+      value: '',
+    },
+    lLimit: {
+      value: '',
+    },
+    sLLimit: {
+      value: '',
+    },
+    threshold: {
+      value: '',
+    },
+    relativeVal: {
+      value: '',
+    },
+    bDelay: {
+      value: '',
+    },
+    eDelay: {
+      value: '',
+    },
+    spType: {
+      value: '',
+    },
+  },
+};
+
 export {
   formParams,
   addLevelOne,
   addChildFsuDevice,
   addFsuLevelOne,
   addChildDevice,
+  remoteControlFields,
 };

@@ -186,7 +186,7 @@ class Passageway extends Component {
     return showError;
   }
 
-  alarmOk() {
+  async alarmOk() {
     const {passagewayStore: {a_tableData, alarmDataChange}} = this.props;
     let alarmTable = toJS(a_tableData);
     let hasAlarmError = [];
@@ -247,10 +247,10 @@ class Passageway extends Component {
       F_ChannelID: this.state.currentChannelID,
       alarmConditions: alarmData,
     };
-    alarmBatchSave(params);
+    await alarmBatchSave(params);
     return true;
   }
-  onEditOk() {
+  async onEditOk() {
     const fields = this.state.fields;
     const showError = this.test(fields);
     const hasError = _.keys(showError);
@@ -267,7 +267,7 @@ class Passageway extends Component {
     } else {
       //告警条件确认
       if (this.state.type !== 'new') {
-        if (!this.alarmOk()) return;
+        if (await !this.alarmOk()) return;
       }
       const {
         passagewayStore: {save, edit, getChildTable, c_tableParmas},
@@ -285,13 +285,17 @@ class Passageway extends Component {
           ? (params[key] = Number(value.value))
           : (params[key] = value.value);
       });
-      this.state.type == 'modify'
-        ? edit(params).then(() => {
-            getChildTable(c_tableParmas);
-          })
-        : save(params).then(() => {
-            getChildTable(c_tableParmas);
-          });
+
+      let saveFun = () => {
+        this.state.type == 'modify'
+          ? edit(params).then(() => {
+              getChildTable(c_tableParmas);
+            })
+          : save(params).then(() => {
+              getChildTable(c_tableParmas);
+            });
+      };
+      await saveFun();
       this.setState({
         ...formParams,
         editShow: false,

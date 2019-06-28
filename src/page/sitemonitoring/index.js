@@ -66,6 +66,7 @@ class Regional extends Component {
   async _initLoading() {
     const {regionalStore, sitemonitoringStore} = this.props;
     const data = await regionalStore.getAsynArea();
+    let ztreeChild = 0;
     if (data.length > 1) {
       this.setState({
         cascaderText: '全国',
@@ -75,6 +76,13 @@ class Regional extends Component {
         cascaderText: data[0].name,
       });
     }
+    //默认属于哪个区域
+    if (data.length > 1) {
+      ztreeChild = 0;
+    } else {
+      ztreeChild = data[0] && data[0].code;
+    }
+    return ztreeChild;
   }
   onKeyPress(e) {
     const {regionalStore} = this.props;
@@ -82,15 +90,17 @@ class Regional extends Component {
   }
   componentDidMount() {
     const {sitemonitoringStore, router} = this.props;
-    this._initLoading();
-    let params = {
-      page: 1,
-      sing: 'area',
-      keywords: '',
-      number: 999,
-    };
-    //设置初始值
-    sitemonitoringStore.getList(params);
+    this._initLoading().then(ztreeChild => {
+      let params = {
+        page: 1,
+        sing: 'area',
+        keywords: '',
+        number: 999,
+        ztreeChild,
+      };
+      //设置初始值
+      sitemonitoringStore.getList(params);
+    });
   }
   componentWillUnmount() {
     const {sitemonitoringStore: {changeActiveKey}} = this.props;

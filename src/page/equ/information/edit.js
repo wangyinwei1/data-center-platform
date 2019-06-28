@@ -18,6 +18,7 @@ const FormItem = Form.Item;
 class Edit extends Component {
   constructor(props) {
     super(props);
+    this.F_ConnectType = null;
     this.handleFormChange = this.handleFormChange.bind(this);
   }
   componentwillunmount() {
@@ -26,8 +27,31 @@ class Edit extends Component {
     // });
   }
   handleFormChange(changedFields) {
-    const {handleFormChange} = this.props;
-    handleFormChange(changedFields);
+    const {
+      informationStore: {detailData, addData},
+      handleFormChange,
+      mode,
+    } = this.props;
+    let F_ConnectType = null;
+    if (changedFields.Id_Version) {
+      let data;
+      switch (mode) {
+        case 'new':
+          data = addData;
+
+          break;
+        case 'modify':
+        case 'detail':
+          data = detailData;
+          break;
+      }
+      const devType = _.map(toJS(data.dev_type), item => {
+        if (item.Id_Version === changedFields.Id_Version.value) {
+          F_ConnectType = item.F_ConnectType;
+        }
+      });
+    }
+    handleFormChange(changedFields, F_ConnectType);
   }
   render() {
     const {informationStore: {detailData, addData}, fields, mode} = this.props;
@@ -53,10 +77,17 @@ class Edit extends Component {
         name: item.F_Name,
       };
     });
+    let F_ConnectType = null;
+    let Id_Version = fields.Id_Version.value;
     const devType = _.map(toJS(data.dev_type), item => {
+      //设备类型里的被动
+      if (Id_Version && item.Id_Version === Id_Version) {
+        F_ConnectType = item.F_ConnectType;
+      }
       return {
         value: item.Id_Version,
         name: item.F_TypeName,
+        F_ConnectType: item.F_ConnectType,
       };
     });
     return (
@@ -90,29 +121,11 @@ class Edit extends Component {
           rules={[{required: true, message: '请必须填写!'}]}
           children={devType}
         />
-        <FormRadio
-          {...fields}
-          onChange={this.handleFormChange}
-          label={'数据上报'}
-          disabled={disabled}
-          name={'F_ReportType'}
-          rules={[{required: true, message: '请必须填写!'}]}
-          children={[{value: 0, name: '被动'}, {value: 1, name: '主动'}]}
-        />
-        <FormRadio
-          {...fields}
-          onChange={this.handleFormChange}
-          label={'链接方式'}
-          disabled={disabled}
-          name={'F_ConnectType'}
-          rules={[{required: true, message: '请必须填写!'}]}
-          children={[{value: 0, name: '被动'}, {value: 1, name: '主动'}]}
-        />
         <FormInput
           {...fields}
           onChange={this.handleFormChange}
           label={'设备IP'}
-          disabled={fields.F_ConnectType.value === 1 ? true : disabled}
+          disabled={F_ConnectType === 1 ? true : disabled}
           name={'F_IP'}
           placeholder={'请输入设备IP'}
           rules={[
@@ -130,7 +143,7 @@ class Edit extends Component {
           {...fields}
           onChange={this.handleFormChange}
           label={'设备端口'}
-          disabled={fields.F_ConnectType.value === 1 ? true : disabled}
+          disabled={F_ConnectType === 1 ? true : disabled}
           name={'F_Port'}
           placeholder={'请输入设备端口'}
           rules={[
@@ -146,7 +159,7 @@ class Edit extends Component {
           {...fields}
           onChange={this.handleFormChange}
           label={'地址'}
-          disabled={fields.F_ConnectType.value === 1 ? true : disabled}
+          disabled={F_ConnectType === 1 ? true : disabled}
           name={'adr'}
           rules={[{required: false}]}
         />

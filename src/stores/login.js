@@ -29,6 +29,8 @@ class Login {
         isAdmin: data.admin,
         FsuTypeID: data.FsuTypeID,
         AppID: data.AppID,
+        ECPUrl: data.ECPUrl,
+        screenUrl: data.screenUrl,
         isNotArea: data.Area === '片区' || !data.Area,
       };
     } else {

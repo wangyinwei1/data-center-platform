@@ -35,11 +35,10 @@ class AddChild extends Component {
 
     const fsuDeviceTypes = _.map(toJS(deviceTypes), item => {
       return {
-        value: `${item.typeID}_${item.version}`,
         name: item.typeName,
+        value: item.deviceType,
       };
     });
-    console.log(fields);
     return (
       <Form layout="inline" className={styles['edit_wrap']}>
         <FormInput
@@ -65,7 +64,7 @@ class AddChild extends Component {
             label={'设备类型'}
             disabled={disabled}
             placeholder={'请选择设备类型'}
-            name={'Id_Version'}
+            name={'deviceSubType'}
             rules={[{required: true, message: '请必须填写!'}]}
             children={fsuDeviceTypes}
           />
@@ -78,7 +77,7 @@ class AddChild extends Component {
               label={'设备类型'}
               disabled={disabled}
               placeholder={'请选择设备类型'}
-              name={'Id_Version'}
+              name={'deviceSubType'}
               rules={[{required: true, message: '请必须填写!'}]}
               children={fsuDeviceTypes}
             />

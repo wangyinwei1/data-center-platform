@@ -141,7 +141,7 @@ class Edit extends Component {
         if (info.file.status === 'done') {
           if (info.file.response && info.file.response.Result === 'success') {
             // message.success(`${info.file.name} 导入成功！`);
-            const importData = info.file.response.data;
+            const importData = info.file.response.Data;
             const record = toJS(a_tableData);
             let data = [];
             if (

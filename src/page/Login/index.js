@@ -59,6 +59,8 @@ class Loginer extends Component {
             localStorage.setItem('isAdmin', data.isAdmin);
             localStorage.setItem('isNotArea', data.isNotArea);
             localStorage.setItem('AppID', data.AppID);
+            localStorage.setItem('screenUrl', data.screenUrl);
+            localStorage.setItem('ECPUrl', data.ECPUrl);
             const timeoutUrl = localStorage.getItem('timeoutUrl');
 
             //记住密码设置cookies

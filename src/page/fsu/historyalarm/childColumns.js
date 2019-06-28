@@ -39,26 +39,60 @@ const columns = () => {
     {
       title: '告警信息',
       dataIndex: 'alarmDesc',
+      with: '10%',
+      render: (text, record, index) => {
+        return <TextOverflow>{record.alarmDesc}</TextOverflow>;
+      },
     },
     {
       title: '开始时间',
       dataIndex: 'startTime',
+      width: '8%',
+      render: (text, record, index) => {
+        return (
+          <span style={{lineHeight: '20px', display: 'block'}}>{text}</span>
+        );
+      },
     },
     {
       title: '确认时间',
       dataIndex: 'confirmTime',
+      width: '8%',
+      render: (text, record, index) => {
+        return (
+          <span style={{lineHeight: '20px', display: 'block'}}>{text}</span>
+        );
+      },
     },
     {
       title: '处理时间',
       dataIndex: 'dealTime',
+      width: '8%',
+      render: (text, record, index) => {
+        return (
+          <span style={{lineHeight: '20px', display: 'block'}}>{text}</span>
+        );
+      },
     },
     {
       title: '结束时间',
       dataIndex: 'endTime',
+      width: '8%',
+      render: (text, record, index) => {
+        return (
+          <span style={{lineHeight: '20px', display: 'block'}}>{text}</span>
+        );
+      },
     },
     {
       title: '告警历时',
       dataIndex: 'timeLong',
+      width: '8%',
+      render: (text, record, index) => {
+        return (
+          <span style={{lineHeight: '20px', display: 'block'}}>{text}</span>
+        );
+      },
     },
   ];
 };

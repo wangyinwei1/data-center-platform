@@ -18,9 +18,12 @@ const menu = ({
   record,
   disableClick,
   exportMonitor,
+  portInfoClick,
   exportSub,
   addLevelOneClick,
   fsuStatusClick,
+  restartClick,
+  fsuSetTimeClick,
 }) => {
   return (
     <Menu className={styles['operation']}>
@@ -42,6 +45,32 @@ const menu = ({
           <span>编辑</span>
         </div>
       </Menu.Item>
+      {JSON.parse(localStorage.getItem('FsuTypeID')) === 2 && (
+        <Menu.Item key="c_restart" onClick={restartClick.bind(_this, record)}>
+          <div className={styles['edit']}>
+            <i className={classnames('icon iconfont icon-bianji')} />
+            <span>重启</span>
+          </div>
+        </Menu.Item>
+      )}
+      {JSON.parse(localStorage.getItem('FsuTypeID')) === 2 && (
+        <Menu.Item key="c_portInfo" onClick={portInfoClick.bind(_this, record)}>
+          <div className={styles['edit']}>
+            <i className={classnames('icon iconfont icon-bianji')} />
+            <span>获取端口信息</span>
+          </div>
+        </Menu.Item>
+      )}
+      {JSON.parse(localStorage.getItem('FsuTypeID')) === 2 && (
+        <Menu.Item
+          key="c_fsuSetTime"
+          onClick={fsuSetTimeClick.bind(_this, record)}>
+          <div className={styles['edit']}>
+            <i className={classnames('icon iconfont icon-bianji')} />
+            <span>校时</span>
+          </div>
+        </Menu.Item>
+      )}
       <Menu.Item key="c_disable" onClick={disableClick.bind(_this, record)}>
         <div className={styles['disable']}>
           <i className={classnames('icon iconfont icon-jinyong')} />
@@ -86,7 +115,10 @@ const columns = ({
   editClick,
   fsuStatusClick,
   exportMonitor,
+  fsuSetTimeClick,
   exportSub,
+  portInfoClick,
+  restartClick,
   rumorClick,
   addLevelOneClick,
   detailClick,
@@ -220,8 +252,11 @@ const columns = ({
               addLevelOneClick,
               exportMonitor,
               exportSub,
+              restartClick,
+              portInfoClick,
               fsuStatusClick,
               disableClick,
+              fsuSetTimeClick,
               _this,
               record,
             })}

@@ -17,13 +17,15 @@ import EditContent from './edit.js';
 import moment from 'moment';
 import Panel from '../../../components/Panel';
 import RealtimeTable from './realtimeTable.js';
+import TelemetryTable from './telemetryTable.js';
 import HistoryModal from './../../equ/information/historyModal.js';
 import ChildTable from './childTable.js';
 import ControlModal from './controlModal.js';
 import ControlContent from './controlContent.js';
-import RumorContent from './rumorContent.js';
+import RemoteControlContent from './rumorContent.js';
 import AddLevelOne from './addLevelOne.js';
 import FsuStatusEcharts from './FsuStatusEcharts.js';
+import PortInfoContent from './portInfoContent.js';
 import DownConfig from './downConfig.js';
 import AddChildDevice from './addChildDevice.js';
 import {
@@ -32,6 +34,7 @@ import {
   addFsuLevelOne,
   addChildFsuDevice,
   addChildDevice,
+  remoteControlFields,
 } from './tplJson.js';
 //实例
 @inject(
@@ -42,6 +45,7 @@ import {
   'fsu_realtimealarmStore',
   'fsuconfigStore',
   'layoutStore',
+  'passagewayStore',
 )
 @observer
 @mixin(cascader)
@@ -61,9 +65,13 @@ class Information extends Component {
     this.onDeleteCancel = this.onDeleteCancel.bind(this);
     this.fsuStatusClick = this.fsuStatusClick.bind(this);
     this.onSearch = this.onSearch.bind(this);
+    this.remoteControlChange = this.remoteControlChange.bind(this);
+    this.telemeteryClick = this.telemeteryClick.bind(this);
     this.onShowSizeChange = this.onShowSizeChange.bind(this);
     this.onEditCancel = this.onEditCancel.bind(this);
+    this.portInfoClick = this.portInfoClick.bind(this);
     this.onEditOk = this.onEditOk.bind(this);
+    this.onTelemeteryCancel = this.onTelemeteryCancel.bind(this);
     this.closeDownShowChange = this.closeDownShowChange.bind(this);
     this.onKeyPress = this.onKeyPress.bind(this);
     this.onPageChange = this.onPageChange.bind(this);
@@ -73,17 +81,19 @@ class Information extends Component {
     this.onRealtimeCancel = this.onRealtimeCancel.bind(this);
     this.expandedRowRender = this.expandedRowRender.bind(this);
     this.onExpand = this.onExpand.bind(this);
+    this.onRemoteControlOk = this.onRemoteControlOk.bind(this);
+    this.restartClick = this.restartClick.bind(this);
     this.realtimeChange = this.realtimeChange.bind(this);
     this.exportMonitor = this.exportMonitor.bind(this);
     this.exportSub = this.exportSub.bind(this);
     this.historyChange = this.historyChange.bind(this);
     this.childDeleteChange = this.childDeleteChange.bind(this);
     this.disableClick = this.disableClick.bind(this);
-    this.rumorChange = this.rumorChange.bind(this);
+    this.remoteControlClick = this.remoteControlClick.bind(this);
     this.controlChange = this.controlChange.bind(this);
     this.onHistoryCancel = this.onHistoryCancel.bind(this);
     this.onControlCancel = this.onControlCancel.bind(this);
-    this.onRumorCancel = this.onRumorCancel.bind(this);
+    this.onRemoteControlCancel = this.onRemoteControlCancel.bind(this);
     this.handleFormChange = this.handleFormChange.bind(this);
     this.onAddLevelOneOk = this.onAddLevelOneOk.bind(this);
     this.onAddLevelOneCancel = this.onAddLevelOneCancel.bind(this);
@@ -95,6 +105,7 @@ class Information extends Component {
     this.childDetailClick = this.childDetailClick.bind(this);
     this.onExportTplClick = this.onExportTplClick.bind(this);
     this.childEditClick = this.childEditClick.bind(this);
+    this.fsuSetTimeClick = this.fsuSetTimeClick.bind(this);
     this.sunEditChange = this.sunEditChange.bind(this);
     this.sunDeleteChange = this.sunDeleteChange.bind(this);
     this.sunDetailChange = this.sunDetailChange.bind(this);
@@ -103,6 +114,7 @@ class Information extends Component {
     this.onRowDoubleClick = this.onRowDoubleClick.bind(this);
     this.onBatchDeleteClick = this.onBatchDeleteClick.bind(this);
     this.onBatchDisableClick = this.onBatchDisableClick.bind(this);
+    this.onPortInfoCancel = this.onPortInfoCancel.bind(this);
     this.onBatchEnabledClick = this.onBatchEnabledClick.bind(this);
     this.onBatchOk = this.onBatchOk.bind(this);
     this.onRealAlarmCancel = this.onRealAlarmCancel.bind(this);
@@ -117,7 +129,7 @@ class Information extends Component {
       realtimeShow: false,
       addLevelOneShow: false,
       addChildDeviceShow: false,
-      rumorShow: false,
+      remoteControlShow: false,
       modalTitle: '',
       currentSuID: '',
       cascaderText: '',
@@ -132,6 +144,7 @@ class Information extends Component {
       childTableTitle: '',
       deleteType: '',
       editParams: {},
+      telemeteryShow: false,
       type: 'new',
       disabledShow: false,
       childType: 'new',
@@ -146,6 +159,7 @@ class Information extends Component {
       currentDeviceID: '',
       batchIds: '',
       batchShow: false,
+      portInfoShow: false,
       fsuStatusShow: false,
       batchField: '',
       needRealtime: true,
@@ -153,6 +167,7 @@ class Information extends Component {
       ...formParams,
       ...addLevelOne,
       ...addChildDevice,
+      ...remoteControlFields,
     };
   }
   //以下级联方法
@@ -186,6 +201,71 @@ class Information extends Component {
     this.setState({
       batchIds: '',
       sunBatchIds: '',
+    });
+  }
+  //重启
+  restartClick(item) {
+    if (item.onOff === 0) {
+      message.error('设备不在线不能重启！');
+      return;
+    }
+    const {fsu_devicemanagementStore: {fsuRestart}} = this.props;
+    const params = {
+      suID: item.suID,
+    };
+    if (JSON.parse(localStorage.getItem('FsuTypeID')) === 2) {
+      params['surID'] = item.surID;
+    }
+    fsuRestart(params);
+  }
+  //校时
+  fsuSetTimeClick(item) {
+    if (item.onOff === 0) {
+      message.error('设备不在线不能校时！');
+      return;
+    }
+    const {fsu_devicemanagementStore: {fsuSetTime}} = this.props;
+    const params = {
+      suID: item.suID,
+    };
+    if (JSON.parse(localStorage.getItem('FsuTypeID')) === 2) {
+      params['surID'] = item.surID;
+    }
+    fsuSetTime(params);
+  }
+  //获取端口信息
+  portInfoClick(item) {
+    const {fsu_devicemanagementStore: {getFsuPortInfo}} = this.props;
+    let params = {
+      suID: item.suID,
+    };
+    getFsuPortInfo(params).then(() => {
+      this.setState({
+        portInfoShow: true,
+      });
+    });
+  }
+  onPortInfoCancel() {
+    this.setState({
+      portInfoShow: false,
+    });
+  }
+  //遥测
+  telemeteryClick(item) {
+    const {fsu_devicemanagementStore: {getTelemetrySpList}} = this.props;
+    let params = {
+      suID: item.suID,
+      deviceID: item.deviceID,
+    };
+    getTelemetrySpList(params).then(() => {
+      this.setState({
+        telemeteryShow: true,
+      });
+    });
+  }
+  onTelemeteryCancel() {
+    this.setState({
+      telemeteryShow: false,
     });
   }
   //禁用
@@ -227,19 +307,35 @@ class Information extends Component {
   realtimeClick(item, e) {
     e.stopPropagation();
     e.nativeEvent.stopImmediatePropagation();
-    const {fsu_devicemanagementStore} = this.props;
-    const params = {
-      keywords: '',
-      page: 1,
-      number: 10,
-      F_Suid: item.suID,
+    const setState = () => {
+      this.setState({
+        realtimeShow: true,
+        childTableTitle: item.name,
+        singleLineData: item,
+        currentSuID: item.suID,
+        needRealtime: item.onOff === 0 ? false : true,
+      });
     };
-    fsu_devicemanagementStore.getRealtimeTable(params);
-    this.setState({
-      realtimeShow: true,
-      childTableTitle: item.name,
-      needRealtime: item.onOff === 0 ? false : true,
-    });
+    const {fsu_devicemanagementStore} = this.props;
+    let F_FsuTypeID = localStorage.getItem('FsuTypeID');
+    if (JSON.parse(F_FsuTypeID) === 2) {
+      const params = {
+        F_Suid: item.suID,
+      };
+      fsu_devicemanagementStore.getSubDevice(params).then(data => {
+        data && setState();
+      });
+    } else {
+      const params = {
+        keywords: '',
+        page: 1,
+        number: 10,
+        F_Suid: item.suID,
+      };
+      fsu_devicemanagementStore.getRealtimeTable(params).then(data => {
+        data && setState();
+      });
+    }
   }
   onRealtimeOk() {}
   onRealtimeCancel() {
@@ -303,6 +399,7 @@ class Information extends Component {
       data &&
         this.setState({
           controlShow: true,
+          singleLineData: item,
         });
     });
   }
@@ -311,28 +408,100 @@ class Information extends Component {
       controlShow: false,
     });
   }
-  //谣调
-  rumorClick(item, e) {
-    e.stopPropagation();
-    e.nativeEvent.stopImmediatePropagation();
+  //谣调设置告警
+  remoteControlClick(item) {
+    if (item.onOff === 0) {
+      message.error('设备不在线！');
+      return;
+    }
     const {fsu_devicemanagementStore} = this.props;
     const params = {
-      F_DeviceID: item.devID,
+      suID: item.suID,
+      deviceID: item.deviceID,
+      spID: item.spID,
     };
-    fsu_devicemanagementStore.getRegulatChannel(params).then(data => {
-      data &&
-        this.setState({
-          rumorShow: true,
+    if (JSON.parse(localStorage.getItem('FsuTypeID')) === 2) {
+      params['devicerID'] = item.devicerID;
+      params['surID'] = item.surID;
+    }
+
+    fsu_devicemanagementStore.getSpInfo(params).then(data => {
+      if (data) {
+        this.setState(({remoteControlFields}) => {
+          let formValue = _.cloneDeep([remoteControlFields])[0];
+          formValue.sVal.value = data.sVal;
+          formValue.hLimit.value = data.hLimit;
+          formValue.sHLimit.value = data.sHLimit;
+          formValue.lLimit.value = data.lLimit;
+          formValue.sLLimit.value = data.sLLimit;
+          formValue.relativeVal.value = data.relativeVal;
+          formValue.threshold.value = data.threshold;
+          formValue.intervalTime.value = data.intervalTime;
+          formValue.bDelay.value = data.bDelay;
+          formValue.eDelay.value = data.eDelay;
+          formValue.spType.value = item.spType;
+          return {
+            remoteControlFields: {
+              ...remoteControlFields,
+              ...formValue,
+            },
+            singleLineData: item,
+            remoteControlShow: true,
+          };
         });
+      }
+    });
+  }
+  onRemoteControlCancel() {
+    this.setState({
+      remoteControlShow: false,
+    });
+  }
+  onRemoteControlOk() {
+    const fields = this.state.remoteControlFields;
+    const showError = this.test(fields);
+    const hasError = _.keys(showError);
+    if (hasError[0]) {
+      this.setState(({remoteControlFields}) => {
+        return {
+          remoteControlFields: {
+            ...remoteControlFields,
+            ...showError,
+          },
+        };
+      });
+    } else {
+      const {fsu_devicemanagementStore: {remoteOperationSp}} = this.props;
+      let item = this.state.singleLineData;
+      const params = {
+        suID: item.suID,
+        deviceID: item.deviceID,
+        spID: item.spID,
+      };
+      if (JSON.parse(localStorage.getItem('FsuTypeID')) === 2) {
+        params['devicerID'] = item.devicerID;
+        params['surID'] = item.surID;
+      }
+
+      _.forIn(fields, (value, key) => {
+        params[key] = value.value;
+      });
+      remoteOperationSp(params).then(() => {
+        this.setState({
+          remoteControlShow: false,
+        });
+      });
+    }
+  }
+  remoteControlChange(changedFields) {
+    this.setState(({remoteControlFields}) => {
+      return {
+        remoteControlFields: {...remoteControlFields, ...changedFields},
+      };
     });
   }
   onExportTplClick() {
     location.href = '/collect/FSU_device/downExcel';
-  }
-  onRumorCancel() {
-    this.setState({
-      rumorShow: false,
-    });
   }
   onDisableCancel() {
     this.setState({
@@ -347,11 +516,13 @@ class Information extends Component {
     const params = {
       F_Suid: item.suID,
     };
-    historymodalStore.getSubDevice(params);
-    this.setState({
-      historyShow: true,
-      currentSuID: item.suID,
-      childTableTitle: item.name,
+    historymodalStore.getSubDevice(params).then(data => {
+      data &&
+        this.setState({
+          historyShow: true,
+          currentSuID: item.suID,
+          childTableTitle: item.name,
+        });
     });
   }
   onHistoryCancel() {
@@ -498,16 +669,7 @@ class Information extends Component {
         ...F_DeviceID,
       };
       _.forIn(fields, (value, key) => {
-        if (key === 'Id_Version') {
-          if (value.value.indexOf('_') !== -1) {
-            let Id_Version = value.value.split('_');
-
-            params['deviceType'] = Id_Version[0];
-            params['version'] = Id_Version[1];
-          }
-        } else {
-          params[key] = value.value;
-        }
+        params[key] = value.value;
       });
       this.state.childType == 'modify'
         ? editConsport(params).then(() => {
@@ -550,8 +712,67 @@ class Information extends Component {
       addLevelOneShow: false,
     });
   }
+  async alarmOk() {
+    const {
+      fsu_devicemanagementStore: {a_tableData, alarmDataChange},
+    } = this.props;
+    let alarmTable = toJS(a_tableData);
+    let hasAlarmError = [];
+    const errorTable = _.map(alarmTable, (record, index) => {
+      if (
+        (!record.conType && record.conType !== 0) ||
+        (!record.msgID && record.msgID !== 0) ||
+        (!record.condition && record.condition !== 0)
+      ) {
+        if (
+          alarmTable.length === 1 &&
+          !record.conType &&
+          !record.msgID &&
+          !record.condition
+        ) {
+          alarmTable = [];
+        } else {
+          hasAlarmError.push(index + 1);
+        }
+        return {
+          ...record,
+          error: true,
+        };
+      } else {
+        return record;
+      }
+    });
+
+    if (hasAlarmError[0]) {
+      alarmDataChange(errorTable);
+      message.error(
+        `告警条件里的第${hasAlarmError.join(',')}条告警存在空值,请填写完整!`,
+      );
+      return false;
+    }
+    let isNumber = true;
+    //过滤后端所需要的数据
+    const item = this.state.singleLineData;
+    const alarmData = _.map(alarmTable, app => {
+      return {
+        conType: app.conType,
+        condition: app.condition,
+        msgID: app.msgID,
+      };
+    });
+    if (!isNumber) return false;
+
+    const {fsu_devicemanagementStore: {alarmBatchSave}} = this.props;
+    const params = {
+      suID: item.suID,
+      deviceID: item.deviceID,
+      spID: item.spID,
+      alarmConditions: alarmData,
+    };
+    return alarmBatchSave(params);
+  }
   //添加子设备
-  addChildDeviceOk() {
+  async addChildDeviceOk() {
     const fields = this.state.childDevicefields;
     const showError = this.test(fields);
     const hasError = _.keys(showError);
@@ -566,6 +787,16 @@ class Information extends Component {
         };
       });
     } else {
+      //告警条件确认
+      if (JSON.parse(localStorage.getItem('FsuTypeID')) === 2) {
+        if (this.state.sunType !== 'new') {
+          let boolean = null;
+          await this.alarmOk().then(result => {
+            boolean = result;
+          });
+          if (!boolean) return;
+        }
+      }
       const {
         fsu_devicemanagementStore: {
           saveSun,
@@ -738,6 +969,7 @@ class Information extends Component {
   onSearch(value) {
     const {fsu_devicemanagementStore} = this.props;
     const params = {
+      number: 10,
       ...fsu_devicemanagementStore.tableParmas,
       keywords: encodeURIComponent(value),
       page: 1,
@@ -783,11 +1015,6 @@ class Information extends Component {
       controlShow: true,
     });
   }
-  rumorChange() {
-    this.setState({
-      rumorShow: true,
-    });
-  }
   addChildShow(item, selectedChildRowKey) {
     const field =
       JSON.parse(localStorage.getItem('FsuTypeID')) === 3
@@ -811,12 +1038,12 @@ class Information extends Component {
       let formValue = _.cloneDeep([value])[0];
       formValue.F_DeviceID.value = item.deviceID;
       formValue.deviceName.value = item.deviceName;
+      formValue.deviceSubType.value = item.deviceSubType;
       if (JSON.parse(localStorage.getItem('FsuTypeID')) === 3) {
         formValue.roomName.value = item.roomName;
         formValue.model.value = item.model;
         formValue.brand.value = item.brand;
         formValue.ratedCapacity.value = item.ratedCapacity;
-        formValue.Id_Version.value = item.deviceType + '_' + item.version;
         formValue.deviceSubType.value = item.deviceSubType;
         formValue.devDescribe.value = item.devDescribe;
       }
@@ -855,9 +1082,21 @@ class Information extends Component {
       formValue.F_OptionID.value = item.optionID;
       formValue.spName.value = item.spName;
       formValue.F_SpID.value = item.spID;
+      formValue.threshold.value = item.threshold;
+
+      // if (JSON.parse(localStorage.getItem('FsuTypeID')) === 2) {
+      //   formValue.sVal.value = item.sVal;
+      //   formValue.intervalTime.value = item.intervalTime;
+      //   formValue.hLimit.value = item.hLimit;
+      //   formValue.sHLimit.value = item.sHLimit;
+      //   formValue.lLimit.value = item.lLimit;
+      //   formValue.sLLimit.value = item.sLLimit;
+      //   formValue.bDelay.value = item.bDelay;
+      //   formValue.eDelay.value = item.eDelay;
+      // }
+
       if (JSON.parse(localStorage.getItem('FsuTypeID')) === 3) {
         formValue.alarmLevel.value = item.alarmLevel;
-        formValue.threshold.value = item.threshold;
         formValue.absoluteVal.value = item.absoluteVal;
         formValue.relativeVal.value = item.relativeVal;
         formValue.describe.value = item.describe;
@@ -876,6 +1115,17 @@ class Information extends Component {
   }
   sunEditChange(item) {
     this.getSunRowData(item, 'modify');
+    this.childAlarmClick(item);
+    this.setState({singleLineData: item});
+  }
+  childAlarmClick(item) {
+    const {fsu_devicemanagementStore: {getAlarmTable}} = this.props;
+    const params = {
+      suID: item.suID,
+      deviceID: item.deviceID,
+      spID: item.spID,
+    };
+    getAlarmTable(params);
   }
   sunDeleteChange(item, selectedChildRowKey) {
     const {
@@ -898,6 +1148,7 @@ class Information extends Component {
 
   sunDetailChange(item) {
     this.getSunRowData(item, 'detail');
+    this.childAlarmClick(item);
   }
   currentPortChange(item) {
     this.setState({
@@ -950,9 +1201,10 @@ class Information extends Component {
 
     return (
       <ChildTable
-        rumorChange={this.rumorChange}
         historyChange={this.historyChange}
+        remoteControlClick={this.remoteControlClick}
         realtimeChange={this.realtimeChange}
+        telemeteryClick={this.telemeteryClick}
         controlChange={this.controlChange}
         addChildShow={this.addChildShow}
         childDetailClick={this.childDetailClick}
@@ -1002,9 +1254,22 @@ class Information extends Component {
   }
 
   addChildDeviceChange(changedFields) {
+    const key = _.keys(changedFields);
+    const fields = this.state.fields;
+    const obj = {};
+    // if (changedFields.spType) {
+    //   obj['sVal'] = {...fields['sVal'], value: ''};
+    //   obj['HLimit'] = {...fields['HLimit'], value: ''};
+    //   obj['SHLimit'] = {...fields['SHLimit'], value: ''};
+    //   obj['LLimit'] = {...fields['LLimit'], value: ''};
+    //   obj['SLLimit'] = {...fields['SLLimit'], value: ''};
+    //   obj['BDelay'] = {...fields['BDelay'], value: ''};
+    //   obj['EDelay'] = {...fields['EDelay'], value: ''};
+    // }
+    obj[key] = {showError: false, ...changedFields[key]};
     this.setState(({childDevicefields}) => {
       return {
-        childDevicefields: {...childDevicefields, ...changedFields},
+        childDevicefields: {...childDevicefields, ...obj},
       };
     });
   }
@@ -1142,11 +1407,13 @@ class Information extends Component {
       realtimeClick: this.realtimeClick,
       historyClick: this.historyClick,
       controlClick: this.controlClick,
+      portInfoClick: this.portInfoClick,
       disableClick: this.disableClick,
-      rumorClick: this.rumorClick,
       fsuStatusClick: this.fsuStatusClick,
+      restartClick: this.restartClick,
       addLevelOneClick: this.addLevelOneClick,
       detailClick: this.detailClick,
+      fsuSetTimeClick: this.fsuSetTimeClick,
       getAlarmTable: this.getAlarmTable,
       _this: this,
     });
@@ -1363,7 +1630,11 @@ class Information extends Component {
             onCancel={this.onRealtimeCancel}
             title={`实时数据/${this.state.childTableTitle}`}
             isShow={this.state.realtimeShow}>
-            <RealtimeTable needRealtime={this.state.needRealtime} />
+            <RealtimeTable
+              needRealtime={this.state.needRealtime}
+              singleLineData={this.state.singleLineData}
+              currentSuID={this.state.currentSuID}
+            />
           </Panel>
           <Panel
             onCancel={this.onHistoryCancel}
@@ -1372,19 +1643,46 @@ class Information extends Component {
             <HistoryModal isFsu={true} currentSuID={this.state.currentSuID} />
           </Panel>
           <ControlModal
-            width={730}
+            width={
+              JSON.parse(localStorage.getItem('FsuTypeID')) === 2 ? 900 : 730
+            }
             isShow={this.state.controlShow}
             title={'远程控制'}
             onCancel={this.onControlCancel}>
-            <ControlContent />
+            <ControlContent item={this.state.singleLineData} />
           </ControlModal>
+
+          <ControlModal
+            width={852}
+            isShow={this.state.remoteControlShow}
+            title={
+              this.state.singleLineData.spType === 6 ? '远程调配' : '告警量设置'
+            }
+            buttons={true}
+            onOk={this.onRemoteControlOk}
+            onCancel={this.onRemoteControlCancel}>
+            <RemoteControlContent
+              fields={this.state.remoteControlFields}
+              handleFormChange={this.remoteControlChange}
+            />
+          </ControlModal>
+
+          <ControlModal
+            width={852}
+            isShow={this.state.portInfoShow}
+            title={'端口信息'}
+            onCancel={this.onPortInfoCancel}>
+            <PortInfoContent />
+          </ControlModal>
+
           <ControlModal
             width={834}
-            isShow={this.state.rumorShow}
-            title={'远程调配'}
-            onCancel={this.onRumorCancel}>
-            <RumorContent />
+            isShow={this.state.telemeteryShow}
+            title={'远程调测'}
+            onCancel={this.onTelemeteryCancel}>
+            <TelemetryTable needRealtime={this.state.needRealtime} />
           </ControlModal>
+
           <ControlModal
             width={850}
             buttons={this.state.type == 'detail' ? false : true}
@@ -1398,6 +1696,7 @@ class Information extends Component {
               handleFormChange={this.handleFormChange}
             />
           </ControlModal>
+
           <EditModal
             isShow={this.state.fsuStatusShow}
             title={'FSU运行状态'}

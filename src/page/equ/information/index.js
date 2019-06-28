@@ -297,12 +297,10 @@ class Information extends Component {
         formValue.F_Port.require = true;
       }
       formValue.Id_Version.require = true;
-      formValue.F_ConnectType.require = true;
       formValue.F_StationID.value = data.pd.stationID || undefined;
       formValue.F_CollectSpan.value = data.pd.collectSpan;
       formValue.Id_Version.value = data.pd.Id_Version;
       formValue.F_HeartSpan.value = data.pd.heartSpan;
-      formValue.F_ConnectType.value = data.pd.connectType;
       formValue.F_DeviceName.value = data.pd.devName;
       formValue.F_IP.value = data.pd.ip;
       formValue.F_Latitude.value = data.pd.latitude;
@@ -311,7 +309,6 @@ class Information extends Component {
       formValue.F_OutDevID.value = data.pd.outDevID;
       formValue.F_Port.value = data.pd.port;
       formValue.rec.value = data.pd.rec;
-      formValue.F_ReportType.value = data.pd.reportType;
       formValue.F_SimCardNO.value = data.pd.simCardNo;
       formValue.adr.value = data.pd.adr || data.pd.adr === 0 ? data.pd.adr : '';
       return {
@@ -694,17 +691,17 @@ class Information extends Component {
     informationStore.getSportTable({F_DeviceID: record.devID});
   }
   //得到编辑所有value
-  handleFormChange(changedFields) {
+  handleFormChange(changedFields, F_ConnectType) {
     //showError让自己校验字段
     const key = _.keys(changedFields);
     const fields = this.state.fields;
     const obj = {};
-    if (key[0] === 'F_ConnectType') {
-      if (changedFields[key].value === 1 && this.state.type === 'new') {
+    if (F_ConnectType !== null) {
+      if (F_ConnectType === 1 && this.state.type === 'new') {
         obj['F_Port'] = {...fields['F_Port'], value: ''};
         obj['F_IP'] = {...fields['F_Port'], value: ''};
       }
-      if (changedFields[key].value === 1) {
+      if (F_ConnectType === 1) {
         obj['F_Port'] = {...fields['F_Port'], require: false};
         obj['F_IP'] = {...fields['F_IP'], require: false};
       } else {
@@ -712,24 +709,6 @@ class Information extends Component {
         obj['F_IP'] = {...fields['F_IP'], require: true};
       }
     }
-    // if (key[0] === 'F_IsConcentrator') {
-    //   if (changedFields[key].value === 1) {
-    //     obj['F_ConnectType'] = {
-    //       ...fields['F_ConnectType'],
-    //       value: undefined,
-    //       require: false,
-    //     };
-    //     obj['F_Port'] = {...fields['F_Port'], value: '', require: false};
-    //     obj['F_IP'] = {...fields['F_IP'], require: true};
-    //     obj['Id_Version'] = {
-    //       ...fields['Id_Version'],
-    //       value: undefined,
-    //       require: false,
-    //     };
-    //   } else {
-    //     obj['F_ConnectType'] = {...fields['F_ConnectType'], value: 0};
-    //   }
-    // }
     obj[key] = {showError: false, ...changedFields[key]};
     this.setState(({fields}) => {
       return {
