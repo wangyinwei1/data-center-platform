@@ -102,6 +102,10 @@ const columns = ({
       dataIndex: 'msgID',
       width: mode === 'detail' ? '29%' : '23%',
       render: (text, record, index) => {
+        let current = alarmList.filter(item => {
+          return item.msgID === record.msgID;
+        });
+        console.log(current);
         return (
           <Dropdown
             visible={record.msgVisible ? true : false}

@@ -22,7 +22,7 @@ class Regional extends Component {
     this.real = this.real.bind(this);
     this.state = {
       subDeviceValue: '',
-      type: 2,
+      type: 1,
     };
   }
   componentDidMount() {}

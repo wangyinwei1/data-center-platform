@@ -201,7 +201,7 @@ class Regional extends Component {
           (realtimeSubDev && (
             <div className={styles['subdev']}>
               <Select
-                defaultValue={2}
+                defaultValue={1}
                 placeholder={'请选择监控点'}
                 onChange={this.realtimeMonitorPointChange}>
                 {_.map(

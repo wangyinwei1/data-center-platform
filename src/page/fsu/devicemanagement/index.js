@@ -235,14 +235,22 @@ class Information extends Component {
   }
   //获取端口信息
   portInfoClick(item) {
+    if (item.onOff === 0) {
+      message.error('设备不在线！');
+      return;
+    }
     const {fsu_devicemanagementStore: {getFsuPortInfo}} = this.props;
     let params = {
       suID: item.suID,
     };
-    getFsuPortInfo(params).then(() => {
-      this.setState({
-        portInfoShow: true,
-      });
+    if (JSON.parse(localStorage.getItem('FsuTypeID')) === 2) {
+      params['surID'] = item.surID;
+    }
+    getFsuPortInfo(params).then(data => {
+      data &&
+        this.setState({
+          portInfoShow: true,
+        });
     });
   }
   onPortInfoCancel() {
@@ -1360,6 +1368,9 @@ class Information extends Component {
     const params = {
       suID: item.suID,
     };
+    if (JSON.parse(localStorage.getItem('FsuTypeID')) === 2) {
+      params['surID'] = item.surID;
+    }
     fsu_devicemanagementStore.getSuStatus(params);
     this.setState({
       fsuStatusShow: true,

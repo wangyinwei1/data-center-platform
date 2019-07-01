@@ -28,7 +28,7 @@ class Regional extends Component {
         servicesHeight,
         width,
       });
-
+      let indexWrapHeight = $(this.indexWrap).height() - 44;
       $(window).resize(() => {
         const width = $(window).width() - 46 - 24;
         const height = $('#layout_wrap #cl_alarm_item').height();
@@ -53,40 +53,58 @@ class Regional extends Component {
     });
   }
   render() {
+    // let width = window.innerWidth - 46;
+    // let height = window.innerHeight - 44;
+    // let slope = 846 / 1076;
+    // let maxHeight = '';
+    // if (height / width < slope) {
+    //   maxHeight = 'index_max_height';
+    // }
+
     return (
-      <div className={styles['index_bg']}>
-        <div className={styles['alarm_state_wrap']}>
-          <div
-            className={styles['state_quantity']}
-            style={{
-              fontSize: this.state.alarmHeigh + 'px',
-            }}>
-            <PieEcharts height={this.state.alarmHeigh} />
+      <div
+        className={styles['index_wrap']}
+        ref={c => {
+          this.indexWrap = c;
+        }}>
+        <div
+          className={classnames(styles['index_bg'])}
+          ref={c => {
+            this.container = c;
+          }}>
+          <div className={styles['alarm_state_wrap']}>
+            <div
+              className={styles['state_quantity']}
+              style={{
+                fontSize: this.state.alarmHeigh + 'px',
+              }}>
+              <PieEcharts height={this.state.alarmHeigh} />
+            </div>
+            <div
+              className={styles['alarm_center']}
+              style={{
+                fontSize: this.state.alarmHeigh + 'px',
+              }}>
+              {this.state.alarmHeigh !== 0 && (
+                <Alarm height={this.state.alarmHeigh} />
+              )}
+            </div>
           </div>
           <div
-            className={styles['alarm_center']}
+            className={styles['services_wrap']}
             style={{
-              fontSize: this.state.alarmHeigh + 'px',
+              fontSize: this.state.servicesHeight + 'px',
+            }}
+            ref={c => {
+              this.servicesWrap = c;
             }}>
-            {this.state.alarmHeigh !== 0 && (
-              <Alarm height={this.state.alarmHeigh} />
+            {this.state.servicesHeight !== 0 && (
+              <Services
+                width={this.state.width}
+                height={this.state.servicesHeight}
+              />
             )}
           </div>
-        </div>
-        <div
-          className={styles['services_wrap']}
-          style={{
-            fontSize: this.state.servicesHeight + 'px',
-          }}
-          ref={c => {
-            this.servicesWrap = c;
-          }}>
-          {this.state.servicesHeight !== 0 && (
-            <Services
-              width={this.state.width}
-              height={this.state.servicesHeight}
-            />
-          )}
         </div>
       </div>
     );
