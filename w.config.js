@@ -161,8 +161,8 @@ var devServer = {
     {
       context: ['/collect/**'],
       // target: 'http://172.16.7.19:8080/',
-      target: 'http://172.17.3.53:8080/',
-      // target: 'http://172.16.4.254:8080/',
+      // target: 'http://172.17.3.53:8080/',
+      target: 'http://172.16.4.254:8080/',
     },
   ],
 };

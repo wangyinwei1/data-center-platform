@@ -22,17 +22,33 @@
     .ant-calendar-footer-extra + .ant-calendar-footer-btn {
       border-top: none;
     }
-    .ant-calendar-time-picker-btn {
+    .ant-calendar-time-picker-btn,
+    .ant-calendar-today-btn {
       color: #56eca1;
     }
 
     .ant-calendar-ok-btn {
       background-color: #56eca1;
       border-color: #56eca1;
+      &:hover,
+      &:focus {
+        background-color: #56eca1;
+        border-color: #56eca1;
+      }
     }
     .ant-calendar-ok-btn-disabled {
       background-color: #f5f5f5;
       border-color: #d9d9d9;
+    }
+  }
+  //input框
+  .ant-calendar-picker:hover
+    .ant-calendar-picker-input:not(.ant-input-disabled) {
+    border-color: #56eca1 !important;
+  }
+  .ant-calendar-picker .ant-input {
+    &:focus {
+      box-shadow: 0 0 0 2px rgba(86, 236, 161, 0.2);
     }
   }
 
