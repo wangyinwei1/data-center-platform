@@ -22,6 +22,7 @@ import HistoryModal from './../../equ/information/historyModal.js';
 import ChildTable from './childTable.js';
 import ControlModal from './controlModal.js';
 import ControlContent from './controlContent.js';
+import TimingContent from './timingContent.js';
 import RemoteControlContent from './rumorContent.js';
 import AddLevelOne from './addLevelOne.js';
 import FsuStatusEcharts from './FsuStatusEcharts.js';
@@ -79,6 +80,8 @@ class Information extends Component {
     this.onRealtimeOk = this.onRealtimeOk.bind(this);
     this.onDisableCancel = this.onDisableCancel.bind(this);
     this.onRealtimeCancel = this.onRealtimeCancel.bind(this);
+    this.onTimingCancel = this.onTimingCancel.bind(this);
+    this.onTimingOk = this.onTimingOk.bind(this);
     this.expandedRowRender = this.expandedRowRender.bind(this);
     this.onExpand = this.onExpand.bind(this);
     this.onRemoteControlOk = this.onRemoteControlOk.bind(this);
@@ -106,6 +109,7 @@ class Information extends Component {
     this.onExportTplClick = this.onExportTplClick.bind(this);
     this.childEditClick = this.childEditClick.bind(this);
     this.fsuSetTimeClick = this.fsuSetTimeClick.bind(this);
+    this.timingChange = this.timingChange.bind(this);
     this.sunEditChange = this.sunEditChange.bind(this);
     this.sunDeleteChange = this.sunDeleteChange.bind(this);
     this.sunDetailChange = this.sunDetailChange.bind(this);
@@ -161,9 +165,11 @@ class Information extends Component {
       batchShow: false,
       portInfoShow: false,
       fsuStatusShow: false,
+      timingShow: false,
       batchField: '',
       needRealtime: true,
       hintContent: '',
+      timing: '',
       ...formParams,
       ...addLevelOne,
       ...addChildDevice,
@@ -203,6 +209,31 @@ class Information extends Component {
       sunBatchIds: '',
     });
   }
+  onTimingCancel() {
+    this.setState({
+      timingShow: false,
+    });
+  }
+  timingChange(value) {
+    console.log(value);
+    this.setState({
+      timing: value,
+    });
+  }
+  onTimingOk() {
+    let time = this.state.timing;
+    let item = this.state.singleLineData;
+
+    const {fsu_devicemanagementStore: {fsuSetTime}} = this.props;
+    const params = {
+      suID: item.suID,
+      time,
+    };
+    if (JSON.parse(localStorage.getItem('FsuTypeID')) === 2) {
+      params['surID'] = item.surID;
+    }
+    fsuSetTime(params);
+  }
   //重启
   restartClick(item) {
     if (item.onOff === 0) {
@@ -224,14 +255,10 @@ class Information extends Component {
       message.error('设备不在线不能校时！');
       return;
     }
-    const {fsu_devicemanagementStore: {fsuSetTime}} = this.props;
-    const params = {
-      suID: item.suID,
-    };
-    if (JSON.parse(localStorage.getItem('FsuTypeID')) === 2) {
-      params['surID'] = item.surID;
-    }
-    fsuSetTime(params);
+    this.setState({
+      timingShow: true,
+      singleLineData: item,
+    });
   }
   //获取端口信息
   portInfoClick(item) {
@@ -1684,6 +1711,15 @@ class Information extends Component {
             title={'端口信息'}
             onCancel={this.onPortInfoCancel}>
             <PortInfoContent />
+          </ControlModal>
+          <ControlModal
+            width={320}
+            isShow={this.state.timingShow}
+            title={'校对服务器时间'}
+            buttons={true}
+            onOk={this.onTimingOk}
+            onCancel={this.onTimingCancel}>
+            <TimingContent timingChange={this.timingChange} />
           </ControlModal>
 
           <ControlModal

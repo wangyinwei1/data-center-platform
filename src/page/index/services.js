@@ -238,59 +238,59 @@ class Pie extends Component {
         {(this.state.activeIndex === 2 || this.state.activeIndex === 4) && (
           <div className={styles['data_center_nav']}>{navItem}</div>
         )}
-        <div className={styles['services_body']}>
-          {/* {this.state.activeIndex === 1 && ( */}
-          {/*   <DispatchCenter CenterItem={centerItem} RightItem={rightItem} /> */}
-          {/* )} */}
-          {/* {this.state.activeIndex === 2 && ( */}
-          {/*   <Api currentPage={this.state.currentPage} /> */}
-          {/* )} */}
-          {/* {this.state.activeIndex === 3 && <Front />} */}
-          {/* {this.state.activeIndex === 4 && ( */}
-          {/*   <Datacenter currentPage={this.state.currentPage} /> */}
-          {/* )} */}
-          {/* <div className={styles['services_nav']}> */}
-          {/*   <Dispatch */}
-          {/*     width={height * 0.106} */}
-          {/*     height={height * 0.106} */}
-          {/*     style={{marginRight: marginRight + 'px'}} */}
-          {/*     className={classnames( */}
-          {/*       styles['services_icon'], */}
-          {/*       this.state.activeIndex === 1 && styles['active'], */}
-          {/*     )} */}
-          {/*     onClick={this.handleClick} */}
-          {/*   /> */}
-          {/*   <ApiService */}
-          {/*     width={height * 0.106} */}
-          {/*     height={height * 0.106} */}
-          {/*     style={{marginRight: marginRight + 'px'}} */}
-          {/*     className={classnames( */}
-          {/*       styles['services_icon'], */}
-          {/*       this.state.activeIndex === 2 && styles['active'], */}
-          {/*     )} */}
-          {/*     onClick={this.handleClick} */}
-          {/*   /> */}
-          {/*   <FrontEndMachine */}
-          {/*     width={height * 0.106} */}
-          {/*     height={height * 0.106} */}
-          {/*     style={{marginRight: marginRight + 'px'}} */}
-          {/*     className={classnames( */}
-          {/*       styles['services_icon'], */}
-          {/*       this.state.activeIndex === 3 && styles['active'], */}
-          {/*     )} */}
-          {/*     onClick={this.handleClick} */}
-          {/*   /> */}
-          {/*   <DataCenter */}
-          {/*     width={height * 0.106} */}
-          {/*     height={height * 0.106} */}
-          {/*     className={classnames( */}
-          {/*       styles['services_icon'], */}
-          {/*       this.state.activeIndex === 4 && styles['active'], */}
-          {/*     )} */}
-          {/*     onClick={this.handleClick} */}
-          {/*   /> */}
-          {/* </div> */}
-        </div>
+        {/* <div className={styles['services_body']}> */}
+        {/* {this.state.activeIndex === 1 && ( */}
+        {/*   <DispatchCenter CenterItem={centerItem} RightItem={rightItem} /> */}
+        {/* )} */}
+        {/* {this.state.activeIndex === 2 && ( */}
+        {/*   <Api currentPage={this.state.currentPage} /> */}
+        {/* )} */}
+        {/* {this.state.activeIndex === 3 && <Front />} */}
+        {/* {this.state.activeIndex === 4 && ( */}
+        {/*   <Datacenter currentPage={this.state.currentPage} /> */}
+        {/* )} */}
+        {/* <div className={styles['services_nav']}> */}
+        {/*   <Dispatch */}
+        {/*     width={height * 0.106} */}
+        {/*     height={height * 0.106} */}
+        {/*     style={{marginRight: marginRight + 'px'}} */}
+        {/*     className={classnames( */}
+        {/*       styles['services_icon'], */}
+        {/*       this.state.activeIndex === 1 && styles['active'], */}
+        {/*     )} */}
+        {/*     onClick={this.handleClick} */}
+        {/*   /> */}
+        {/*   <ApiService */}
+        {/*     width={height * 0.106} */}
+        {/*     height={height * 0.106} */}
+        {/*     style={{marginRight: marginRight + 'px'}} */}
+        {/*     className={classnames( */}
+        {/*       styles['services_icon'], */}
+        {/*       this.state.activeIndex === 2 && styles['active'], */}
+        {/*     )} */}
+        {/*     onClick={this.handleClick} */}
+        {/*   /> */}
+        {/*   <FrontEndMachine */}
+        {/*     width={height * 0.106} */}
+        {/*     height={height * 0.106} */}
+        {/*     style={{marginRight: marginRight + 'px'}} */}
+        {/*     className={classnames( */}
+        {/*       styles['services_icon'], */}
+        {/*       this.state.activeIndex === 3 && styles['active'], */}
+        {/*     )} */}
+        {/*     onClick={this.handleClick} */}
+        {/*   /> */}
+        {/*   <DataCenter */}
+        {/*     width={height * 0.106} */}
+        {/*     height={height * 0.106} */}
+        {/*     className={classnames( */}
+        {/*       styles['services_icon'], */}
+        {/*       this.state.activeIndex === 4 && styles['active'], */}
+        {/*     )} */}
+        {/*     onClick={this.handleClick} */}
+        {/*   /> */}
+        {/* </div> */}
+        {/* </div> */}
       </div>
     );
   }
