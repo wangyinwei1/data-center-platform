@@ -27,7 +27,7 @@ class TopNav extends Component {
       <Row className={styles['top_nav_wrap']}>
         <Col span={1} className={styles['logo']}>
           <p>物联网数据中心平台</p>
-          <span>IOT DATA CENTER PLATFORM</span>
+          {/* <span>IOT DATA CENTER PLATFORM</span> */}
         </Col>
         <Col span={1} className={styles['top_nav_title']}>
           {title}

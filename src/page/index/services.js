@@ -5,6 +5,7 @@ import DispatchCenter from './dispacth.js';
 import Datacenter from './dataCenter.js';
 import Api from './api.js';
 import Front from './fronts.js';
+import {Tabs} from 'antd';
 import {toJS} from 'mobx';
 import _ from 'lodash';
 import classnames from 'classnames';
@@ -22,6 +23,7 @@ import {
   Cpu,
   Timer,
 } from './svg.js';
+const {TabPane} = Tabs;
 
 const centerItem = props => {
   let data = null;
@@ -131,6 +133,7 @@ class Pie extends Component {
   constructor(props) {
     super(props);
     this.handleClick = this.handleClick.bind(this);
+    this.onChange = this.onChange.bind(this);
     this.state = {
       activeIndex: 1,
       currentPage: 1,
@@ -143,6 +146,7 @@ class Pie extends Component {
       currentPage: 1,
     });
   }
+  onChange() {}
   render() {
     const {height, home_pageStore: {servicesData}} = this.props;
     let title = {en: '', zh: ''};
@@ -208,84 +212,84 @@ class Pie extends Component {
         ref={c => {
           this.root = c;
         }}>
-        <div className={styles['service_title']}>
-          <span className={styles['service_zh']}>{title.zh}</span>
-          <span className={styles['service_en']}>{title.en}</span>
-        </div>
+        <Tabs defaultActiveKey="1" onChange={this.onChange}>
+          <TabPane tab="调度中心" key="1">
+            <div className={styles['services_body']}>
+              <DispatchCenter CenterItem={centerItem} RightItem={rightItem} />
+            </div>
+          </TabPane>
+          <TabPane tab="API服务" key="2">
+            <div className={styles['services_body']}>
+              <Api currentPage={this.state.currentPage} />
+            </div>
+          </TabPane>
+          <TabPane tab="前置机" key="3">
+            <div className={styles['services_body']}>
+              <Front />
+            </div>
+          </TabPane>
+          <TabPane tab="数据中心" key="4">
+            <div className={styles['services_body']}>
+              <Datacenter currentPage={this.state.currentPage} />
+            </div>
+          </TabPane>
+        </Tabs>
+
         {(this.state.activeIndex === 2 || this.state.activeIndex === 4) && (
           <div className={styles['data_center_nav']}>{navItem}</div>
         )}
         <div className={styles['services_body']}>
-          {this.state.activeIndex === 1 && (
-            <DispatchCenter CenterItem={centerItem} RightItem={rightItem} />
-          )}
-          {this.state.activeIndex === 2 && (
-            <Api currentPage={this.state.currentPage} />
-          )}
-          {this.state.activeIndex === 3 && <Front />}
-          {this.state.activeIndex === 4 && (
-            <Datacenter currentPage={this.state.currentPage} />
-          )}
-          <div className={styles['services_nav']}>
-            <Dispatch
-              width={height * 0.106}
-              height={height * 0.106}
-              style={{marginRight: marginRight + 'px'}}
-              className={classnames(
-                styles['services_icon'],
-                this.state.activeIndex === 1 && styles['active'],
-              )}
-              onClick={this.handleClick}
-            />
-            <ApiService
-              width={height * 0.106}
-              height={height * 0.106}
-              style={{marginRight: marginRight + 'px'}}
-              className={classnames(
-                styles['services_icon'],
-                this.state.activeIndex === 2 && styles['active'],
-              )}
-              onClick={this.handleClick}
-            />
-            <FrontEndMachine
-              width={height * 0.106}
-              height={height * 0.106}
-              style={{marginRight: marginRight + 'px'}}
-              className={classnames(
-                styles['services_icon'],
-                this.state.activeIndex === 3 && styles['active'],
-              )}
-              onClick={this.handleClick}
-            />
-            <DataCenter
-              width={height * 0.106}
-              height={height * 0.106}
-              className={classnames(
-                styles['services_icon'],
-                this.state.activeIndex === 4 && styles['active'],
-              )}
-              onClick={this.handleClick}
-            />
-            {/* <SchedulingService */}
-            {/*   width={height * 0.106} */}
-            {/*   height={height * 0.106} */}
-            {/*   style={{marginRight: marginRight + 'px'}} */}
-            {/*   className={classnames( */}
-            {/*     styles['services_icon'], */}
-            {/*     this.state.activeIndex === 5 && styles['active'], */}
-            {/*   )} */}
-            {/*   onClick={this.handleClick} */}
-            {/* /> */}
-            {/* <Authentication */}
-            {/*   width={height * 0.106} */}
-            {/*   height={height * 0.106} */}
-            {/*   className={classnames( */}
-            {/*     styles['services_icon'], */}
-            {/*     this.state.activeIndex === 6 && styles['active'], */}
-            {/*   )} */}
-            {/*   onClick={this.handleClick} */}
-            {/* /> */}
-          </div>
+          {/* {this.state.activeIndex === 1 && ( */}
+          {/*   <DispatchCenter CenterItem={centerItem} RightItem={rightItem} /> */}
+          {/* )} */}
+          {/* {this.state.activeIndex === 2 && ( */}
+          {/*   <Api currentPage={this.state.currentPage} /> */}
+          {/* )} */}
+          {/* {this.state.activeIndex === 3 && <Front />} */}
+          {/* {this.state.activeIndex === 4 && ( */}
+          {/*   <Datacenter currentPage={this.state.currentPage} /> */}
+          {/* )} */}
+          {/* <div className={styles['services_nav']}> */}
+          {/*   <Dispatch */}
+          {/*     width={height * 0.106} */}
+          {/*     height={height * 0.106} */}
+          {/*     style={{marginRight: marginRight + 'px'}} */}
+          {/*     className={classnames( */}
+          {/*       styles['services_icon'], */}
+          {/*       this.state.activeIndex === 1 && styles['active'], */}
+          {/*     )} */}
+          {/*     onClick={this.handleClick} */}
+          {/*   /> */}
+          {/*   <ApiService */}
+          {/*     width={height * 0.106} */}
+          {/*     height={height * 0.106} */}
+          {/*     style={{marginRight: marginRight + 'px'}} */}
+          {/*     className={classnames( */}
+          {/*       styles['services_icon'], */}
+          {/*       this.state.activeIndex === 2 && styles['active'], */}
+          {/*     )} */}
+          {/*     onClick={this.handleClick} */}
+          {/*   /> */}
+          {/*   <FrontEndMachine */}
+          {/*     width={height * 0.106} */}
+          {/*     height={height * 0.106} */}
+          {/*     style={{marginRight: marginRight + 'px'}} */}
+          {/*     className={classnames( */}
+          {/*       styles['services_icon'], */}
+          {/*       this.state.activeIndex === 3 && styles['active'], */}
+          {/*     )} */}
+          {/*     onClick={this.handleClick} */}
+          {/*   /> */}
+          {/*   <DataCenter */}
+          {/*     width={height * 0.106} */}
+          {/*     height={height * 0.106} */}
+          {/*     className={classnames( */}
+          {/*       styles['services_icon'], */}
+          {/*       this.state.activeIndex === 4 && styles['active'], */}
+          {/*     )} */}
+          {/*     onClick={this.handleClick} */}
+          {/*   /> */}
+          {/* </div> */}
         </div>
       </div>
     );

@@ -133,11 +133,7 @@ class Pie extends Component {
           }}
           option={options}
         />
-        <Panel
-          onCancel={this.onCancel}
-          title={title}
-          theme={'darker'}
-          isShow={this.state.show}>
+        <Panel onCancel={this.onCancel} title={title} isShow={this.state.show}>
           <ChildTable type={this.state.type} />
         </Panel>
       </div>

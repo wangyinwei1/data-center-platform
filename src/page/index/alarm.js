@@ -224,10 +224,6 @@ class Pie extends Component {
                   )}>
                   <div className={styles['alarm_header']}>
                     <span className={styles['zh']}>告警中心 / {app.type}</span>
-                    <span className={styles['en']}>
-                      ALARM CENTER / {app.type === '基础告警' ? 'BASIC' : 'FSU'}{' '}
-                      ALARM
-                    </span>
                     <span
                       onClick={this.switchAlarmApi}
                       className={styles['switch_alarm']}>
@@ -258,7 +254,6 @@ class Pie extends Component {
         <Panel
           onCancel={this.onCancel}
           title={this.state.isFsu ? 'FSU告警' : '基础告警'}
-          theme={'darker'}
           isShow={this.state.show}>
           <ChildTable isFsu={this.state.isFsu} />
         </Panel>

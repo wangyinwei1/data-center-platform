@@ -108,13 +108,12 @@ class Regional extends Component {
     });
     return (
       <div className={styles['alarm_table_wrap']}>
-        <Toolbar onSearch={this.onSearch} theme={'darker'} closeAdd={true} />
+        <Toolbar onSearch={this.onSearch} closeAdd={true} />
         <Table
           pageIndex={pagination.page}
           pageSize={pagination.number}
           total={pagination.count}
           columns={columns}
-          theme={'darker'}
           loading={home_pageStore.a_loading}
           onShowSizeChange={this.onShowSizeChange}
           onChange={this.onPageChange}
@@ -125,14 +124,13 @@ class Regional extends Component {
           isShow={this.state.alarmShow}
           title={this.state.isFsu ? 'FSU告警' : '基础告警'}
           onOk={this.onEditOk}
-          theme={'darker'}
           wrapClassName={'index_alarm_num'}
           onCancel={this.onEditCancel}>
           <div className={styles['alarm_left_wrap']}>
             {this.state.isFsu ? (
-              <FsuRealtimeAlarmTable theme={'darker'} />
+              <FsuRealtimeAlarmTable />
             ) : (
-              <RealtimeAlarmTable theme={'darker'} />
+              <RealtimeAlarmTable />
             )}
           </div>
         </EditModal>

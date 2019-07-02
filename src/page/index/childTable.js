@@ -129,14 +129,13 @@ class Regional extends Component {
         });
     return (
       <div className={styles['alarm_table_wrap']}>
-        <Remarks theme={'darker'} />
-        <Toolbar onSearch={this.onSearch} theme={'darker'} closeAdd={true} />
+        <Remarks />
+        <Toolbar onSearch={this.onSearch} closeAdd={true} />
         <Table
           pageIndex={pagination.page}
           pageSize={pagination.number}
           total={pagination.allCount}
           columns={columns}
-          theme={'darker'}
           rowClassName={(record, index) => {
             const rowClassName = ['td_padding'];
             record.onOff === 0 && rowClassName.push('cl_online_state');
@@ -152,7 +151,6 @@ class Regional extends Component {
           isShow={this.state.show}
           title={'派发告警'}
           onOk={this.onEditOk}
-          theme={'darker'}
           wrapClassName={'workorders_modal'}
           onCancel={this.onCancel}>
           <WorkOrders
