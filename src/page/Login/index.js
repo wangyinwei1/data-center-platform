@@ -6,7 +6,7 @@ import classnames from 'classnames';
 import {Link} from 'react-router';
 import styles from './index.less';
 import _ from 'lodash';
-const logo = 'static/images/logo.png';
+const logo = 'static/images/login_logo.png';
 const FormItem = Form.Item;
 //实例
 @inject('loginStore', 'globalStore', 'layoutStore')
@@ -102,10 +102,10 @@ class Loginer extends Component {
       <div className={styles['login_wrap']}>
         <div className={classnames(styles['login_ct'], 'clearfix')}>
           <img src={logo} className={styles['logo']} />
-          <div className={styles['logo_title']}>
-            <p>物联网数据中心平台</p>
-            <span>IOT &nbsp;DATA &nbsp;CENTER &nbsp;PLATFORM</span>
-          </div>
+          {/* <div className={styles['logo_title']}> */}
+          {/*   <p>物联网数据中心平台</p> */}
+          {/*   <span>IOT &nbsp;DATA &nbsp;CENTER &nbsp;PLATFORM</span> */}
+          {/* </div> */}
           <div className={styles['line']} />
           <div className={styles['login_form']}>
             <Form>
