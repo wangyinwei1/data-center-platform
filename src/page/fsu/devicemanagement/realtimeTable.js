@@ -65,13 +65,13 @@ class Regional extends Component {
         return;
       }
     }
-    const {fsu_devicemanagementStore, currentSuID} = this.props;
+    const {fsu_devicemanagementStore, singleLineData} = this.props;
     const params = {
       number: 10,
       ...fsu_devicemanagementStore.r_tableParmas,
       keywords: encodeURIComponent(value),
       page: 1,
-      F_Suid: currentSuID,
+      F_Suid: singleLineData.suID,
     };
 
     if (FsuTypeID === 2) {
@@ -89,13 +89,13 @@ class Regional extends Component {
         return;
       }
     }
-    const {fsu_devicemanagementStore, currentSuID, singleLineData} = this.props;
+    const {fsu_devicemanagementStore, singleLineData} = this.props;
     let realtimeSubDevMenu = fsu_devicemanagementStore.realtimeSubDevMenu;
     let current = realtimeSubDevMenu.filter(item => {
       return item.deviceID === this.state.subDeviceValue;
     });
     const params = {
-      F_Suid: currentSuID,
+      F_Suid: singleLineData.suID,
       ...fsu_devicemanagementStore.r_tableParmas,
     };
     if (FsuTypeID === 2) {
