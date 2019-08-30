@@ -41,8 +41,8 @@ class Regional extends Component {
     sunDetailChange(item);
   }
   onRowDoubleClick(item) {
-    const {sunDetailChange} = this.props;
-    sunDetailChange(item);
+    const {sunEditChange} = this.props;
+    sunEditChange(item);
   }
   //实时数据
   realtimeClick(item, e) {
@@ -112,7 +112,7 @@ class Regional extends Component {
       _this: this,
     });
     return (
-      <div className={'cl_grandson'}>
+      <div className={'cl_grandson'} style={{padding: '20px'}}>
         <Table
           className={'aaaa'}
           pagination={false}

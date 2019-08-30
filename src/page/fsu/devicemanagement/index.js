@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {action, observer, inject} from 'mobx-react';
-import {Spin, Form, message, Upload} from 'antd';
+import {Spin, Form, message, Button, Row, Upload} from 'antd';
 import styles from './index.less';
 import RealtimeAlarmTable from '../realtimealarm/childTable.js';
 import Cascader from '../../../components/Cascader';
@@ -29,6 +29,7 @@ import FsuStatusEcharts from './FsuStatusEcharts.js';
 import PortInfoContent from './portInfoContent.js';
 import DownConfig from './downConfig.js';
 import AddChildDevice from './addChildDevice.js';
+import GrandsonTable from './grandsonTable.js';
 import {
   formParams,
   addLevelOne,
@@ -66,12 +67,15 @@ class Information extends Component {
     this.onDeleteCancel = this.onDeleteCancel.bind(this);
     this.fsuStatusClick = this.fsuStatusClick.bind(this);
     this.onSearch = this.onSearch.bind(this);
+    this.onMonitorCancel = this.onMonitorCancel.bind(this);
     this.remoteControlChange = this.remoteControlChange.bind(this);
     this.telemeteryClick = this.telemeteryClick.bind(this);
     this.onShowSizeChange = this.onShowSizeChange.bind(this);
     this.onEditCancel = this.onEditCancel.bind(this);
     this.portInfoClick = this.portInfoClick.bind(this);
     this.onEditOk = this.onEditOk.bind(this);
+    this.onSubDevCancel = this.onSubDevCancel.bind(this);
+    this.controlClick = this.controlClick.bind(this);
     this.onTelemeteryCancel = this.onTelemeteryCancel.bind(this);
     this.closeDownShowChange = this.closeDownShowChange.bind(this);
     this.onKeyPress = this.onKeyPress.bind(this);
@@ -81,7 +85,10 @@ class Information extends Component {
     this.onDisableCancel = this.onDisableCancel.bind(this);
     this.onRealtimeCancel = this.onRealtimeCancel.bind(this);
     this.onTimingCancel = this.onTimingCancel.bind(this);
+    this.detailClick = this.detailClick.bind(this);
     this.onTimingOk = this.onTimingOk.bind(this);
+    this.monitorClick = this.monitorClick.bind(this);
+    this.subDevClick = this.subDevClick.bind(this);
     this.expandedRowRender = this.expandedRowRender.bind(this);
     this.onExpand = this.onExpand.bind(this);
     this.onRemoteControlOk = this.onRemoteControlOk.bind(this);
@@ -95,6 +102,7 @@ class Information extends Component {
     this.remoteControlClick = this.remoteControlClick.bind(this);
     this.controlChange = this.controlChange.bind(this);
     this.onHistoryCancel = this.onHistoryCancel.bind(this);
+    this.realtimeClick = this.realtimeClick.bind(this);
     this.onControlCancel = this.onControlCancel.bind(this);
     this.onRemoteControlCancel = this.onRemoteControlCancel.bind(this);
     this.handleFormChange = this.handleFormChange.bind(this);
@@ -166,15 +174,47 @@ class Information extends Component {
       portInfoShow: false,
       fsuStatusShow: false,
       timingShow: false,
+      subDevShow: false,
+      monitorShow: false,
       batchField: '',
       needRealtime: true,
       hintContent: '',
+      singleLineData1: {},
       timing: '',
       ...formParams,
       ...addLevelOne,
       ...addChildDevice,
       ...remoteControlFields,
     };
+  }
+  monitorClick(item) {
+    const {fsu_devicemanagementStore} = this.props;
+    fsu_devicemanagementStore
+      .getGrandsonTable({F_DeviceID: item.deviceID, F_Suid: item.suID})
+      .then(() => {
+        console.log(item);
+        this.setState({
+          monitorShow: true,
+        });
+      });
+  }
+  subDevClick(item) {
+    const {fsu_devicemanagementStore} = this.props;
+    fsu_devicemanagementStore.getSportTable({F_Suid: item.suID}).then(() => {
+      this.setState({
+        subDevShow: true,
+      });
+    });
+  }
+  onSubDevCancel() {
+    this.setState({
+      subDevShow: false,
+    });
+  }
+  onMonitorCancel() {
+    this.setState({
+      monitorShow: false,
+    });
   }
   //以下级联方法
   onKeyPress(e) {
@@ -235,7 +275,12 @@ class Information extends Component {
     fsuSetTime(params);
   }
   //重启
-  restartClick(item) {
+  restartClick() {
+    let item = this.state.singleLineData1;
+    if (!this.state.batchIds) {
+      message.error('请选择设备!');
+      return;
+    }
     if (item.onOff === 0) {
       message.error('设备不在线不能重启！');
       return;
@@ -250,15 +295,24 @@ class Information extends Component {
     fsuRestart(params);
   }
   //校时
-  fsuSetTimeClick(item) {
+  fsuSetTimeClick() {
+    if (!this.state.batchIds) {
+      message.error('请选择设备!');
+      return;
+    }
+    let item = this.state.singleLineData1;
     if (item.onOff === 0) {
       message.error('设备不在线不能校时！');
       return;
     }
-    this.setState({
-      timingShow: true,
-      singleLineData: item,
-    });
+    const {fsu_devicemanagementStore: {fsuSetTime}} = this.props;
+    const params = {
+      suID: item.suID,
+    };
+    if (JSON.parse(localStorage.getItem('FsuTypeID')) === 2) {
+      params['surID'] = item.surID;
+    }
+    fsuSetTime(params);
   }
   //获取端口信息
   portInfoClick(item) {
@@ -340,8 +394,6 @@ class Information extends Component {
   }
   //真实数据弹框
   realtimeClick(item, e) {
-    e.stopPropagation();
-    e.nativeEvent.stopImmediatePropagation();
     const setState = () => {
       this.setState({
         realtimeShow: true,
@@ -420,8 +472,6 @@ class Information extends Component {
   }
   //控制
   controlClick(item, e) {
-    e.stopPropagation();
-    e.nativeEvent.stopImmediatePropagation();
     if (item.onOff === 0) {
       message.error('离线设备不支持远程控制！');
       return;
@@ -589,9 +639,12 @@ class Information extends Component {
     });
   }
   onRowDoubleClick(item, index, e) {
-    const {fsu_devicemanagementStore: {goFind2, ztreeChild}} = this.props;
+    const {
+      fsu_devicemanagementStore: {goFind2, getFSUType, ztreeChild},
+    } = this.props;
+    getFSUType();
     goFind2({Area_ID: ztreeChild, suID: item.suID}).then(data => {
-      this.initFromValue(data, 'detail');
+      this.initFromValue(data, 'modify');
     });
   }
   onRealAlarmCancel() {
@@ -708,12 +761,10 @@ class Information extends Component {
       });
       this.state.childType == 'modify'
         ? editConsport(params).then(() => {
-            this.state.expandedRows[0] === currentDevice &&
-              getSportTable(F_Suid);
+            getSportTable(F_Suid);
           })
         : saveConsport(params).then(() => {
-            this.state.expandedRows[0] === currentDevice &&
-              getSportTable(F_Suid);
+            getSportTable(F_Suid);
           });
       this.setState({
         addLevelOneShow: false,
@@ -851,18 +902,16 @@ class Information extends Component {
       });
       this.state.sunType == 'modify'
         ? editSun(params).then(() => {
-            this.state.selectedChildRowKey[0] === this.state.currentDeviceID &&
-              getGrandsonTable({
-                ...F_Suid,
-                F_DeviceID: this.state.currentDeviceID,
-              });
+            getGrandsonTable({
+              ...F_Suid,
+              F_DeviceID: this.state.currentDeviceID,
+            });
           })
         : saveSun(params).then(() => {
-            this.state.selectedChildRowKey[0] === this.state.currentDeviceID &&
-              getGrandsonTable({
-                ...F_Suid,
-                F_DeviceID: this.state.currentDeviceID,
-              });
+            getGrandsonTable({
+              ...F_Suid,
+              F_DeviceID: this.state.currentDeviceID,
+            });
           });
       this.setState({
         ...addChildDevice,
@@ -895,7 +944,7 @@ class Information extends Component {
   onDeleteOk() {
     if (this.state.deleteType === 'subDev') {
       const {fsu_devicemanagementStore} = this.props;
-      const params = {F_Suid: this.state.singleLineData.suID};
+      const params = {F_Suid: this.state.singleLineData1.suID};
       this.c_onDeleteOk(fsu_devicemanagementStore, params);
     } else {
       const {
@@ -905,7 +954,7 @@ class Information extends Component {
           getSportTable,
         },
       } = this.props;
-      const item = this.state.singleLineData;
+      const item = this.state.singleLineData1;
       delectConsport({F_Suid: currentDevice, F_DeviceID: item.deviceID}).then(
         () => {
           const F_Suid = {F_Suid: currentDevice};
@@ -920,7 +969,13 @@ class Information extends Component {
   onDeleteCancel() {
     this.c_onDeleteCancel();
   }
-  deleteClick(item, e) {
+  deleteClick() {
+    if (!this.state.batchIds) {
+      message.error('请选择设备！');
+
+      return;
+    }
+    let item = this.state.singleLineData1;
     const {fsu_devicemanagementStore} = this.props;
     fsu_devicemanagementStore.getSportTable({F_Suid: item.suID}).then(data => {
       if (data && data[0]) {
@@ -928,14 +983,14 @@ class Information extends Component {
           deleteContent: '该设备下拥有子设备,是否继续删除？',
           deleteShow: true,
           deleteType: 'subDev',
-          singleLineData: item,
+          singleLineData1: item,
         });
       } else {
         this.setState({
           deleteContent: '此操作将删除该条数据, 是否继续?',
           deleteShow: true,
           deleteType: 'subDev',
-          singleLineData: item,
+          singleLineData1: item,
         });
       }
     });
@@ -1437,6 +1492,7 @@ class Information extends Component {
     const {fsu_devicemanagementStore, zTreeLevel, regionalStore} = this.props;
     const tableData = toJS(fsu_devicemanagementStore.tableData.varList) || [];
     const pagination = toJS(fsu_devicemanagementStore.tableData) || {};
+    console.log(tableData);
     const columns = columnData({
       deleteClick: this.deleteClick,
       editClick: this.editClick,
@@ -1453,6 +1509,8 @@ class Information extends Component {
       detailClick: this.detailClick,
       fsuSetTimeClick: this.fsuSetTimeClick,
       getAlarmTable: this.getAlarmTable,
+      monitorClick: this.monitorClick,
+      subDevClick: this.subDevClick,
       _this: this,
     });
     const nesting = {
@@ -1509,40 +1567,17 @@ class Information extends Component {
     const batchIds = this.state.batchIds;
     const selectedRowKeys = batchIds ? batchIds.split(',') : [];
     const rowSelection = {
-      onSelectAll: (selected, selectedRows, changeRows) => {
+      selectedRowKeys,
+      onSelect: (record, selected, selectedRows) => {
         if (selected) {
-          const suIDs = selectedRows.map(item => {
-            return item.suID;
-          });
           this.setState({
-            batchIds: suIDs.join(','),
+            batchIds: record.suID,
+            singleLineData1: record,
           });
         } else {
           this.setState({
             batchIds: '',
-          });
-        }
-      },
-      selectedRowKeys,
-      onSelect: (record, selected, selectedRows) => {
-        if (selected) {
-          const batchIds = this.state.batchIds;
-          let suIDs = batchIds.split(',');
-          suIDs.push(record.suID);
-          const filterSuIDs = suIDs.filter(item => {
-            return item !== '';
-          });
-          this.setState({
-            batchIds: filterSuIDs.join(','),
-          });
-        } else {
-          const batchIds = this.state.batchIds;
-          let suIDs = batchIds.split(',');
-          const filterSuIDs = suIDs.filter(item => {
-            return item !== record.suID;
-          });
-          this.setState({
-            batchIds: filterSuIDs.join(','),
+            singleLineData1: {},
           });
         }
       },
@@ -1583,16 +1618,16 @@ class Information extends Component {
     };
     return (
       <div className={styles['information_wrap']}>
-        <Cascader
-          loading={this.state.cascaderLoading}
-          options={toJS(regionalStore.areaTree)}
-          onKeyPress={this.onKeyPress}
-          loadData={this.loadData}
-          onTextChange={this.onTextChange}
-          cascaderValue={this.state.cascaderValue}
-          cascaderText={this.state.cascaderText}
-          onChange={this.onCascaderChange}
-        />
+        {/* <Cascader */}
+        {/*   loading={this.state.cascaderLoading} */}
+        {/*   options={toJS(regionalStore.areaTree)} */}
+        {/*   onKeyPress={this.onKeyPress} */}
+        {/*   loadData={this.loadData} */}
+        {/*   onTextChange={this.onTextChange} */}
+        {/*   cascaderValue={this.state.cascaderValue} */}
+        {/*   cascaderText={this.state.cascaderText} */}
+        {/*   onChange={this.onCascaderChange} */}
+        {/* /> */}
         <div className={styles['information_ct']}>
           <div className={styles['set_min_width']}>
             {/* <Toolbar */}
@@ -1608,29 +1643,43 @@ class Information extends Component {
             {/*   onBatchEnabledClick={this.onBatchEnabledClick} */}
             {/*   onSearch={this.onSearch} */}
             {/* /> */}
-            <Toolbar
-              onClick={this.add}
-              downDevChange={this.downDevChange}
-              showValue={['exportMonitorTpl', 'downDev', 'batchOption', 'add']}
-              fsuAddTypes={fsu_devicemanagementStore.fsuAddTypes}
-              onBatchDeleteClick={this.onBatchDeleteClick}
-              onBatchDisableClick={this.onBatchDisableClick}
-              deviceStatus={true}
-              onExportTplClick={this.onExportTplClick}
-              selectChange={this.selectChange}
-              typesChange={this.typesChange}
-              onBatchEnabledClick={this.onBatchEnabledClick}
-              onSearch={this.onSearch}
-              searchValue={this.state.searchValue}
-            />
+            {/* <Toolbar */}
+            {/*   onClick={this.add} */}
+            {/*   downDevChange={this.downDevChange} */}
+            {/*   showValue={['closeAdd']} */}
+            {/*   onBatchDeleteClick={this.onBatchDeleteClick} */}
+            {/*   onBatchDisableClick={this.onBatchDisableClick} */}
+            {/*   deviceStatus={true} */}
+            {/*   onExportTplClick={this.onExportTplClick} */}
+            {/*   selectChange={this.selectChange} */}
+            {/*   typesChange={this.typesChange} */}
+            {/*   onBatchEnabledClick={this.onBatchEnabledClick} */}
+            {/*   onSearch={this.onSearch} */}
+            {/*   searchValue={this.state.searchValue} */}
+            {/* /> */}
+            <Row style={{textAlign: 'right', marginBottom: '10px'}}>
+              <Button
+                className={styles['rest_btn']}
+                onClick={this.restartClick}>
+                <span>重启</span>
+              </Button>
+              <Button
+                className={styles['rest_btn']}
+                onClick={this.fsuSetTimeClick}>
+                <span>校时</span>
+              </Button>
+              <Button className={styles['rest_btn']} onClick={this.deleteClick}>
+                <span>删除</span>
+              </Button>
+            </Row>
             <div className={styles['table_wrap']}>
               <Table
-                nesting={nesting}
                 onRowDoubleClick={this.onRowDoubleClick}
                 pageIndex={pagination.page}
                 pageSize={pagination.number}
                 total={pagination.count}
                 columns={columns}
+                rowSelection={rowSelection}
                 rowClassName={(record, index) => {
                   const rowClassName = ['td_padding'];
                   record.onOff === 0 &&
@@ -1643,11 +1692,9 @@ class Information extends Component {
                     rowClassName.push('cl_hidden_expand_icon');
                   return rowClassName.join(' ');
                 }}
-                expandIconAsCell={false}
                 loading={fsu_devicemanagementStore.loading}
                 onShowSizeChange={this.onShowSizeChange}
                 onChange={this.onPageChange}
-                rowSelection={rowSelection}
                 data={tableData}
               />
             </div>
@@ -1672,6 +1719,37 @@ class Information extends Component {
               needRealtime={this.state.needRealtime}
               singleLineData={this.state.singleLineData}
               currentSuID={this.state.currentSuID}
+            />
+          </Panel>
+          <ControlModal
+            width={1200}
+            onCancel={this.onMonitorCancel}
+            title={`监控点`}
+            isShow={this.state.monitorShow}>
+            <GrandsonTable
+              historyChange={this.historyChange}
+              controlChange={this.controlChange}
+              realtimeChange={this.realtimeChange}
+              remoteControlClick={this.remoteControlClick}
+              sunEditChange={this.sunEditChange}
+              sunDeleteChange={this.sunDeleteChange}
+              sunDetailChange={this.sunDetailChange}
+            />
+          </ControlModal>
+          <Panel
+            onCancel={this.onSubDevCancel}
+            title={`子设备`}
+            isShow={this.state.subDevShow}>
+            <ChildTable
+              telemeteryClick={this.telemeteryClick}
+              addChildShow={this.addChildShow}
+              monitorClick={this.monitorClick}
+              childDetailClick={this.childDetailClick}
+              childEditClick={this.childEditClick}
+              childDeleteClick={this.childDeleteClick}
+              childExportClick={this.childExportClick}
+              currentPortChange={this.currentPortChange}
+              childDeleteChange={this.childDeleteChange}
             />
           </Panel>
           <Panel
@@ -1746,8 +1824,8 @@ class Information extends Component {
 
           <EditModal
             isShow={this.state.fsuStatusShow}
-            title={'FSU运行状态'}
-            width={670}
+            title={'运行状态'}
+            width={305}
             onCancel={this.onFsuStatusCancel}>
             <FsuStatusEcharts />
           </EditModal>

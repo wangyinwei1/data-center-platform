@@ -314,8 +314,8 @@ class BasicLayout extends Component {
     //特殊路径处理
     path == 'bsifm-devicetype' && (title = '设备类型管理');
     const exclusionPath = [
-      ['fsu-devicemanagement', 'equ-information'],
-      ['fsu-realtimealarm', 'equ-realtimealarm'],
+      // ['fsu-devicemanagement', 'equ-information'],
+      // ['fsu-realtimealarm', 'equ-realtimealarm'],
       ['fsu-historyalarm', 'equ-historyalarm'],
       ['fsu-controlrecord', 'equ-controlrecord'],
       ['fsu-alarminformation', 'bsifm-alarminformation'],

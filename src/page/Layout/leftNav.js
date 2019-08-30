@@ -28,51 +28,47 @@ const exclusionPath = [
   'fsu-historicaldata',
 ];
 const secondLevel = function(item) {
-  if (item.MENU_ID === '412') {
-    return null;
-  } else {
-    return (
-      <SubMenu
-        key={item.MENU_ROUTE || item.MENU_ID}
-        title={
-          <span>
-            <i
-              className={classnames(
-                'icon iconfont',
-                menuIcon[item.MENU_ID],
-                styles['menu_icon'],
-              )}
-            />
-            <span>{item.MENU_NAME}</span>
-          </span>
-        }>
-        {_.map(item.subMenu, sub => {
-          if (
-            sub.MENU_ID == '397' &&
-            !JSON.parse(localStorage.getItem('isAdmin'))
-          ) {
-            return null;
-          }
-          if (
-            sub.MENU_ID == '391' &&
-            JSON.parse(localStorage.getItem('isNotArea'))
-          ) {
-            return null;
-          }
+  return (
+    <SubMenu
+      key={item.MENU_ROUTE || item.MENU_ID}
+      title={
+        <span>
+          <i
+            className={classnames(
+              'icon iconfont',
+              menuIcon[item.MENU_ID],
+              styles['menu_icon'],
+            )}
+          />
+          <span>{item.MENU_NAME}</span>
+        </span>
+      }>
+      {_.map(item.subMenu, sub => {
+        if (
+          sub.MENU_ID == '397' &&
+          !JSON.parse(localStorage.getItem('isAdmin'))
+        ) {
+          return null;
+        }
+        if (
+          sub.MENU_ID == '391' &&
+          JSON.parse(localStorage.getItem('isNotArea'))
+        ) {
+          return null;
+        }
 
-          if (exclusionPath.indexOf(sub.MENU_ROUTE) != -1) {
-            return null;
-          } else {
-            return (
-              <Menu.Item key={sub.MENU_ROUTE || sub.MENU_ID}>
-                <Link to={`/${sub.MENU_ROUTE}`}>{sub.MENU_NAME}</Link>
-              </Menu.Item>
-            );
-          }
-        })}
-      </SubMenu>
-    );
-  }
+        if (exclusionPath.indexOf(sub.MENU_ROUTE) != -1) {
+          return null;
+        } else {
+          return (
+            <Menu.Item key={sub.MENU_ROUTE || sub.MENU_ID}>
+              <Link to={`/${sub.MENU_ROUTE}`}>{sub.MENU_NAME}</Link>
+            </Menu.Item>
+          );
+        }
+      })}
+    </SubMenu>
+  );
 };
 const firstLevel = function(item) {
   if (outreach.indexOf(item.MENU_ROUTE) !== -1) {

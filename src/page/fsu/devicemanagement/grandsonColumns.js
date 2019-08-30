@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
-import {Tooltip, Dropdown, Menu, Icon} from 'antd';
+import {Tooltip, Button, Dropdown, Menu, Icon} from 'antd';
 import columnData from './childColumns.js';
 import TextOverflow from '../../../components/TextOverflow';
 /**
@@ -77,29 +77,48 @@ const columns = ({
   let options = [
     {
       title: '操作',
-      width: '6%',
+      width: '20%',
       dataIndex: '',
       className: 'information_th',
       render: (text, record, index) => {
+        let remoteName = '';
+        switch (record.spType) {
+          case 2:
+          case 4:
+            remoteName = '告警量设置';
+            break;
+
+          case 6:
+            remoteName = '遥调';
+            break;
+        }
         return (
-          <Dropdown
-            overlay={menu({
-              editClick,
-              deleteClick,
-              detailClick,
-              remoteControlClick,
-              _this,
-              record,
-            })}
-            placement={'bottomCenter'}
-            trigger={['click']}>
-            <i
-              className={classnames(
-                'icon iconfont icon-gengduo',
-                styles['more'],
-              )}
-            />
-          </Dropdown>
+          <div>
+            {(record.spType === 6 ||
+              record.spType === 2 ||
+              record.spType === 4) && (
+              <Button
+                className={styles['btn']}
+                onClick={remoteControlClick.bind(_this, record)}>
+                <span>{remoteName}</span>
+              </Button>
+            )}
+            <Button
+              className={styles['btn']}
+              onClick={editClick.bind(_this, record)}>
+              <span>编辑</span>
+            </Button>
+            <Button
+              className={styles['btn']}
+              onClick={detailClick.bind(_this, record)}>
+              <span>详情</span>
+            </Button>
+            <Button
+              className={styles['btn']}
+              onClick={deleteClick.bind(_this, record)}>
+              <span>删除</span>
+            </Button>
+          </div>
         );
       },
     },

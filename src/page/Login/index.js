@@ -78,8 +78,8 @@ class Loginer extends Component {
             } else {
               //setSelectedKeys
 
-              layoutStore.setSelectedKeys('shouye');
-              router.push('/shouye');
+              layoutStore.setSelectedKeys('fsu-devicemanagement');
+              router.push('/fsu-devicemanagement');
             }
           } else {
             this.setBgImage();

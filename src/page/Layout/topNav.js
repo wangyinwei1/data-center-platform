@@ -26,11 +26,13 @@ class TopNav extends Component {
     return (
       <Row className={styles['top_nav_wrap']}>
         <Col span={1} className={styles['logo']}>
-          <p>物联网数据中心平台</p>
+          {/* <p>物联网数据中心平台</p> */}
+          <img src="static/images/logo.png" className={styles['top_nav_img']} />
+
           {/* <span>IOT DATA CENTER PLATFORM</span> */}
         </Col>
         <Col span={1} className={styles['top_nav_title']}>
-          {title}
+          {''}
         </Col>
         <Col span={1} className={styles['user_info']}>
           <Row className={styles['user_info_wrap']}>
@@ -55,7 +57,7 @@ class TopNav extends Component {
                       )}
                     />
 
-                    <span> 退出登录</span>
+                    <span> 注销</span>
                   </div>
                 </li>
               </ul>

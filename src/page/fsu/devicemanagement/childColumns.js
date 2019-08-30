@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
-import {Tooltip, Dropdown, Menu, Icon} from 'antd';
+import {Tooltip, Dropdown, Button, Menu, Icon} from 'antd';
 import columnData from './childColumns.js';
 import TextOverflow from '../../../components/TextOverflow';
 /**
@@ -22,12 +22,12 @@ const menu = ({
 }) => {
   return (
     <Menu className={styles['operation']}>
-      <Menu.Item key="c_add" onClick={addClick.bind(_this, record)}>
-        <div className={styles['add_child']}>
-          <i className={classnames('icon iconfont icon-xinzeng')} />
-          <span>新增</span>
-        </div>
-      </Menu.Item>
+      {/* <Menu.Item key="c_add" onClick={addClick.bind(_this, record)}> */}
+      {/*   <div className={styles['add_child']}> */}
+      {/*     <i className={classnames('icon iconfont icon-xinzeng')} /> */}
+      {/*     <span>新增</span> */}
+      {/*   </div> */}
+      {/* </Menu.Item> */}
       <Menu.Item key="c_detail" onClick={detailClick.bind(_this, record)}>
         <div className={styles['detail']}>
           <i className={classnames('icon iconfont icon-xiangqing')} />
@@ -48,12 +48,12 @@ const menu = ({
       {/*     <span>遥测</span> */}
       {/*   </div> */}
       {/* </Menu.Item> */}
-      <Menu.Item key="c_export" onClick={exportClick.bind(_this, record)}>
-        <div className={styles['edit']}>
-          <i className={classnames('icon iconfont icon-daoru')} />
-          <span>导入</span>
-        </div>
-      </Menu.Item>
+      {/* <Menu.Item key="c_export" onClick={exportClick.bind(_this, record)}> */}
+      {/*   <div className={styles['edit']}> */}
+      {/*     <i className={classnames('icon iconfont icon-daoru')} /> */}
+      {/*     <span>导入</span> */}
+      {/*   </div> */}
+      {/* </Menu.Item> */}
       <Menu.Item key="c_delete" onClick={deleteClick.bind(_this, record)}>
         <div className={styles['delete']}>
           <i className={classnames('icon iconfont icon-shanchu')} />
@@ -69,6 +69,7 @@ const columns = ({
   deleteClick,
   addClick,
   detailClick,
+  monitorClick,
   telemeteryClick,
 
   _this,
@@ -76,30 +77,32 @@ const columns = ({
   let options = [
     {
       title: '操作',
-      width: '8%',
+      width: '25%',
       dataIndex: '',
       render: (text, record, index) => {
         return (
-          <Dropdown
-            overlay={menu({
-              editClick,
-              deleteClick,
-              detailClick,
-              exportClick,
-              telemeteryClick,
-              addClick,
-              _this,
-              record,
-            })}
-            placement={'bottomCenter'}
-            trigger={['click']}>
-            <i
-              className={classnames(
-                'icon iconfont icon-gengduo',
-                styles['more'],
-              )}
-            />
-          </Dropdown>
+          <div>
+            <Button
+              className={styles['btn']}
+              onClick={monitorClick.bind(_this, record)}>
+              <span>获取监控点</span>
+            </Button>
+            <Button
+              className={styles['btn']}
+              onClick={editClick.bind(_this, record)}>
+              <span>编辑</span>
+            </Button>
+            <Button
+              className={styles['btn']}
+              onClick={detailClick.bind(_this, record)}>
+              <span>详情</span>
+            </Button>
+            <Button
+              className={styles['btn']}
+              onClick={deleteClick.bind(_this, record)}>
+              <span>删除</span>
+            </Button>
+          </div>
         );
       },
     },

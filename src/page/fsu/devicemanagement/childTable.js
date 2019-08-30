@@ -15,6 +15,8 @@ class Regional extends Component {
     super(props);
     this.deleteClick = this.deleteClick.bind(this);
     this.editClick = this.editClick.bind(this);
+    this.detailClick = this.detailClick.bind(this);
+    this.monitorClick = this.monitorClick.bind(this);
     this.expandedRowRender = this.expandedRowRender.bind(this);
     this.onExpand = this.onExpand.bind(this);
     this.onRowDoubleClick = this.onRowDoubleClick.bind(this);
@@ -77,13 +79,17 @@ class Regional extends Component {
     const {childDeleteChange} = this.props;
     childDeleteChange(item);
   }
+  monitorClick(item) {
+    const {monitorClick} = this.props;
+    monitorClick(item);
+  }
   detailClick(item) {
     const {childDetailClick} = this.props;
     childDetailClick(item);
   }
   onRowDoubleClick(item) {
-    const {childDetailClick} = this.props;
-    childDetailClick(item);
+    const {childEditClick} = this.props;
+    childEditClick(item);
   }
   exportClick(item) {
     const {childExportClick} = this.props;
@@ -113,6 +119,7 @@ class Regional extends Component {
       exportClick: this.exportClick,
       telemeteryClick: this.telemeteryClick,
       detailClick: this.detailClick,
+      monitorClick: this.monitorClick,
       addClick: this.addClick,
       _this: this,
     });
@@ -126,7 +133,6 @@ class Regional extends Component {
         <Table
           pagination={false}
           loading={fsu_devicemanagementStore.s_loading}
-          nesting={nesting}
           onRowDoubleClick={this.onRowDoubleClick}
           columns={columns}
           data={tableData}

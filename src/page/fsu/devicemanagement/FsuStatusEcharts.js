@@ -21,24 +21,20 @@ class Pie extends Component {
 
     const options = option();
     let data = options.series[0].data;
-    data[0] = fsuStatus.cpu;
-    data[1] = fsuStatus.memu;
     return (
-      <div className={styles['wrap']}>
-        <ReactEcharts
-          style={{
-            width: '100%',
-          }}
-          showLoading={status_loading}
-          loadingOption={{
-            text: '加载中...',
-            color: '#5deda4',
-            textColor: '#000',
-            maskColor: 'rgba(255, 255, 255, 0.6)',
-            zlevel: 0,
-          }}
-          option={options}
-        />
+      <div className={styles['status_wrap']}>
+        <div className={styles['item']}>
+          <span className={styles['status_title']}>CPU使用率:</span>
+          <span className={styles['status_value']}>
+            {fsuStatus.cpu ? fsuStatus.cpu + '%' : '0%'}
+          </span>
+        </div>
+        <div className={styles['item']}>
+          <span className={styles['status_title']}>内存使用率:</span>
+          <span className={styles['status_value']}>
+            {fsuStatus.memu ? fsuStatus.memu + '%' : '0%'}
+          </span>
+        </div>
       </div>
     );
   }

@@ -2,6 +2,35 @@
 :local {
   .information_wrap {
     height: 100%;
+    .rest_btn {
+      width: auto !important;
+      border-radius: 4px !important;
+      margin-left: 8px;
+    }
+  }
+  .status_wrap {
+    text-align: center;
+    .item {
+      line-height: 36px;
+      .status_title {
+        font-weight: bold;
+      }
+      .status_value {
+        color: #f0771a;
+        font-weight: bold;
+      }
+    }
+  }
+  .btn {
+    width: auto !important;
+    margin-left: 8px;
+    border-radius: 4px !important;
+    line-height: 24px !important;
+    height: 24px !important;
+    display: inline-block !important;
+    vertical-align: top !important;
+    margin-bottom: 8px;
+    padding: 0 6px !important;
   }
   .edit_wrap {
     padding: 20px 20px 10px 20px;
@@ -14,13 +43,15 @@
       padding: 22px 38px 0;
     }
     overflow: auto;
-    margin-top: 14px;
+    // margin-top: 14px;
+
+    height: 100%;
     background: #fff;
-    height: -webkit-calc(~'100% - 68px');
-    height: -moz-calc(~'100% - 68px');
-    height: -ms-calc(~'100% - 68px');
-    height: -o-calc(~'100% - 68px');
-    height: calc(~'100% - 68px');
+    // height: -webkit-calc(~'100% - 68px');
+    // height: -moz-calc(~'100% - 68px');
+    // height: -ms-calc(~'100% - 68px');
+    // height: -o-calc(~'100% - 68px');
+    // height: calc(~'100% - 68px');
   }
   .sub_title {
     position: relative;
@@ -104,7 +135,10 @@
   }
   .more {
     cursor: pointer;
-    font-size: 22px;
+    font-size: 14px;
+    font-style: normal;
+    text-decoration: underline;
+    color: #f0771a;
   }
   .icon_style {
     cursor: pointer;
@@ -427,6 +461,9 @@
     :global {
       .cl_g_border {
         border-bottom: 1px solid #e4e4e4 !important;
+      }
+      .ant-table-selection .ant-checkbox-wrapper {
+        display: none;
       }
       .information_th {
         position: relative;
