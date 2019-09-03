@@ -18,6 +18,11 @@ const menuIcon = {
   '428': 'icon-liebiao',
   '429': 'icon-jizhan',
   '430': 'icon-shishishuju',
+  '391': 'icon-quyuguanli',
+  '392': 'icon-zhandianguanli',
+  '399': 'icon-gongdibao',
+  '400': 'icon-svg-',
+  '397': 'icon-yonghuguanli1',
 };
 const exclusionPath = [
   'equ-agreement',

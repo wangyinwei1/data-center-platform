@@ -1,5 +1,5 @@
 import request from '../utils/request';
-const base = '/collect';
+const base = '/gdb';
 
 export function getMenu() {
   return request.get(base + '/main/index');
@@ -867,6 +867,55 @@ export function getDeviceTypeList(params) {
 }
 export function getSpTypeList(params) {
   return request.get(base + '/fsuBaseConfig/spTypeList', {
+    params,
+  });
+}
+//Site Treasure
+export function getSiteTreasureList(params) {
+  return request.get(base + '/gdb/list', {
+    params,
+  });
+}
+export function siteTreasureEdit(data) {
+  return request.post(base + '/gdb/edit', data);
+}
+export function siteTreasureSave(data) {
+  return request.post(base + '/gdb/save', data);
+}
+export function getTagList(params) {
+  return request.get(base + '/chip/list', {
+    params,
+  });
+}
+export function tagEdit(data) {
+  return request.post(base + '/chip/edit', data);
+}
+export function tagSave(data) {
+  return request.post(base + '/chip/save', data);
+}
+export function deleteSiteTreasure(data) {
+  return request.post(base + '/gdb/delete', data);
+}
+export function deleteTags(data) {
+  return request.post(base + '/chip/delete', data);
+}
+export function getTagHistory(params) {
+  return request.get(base + '/chip/data', {
+    params,
+  });
+}
+export function getTagAlarm(params) {
+  return request.get(base + '/chip/alarm', {
+    params,
+  });
+}
+export function getTagLogs(params) {
+  return request.get(base + '/chip/logs', {
+    params,
+  });
+}
+export function findStationByCode(params) {
+  return request.get(base + '/device_area/findStationByCode', {
     params,
   });
 }

@@ -57,7 +57,7 @@ request.interceptors.response.use(res => {
       !once401 && message.error('登录超时,请重新登录！');
       res.status === 200 ? (once401 = false) : (once401 = true);
       if (process.env.NODE_ENV == 'production') {
-        location.href = location.origin + '/collect/#/login';
+        location.href = location.origin + '/gdb/#/login';
       } else {
         location.href = location.origin + '/#/login';
       }

@@ -7,32 +7,38 @@ const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
 const {TextArea} = Input;
 const Option = Select.Option;
-const mapPropsToFields = props => {
+const mapPropsToFields = record => {
+  let fields = record.fields || {};
+  let props = {
+    ...record,
+    ...fields,
+    my_name: record.name,
+  };
   if (props.visiable === false) return;
-  const value = props[props.name].value;
+  const value = props[props.my_name].value;
   // console.log(value);
 
-  let object = {...props[props.name]};
+  let object = {...props[props.my_name]};
   if (
     ((value !== 0 && !value) || !value[0]) &&
     props.rules[0].required &&
-    props[props.name].showError
+    props[props.my_name].showError
   ) {
     const error = {
       errors: [
         {
-          field: props.name,
+          field: props.my_name,
           message: props.rules[0].message,
         },
       ],
     };
 
-    object = {...error, ...props[props.name]};
+    object = {...error, ...props[props.my_name]};
   }
   let obj = {};
-  obj[props.name] = Form.createFormField({
+  obj[props.my_name] = Form.createFormField({
     ...object,
-    value: props[props.name].value,
+    value: props[props.my_name].value,
     // typeof props[props.name].value === 'number'
     //   ? props[props.name].value.toString()
     //   : props[props.name].value,
@@ -45,10 +51,13 @@ const FormSelect = Form.create({
     props.onChange(changedFields);
   },
   mapPropsToFields(props) {
+    let value = props[props.name]
+      ? props[props.name]
+      : props.fields[props.name];
     let hasValue = props.children.filter(item => {
-      return item.value === props[props.name]['value'];
+      return item.value === value['value'];
     });
-    !hasValue[0] && (props[props.name]['value'] = undefined);
+    !hasValue[0] && (value['value'] = undefined);
     return mapPropsToFields(props);
   },
   onValuesChange(_, values) {

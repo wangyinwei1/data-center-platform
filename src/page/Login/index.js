@@ -23,7 +23,7 @@ class Loginer extends Component {
     };
   }
   setBgImage() {
-    this.idImg.style.backgroundImage = `url(/collect/code.do?t=${new Date().getTime()})`;
+    this.idImg.style.backgroundImage = `url(/gdb/code.do?t=${new Date().getTime()})`;
   }
   componentDidMount() {
     this.setBgImage();
@@ -78,8 +78,8 @@ class Loginer extends Component {
             } else {
               //setSelectedKeys
 
-              layoutStore.setSelectedKeys('shouye');
-              router.push('/shouye');
+              layoutStore.setSelectedKeys('bsifm-site');
+              router.push('/bsifm-site');
             }
           } else {
             this.setBgImage();
@@ -103,8 +103,10 @@ class Loginer extends Component {
         <div className={classnames(styles['login_ct'], 'clearfix')}>
           <img src={logo} className={styles['logo']} />
           <div className={styles['logo_title']}>
-            <p>物联网数据中心平台</p>
-            <span>IOT &nbsp;DATA &nbsp;CENTER &nbsp;PLATFORM</span>
+            <p>基站资产管理平台</p>
+            <span>
+              BASE &nbsp;STATION &nbsp;ASSET &nbsp;MANAGEMENT &nbsp;PLATFORM
+            </span>
           </div>
           <div className={styles['line']} />
           <div className={styles['login_form']}>

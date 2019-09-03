@@ -13,7 +13,9 @@ class TopNav extends Component {
   }
   exitLogin(e) {
     e.nativeEvent.stopImmediatePropagation();
-    const {loginStore: {loginOut}} = this.props;
+    const {
+      loginStore: {loginOut},
+    } = this.props;
     loginOut().then(data => {
       if (data) {
         Cookies.remove('cl_username');
@@ -26,8 +28,8 @@ class TopNav extends Component {
     return (
       <Row className={styles['top_nav_wrap']}>
         <Col span={1} className={styles['logo']}>
-          <p>物联网数据中心平台</p>
-          <span>IOT DATA CENTER PLATFORM</span>
+          <p>基站资产管理平台</p>
+          <span>BASE STATION ASSET MANAGEMENT </span>
         </Col>
         <Col span={1} className={styles['top_nav_title']}>
           {title}
