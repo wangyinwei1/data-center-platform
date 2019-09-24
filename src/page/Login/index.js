@@ -78,8 +78,8 @@ class Loginer extends Component {
             } else {
               //setSelectedKeys
 
-              layoutStore.setSelectedKeys('bsifm-site');
-              router.push('/bsifm-site');
+              layoutStore.setSelectedKeys('gdb_manager');
+              router.push('/gdb_manager');
             }
           } else {
             this.setBgImage();

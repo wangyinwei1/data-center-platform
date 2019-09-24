@@ -29,7 +29,7 @@ class Regional extends Component {
         <FormInput
           fields={fields}
           onChange={this.handleFormChange}
-          label={'标签ID'}
+          label={'设备ID'}
           disabled={type === 'modify' ? true : disabled}
           className={currentClass}
           name={'chipId'}
@@ -38,7 +38,7 @@ class Regional extends Component {
         <FormInput
           fields={fields}
           onChange={this.handleFormChange}
-          label={'标签名称'}
+          label={'设备名称'}
           disabled={disabled}
           className={currentClass}
           name={'chipName'}

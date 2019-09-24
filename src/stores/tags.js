@@ -78,6 +78,7 @@ class SiteMonitoring {
   }
   @action.bound
   async getTagDetail(params, which) {
+    this.detailData = [];
     this.detailLoading = true;
     let data;
     switch (which) {

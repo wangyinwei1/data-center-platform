@@ -149,26 +149,26 @@ class Regional extends Component {
               },
             ]}
           />
-          <FormSelect
-            {...fields}
-            onChange={this.handleFormChange}
-            label={'状态'}
-            disabled={mode === 'new' ? true : disabled}
-            name={'STATUS'}
-            className={'applicationuser_edit'}
-            rules={[{required: true, message: '请必须填写!'}]}
-            children={[{value: 1, name: '正常'}, {value: 0, name: '冻结'}]}
-          />
-          <FormSelect
-            {...fields}
-            onChange={this.handleFormChange}
-            label={'FSU设备类型'}
-            disabled={disabled}
-            name={'F_FsuTypeID'}
-            className={'applicationuser_edit'}
-            rules={[{required: false, message: '请必须填写!'}]}
-            children={fsuTypeArray}
-          />
+          {/* <FormSelect */}
+          {/*   {...fields} */}
+          {/*   onChange={this.handleFormChange} */}
+          {/*   label={'状态'} */}
+          {/*   disabled={mode === 'new' ? true : disabled} */}
+          {/*   name={'STATUS'} */}
+          {/*   className={'applicationuser_edit'} */}
+          {/*   rules={[{required: false, message: '请必须填写!'}]} */}
+          {/*   children={[{value: 1, name: '正常'}, {value: 0, name: '冻结'}]} */}
+          {/* /> */}
+          {/* <FormSelect */}
+          {/*   {...fields} */}
+          {/*   onChange={this.handleFormChange} */}
+          {/*   label={'FSU设备类型'} */}
+          {/*   disabled={disabled} */}
+          {/*   name={'F_FsuTypeID'} */}
+          {/*   className={'applicationuser_edit'} */}
+          {/*   rules={[{required: false, message: '请必须填写!'}]} */}
+          {/*   children={fsuTypeArray} */}
+          {/* /> */}
           {/* <FormSelect */}
           {/*   {...fields} */}
           {/*   onChange={this.handleFormChange} */}

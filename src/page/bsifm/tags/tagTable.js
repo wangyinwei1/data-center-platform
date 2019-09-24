@@ -215,6 +215,7 @@ class Regional extends Component {
         <Table
           pageIndex={pagination.page}
           pageSize={pagination.number}
+          total={pagination.allCount}
           columns={columns}
           theme={theme}
           loading={tagsStore.tagLoading}
@@ -232,7 +233,7 @@ class Regional extends Component {
           isShow={this.state.editShow}
           mode={this.state.type}
           onOk={this.onEditOk}
-          title={this.state.type === 'new' ? '标签新增' : '标签修改'}
+          title={this.state.type === 'new' ? '设备新增' : '设备修改'}
           width={850}
           buttons={true}
           onCancel={this.onEditCancel}>

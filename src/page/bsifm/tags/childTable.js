@@ -33,7 +33,7 @@ class Regional extends Component {
   onPageChange(pageNumber) {
     const {tagsStore, whichTable} = this.props;
     const params = {
-      ...tagsStore.c_tableParmas,
+      ...tagsStore.detailParmas,
       page: pageNumber,
     };
     tagsStore.getTagDetail(params, whichTable);
@@ -66,7 +66,6 @@ class Regional extends Component {
   render() {
     const {tagsStore, theme, whichTable} = this.props;
     const c_tableData = toJS(tagsStore.detailData);
-    console.log(c_tableData);
     const tableData = (c_tableData && c_tableData.list) || [];
     const pagination = c_tableData || {};
     const columns = columnData({
@@ -75,7 +74,7 @@ class Regional extends Component {
     return (
       <div>
         <Toolbar
-          onSearch={this.onSearch}
+          // onSearch={this.onSearch}
           closeAdd={true}
           showValue={['time']}
           timeChange={this.timeChange}
@@ -84,7 +83,7 @@ class Regional extends Component {
         <Table
           pageIndex={pagination.page}
           pageSize={pagination.number}
-          total={pagination.count}
+          total={pagination.allCount}
           columns={columns}
           theme={theme}
           loading={tagsStore.detailLoading}

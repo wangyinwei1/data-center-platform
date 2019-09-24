@@ -14,13 +14,13 @@ import TextOverflow from '../../../components/TextOverflow';
 const columns = ({deleteClick, editClick, getChildTable}) => {
   let arr = [
     {
-      title: '标签名称',
+      title: '设备名称',
       dataIndex: 'chipName',
       className: 'cl_header_padding',
       width: '18%',
     },
     {
-      title: '标签ID',
+      title: '设备ID',
       dataIndex: 'chipId',
       className: 'cl_header_padding',
       width: '18%',
@@ -39,7 +39,7 @@ const columns = ({deleteClick, editClick, getChildTable}) => {
       className: 'cl_header_padding',
       width: '18%',
       render: (text, record, index) => {
-        return <span>{moment(text).format('YYYY-MM-DD h:mm:ss')}</span>;
+        return <span>{moment(text).format('YYYY-MM-DD HH:mm:ss')}</span>;
       },
     },
   ];

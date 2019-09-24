@@ -265,7 +265,7 @@ class Passageway extends Component {
           isShow={this.state.editShow}
           mode={this.state.type}
           onOk={this.onEditOk}
-          title={this.state.type === 'new' ? '工地宝新增' : '工地宝修改'}
+          title={this.state.type === 'new' ? '网关新增' : '网关修改'}
           width={850}
           buttons={true}
           onCancel={this.onEditCancel}>

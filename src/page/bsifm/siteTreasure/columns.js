@@ -39,12 +39,12 @@ const menu = ({editClick, deleteClick, record}) => {
 const columns = ({deleteClick, editClick, getChildTable, _this}) => {
   let arr = [
     {
-      title: '工地宝ID',
+      title: '网关ID',
       dataIndex: 'gdbId',
       width: '18%',
     },
     {
-      title: '工地宝名称',
+      title: '网关名称',
       dataIndex: 'name',
       width: '18%',
     },
@@ -63,7 +63,7 @@ const columns = ({deleteClick, editClick, getChildTable, _this}) => {
       dataIndex: 'createTime',
       width: '18%',
       render: (text, record, index) => {
-        return <span>{moment(text).format('YYYY-MM-DD h:mm:ss')}</span>;
+        return <span>{moment(text).format('YYYY-MM-DD HH:mm:ss')}</span>;
       },
     },
   ];

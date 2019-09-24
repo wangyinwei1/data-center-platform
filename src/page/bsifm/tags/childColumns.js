@@ -18,11 +18,11 @@ const columns = ({whichTable}) => {
     case 'logs':
       result = [
         {
-          title: '工地宝ID',
+          title: '网关ID',
           dataIndex: 'gdbId',
         },
         {
-          title: '标签ID',
+          title: '设备ID',
           dataIndex: 'chipId',
         },
         {
@@ -33,7 +33,7 @@ const columns = ({whichTable}) => {
           title: '创建时间',
           dataIndex: 'createTime',
           render: (text, record, index) => {
-            return <span>{moment(text).format('YYYY-MM-DD h:mm:ss')}</span>;
+            return <span>{moment(text).format('YYYY-MM-DD HH:mm:ss')}</span>;
           },
         },
       ];
@@ -41,8 +41,12 @@ const columns = ({whichTable}) => {
     case 'history':
       result = [
         {
-          title: '工地宝ID',
+          title: '网关ID',
           dataIndex: 'gdbId',
+        },
+        {
+          title: '设备ID',
+          dataIndex: 'chipId',
         },
         {
           title: '信号',
@@ -56,7 +60,7 @@ const columns = ({whichTable}) => {
           title: '采集时间',
           dataIndex: 'time',
           render: (text, record, index) => {
-            return <span>{moment(text).format('YYYY-MM-DD h:mm:ss')}</span>;
+            return <span>{moment(text).format('YYYY-MM-DD HH:mm:ss')}</span>;
           },
         },
       ];
