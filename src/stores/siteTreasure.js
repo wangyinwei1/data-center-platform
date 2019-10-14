@@ -21,20 +21,6 @@ class Historyalarm {
     const data = await findStationByCode(params);
     this.station = data.Data;
   }
-  @action.bound
-  async getTagList(params) {
-    this.tagLoading = true;
-    const data = await getTagList(params);
-    this.tagLoading = false;
-    // params.number = data.Data.number;
-    // params.page = data.Data.page;
-    // this.tagParmas = params;
-    if (data.Result == 'success') {
-      this.tagData = data.Data;
-    } else {
-      message.error(data.Msg);
-    }
-  }
 
   @action.bound
   async getTable(params) {

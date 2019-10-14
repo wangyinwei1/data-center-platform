@@ -20,7 +20,7 @@ const menuIcon = {
   '430': 'icon-shishishuju',
   '391': 'icon-quyuguanli',
   '392': 'icon-zhandianguanli',
-  '399': 'icon-gongdibao',
+  '399': 'icon-shebeiguanli',
   '400': 'icon-svg-',
   '397': 'icon-yonghuguanli1',
 };

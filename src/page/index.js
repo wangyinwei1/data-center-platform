@@ -5,6 +5,7 @@ export Regional from './bsifm/regional';
 export Site from './bsifm/site';
 export SiteTreasure from './bsifm/siteTreasure';
 export Tags from './bsifm/tags';
+export TowerdeviceManager from './bsifm/towerdeviceManager';
 export Deviceversion from './bsifm/deviceversion';
 export Devicetype from './bsifm/devicetype';
 export Agreement from './bsifm/agreement';

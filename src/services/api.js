@@ -1,5 +1,5 @@
 import request from '../utils/request';
-const base = '/gdb';
+const base = '/tower';
 
 export function getMenu() {
   return request.get(base + '/main/index');
@@ -916,6 +916,41 @@ export function getTagLogs(params) {
 }
 export function findStationByCode(params) {
   return request.get(base + '/device_area/findStationByCode', {
+    params,
+  });
+}
+//铁塔
+export function getTowerList(params) {
+  return request.get(base + '/device/list', {
+    params,
+  });
+}
+export function towerSave(data) {
+  return request.post(base + '/device/save', data);
+}
+export function towerEdit(data) {
+  return request.post(base + '/device/edit', data);
+}
+export function towerDelete(data) {
+  return request.post(base + '/device/delete', data);
+}
+export function towerEditInfo(params) {
+  return request.get(base + '/device/info', {
+    params,
+  });
+}
+export function getElectricQuantity(params) {
+  return request.get(base + '/device/electricQuantity', {
+    params,
+  });
+}
+export function getElectricEnergy(params) {
+  return request.get(base + '/device/electricEnergy', {
+    params,
+  });
+}
+export function getAlarmInfo(params) {
+  return request.get(base + '/device/warnInfo', {
     params,
   });
 }

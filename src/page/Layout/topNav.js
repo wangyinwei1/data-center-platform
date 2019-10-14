@@ -28,8 +28,8 @@ class TopNav extends Component {
     return (
       <Row className={styles['top_nav_wrap']}>
         <Col span={1} className={styles['logo']}>
-          <p>基站资产管理平台</p>
-          <span>BASE STATION ASSET MANAGEMENT </span>
+          <p>创力能耗管理平台</p>
+          <span>ENERGY CONSUMPTION MANAGEMENT</span>
         </Col>
         <Col span={1} className={styles['top_nav_title']}>
           {title}

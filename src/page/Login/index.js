@@ -23,7 +23,7 @@ class Loginer extends Component {
     };
   }
   setBgImage() {
-    this.idImg.style.backgroundImage = `url(/gdb/code.do?t=${new Date().getTime()})`;
+    this.idImg.style.backgroundImage = `url(/tower/code.do?t=${new Date().getTime()})`;
   }
   componentDidMount() {
     this.setBgImage();
@@ -78,8 +78,8 @@ class Loginer extends Component {
             } else {
               //setSelectedKeys
 
-              layoutStore.setSelectedKeys('gdb_manager');
-              router.push('/gdb_manager');
+              layoutStore.setSelectedKeys('towerdevice_manager');
+              router.push('/towerdevice_manager');
             }
           } else {
             this.setBgImage();
@@ -103,10 +103,8 @@ class Loginer extends Component {
         <div className={classnames(styles['login_ct'], 'clearfix')}>
           <img src={logo} className={styles['logo']} />
           <div className={styles['logo_title']}>
-            <p>基站资产管理平台</p>
-            <span>
-              BASE &nbsp;STATION &nbsp;ASSET &nbsp;MANAGEMENT &nbsp;PLATFORM
-            </span>
+            <p>创力能耗管理平台</p>
+            <span>MAKE POWER ENERGY CONSUMPTION MANAGEMENT</span>
           </div>
           <div className={styles['line']} />
           <div className={styles['login_form']}>

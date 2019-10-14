@@ -29,7 +29,6 @@ class EditModal extends Component {
       title,
       theme,
       width,
-      mode,
     } = this.props;
     const okProps = {
       onClick: () => {

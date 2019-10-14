@@ -45,6 +45,21 @@ class Cl_Table extends Component {
         }
       : {};
 
+    let dataIndexs = [];
+    columns.forEach(item => {
+      dataIndexs.push(item.dataIndex);
+    });
+
+    let newData = data.map(item => {
+      dataIndexs.forEach(app => {
+        if (item[app] === null || item[app] === '') {
+          item[app] = '-';
+        }
+      });
+
+      return item;
+    });
+
     return (
       <div
         className={classnames(
@@ -66,7 +81,7 @@ class Cl_Table extends Component {
           {...(nesting ? nesting : {})}
           columns={columns}
           scroll={scroll}
-          dataSource={data}
+          dataSource={newData}
           loading={loading ? true : false}
           rowClassName={rowClassName}
           rowSelection={rowSelection}

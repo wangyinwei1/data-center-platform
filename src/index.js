@@ -60,6 +60,7 @@ import {
   // Other_Workorders,
   Site_Monitoring,
   SiteTreasure,
+  TowerdeviceManager,
   // Index,
   Tags,
 } from './page';
@@ -94,8 +95,9 @@ render(
             {/* /> */}
             <Route path="/bsifm-regional" component={Regional} />
             <Route path="/bsifm-site" component={Site} />
-            <Route path="/gdb_manager" component={SiteTreasure} />
-            <Route path="/chip_manager" component={Tags} />
+            {/* <Route path="/gdb_manager" component={SiteTreasure} /> */}
+            {/* <Route path="/chip_manager" component={Tags} /> */}
+            <Route path="/towerdevice_manager" component={TowerdeviceManager} />
             {/* <Route path="/bsifm-Menu" component={Menu}> */}
             {/*   <Route path="/bsifm-deviceversion" component={Deviceversion} /> */}
             {/*   <Route path="/bsifm-devicetype" component={Devicetype} /> */}
