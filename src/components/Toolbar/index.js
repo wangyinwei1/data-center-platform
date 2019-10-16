@@ -96,6 +96,19 @@ class Regional extends Component {
     const {onBatchDisableClick} = this.props;
     onBatchDisableClick && onBatchDisableClick();
   }
+  reportedChange = () => {
+    const {reportedChange} = this.props;
+    reportedChange && reportedChange();
+  };
+  historyChange = () => {
+    const {historyChange} = this.props;
+    historyChange && historyChange();
+  };
+  issuedChange = () => {
+    console.log(this.props);
+    const {issuedChange} = this.props;
+    issuedChange && issuedChange();
+  };
 
   batchDelete() {
     const {onBatchDeleteClick} = this.props;
@@ -220,26 +233,25 @@ class Regional extends Component {
               </Select>
             </div>
           ))}
-        {showValue &&
-          showValue.indexOf('time') != -1 && (
-            <div className={styles['device_time']}>
-              <RangePicker
-                ranges={{
-                  当天: [moment().startOf('day'), moment().endOf('day')],
-                  最近一周: [moment().subtract(1, 'weeks'), moment()],
-                  最近一个月: [moment().subtract(1, 'months'), moment()],
-                  最近三个月: [moment().subtract(3, 'months'), moment()],
-                }}
-                defaultValue={[moment().startOf('day'), moment().endOf('day')]}
-                className={'cl_time'}
-                onChange={this.onTimeChange}
-                onOk={this.onTimeOk}
-                onOpenChange={this.onOpenChange}
-                showTime
-                format={'YYYY-MM-DD HH:mm:ss'}
-              />
-            </div>
-          )}
+        {showValue && showValue.indexOf('time') != -1 && (
+          <div className={styles['device_time']}>
+            <RangePicker
+              ranges={{
+                当天: [moment().startOf('day'), moment().endOf('day')],
+                最近一周: [moment().subtract(1, 'weeks'), moment()],
+                最近一个月: [moment().subtract(1, 'months'), moment()],
+                最近三个月: [moment().subtract(3, 'months'), moment()],
+              }}
+              defaultValue={[moment().startOf('day'), moment().endOf('day')]}
+              className={'cl_time'}
+              onChange={this.onTimeChange}
+              onOk={this.onTimeOk}
+              onOpenChange={this.onOpenChange}
+              showTime
+              format={'YYYY-MM-DD HH:mm:ss'}
+            />
+          </div>
+        )}
         {onSearch && (
           <Search
             onSearch={onSearch}
@@ -263,27 +275,26 @@ class Regional extends Component {
             </Select>
           </div>
         )}
-        {JSON.parse(localStorage.getItem('isAdmin')) &&
-          fsuAddTypes && (
-            <div
-              className={classnames(
-                styles['device_status'],
-                styles['device_types'],
-              )}>
-              <span>设备类型:</span>
-              <Select
-                defaultValue={JSON.parse(localStorage.getItem('FsuTypeID'))}
-                onChange={this.typesChange}>
-                {_.map(fsuAddTypes, (item, i) => {
-                  return (
-                    <Option key={i.toString(36) + i} value={item.typeId}>
-                      {item.typeName}
-                    </Option>
-                  );
-                })}
-              </Select>
-            </div>
-          )}
+        {JSON.parse(localStorage.getItem('isAdmin')) && fsuAddTypes && (
+          <div
+            className={classnames(
+              styles['device_status'],
+              styles['device_types'],
+            )}>
+            <span>设备类型:</span>
+            <Select
+              defaultValue={JSON.parse(localStorage.getItem('FsuTypeID'))}
+              onChange={this.typesChange}>
+              {_.map(fsuAddTypes, (item, i) => {
+                return (
+                  <Option key={i.toString(36) + i} value={item.typeId}>
+                    {item.typeName}
+                  </Option>
+                );
+              })}
+            </Select>
+          </div>
+        )}
 
         {channelType && (
           <div className={styles['device_status']}>
@@ -301,157 +312,155 @@ class Regional extends Component {
         )}
         {/* <Remarks /> */}
         <div className={styles['btn_wrap']}>
-          {showValue &&
-            showValue.indexOf('upload') != -1 && (
-              <Button className={styles['add_btn']} onClick={this.import}>
-                <i
-                  className={classnames('icon iconfont icon-xinzeng')}
-                  style={{paddingRight: '4px'}}
-                />
-                <span>上传</span>
-              </Button>
-            )}
-          {(!showValue || !showValue[0]) &&
-            !closeAdd && (
-              <Button className={styles['add_btn']} onClick={this.add}>
-                <i
-                  className={classnames('icon iconfont icon-xinzeng')}
-                  style={{paddingRight: '4px'}}
-                />
-                <span>新增</span>
-              </Button>
-            )}
-          {showValue &&
-            showValue.indexOf('real') != -1 && (
+          {showValue && showValue.indexOf('upload') != -1 && (
+            <Button className={styles['add_btn']} onClick={this.import}>
+              <i
+                className={classnames('icon iconfont icon-xinzeng')}
+                style={{paddingRight: '4px'}}
+              />
+              <span>上传</span>
+            </Button>
+          )}
+          {(!showValue || !showValue[0]) && !closeAdd && (
+            <Button className={styles['add_btn']} onClick={this.add}>
+              <i
+                className={classnames('icon iconfont icon-xinzeng')}
+                style={{paddingRight: '4px'}}
+              />
+              <span>新增</span>
+            </Button>
+          )}
+          {showValue && showValue.indexOf('real') != -1 && (
+            <Button
+              className={styles['real_btn']}
+              disabled={!needRealtime}
+              loading={realLoding}
+              onClick={this.real}>
+              实时召测
+            </Button>
+          )}
+          {showValue && showValue.indexOf('exportMonitorTpl') != -1 && (
+            <Button
+              className={styles['exportTpl_btn']}
+              onClick={this.exportTpl}>
+              <i
+                className={classnames(
+                  'icon iconfont icon-xiazai',
+                  styles['common_icon'],
+                )}
+              />
+              <span>监控点模板</span>
+            </Button>
+          )}
+          {showValue && showValue.indexOf('batchOption') != -1 && (
+            <Dropdown overlay={batchMenu} overlayClassName={'batch_cl_option'}>
               <Button
-                className={styles['real_btn']}
-                disabled={!needRealtime}
-                loading={realLoding}
-                onClick={this.real}>
-                实时召测
+                className={classnames(
+                  styles['batch_btn'],
+                  styles['batch_option'],
+                )}
+                style={{width: '102px'}}>
+                批量操作
+                <Icon type="down" />
               </Button>
-            )}
-          {showValue &&
-            showValue.indexOf('exportMonitorTpl') != -1 && (
-              <Button
-                className={styles['exportTpl_btn']}
-                onClick={this.exportTpl}>
-                <i
-                  className={classnames(
-                    'icon iconfont icon-xiazai',
-                    styles['common_icon'],
-                  )}
-                />
-                <span>监控点模板</span>
-              </Button>
-            )}
-          {showValue &&
-            showValue.indexOf('batchOption') != -1 && (
-              <Dropdown
-                overlay={batchMenu}
-                overlayClassName={'batch_cl_option'}>
-                <Button
-                  className={classnames(
-                    styles['batch_btn'],
-                    styles['batch_option'],
-                  )}
-                  style={{width: '102px'}}>
-                  批量操作<Icon type="down" />
-                </Button>
-              </Dropdown>
-            )}
-          {showValue &&
-            showValue.indexOf('batchDelete') != -1 && (
-              <Button
-                className={styles['batch_btn']}
-                onClick={this.batchDelete}>
-                批量删除
-              </Button>
-            )}
-          {showValue &&
-            showValue.indexOf('batchEnabled') != -1 && (
-              <Button
-                className={styles['batch_btn']}
-                onClick={this.batchEnabled}>
-                批量启用
-              </Button>
-            )}
-          {showValue &&
-            showValue.indexOf('batchDisable') != -1 && (
-              <Button
-                className={styles['batch_btn']}
-                onClick={this.batchDisable}>
-                批量禁用
-              </Button>
-            )}
-          {showValue &&
-            showValue.indexOf('refresh') != -1 && (
-              <Button className={styles['refresh_btn']} onClick={this.refresh}>
-                <i
-                  className={classnames('icon iconfont icon-sousuo')}
-                  style={{paddingRight: '4px'}}
-                />
-                <span>实时刷新</span>
-              </Button>
-            )}
-          {showValue &&
-            showValue.indexOf('exportTpl') != -1 && (
-              <Button
-                className={styles['exportTpl_btn']}
-                onClick={this.exportTpl}>
-                <i
-                  className={classnames(
-                    'icon iconfont icon-xiazai',
-                    styles['common_icon'],
-                  )}
-                />
-                <span>下载模板</span>
-              </Button>
-            )}
-          {showValue &&
-            showValue.indexOf('import') != -1 && (
-              <Button className={styles['import_btn']} onClick={this.import}>
-                <i
-                  className={classnames(
-                    'icon iconfont icon-daoru',
-                    styles['common_icon'],
-                  )}
-                />
-                <span>导入</span>
-              </Button>
-            )}
-          {showValue &&
-            showValue.indexOf('export') != -1 && (
-              <Button className={styles['export_btn']} onClick={this.export}>
-                <i
-                  className={classnames(
-                    'icon iconfont icon-daochu',
-                    styles['common_icon'],
-                  )}
-                />
-                <span>导出</span>
-              </Button>
-            )}
-          {showValue &&
-            showValue.indexOf('downDev') != -1 && (
-              <Button className={styles['add_btn']} onClick={this.downDev}>
-                <i
-                  className={classnames('icon iconfont icon-xinzeng')}
-                  style={{paddingRight: '4px'}}
-                />
-                <span>下发配置</span>
-              </Button>
-            )}
-          {showValue &&
-            showValue.indexOf('add') != -1 && (
-              <Button className={styles['add_btn']} onClick={this.add}>
-                <i
-                  className={classnames('icon iconfont icon-xinzeng')}
-                  style={{paddingRight: '4px'}}
-                />
-                <span>新增</span>
-              </Button>
-            )}
+            </Dropdown>
+          )}
+          {showValue && showValue.indexOf('batchDelete') != -1 && (
+            <Button className={styles['batch_btn']} onClick={this.batchDelete}>
+              批量删除
+            </Button>
+          )}
+          {showValue && showValue.indexOf('batchEnabled') != -1 && (
+            <Button className={styles['batch_btn']} onClick={this.batchEnabled}>
+              批量启用
+            </Button>
+          )}
+          {showValue && showValue.indexOf('eventsReported') != -1 && (
+            <Button
+              className={styles['batch_btn']}
+              onClick={this.reportedChange}>
+              事件上报
+            </Button>
+          )}
+          {showValue && showValue.indexOf('history') != -1 && (
+            <Button
+              className={styles['batch_btn']}
+              onClick={this.historyChange}>
+              数据查看
+            </Button>
+          )}
+          {showValue && showValue.indexOf('issued') != -1 && (
+            <Button className={styles['batch_btn']} onClick={this.issuedChange}>
+              指令下发日志
+            </Button>
+          )}
+          {showValue && showValue.indexOf('batchDisable') != -1 && (
+            <Button className={styles['batch_btn']} onClick={this.batchDisable}>
+              批量禁用
+            </Button>
+          )}
+          {showValue && showValue.indexOf('refresh') != -1 && (
+            <Button className={styles['refresh_btn']} onClick={this.refresh}>
+              <i
+                className={classnames('icon iconfont icon-sousuo')}
+                style={{paddingRight: '4px'}}
+              />
+              <span>实时刷新</span>
+            </Button>
+          )}
+          {showValue && showValue.indexOf('exportTpl') != -1 && (
+            <Button
+              className={styles['exportTpl_btn']}
+              onClick={this.exportTpl}>
+              <i
+                className={classnames(
+                  'icon iconfont icon-xiazai',
+                  styles['common_icon'],
+                )}
+              />
+              <span>下载模板</span>
+            </Button>
+          )}
+          {showValue && showValue.indexOf('import') != -1 && (
+            <Button className={styles['import_btn']} onClick={this.import}>
+              <i
+                className={classnames(
+                  'icon iconfont icon-daoru',
+                  styles['common_icon'],
+                )}
+              />
+              <span>导入</span>
+            </Button>
+          )}
+          {showValue && showValue.indexOf('export') != -1 && (
+            <Button className={styles['export_btn']} onClick={this.export}>
+              <i
+                className={classnames(
+                  'icon iconfont icon-daochu',
+                  styles['common_icon'],
+                )}
+              />
+              <span>导出</span>
+            </Button>
+          )}
+          {showValue && showValue.indexOf('downDev') != -1 && (
+            <Button className={styles['add_btn']} onClick={this.downDev}>
+              <i
+                className={classnames('icon iconfont icon-xinzeng')}
+                style={{paddingRight: '4px'}}
+              />
+              <span>下发配置</span>
+            </Button>
+          )}
+          {showValue && showValue.indexOf('add') != -1 && (
+            <Button className={styles['add_btn']} onClick={this.add}>
+              <i
+                className={classnames('icon iconfont icon-xinzeng')}
+                style={{paddingRight: '4px'}}
+              />
+              <span>新增</span>
+            </Button>
+          )}
         </div>
       </div>
     );

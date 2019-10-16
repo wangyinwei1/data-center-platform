@@ -1,5 +1,5 @@
 import request from '../utils/request';
-const base = '/gdb';
+const base = '/AEP';
 
 export function getMenu() {
   return request.get(base + '/main/index');
@@ -918,4 +918,37 @@ export function findStationByCode(params) {
   return request.get(base + '/device_area/findStationByCode', {
     params,
   });
+}
+//AEP
+export function getAEPDeviceList(params) {
+  return request.get(base + '/device/list', {
+    params,
+  });
+}
+export function AEPSave(data) {
+  return request.post(base + '/device/save', data);
+}
+export function AEPEdit(data) {
+  return request.post(base + '/device/edit', data);
+}
+export function AEPDelete(data) {
+  return request.post(base + '/device/delete', data);
+}
+export function getCommandList(params) {
+  return request.get(base + '/device/commandList', params);
+}
+export function AEPcommand(data) {
+  return request.post(base + '/device/command', data);
+}
+export function queryEventList(data) {
+  return request.post(base + '/device/queryEventList', data);
+}
+export function queryCommandList(data) {
+  return request.post(base + '/device/queryCommandList', data);
+}
+export function getDeviceStatusHis(data) {
+  return request.post(base + '/device/getDeviceStatusHis', data);
+}
+export function getDeviceInfo(params) {
+  return request.get(base + '/device/info', {params});
 }

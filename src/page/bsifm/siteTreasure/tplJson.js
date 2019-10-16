@@ -1,21 +1,37 @@
 const formParams = {
   fields: {
-    gdbId: {
+    autoObserver: {
+      value: 1,
+      require: false,
+    },
+    deviceName: {
       value: '',
       require: true,
     },
-    name: {
+    imsi: {
       value: '',
-      require: true,
+      require: false,
     },
-    stationId: {
-      value: undefined,
-      require: true,
-    },
-    dataFilterTime: {
+    imei: {
       value: '',
       require: true,
     },
   },
 };
-export {formParams};
+const issuedParams = {
+  issuedFields: {
+    serviceName: {
+      value: '',
+      require: false,
+    },
+    propertyValue: {
+      value: '',
+      require: true,
+    },
+    serviceFlag: {
+      value: undefined,
+      require: true,
+    },
+  },
+};
+export {formParams, issuedParams};

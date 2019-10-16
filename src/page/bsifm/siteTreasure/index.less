@@ -3,6 +3,14 @@
   .information_wrap {
     height: 100%;
   }
+  .issued_wrap {
+    :global {
+      .ant-form-inline .ant-form-item > .ant-form-item-label {
+        display: block;
+        text-align: left;
+      }
+    }
+  }
   .child_link {
     display: block;
     color: #13ce66;
@@ -22,6 +30,21 @@
   .icon_passive {
     color: #5dccff;
   }
+  .device-info-wrap {
+    padding: 20px;
+    padding-bottom: 0;
+
+    .device-info-item {
+      div {
+        text-align: left;
+        &:first-child {
+          padding-right: 10px;
+          text-align: right;
+        }
+        line-height: 32px;
+      }
+    }
+  }
   .information_ct {
     .min_width {
       min-width: 1069px;
@@ -30,13 +53,8 @@
     }
     .scrollCommon();
     overflow: auto;
-    margin-top: 14px;
     background: #fff;
-    height: -webkit-calc(~'100% - 67px');
-    height: -moz-calc(~'100% - 67px');
-    height: -ms-calc(~'100% - 67px');
-    height: -o-calc(~'100% - 67px');
-    height: calc(~'100% - 67px');
+    height: 100%;
     .table_wrap {
       :global {
         .ant-table .ant-table-expanded-row-level-1 > td:last-child {

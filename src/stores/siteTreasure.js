@@ -1,12 +1,18 @@
 import {observable, action} from 'mobx';
 import {
-  getSiteTreasureList,
-  siteTreasureEdit,
-  siteTreasureSave,
+  AEPEdit,
+  AEPSave,
   findStationByCode,
   getTagList,
-  deleteSiteTreasure,
+  AEPDelete,
   getGoAdd,
+  AEPcommand,
+  getAEPDeviceList,
+  getCommandList,
+  queryEventList,
+  queryCommandList,
+  getDeviceStatusHis,
+  getDeviceInfo,
 } from '../services/api.js';
 import {message} from 'antd';
 class Historyalarm {
@@ -14,7 +20,12 @@ class Historyalarm {
   @observable tableParmas = {};
   @observable loading = false;
   @observable ztreeChild = 0;
+  @observable commandList = {};
   @observable station = [];
+  @observable detailParmas = {};
+  @observable detailData = [];
+  @observable detailLoading = false;
+  @observable deviceInfo = {};
 
   @action.bound
   async findStationByCode(params) {
@@ -22,15 +33,42 @@ class Historyalarm {
     this.station = data.Data;
   }
   @action.bound
-  async getTagList(params) {
-    this.tagLoading = true;
-    const data = await getTagList(params);
-    this.tagLoading = false;
+  async getDeviceInfo(params) {
+    const data = await getDeviceInfo(params);
+    this.deviceInfo = data.Data;
+  }
+  @action.bound
+  async getCommandList(params) {
+    const data = await getCommandList(params);
+    if (data.Result == 'success') {
+      this.commandList = data.Data;
+    } else {
+      message.error(data.Msg);
+    }
+  }
+  @action.bound
+  async getTagDetail(params, which) {
+    this.detailData = [];
+    this.detailLoading = true;
+    let data;
+    switch (which) {
+      case 'history':
+        data = await getDeviceStatusHis(params);
+        break;
+      case 'issued':
+        data = await queryCommandList(params);
+        break;
+      case 'reported':
+        data = await queryEventList(params);
+        break;
+    }
+    this.detailLoading = false;
+
     // params.number = data.Data.number;
     // params.page = data.Data.page;
-    // this.tagParmas = params;
+    this.detailParmas = params;
     if (data.Result == 'success') {
-      this.tagData = data.Data;
+      this.detailData = data.Data;
     } else {
       message.error(data.Msg);
     }
@@ -39,7 +77,7 @@ class Historyalarm {
   @action.bound
   async getTable(params) {
     this.loading = true;
-    const data = await getSiteTreasureList(params);
+    const data = await getAEPDeviceList(params);
     this.loading = false;
     params.number = data.Data.number;
     params.page = data.Data.page;
@@ -52,8 +90,8 @@ class Historyalarm {
     }
   }
   @action.bound
-  async siteTreasureSave(params) {
-    const data = await siteTreasureSave(params);
+  async AEPSave(params) {
+    const data = await AEPSave(params);
     if (data.Result == 'success') {
       this.getTable(this.tableParmas);
       message.success(data.Msg);
@@ -63,8 +101,18 @@ class Historyalarm {
     }
   }
   @action.bound
-  async siteTreasureEdit(params) {
-    const data = await siteTreasureEdit(params);
+  async AEPcommand(params) {
+    const data = await AEPcommand(params);
+    if (data.Result == 'success') {
+      message.success(data.Msg);
+      return true;
+    } else {
+      message.error(data.Msg);
+    }
+  }
+  @action.bound
+  async AEPEdit(params) {
+    const data = await AEPEdit(params);
     if (data.Result == 'success') {
       this.getTable(this.tableParmas);
       message.success(data.Msg);
@@ -75,7 +123,7 @@ class Historyalarm {
   }
   @action
   async delete(params) {
-    const data = await deleteSiteTreasure(params);
+    const data = await AEPDelete(params);
     if (data.Result == 'success') {
       this.getTable(this.tableParmas);
       message.success('删除成功!');

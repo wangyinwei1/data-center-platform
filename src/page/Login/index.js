@@ -23,7 +23,7 @@ class Loginer extends Component {
     };
   }
   setBgImage() {
-    this.idImg.style.backgroundImage = `url(/gdb/code.do?t=${new Date().getTime()})`;
+    this.idImg.style.backgroundImage = `url(/AEP/code.do?t=${new Date().getTime()})`;
   }
   componentDidMount() {
     this.setBgImage();
@@ -78,8 +78,8 @@ class Loginer extends Component {
             } else {
               //setSelectedKeys
 
-              layoutStore.setSelectedKeys('gdb_manager');
-              router.push('/gdb_manager');
+              layoutStore.setSelectedKeys('device_manager');
+              router.push('/device_manager');
             }
           } else {
             this.setBgImage();

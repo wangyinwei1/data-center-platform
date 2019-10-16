@@ -3,7 +3,7 @@ import {action, observer, inject} from 'mobx-react';
 import {Button, Form, Row} from 'antd';
 import classnames from 'classnames';
 import styles from './index.less';
-import {FormInput, FormSelect} from '../../../components/FormItem';
+import {FormInput, FormRadio, FormSelect} from '../../../components/FormItem';
 import {toJS} from 'mobx';
 //实例
 @observer
@@ -35,47 +35,55 @@ class Regional extends Component {
         <FormInput
           fields={fields}
           onChange={this.handleFormChange}
-          label={'网关ID'}
-          disabled={type === 'modify' ? true : disabled}
+          label={'设备名称'}
+          disabled={disabled}
           className={currentClass}
-          name={'gdbId'}
+          name={'deviceName'}
           rules={[{required: true, message: '请必须填写!'}]}
         />
         <FormInput
           fields={fields}
           onChange={this.handleFormChange}
-          label={'网关名称'}
+          label={'IMEI号'}
           disabled={disabled}
+          visiable={type === 'new' ? true : false}
+          placeholder={'请根据产品Endpoint格式输入IMEI号'}
           className={currentClass}
-          name={'name'}
-          rules={[{required: true, message: '请必须填写!'}]}
+          name={'imei'}
+          rules={[
+            {required: true, message: '请必须填写!'},
+            {
+              pattern: /^[0-9]{15}$/,
+              message: '设备IMEI号必须是 15 位数字!',
+            },
+          ]}
         />
-        <FormSelect
+        <FormInput
+          fields={fields}
+          onChange={this.handleFormChange}
+          label={'IMSI号'}
+          disabled={disabled}
+          placeholder={'请根据产品Endpoint格式输入IMSI号'}
+          className={currentClass}
+          name={'imsi'}
+          rules={[
+            {required: false, message: '请必须填写!'},
+            {
+              pattern: /^[0-9]{0,15}$/,
+              message: '总长度不超过15位，使用0~9的数字!',
+            },
+          ]}
+        />
+        <FormRadio
           fields={fields}
           {...fields}
           onChange={this.handleFormChange}
           disabled={disabled}
-          label={'站点选择'}
-          placeholder={'请选择站点'}
-          name={'stationId'}
+          label={'是否开启自动订阅'}
+          name={'autoObserver'}
           className={currentClass}
-          rules={[{required: true, message: '请必须填写!'}]}
-          children={station}
-        />
-        <FormInput
-          fields={fields}
-          onChange={this.handleFormChange}
-          label={'采集间隔(s)'}
-          disabled={disabled}
-          className={currentClass}
-          name={'dataFilterTime'}
-          rules={[
-            {required: true, message: '请必须填写!'},
-            {
-              pattern: /^30|[3-5][0-9]|60$/,
-              message: '请输入>=30且<=60的数字',
-            },
-          ]}
+          rules={[{required: false, message: '请必须填写!'}]}
+          children={[{name: '是', value: 1}, {name: '否', value: 0}]}
         />
       </Form>
     );
