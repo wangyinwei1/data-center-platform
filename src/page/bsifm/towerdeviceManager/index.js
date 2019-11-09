@@ -17,8 +17,9 @@ import DeleteModal from '../../../components/DeleteModal';
 import EditModal from '../../../components/EditModal';
 import moment from 'moment';
 import EditContent from './editContent.js';
+import IssuedContent from './issuedContent.js';
 import {validateFields} from './common.js';
-import {formParams} from './tplJson.js';
+import {formParams, issuedParams} from './tplJson.js';
 //实例
 @inject('regionalStore', 'towerStore')
 @observer
@@ -41,10 +42,12 @@ class Passageway extends Component {
       deleteShow: false,
       currentData: {},
       editShow: false,
+      issuedVisiable: false,
       type: 'new',
       historyShow: false,
       currentType: '',
       ...formParams,
+      ...issuedParams,
     };
   }
   //以下级联方法
@@ -58,6 +61,16 @@ class Passageway extends Component {
   onTextChange(value) {
     this.c_onTextChange(value);
   }
+  devStateChange = value => {
+    const {towerStore} = this.props;
+    const params = {
+      number: 10,
+      ...towerStore.tableParmas,
+      state: value,
+      page: 1,
+    };
+    towerStore.getTable(params);
+  };
   onCascaderChange(value, selectedOptions) {
     this.c_onCascaderChang(value, selectedOptions);
     const params = {
@@ -123,6 +136,17 @@ class Passageway extends Component {
   onDeleteCancel = () => {
     this.setState({
       deleteShow: false,
+    });
+  };
+  issuedHandleFormChange = changedFields => {
+    const key = _.keys(changedFields);
+    //showError让自己校验字段
+    const obj = {};
+    obj[key] = {showError: false, ...changedFields[key]};
+    this.setState(({issuedFields}) => {
+      return {
+        issuedFields: {...issuedFields, ...obj},
+      };
     });
   };
   handleFormChange = changedFields => {
@@ -206,6 +230,7 @@ class Passageway extends Component {
     data &&
       this.setState({
         ...formParams,
+        ...issuedParams,
         editShow: false,
       });
   }
@@ -221,8 +246,12 @@ class Passageway extends Component {
 
     const params = {
       id: record.id,
-      startTime: moment().startOf('day'),
-      endTime: moment().endOf('day'),
+      startTime: moment()
+        .startOf('day')
+        .format('YYYY-MM-DD HH:mm:ss'),
+      endTime: moment()
+        .endOf('day')
+        .format('YYYY-MM-DD HH:mm:ss'),
       page: 1,
       number: 10,
     };
@@ -254,6 +283,54 @@ class Passageway extends Component {
       historyShow: false,
     });
   };
+  issuedClick = record => {
+    this.setState({
+      issuedVisiable: true,
+      currentData: record,
+    });
+    // const {
+    //   towerStore: {sendCommand},
+    // } = this.props;
+    // sendCommand({
+    //   id: record.id,
+    //   serverdata: record.serverdata,
+    //   servercommand: record.servercommand,
+    // });
+  };
+  //编辑确定
+  onIssuedOk = () => {
+    const issuedFields = this.state.issuedFields;
+    const currentData = this.state.currentData;
+    const {
+      towerStore: {sendCommand},
+    } = this.props;
+    validateFields(
+      toJS(issuedFields),
+      () => {
+        let params = {};
+        _.forIn(issuedFields, (value, key) => {
+          params[key] = value.value;
+        });
+        params['id'] = currentData.id;
+        sendCommand(params).then(data => {
+          this.clearParams(data);
+        });
+      },
+      newFields => {
+        this.setState({issuedFields: newFields});
+      },
+    );
+  };
+  remoteClick = (record, rrpc) => {
+    const {
+      towerStore: {sendRRPC},
+    } = this.props;
+    let params = {
+      rrpc: rrpc,
+      id: record.id,
+    };
+    sendRRPC(params, rrpc);
+  };
   render() {
     const {towerStore, regionalStore} = this.props;
     const tableData = toJS(towerStore.tableData.list) || [];
@@ -262,6 +339,8 @@ class Passageway extends Component {
       deleteClick: this.deleteClick,
       editClick: this.editClick,
       historyClick: this.historyClick,
+      issuedClick: this.issuedClick,
+      remoteClick: this.remoteClick,
       _this: this,
     });
     return (
@@ -278,7 +357,11 @@ class Passageway extends Component {
         />
         <div className={styles['information_ct']}>
           <div className={styles['min_width']}>
-            <Toolbar onSearch={this.onSearch} onClick={this.add} />
+            <Toolbar
+              onSearch={this.onSearch}
+              devStateChange={this.devStateChange}
+              onClick={this.add}
+            />
             <div className={styles['table_wrap']}>
               <Table
                 rowClassName={(record, index) => {
@@ -316,6 +399,22 @@ class Passageway extends Component {
             record={this.state.currentData}
             type={this.state.type}
             stationList={towerStore.station}
+          />
+        </EditModal>
+        <EditModal
+          isShow={this.state.issuedVisiable}
+          onOk={this.onIssuedOk}
+          title={'下发命令'}
+          width={880}
+          buttons={true}
+          onCancel={() => {
+            this.setState({issuedVisiable: false});
+            this.clearParams(true);
+          }}>
+          <IssuedContent
+            handleFormChange={this.issuedHandleFormChange}
+            fields={this.state.issuedFields}
+            record={this.state.currentData}
           />
         </EditModal>
         <Panel

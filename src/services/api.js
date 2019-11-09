@@ -928,6 +928,9 @@ export function getTowerList(params) {
 export function towerSave(data) {
   return request.post(base + '/device/save', data);
 }
+export function sendCommand(data) {
+  return request.post(base + '/device/sendCommand', data);
+}
 export function towerEdit(data) {
   return request.post(base + '/device/edit', data);
 }
@@ -953,4 +956,7 @@ export function getAlarmInfo(params) {
   return request.get(base + '/device/warnInfo', {
     params,
   });
+}
+export function sendRRPC(data) {
+  return request.post(base + '/device/sendRRPC', data);
 }

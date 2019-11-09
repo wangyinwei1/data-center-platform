@@ -62,4 +62,16 @@ const formParams = {
     },
   },
 };
-export {formParams};
+const issuedParams = {
+  issuedFields: {
+    servercommand: {
+      value: '',
+      require: true,
+    },
+    serverdata: {
+      value: '',
+      require: true,
+    },
+  },
+};
+export {formParams, issuedParams};

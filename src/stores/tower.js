@@ -8,10 +8,13 @@ import {
   towerEditInfo,
   towerDelete,
   getElectricQuantity,
+  sendCommand,
   getElectricEnergy,
   getAlarmInfo,
+  sendRRPC,
 } from '../services/api.js';
-import {message} from 'antd';
+import React, {Component} from 'react';
+import {message, notification, Icon} from 'antd';
 class Historyalarm {
   @observable tableData = {};
   @observable tableParmas = {};
@@ -28,9 +31,38 @@ class Historyalarm {
     this.station = data.Data;
   }
   @action.bound
+  async sendRRPC(params, rrpc) {
+    const data = await sendRRPC(params);
+    if (data.Result == 'success') {
+      if (rrpc === 'rrpc,getver') {
+        const args = {
+          message: '最新固件版本',
+          description: `版本号：${data.Msg}`,
+          duration: 4.5,
+          icon: <Icon type="check-circle" style={{color: '#52c41a'}} />,
+        };
+        notification.open(args);
+      } else {
+        message.success(data.Msg);
+        this.getTable(this.tableParmas);
+      }
+    } else {
+      message.error(data.Msg);
+    }
+  }
+  @action.bound
   async getInfo(params) {
     const data = await towerEditInfo(params);
     return data.Data || {};
+  }
+  @action.bound
+  async sendCommand(params) {
+    const data = await sendCommand(params);
+    if (data.Result == 'success') {
+      message.success(data.Msg);
+    } else {
+      message.error(data.Msg);
+    }
   }
   @action.bound
   async getElectricQuantity(params) {

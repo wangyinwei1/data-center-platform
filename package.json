@@ -67,7 +67,7 @@
     "webpack-dev-server": "^1.14.1"
   },
   "dependencies": {
-    "antd": "^3.5.3",
+    "antd": "3.6.6",
     "axios-mock-adapter": "^1.11.0",
     "classnames": "^2.2.5",
     "document-offset": "^1.0.4",

@@ -23,27 +23,27 @@ const columns = (type, detailClick) => {
       },
       {
         title: '回路一',
-        dataIndex: 'loop1Kwh',
+        dataIndex: 'loop1kwh',
       },
       {
         title: '回路二',
-        dataIndex: 'loop2Kwh',
+        dataIndex: 'loop2kwh',
       },
       {
         title: '回路三',
-        dataIndex: 'loop3Kwh',
+        dataIndex: 'loop3kwh',
       },
       {
         title: '回路四',
-        dataIndex: 'loop4Kwh',
+        dataIndex: 'loop4kwh',
       },
       {
         title: '回路五',
-        dataIndex: 'loop5Kwh',
+        dataIndex: 'loop5kwh',
       },
       {
         title: '回路六',
-        dataIndex: 'loop6Kwh',
+        dataIndex: 'loop6kwh',
       },
       {
         title: '创建时间',

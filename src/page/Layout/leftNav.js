@@ -7,7 +7,7 @@ import styles from './index.less';
 import _ from 'lodash';
 const {SubMenu} = Menu;
 const {Content, Footer, Sider} = Layout;
-const outreach = ['energy-consumption', 'large-screen'];
+const outreach = ['energy-consumption', 'large-screen', 'remoteUpdate'];
 const menuIcon = {
   '420': 'icon-shouye',
   '390': 'icon-jichuxinxiguanli',
@@ -90,6 +90,9 @@ const firstLevel = function(item) {
 
       case 1:
         url = localStorage.getItem('screenUrl');
+        break;
+      case 2:
+        url = 'https://iot.openluat.com/Login/';
         break;
     }
 
