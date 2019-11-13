@@ -1,0 +1,136 @@
+// .tree-wrap {
+//   :global {
+//     .ant-tree.ant-tree-show-line.hide-file-icon li span.ant-tree-switcher-noop {
+//       background: transparent;
+//     }
+//
+//     .ant-tree.ant-tree-show-line.hide-file-icon li:before {
+//       content: ' ';
+//       width: 1px;
+//       border-left: 1px solid #d9d9d9;
+//       height: 100%;
+//       position: absolute;
+//       left: 12px;
+//       top: 0;
+//       margin: 0;
+//     }
+//
+//     .ant-tree.ant-tree-show-line.hide-file-icon li:first-child:before {
+//       top: 6px;
+//       height: calc(100% - 6px);
+//     }
+//
+//     .ant-tree.ant-tree-show-line.hide-file-icon li:last-child:before {
+//       height: 16px;
+//     }
+//
+//     .ant-tree.ant-tree-show-line.hide-file-icon
+//       li:first-child:last-child:before {
+//       height: 10px;
+//     }
+//
+//     .ant-tree.ant-tree-show-line.hide-file-icon li .ant-tree-switcher-noop > i {
+//       visibility: hidden;
+//     }
+//
+//     .ant-tree.ant-tree-show-line.hide-file-icon
+//       li
+//       .ant-tree-switcher-noop:after {
+//       content: ' ';
+//       height: 1px;
+//       border-bottom: 1px solid #d9d9d9;
+//       width: 10px;
+//       position: absolute;
+//       left: 12px;
+//       top: 50%;
+//       margin: 0;
+//     }
+//     li:not(:last-child):before {
+//       display: none;
+//     }
+//     // li span.ant-tree-switcher.ant-tree-switcher_open:after {
+//     //   content: '\E624' !important;
+//     //   font-size: 16px !important;
+//     //   font-weight: bold !important;
+//     // }
+//     // li span.ant-tree-switcher.ant-tree-switcher_close:after {
+//     //   content: '\E627' !important;
+//     //   font-size: 16px !important;
+//     //   font-weight: bold !important;
+//     // }
+//     li span.ant-tree-switcher.ant-tree-switcher-noop {
+//       display: none;
+//     }
+//     li ul {
+//       padding: 0;
+//     }
+//     .ant-tree-switcher {
+//       position: absolute;
+//       right: 0;
+//     }
+//   }
+// }
+.tree-wrap {
+  :global {
+    .ant-tree li span.ant-tree-switcher.ant-tree-switcher_close:after {
+      content: '\E627';
+      font-size: 24px;
+      font-weight: 600;
+    }
+    .ant-tree li span.ant-tree-switcher.ant-tree-switcher_open:after {
+      content: '\E624';
+      font-size: 24px;
+      font-weight: 600;
+    }
+    .ant-tree li span.ant-tree-switcher {
+      // position: absolute;
+      // right: 0;
+    }
+    .ant-tree li span.ant-tree-switcher {
+      width: 32px;
+      height: 32px;
+      line-height: 32px;
+      color: #a2a3a4;
+      position: absolute;
+      right: 0;
+      z-index: 1;
+    }
+    .ant-tree li span.ant-tree-iconEle {
+      width: 32px;
+      height: 32px;
+      top: 0;
+      line-height: 32px;
+    }
+    .ant-tree li span.ant-tree-icon_loading {
+      right: -32px;
+      left: unset;
+      z-index: 2;
+    }
+    .ant-tree li .ant-tree-node-content-wrapper:hover,
+    .ant-tree li .ant-tree-node-content-wrapper.ant-tree-node-selected {
+      background-color: #f3f3f3;
+      span.ant-tree-icon_loading {
+        background-color: #f3f3f3;
+      }
+    }
+    .ant-tree li ul {
+      padding: 0;
+    }
+    // .ant-tree li span.ant-tree-icon_loading:after {
+    //   color: #18d27d;
+    // }
+    .ant-tree-title {
+      font-family: 'Microsoft YaHei Monospaced Number, Chinese Quote,
+        -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, PingFang SC,
+        Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial,
+        sans-serif';
+    }
+    .ant-tree li .ant-tree-node-content-wrapper {
+      line-height: 32px;
+      padding: 0;
+      padding-left: 30px;
+      height: 32px;
+      width: 100%;
+    }
+  }
+}

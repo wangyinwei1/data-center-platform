@@ -124,7 +124,9 @@ class Passageway extends Component {
   }
 
   typesChange(value) {
-    const {fsu_realtimealarmStore: {getTable, tableParmas}} = this.props;
+    const {
+      fsu_realtimealarmStore: {getTable, tableParmas},
+    } = this.props;
     const params = {
       ...tableParmas,
       page: 1,

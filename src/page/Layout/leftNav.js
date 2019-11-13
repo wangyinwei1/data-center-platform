@@ -28,51 +28,51 @@ const exclusionPath = [
   'fsu-historicaldata',
 ];
 const secondLevel = function(item) {
-  if (item.MENU_ID === '412') {
-    return null;
-  } else {
-    return (
-      <SubMenu
-        key={item.MENU_ROUTE || item.MENU_ID}
-        title={
-          <span>
-            <i
-              className={classnames(
-                'icon iconfont',
-                menuIcon[item.MENU_ID],
-                styles['menu_icon'],
-              )}
-            />
-            <span>{item.MENU_NAME}</span>
-          </span>
-        }>
-        {_.map(item.subMenu, sub => {
-          if (
-            sub.MENU_ID == '397' &&
-            !JSON.parse(localStorage.getItem('isAdmin'))
-          ) {
-            return null;
-          }
-          if (
-            sub.MENU_ID == '391' &&
-            JSON.parse(localStorage.getItem('isNotArea'))
-          ) {
-            return null;
-          }
+  // if (item.MENU_ID === '412') {
+  //   return null;
+  // } else {
+  return (
+    <SubMenu
+      key={item.MENU_ROUTE || item.MENU_ID}
+      title={
+        <span>
+          <i
+            className={classnames(
+              'icon iconfont',
+              menuIcon[item.MENU_ID],
+              styles['menu_icon'],
+            )}
+          />
+          <span>{item.MENU_NAME}</span>
+        </span>
+      }>
+      {_.map(item.subMenu, sub => {
+        if (
+          sub.MENU_ID == '397' &&
+          !JSON.parse(localStorage.getItem('isAdmin'))
+        ) {
+          return null;
+        }
+        if (
+          sub.MENU_ID == '391' &&
+          JSON.parse(localStorage.getItem('isNotArea'))
+        ) {
+          return null;
+        }
 
-          if (exclusionPath.indexOf(sub.MENU_ROUTE) != -1) {
-            return null;
-          } else {
-            return (
-              <Menu.Item key={sub.MENU_ROUTE || sub.MENU_ID}>
-                <Link to={`/${sub.MENU_ROUTE}`}>{sub.MENU_NAME}</Link>
-              </Menu.Item>
-            );
-          }
-        })}
-      </SubMenu>
-    );
-  }
+        if (exclusionPath.indexOf(sub.MENU_ROUTE) != -1) {
+          return null;
+        } else {
+          return (
+            <Menu.Item key={sub.MENU_ROUTE || sub.MENU_ID}>
+              <Link to={`/${sub.MENU_ROUTE}`}>{sub.MENU_NAME}</Link>
+            </Menu.Item>
+          );
+        }
+      })}
+    </SubMenu>
+  );
+  // }
 };
 const firstLevel = function(item) {
   if (outreach.indexOf(item.MENU_ROUTE) !== -1) {
@@ -184,35 +184,35 @@ class BasicLayout extends Component {
     let path = '';
     //特殊处理
     switch (selectedKeys) {
-      case 'fsu-historyalarm':
-        path = 'equ-historyalarm';
-        break;
-      case 'fsu-devicemanagement':
-        path = 'equ-information';
-        break;
-      case 'fsu-controlrecord':
-        path = 'equ-controlrecord';
-        break;
-      case 'fsu-realtimealarm':
-        path = 'equ-realtimealarm';
-        break;
-      case 'fsu-alarminformation':
-        path = 'bsifm-alarminformation';
-        break;
-      case 'bsifm-devicetype':
-        path = 'bsifm-deviceversion';
-        break;
+      // case 'fsu-historyalarm':
+      //   path = 'equ-historyalarm';
+      //   break;
+      // case 'fsu-devicemanagement':
+      //   path = 'equ-information';
+      //   break;
+      // case 'fsu-controlrecord':
+      //   path = 'equ-controlrecord';
+      //   break;
+      // case 'fsu-realtimealarm':
+      //   path = 'equ-realtimealarm';
+      //   break;
+      // case 'fsu-alarminformation':
+      //   path = 'bsifm-alarminformation';
+      //   break;
+      // case 'bsifm-devicetype':
+      //   path = 'bsifm-deviceversion';
+      //   break;
       default:
         path = selectedKeys;
 
         break;
     }
-    if (selectedKeys.indexOf('fsu-devicemanagement') != -1) {
-      path = 'equ-information';
-    }
-    if (selectedKeys.indexOf('equ-information') != -1) {
-      path = 'equ-information';
-    }
+    // if (selectedKeys.indexOf('fsu-devicemanagement') != -1) {
+    //   path = 'equ-information';
+    // }
+    // if (selectedKeys.indexOf('equ-information') != -1) {
+    //   path = 'equ-information';
+    // }
     let isClose = true;
     if (selectedKeys === 'shouye') {
       isClose = true;

@@ -47,9 +47,10 @@ import {
   Historicaldata,
   Passivedevicechangerecord,
   Fsu_Controlrecord,
+  Fsu_MonitoryPoint,
   Fsu_Historicaldata,
   Fsu_Realtimedata,
-  Fsn_Realtimealarm,
+  Fsu_Realtimealarm,
   Fsu_Historyalarm,
   Fsu_Alarminformation,
   Fsu_Devicemanagement,
@@ -85,7 +86,8 @@ render(
             <Route path="/fsu-historyalarm" component={Fsu_Historyalarm} />
             <Route path="/fsu-realtimedata" component={Fsu_Realtimedata} />
             <Route path="/fsu-historicaldata" component={Fsu_Historicaldata} />
-            <Route path="/fsu-realtimealarm" component={Fsn_Realtimealarm} />
+            <Route path="/fsu-realtimealarm" component={Fsu_Realtimealarm} />
+            <Route path="/fsu-monitoryPoint" component={Fsu_MonitoryPoint} />
             <Route
               path="/fsu-alarminformation"
               component={Fsu_Alarminformation}

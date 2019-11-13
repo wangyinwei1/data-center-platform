@@ -114,9 +114,7 @@ class BasicLayout extends Component {
             notification.open({
               message: '模块上线/下线通知:',
               placement: 'bottomRight',
-              description: `平台ID:${result.platId} 节点ID:${
-                result.nodeId
-              } 状态:${result.status}`,
+              description: `平台ID:${result.platId} 节点ID:${result.nodeId} 状态:${result.status}`,
             });
           } else if (result.Type == 'AlarmMsg') {
             notification.open({
@@ -176,27 +174,27 @@ class BasicLayout extends Component {
     let path = newPath || location.pathname.replace('/', '');
     let title = '';
     let openKeys = null;
-    //特殊处理
-    switch (path) {
-      case 'fsu-historyalarm':
-        path = 'equ-historyalarm';
-        break;
-      case 'fsu-devicemanagement':
-        path = 'equ-information';
-        break;
-      case 'fsu-controlrecord':
-        path = 'equ-controlrecord';
-        break;
-      case 'fsu-realtimealarm':
-        path = 'equ-realtimealarm';
-        break;
-      case 'fsu-alarminformation':
-        path = 'bsifm-alarminformation';
-        break;
-      case 'bsifm-devicetype':
-        path = 'bsifm-deviceversion';
-        break;
-    }
+    // //特殊处理
+    // switch (path) {
+    //   case 'fsu-historyalarm':
+    //     path = 'equ-historyalarm';
+    //     break;
+    //   case 'fsu-devicemanagement':
+    //     path = 'equ-information';
+    //     break;
+    //   case 'fsu-controlrecord':
+    //     path = 'equ-controlrecord';
+    //     break;
+    //   case 'fsu-realtimealarm':
+    //     path = 'equ-realtimealarm';
+    //     break;
+    //   case 'fsu-alarminformation':
+    //     path = 'bsifm-alarminformation';
+    //     break;
+    //   case 'bsifm-devicetype':
+    //     path = 'bsifm-deviceversion';
+    //     break;
+    // }
     _.map(menu, item => {
       if (item.subMenu[0]) {
         const second = item.subMenu;
@@ -350,24 +348,24 @@ class BasicLayout extends Component {
                   path === 'shouye' && styles['no_padding'],
                 )}>
                 {this.props.children}
-                {currentLink[0] && (
-                  <div className={styles['subNav']}>
-                    <Link
-                      to={`/${currentLink[1]}`}
-                      className={classnames(
-                        currentLink[1].indexOf(path) !== -1 && styles['active'],
-                      )}>
-                      基础设备
-                    </Link>
-                    <Link
-                      to={`/${currentLink[0]}`}
-                      className={classnames(
-                        currentLink[0].indexOf(path) !== -1 && styles['active'],
-                      )}>
-                      FSU设备
-                    </Link>
-                  </div>
-                )}
+                {/* {currentLink[0] && ( */}
+                {/*   <div className={styles['subNav']}> */}
+                {/*     <Link */}
+                {/*       to={`/${currentLink[1]}`} */}
+                {/*       className={classnames( */}
+                {/*         currentLink[1].indexOf(path) !== -1 && styles['active'], */}
+                {/*       )}> */}
+                {/*       基础设备 */}
+                {/*     </Link> */}
+                {/*     <Link */}
+                {/*       to={`/${currentLink[0]}`} */}
+                {/*       className={classnames( */}
+                {/*         currentLink[0].indexOf(path) !== -1 && styles['active'], */}
+                {/*       )}> */}
+                {/*       FSU设备 */}
+                {/*     </Link> */}
+                {/*   </div> */}
+                {/* )} */}
               </div>
               <div
                 id="cl_tree_cascader"
