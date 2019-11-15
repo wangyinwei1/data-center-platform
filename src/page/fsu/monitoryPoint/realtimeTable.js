@@ -16,10 +16,6 @@ class Regional extends Component {
     super(props);
     this.onShowSizeChange = this.onShowSizeChange.bind(this);
     this.onPageChange = this.onPageChange.bind(this);
-    this.onSearch = this.onSearch.bind(this);
-    this.onSubDevSelect = this.onSubDevSelect.bind(this);
-    this.onMonitorPointSelect = this.onMonitorPointSelect.bind(this);
-    this.real = this.real.bind(this);
     this.state = {
       subDeviceValue: '',
       type: 1,
@@ -57,73 +53,35 @@ class Regional extends Component {
     }
     fsu_monitorypointStore.getRealtimeTable(params);
   }
-  onSearch(value) {
-    let FsuTypeID = JSON.parse(localStorage.getItem('FsuTypeID'));
-    if (FsuTypeID === 2) {
-      if (!this.state.subDeviceValue) {
-        message.error('请选择子设备!');
-        return;
-      }
-    }
-    const {fsu_monitorypointStore, singleLineData} = this.props;
-    const params = {
-      number: 10,
-      ...fsu_monitorypointStore.tableParmas,
-      keywords: encodeURIComponent(value),
-      page: 1,
-      F_Suid: singleLineData.suID,
-    };
 
-    if (FsuTypeID === 2) {
-      params['deviceID'] = this.state.subDeviceValue;
-      params['type'] = this.state.type;
-      params['typeID'] = FsuTypeID;
-    }
-    fsu_monitorypointStore.realtimeSearch(params);
-  }
-  real() {
-    let FsuTypeID = JSON.parse(localStorage.getItem('FsuTypeID'));
-    if (FsuTypeID === 2) {
-      if (!this.state.subDeviceValue) {
-        message.error('请选择子设备!');
-        return;
-      }
-    }
-    const {fsu_monitorypointStore, singleLineData} = this.props;
-    let realtimeSubDevMenu = fsu_monitorypointStore.realtimeSubDevMenu;
-    let current = realtimeSubDevMenu.filter(item => {
-      return item.deviceID === this.state.subDeviceValue;
-    });
+  //控制
+  controlClick(item, e) {
+    const {
+      fsu_monitorypointStore: {postDeviceControl},
+    } = this.props;
+
     const params = {
-      F_Suid: singleLineData.suID,
-      ...fsu_monitorypointStore.tableParmas,
+      F_DeviceID: devID,
+      F_Spid: spID,
+      F_Suid: currentDevice,
+      // surID
+      // devicerID
     };
-    if (FsuTypeID === 2) {
-      params['deviceID'] = this.state.subDeviceValue;
-      params['type'] = this.state.type;
-      params['typeID'] = FsuTypeID;
-      params['surID'] = singleLineData.surID;
-      params['devicerID'] = current[0] ? current[0].devicerID : '';
-    }
-    fsu_monitorypointStore.getRealTimeCall(params);
+    postDeviceControl(params);
   }
-  onSubDevSelect(value) {
-    this.setState({
-      subDeviceValue: value,
-    });
-  }
-  onMonitorPointSelect(value) {
-    this.setState({
-      type: value,
-    });
-  }
+
   render() {
-    const {fsu_monitorypointStore, needRealtime} = this.props;
+    const {fsu_monitorypointStore, needRealtime, spValue} = this.props;
     const r_tableData = toJS(fsu_monitorypointStore.tableData);
     const tableData = (r_tableData && r_tableData.Data) || [];
+    let spType = fsu_monitorypointStore.spType;
+    let rest = spType.filter(item => {
+      return item.value === spValue;
+    });
+
     const pagination = r_tableData || {};
-    const columns = columnData();
-    let FsuTypeID = JSON.parse(localStorage.getItem('FsuTypeID'));
+
+    const columns = columnData({controlClick: this.controlClick, rest});
     return (
       <div>
         <Table

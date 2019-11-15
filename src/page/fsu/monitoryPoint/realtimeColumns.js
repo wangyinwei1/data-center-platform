@@ -8,8 +8,8 @@ import {Tooltip} from 'antd';
  * @param {editClick} 切换按钮的回调
  * @return {array}
  */
-const columns = () => {
-  return [
+const columns = ({controlClick, rest}) => {
+  let options = [
     {
       title: '子设备名称',
       dataIndex: 'deviceName',
@@ -31,6 +31,26 @@ const columns = () => {
       dataIndex: 'recordTime',
     },
   ];
+  rest[0] &&
+    rest[0].name === '遥测' &&
+    options.push({
+      title: '控制',
+      dataIndex: '',
+      width: '8%',
+      render: (text, record, index) => {
+        // if (record.isConcentrator === 1) return null;
+        return (
+          <i
+            className={classnames(
+              'icon iconfont icon-tiaoshi',
+              styles['icon_style'],
+            )}
+            onClick={controlClick.bind(_this, record)}
+          />
+        );
+      },
+    });
+  return options;
 };
 
 export default columns;

@@ -110,6 +110,7 @@ class Passageway extends Component {
       page: 1,
       ztreeChild: item.suID,
       number: 10,
+      fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
     };
     fsu_realtimealarmStore.getChildTable(params);
     this.setState({

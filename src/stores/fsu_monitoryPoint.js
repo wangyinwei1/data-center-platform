@@ -1,6 +1,7 @@
 import {observable, action, toJS} from 'mobx';
 import {
   fsu_realtimealarm_search,
+  getFsuSpType,
   getFsu_realtimealarmTable,
   getFsu_realtimealarmChildTable,
   fsu_realtimealarmChild_search,
@@ -13,6 +14,7 @@ import {
   fsuConfirmAlarm,
   getFsuRealtimeTable,
   getSubDeviceTree,
+  getFsuSunDeviceTable,
 } from '../services/api.js';
 import {message} from 'antd';
 class Historyalarm {
@@ -25,6 +27,8 @@ class Historyalarm {
   @observable currentDevice = '';
   @observable subDeviceTree = [];
   @observable subDeviceLoading = false;
+  @observable spType = [];
+  @observable fsuAddTypes = [];
 
   @action.bound
   async getZone(params) {
@@ -49,6 +53,28 @@ class Historyalarm {
       return this.subDeviceTree[0] || {};
     } else {
       message.error(data.Msg);
+    }
+  }
+  @action.bound
+  async getFsuSpType(params) {
+    const data = await getFsuSpType(params);
+    if (data.Result == 'success') {
+      this.spType = data.Data.map(item => {
+        return {name: item.spTypaName, value: item.spTypeId};
+      });
+      return this.spType;
+    } else {
+      message.error(data.Msg);
+    }
+  }
+  @action.bound
+  async getControlChannel(params) {
+    const data = await getFsuSunDeviceTable(params);
+    if (data.Result == 'success') {
+      console.log(data);
+    } else {
+      message.error(data.Msg);
+      return false;
     }
   }
   @action.bound

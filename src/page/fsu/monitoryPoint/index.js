@@ -7,7 +7,7 @@ import classnames from 'classnames';
 import HistoryModal from './../../equ/information/historyModal.js';
 import {toJS} from 'mobx';
 import {decorate as mixin} from 'react-mixin';
-import RealtimeTable from '../devicemanagement/realtimeTable.js';
+import RealtimeTable from './realtimeTable.js';
 import {cascader} from '../../bsifm/common';
 import Toolbar from '../../../components/Toolbarnew';
 import Table from '../../../components/Table';
@@ -37,6 +37,8 @@ class Passageway extends Component {
       currentArea: {},
       currentSubDevice: {},
       historyShow: false,
+      spValue: 1,
+      nodata: false,
     };
   }
   componentDidMount() {
@@ -49,6 +51,9 @@ class Passageway extends Component {
       F_FsuTypeID: localStorage.getItem('FsuTypeID'),
     };
     fsu_monitorypointStore.getFSUType();
+    fsu_monitorypointStore.getFsuSpType({
+      fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
+    });
     this.getAreaList();
   }
   getAreaList = async () => {
@@ -148,60 +153,51 @@ class Passageway extends Component {
       sing: record.sing,
     };
     let firstData = await getSubDeviceTree(params);
-    if (firstData.deviceID && firstData.children && firstData.children[0]) {
+    if (
+      firstData &&
+      firstData.deviceID &&
+      firstData.children &&
+      firstData.children[0]
+    ) {
       let children = firstData.children[0];
       this.setState({
         subExpandedKeys: [firstData.deviceID],
         subSelectedKeys: [children.deviceID],
         currentSubDevice: children,
+        nodata: false,
       });
       this.getTableData(children);
       //获取监控
+    } else {
+      this.setState({
+        nodata: true,
+      });
     }
   };
   getTableData = children => {
     const {fsu_realtimealarmStore, fsu_monitorypointStore} = this.props;
 
-    // fsu_monitorypointStore.getTable({
-    //   F_DeviceID: children.deviceID,
-    //   F_Suid: children.suID,
-    //   F_DevicerID: children.devicerID,
-    //   F_SurID: children.surID,
-    //   fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
-    // });
-    let F_FsuTypeID = localStorage.getItem('FsuTypeID');
-    if (JSON.parse(F_FsuTypeID) === 2) {
-      // const params = {
-      //   F_Suid: item.suID,
-      // };
-      // fsu_devicemanagementStore.getSubDevice(params).then(data => {
-      //   data && setState();
-      // });
-    } else {
-      const params = {
-        keywords: '',
-        page: 1,
-        number: 10,
-        F_Suid: children.suID,
-        fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
-      };
-      fsu_monitorypointStore.getTable(params).then(data => {
-        // data && setState();
-      });
-    }
+    //实时数据
+    fsu_monitorypointStore.getTable({
+      page: 1,
+      number: 10,
+      spTypeId: this.state.spValue,
+      F_Suid: children.suID,
+      fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
+    });
 
-    const params = {
+    //告警
+    fsu_realtimealarmStore.getChildTable({
       keywords: '',
       page: 1,
       ztreeChild: children.suID,
       number: 10,
       fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
-    };
-    fsu_realtimealarmStore.getChildTable(params);
+    });
   };
-  typesChange(value) {
+  typesChange = async value => {
     const {
-      fsu_monitorypointStore: {getTable, tableParmas},
+      fsu_monitorypointStore: {getTable, getFsuSpType, tableParmas},
     } = this.props;
     const params = {
       ...tableParmas,
@@ -209,24 +205,29 @@ class Passageway extends Component {
       F_FsuTypeID: value,
     };
     localStorage.setItem('FsuTypeID', value);
-    this.getSubDeviceAndMoniter(this.state.currentArea);
-    // getTable(params);
-  }
+    await getFsuSpType({
+      fsuTypeId: value,
+    }).then(data => {
+      this.setState({spValue: data[0] ? 1 : undefined});
+    });
+    await this.getSubDeviceAndMoniter(this.state.currentArea);
+  };
   onHistoryCancel = () => {
     this.setState({
       historyShow: false,
     });
-    const {fsu_devicemanagementStore} = this.props;
-    fsu_devicemanagementStore.clearHisData(); //离开情况列表
+    // const {fsu_devicemanagementStore} = this.props;
+    // fsu_devicemanagementStore.clearHisData(); //离开情况列表
   };
-
   render() {
     const {fsu_monitorypointStore, regionalStore} = this.props;
     const {
       fsuAddTypes,
+      spType,
       subDeviceTree,
       subDeviceLoading,
       tableData,
+      tableParmas,
     } = fsu_monitorypointStore;
     const columns = columnData({
       getChildTable: this.getChildTable,
@@ -237,12 +238,14 @@ class Passageway extends Component {
         type: 'button',
         pos: 'right',
         name: '实时召测',
+        disabled: this.state.nodata,
         handleClick: () => {},
       },
       {
         type: 'button',
         pos: 'right',
         name: '历史数据',
+        disabled: this.state.nodata,
         style: {marginRight: '8px'},
         handleClick: () => {
           this.setState({
@@ -269,6 +272,28 @@ class Passageway extends Component {
         wrapperCol: 15,
         handleChange: value => {
           this.typesChange(value);
+        },
+      },
+      {
+        type: 'selectItem',
+        pos: 'left',
+        name: '监控点类型',
+        children: spType || [],
+        width: 210,
+        defaultValue: this.state.spValue,
+        disabled: this.state.nodata,
+        labelCol: 10,
+        wrapperCol: 14,
+        handleChange: value => {
+          this.setState({
+            spValue: value,
+          });
+          let params = {
+            ...tableParmas,
+            spTypeId: value,
+            fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
+          };
+          fsu_monitorypointStore.getTable(params);
         },
       },
     ];
@@ -362,17 +387,7 @@ class Passageway extends Component {
             </Row>
             <Row className={styles['table-wrap']}>
               <Toolbar modules={toolbar} className={styles['toolbar-wrap']} />
-              {/* <Table */}
-              {/*   columns={columns} */}
-              {/*   rowClassName={(record, index) => { */}
-              {/*     const rowClassName = []; */}
-              {/*     return rowClassName.join(' '); */}
-              {/*   }} */}
-              {/*   pagination={false} */}
-              {/*   loading={fsu_monitorypointStore.loading} */}
-              {/*   data={[...tableData]} */}
-              {/* /> */}
-              <RealtimeTable singleLineData={this.state.currentSubDevice} />
+              <RealtimeTable spValue={this.state.spValue} />
             </Row>
           </div>
           <div className={styles['alarm-wrap']}>

@@ -875,3 +875,8 @@ export function getSubDeviceTree(params) {
     params,
   });
 }
+export function getFsuSpType(params) {
+  return request.get(base + '/fsuBaseConfig/spType', {
+    params,
+  });
+}

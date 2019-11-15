@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, PureComponent} from 'react';
 import {
   Button,
   Row,
@@ -14,10 +14,11 @@ import classnames from 'classnames';
 const {Option} = Select;
 const {RangePicker} = DatePicker;
 import moment from 'moment';
+import {toJS} from 'mobx';
 
 import styles from './style.less';
 
-class Toolbar extends Component {
+class Toolbar extends PureComponent {
   constructor(props) {
     super(props);
   }
@@ -126,9 +127,10 @@ class Toolbar extends Component {
         label={item.name || ''}>
         <Select
           key={`${random6()}${index}`}
-          defaultValue={item.defaultValue}
+          defaultValue={item.children[0] ? item.defaultValue : undefined}
           className={styles['select-wrap']}
           placeholder={item.placeholder ? item.placeholder : '请选择内容'}
+          disabled={item.disabled ? true : false}
           onChange={item.handleChange ? item.handleChange : () => {}}>
           {item.children
             ? item.children.map((record, i) => {
@@ -144,13 +146,15 @@ class Toolbar extends Component {
     );
   }
   getButtonModule(item, index) {
+    const {icon, name, handleClick, pos, className, ...rest} = item;
     const InnerButton = () => {
       return (
         <Button
-          className={classnames(item.className, styles['btn'])}
-          onClick={item.handleClick ? () => item.handleClick(item) : () => {}}>
-          {item.icon}
-          <span>{item.name}</span>
+          className={classnames(className, styles['btn'])}
+          {...rest}
+          onClick={handleClick ? () => item.handleClick(item) : () => {}}>
+          {icon}
+          <span>{name}</span>
         </Button>
       );
     };
