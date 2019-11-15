@@ -10,6 +10,78 @@ import TextOverflow from '../../../components/TextOverflow';
  * @return {array}
  */
 
+/*{
+      title: '告警',
+      width: '5%',
+      className: 'information_th',
+      dataIndex: 'alerm_count',
+      render: (text, record, index) => {
+        return (
+          <a
+            className={styles['child_link']}
+            onClick={
+              record.isConcentrator !== 1 &&
+              (getAlarmTable ? getAlarmTable.bind(_this, record) : () => {})
+            }>
+            {record.isConcentrator === 1 ? null : text}
+          </a>
+        );
+      },
+    },
+    {
+      title: '实时',
+      dataIndex: '',
+      className: 'information_th',
+      width: '5%',
+      render: (text, record, index) => {
+        if (record.isConcentrator === 1) return null;
+        return (
+          <i
+            className={classnames(
+              'icon iconfont icon-shishishuju',
+              styles['icon_style'],
+            )}
+            onClick={realtimeClick.bind(_this, record)}
+          />
+        );
+      },
+    },
+    {
+      title: '历史',
+      dataIndex: '',
+      className: 'information_th',
+      width: '5%',
+      render: (text, record, index) => {
+        if (record.isConcentrator === 1) return null;
+        return (
+          <i
+            className={classnames(
+              'icon iconfont icon-lishishuju',
+              styles['icon_style'],
+            )}
+            onClick={historyClick.bind(_this, record)}
+          />
+        );
+      },
+    },
+    {
+      title: '控制',
+      dataIndex: '',
+      className: 'information_th',
+      width: '5%',
+      render: (text, record, index) => {
+        if (record.isConcentrator === 1) return null;
+        return (
+          <i
+            className={classnames(
+              'icon iconfont icon-tiaoshi',
+              styles['icon_style'],
+            )}
+            onClick={controlClick.bind(_this, record)}
+          />
+        );
+      },
+    },*/
 const menu = ({
   editClick,
   deleteClick,
@@ -45,14 +117,12 @@ const menu = ({
           <span>编辑</span>
         </div>
       </Menu.Item>
-      {JSON.parse(localStorage.getItem('FsuTypeID')) === 2 && (
-        <Menu.Item key="c_restart" onClick={restartClick.bind(_this, record)}>
-          <div className={styles['edit']}>
-            <i className={classnames('icon iconfont icon-bianji')} />
-            <span>重启</span>
-          </div>
-        </Menu.Item>
-      )}
+      <Menu.Item key="c_restart" onClick={restartClick.bind(_this, record)}>
+        <div className={styles['edit']}>
+          <i className={classnames('icon iconfont icon-bianji')} />
+          <span>重启</span>
+        </div>
+      </Menu.Item>
       {JSON.parse(localStorage.getItem('FsuTypeID')) === 2 && (
         <Menu.Item key="c_portInfo" onClick={portInfoClick.bind(_this, record)}>
           <div className={styles['edit']}>
@@ -61,16 +131,14 @@ const menu = ({
           </div>
         </Menu.Item>
       )}
-      {JSON.parse(localStorage.getItem('FsuTypeID')) === 2 && (
-        <Menu.Item
-          key="c_fsuSetTime"
-          onClick={fsuSetTimeClick.bind(_this, record)}>
-          <div className={styles['edit']}>
-            <i className={classnames('icon iconfont icon-bianji')} />
-            <span>校时</span>
-          </div>
-        </Menu.Item>
-      )}
+      <Menu.Item
+        key="c_fsuSetTime"
+        onClick={fsuSetTimeClick.bind(_this, record)}>
+        <div className={styles['edit']}>
+          <i className={classnames('icon iconfont icon-bianji')} />
+          <span>校时</span>
+        </div>
+      </Menu.Item>
       <Menu.Item key="c_disable" onClick={disableClick.bind(_this, record)}>
         <div className={styles['disable']}>
           <i className={classnames('icon iconfont icon-jinyong')} />
@@ -163,78 +231,6 @@ const columns = ({
       width: '25%',
       render: (text, record, index) => {
         return <TextOverflow>{text}</TextOverflow>;
-      },
-    },
-    {
-      title: '告警',
-      width: '5%',
-      className: 'information_th',
-      dataIndex: 'alerm_count',
-      render: (text, record, index) => {
-        return (
-          <a
-            className={styles['child_link']}
-            onClick={
-              record.isConcentrator !== 1 &&
-              (getAlarmTable ? getAlarmTable.bind(_this, record) : () => {})
-            }>
-            {record.isConcentrator === 1 ? null : text}
-          </a>
-        );
-      },
-    },
-    {
-      title: '实时',
-      dataIndex: '',
-      className: 'information_th',
-      width: '5%',
-      render: (text, record, index) => {
-        if (record.isConcentrator === 1) return null;
-        return (
-          <i
-            className={classnames(
-              'icon iconfont icon-shishishuju',
-              styles['icon_style'],
-            )}
-            onClick={realtimeClick.bind(_this, record)}
-          />
-        );
-      },
-    },
-    {
-      title: '历史',
-      dataIndex: '',
-      className: 'information_th',
-      width: '5%',
-      render: (text, record, index) => {
-        if (record.isConcentrator === 1) return null;
-        return (
-          <i
-            className={classnames(
-              'icon iconfont icon-lishishuju',
-              styles['icon_style'],
-            )}
-            onClick={historyClick.bind(_this, record)}
-          />
-        );
-      },
-    },
-    {
-      title: '控制',
-      dataIndex: '',
-      className: 'information_th',
-      width: '5%',
-      render: (text, record, index) => {
-        if (record.isConcentrator === 1) return null;
-        return (
-          <i
-            className={classnames(
-              'icon iconfont icon-tiaoshi',
-              styles['icon_style'],
-            )}
-            onClick={controlClick.bind(_this, record)}
-          />
-        );
       },
     },
     {

@@ -1,5 +1,9 @@
 @import '../../../theme/sorollbar.less';
 :local {
+  .more {
+    cursor: pointer;
+    font-size: 22px;
+  }
   .information_wrap {
     box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
     height: 100%;
@@ -20,7 +24,8 @@
       width: calc(~'100% - 252px');
       border-left: 1px solid #e5e6e6;
       .scrollCommon();
-      .realtime-wrap {
+      .realtime-wrap,
+      .alarm-wrap {
         .table-wrap {
           padding: 0 18px;
           & > div:nth-child(1) {
@@ -28,8 +33,8 @@
           }
         }
         .title {
-          background-color: #12b5e5;
-          padding-left: 12px;
+          background-color: #fff;
+          padding-left: 18px;
           line-height: 40px;
           span,
           i {
@@ -38,16 +43,30 @@
           }
           span {
             padding-left: 12px;
-            color: #fff;
           }
           i {
             height: 20px;
-            border-left: 4px solid #fff;
+            border-left: 4px solid #5deda4;
           }
         }
       }
+      .realtime-wrap {
+        padding-top: 8px;
+        min-height: -webkit-calc(~'100% - 350px');
+        min-height: -moz-calc(~'100% - 350px');
+        min-height: -ms-calc(~'100% - 350px');
+        min-height: -o-calc(~'100% - 350px');
+        min-height: calc(~'100% - 350px');
+      }
+      .alarm-wrap {
+        padding-top: 12px;
+        .table-wrap {
+          padding-top: 12px;
+        }
+      }
     }
-    .top {
+    .top,
+    .bottom {
       border-bottom: 1px solid #e5e6e6;
       .tree-title {
         padding-left: 12px;

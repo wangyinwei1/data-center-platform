@@ -22,7 +22,8 @@ class Regional extends Component {
   }
   onOk(value) {
     const {timingChange} = this.props;
-    timingChange && timingChange(value.format('YYYY-MM-DD HH:mm:ss'));
+    timingChange &&
+      timingChange(value ? value.format('YYYY-MM-DD HH:mm:ss') : '');
   }
 
   render() {

@@ -1,5 +1,14 @@
 import React, {Component} from 'react';
-import {Button, DatePicker, Form, Select, Input, Popconfirm} from 'antd';
+import {
+  Button,
+  Row,
+  Col,
+  DatePicker,
+  Form,
+  Select,
+  Input,
+  Popconfirm,
+} from 'antd';
 import {random6} from '../../utils/tool.js';
 import classnames from 'classnames';
 const {Option} = Select;
@@ -17,39 +26,6 @@ class Toolbar extends Component {
     const {location, match, history} = this.props;
 
     // await this.store.onWillMount(location, match, history);
-  }
-  getSelectItemModule(item, index) {
-    let formItemLayout = {
-      labelCol: {span: !isNaN(parseInt(item.labelCol)) ? item.labelCol : 8},
-      wrapperCol: {
-        span: !isNaN(parseInt(item.wrapperCol)) ? item.wrapperCol : 16,
-      },
-    };
-    return (
-      <Form
-        key={`${random6()}${index}`}
-        {...formItemLayout}
-        className={classnames(styles['select-wrap'], item.className)}
-        style={item.width ? {width: item.width} : {}}>
-        <Form.Item label={item.name || ''} hasFeedback>
-          <Select
-            key={`${random6()}${index}`}
-            defaultValue={item.defaultValue}
-            placeholder={item.placeholder ? item.placeholder : '请选择内容'}
-            onChange={item.handleChange ? item.handleChange : () => {}}>
-            {item.children
-              ? item.children.map((record, i) => {
-                  return (
-                    <Option key={i.toString(36) + i} value={record.value}>
-                      {record.name}
-                    </Option>
-                  );
-                })
-              : null}
-          </Select>
-        </Form.Item>
-      </Form>
-    );
   }
   getRangePickerItemModule(item, index) {
     let formItemLayout = {
@@ -85,11 +61,10 @@ class Toolbar extends Component {
     };
     return (
       <Form
-        {...formItemLayout}
         key={`${random6()}${index}`}
         className={classnames(styles['select-wrap'], item.className)}
         style={item.width ? {width: item.width} : {}}>
-        <Form.Item label={item.name || ''} hasFeedback>
+        <Form.Item {...formItemLayout} label={item.name || ''} hasFeedback>
           <Input
             placeholder="请输入内容"
             defaultValue={item.defaultValue ? item.defaultValue : ''}
@@ -134,11 +109,45 @@ class Toolbar extends Component {
       />
     );
   }
+  //多选框
+  getSelectItemModule(item, index) {
+    let formItemLayout = {
+      labelCol: {span: !isNaN(parseInt(item.labelCol)) ? item.labelCol : 8},
+      wrapperCol: {
+        span: !isNaN(parseInt(item.wrapperCol)) ? item.wrapperCol : 16,
+      },
+    };
+    return (
+      <Form.Item
+        key={`${random6()}${index}`}
+        style={item.width ? {width: item.width} : {}}
+        className={classnames(item.className)}
+        {...formItemLayout}
+        label={item.name || ''}>
+        <Select
+          key={`${random6()}${index}`}
+          defaultValue={item.defaultValue}
+          className={styles['select-wrap']}
+          placeholder={item.placeholder ? item.placeholder : '请选择内容'}
+          onChange={item.handleChange ? item.handleChange : () => {}}>
+          {item.children
+            ? item.children.map((record, i) => {
+                return (
+                  <Option key={i.toString(36) + i} value={record.value}>
+                    {record.name}
+                  </Option>
+                );
+              })
+            : null}
+        </Select>
+      </Form.Item>
+    );
+  }
   getButtonModule(item, index) {
     const InnerButton = () => {
       return (
         <Button
-          className={classnames(item.className, styles['float'])}
+          className={classnames(item.className, styles['btn'])}
           onClick={item.handleClick ? () => item.handleClick(item) : () => {}}>
           {item.icon}
           <span>{item.name}</span>
@@ -152,16 +161,18 @@ class Toolbar extends Component {
           onConfirm={() => item.onConfirm(item)}
           placement={item.placement ? item.placement : 'top'}
           okText="确定"
-          cancelText="取消"></Popconfirm>
+          cancelText="取消">
+          <InnerButton />
+        </Popconfirm>
       );
     };
-    return <InnerButton key={`${random6()}${index}`} />;
-  }
-  getTitleModule(item, index) {
     return (
-      <div className={''} key={`${random6()}${index}`}>
-        {item.name}
-      </div>
+      <Form.Item
+        style={item.style}
+        key={`${random6()}${index}`}
+        className={classnames(item.className)}>
+        {item.onConfirm ? <WrapModal /> : <InnerButton />}
+      </Form.Item>
     );
   }
   filterModule(modules) {
@@ -169,9 +180,6 @@ class Toolbar extends Component {
     let leftModules = [];
     const loadModule = (type, item, index, currentModuules) => {
       switch (type) {
-        case 'title':
-          currentModuules.push(this.getTitleModule(item, index));
-          break;
         case 'button':
           currentModuules.push(this.getButtonModule(item, index));
           break;
@@ -204,35 +212,23 @@ class Toolbar extends Component {
       right: rightModules,
     };
   }
-  componentDidMount() {
-    let leftWidth = this.leftDOm.clientWidth;
-    let rightWidth = this.rightDOm.clientWidth;
-    let percentage = ((leftWidth - rightWidth) / leftWidth) * 100;
-    this.leftDOm.style.width = `${percentage}%`;
-  }
 
   render() {
-    const {modules = [], className} = this.props;
+    const {modules = [], className, leftSpan, rightSpan} = this.props;
     let module = this.filterModule(modules);
+
     return (
-      <div className={classnames(className)}>
-        <div className={styles['wrap']}>
-          <div
-            className={styles['toolbar-left']}
-            ref={c => {
-              this.leftDOm = c;
-            }}>
-            {module.left}
-          </div>
-          <div
-            className={styles['toolbar-right']}
-            ref={c => {
-              this.rightDOm = c;
-            }}>
+      <Form layout={'inline'}>
+        <Row className={classnames(styles['tool-wrap'], className)}>
+          <Col span={leftSpan || 12}>{module.left}</Col>
+          <Col
+            className={styles['right']}
+            span={leftSpan && rightSpan ? rightSpan : 24 - (leftSpan || 12)}
+            offset={leftSpan && rightSpan ? 24 - leftSpan - rightSpan : 0}>
             {module.right}
-          </div>
-        </div>
-      </div>
+          </Col>
+        </Row>
+      </Form>
     );
   }
 }

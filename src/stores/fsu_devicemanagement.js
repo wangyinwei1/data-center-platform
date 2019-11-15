@@ -542,6 +542,7 @@ class Devicemanagement {
     const data = await fsuSetTime(params);
     if (data.Result == 'success') {
       message.success(data.Msg);
+      return true;
     } else {
       message.error(data.Msg);
     }

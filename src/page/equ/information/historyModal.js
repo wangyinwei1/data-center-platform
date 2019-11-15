@@ -67,8 +67,12 @@ class EchartsOrList extends Component {
             </span>
             <span style={{fontSize: '14px', fontWeight: 'normal'}}>
               {isFsu
-                ? data.spUnit ? '(' + '单位/' + data.spUnit + ')' : ''
-                : data.unit ? '(' + '单位/' + data.unit + ')' : ''}
+                ? data.spUnit
+                  ? '(' + '单位/' + data.spUnit + ')'
+                  : ''
+                : data.unit
+                ? '(' + '单位/' + data.unit + ')'
+                : ''}
             </span>
           </div>
         )}
@@ -164,7 +168,9 @@ class Regional extends Component {
     };
   }
   componentWillUnmount() {
-    const {historymodalStore: {clearDeviceData}} = this.props;
+    const {
+      historymodalStore: {clearDeviceData},
+    } = this.props;
     clearDeviceData();
     this.setState({
       lastLoginStart: '',
@@ -179,7 +185,9 @@ class Regional extends Component {
     });
   }
   onSubDevChange(value, option) {
-    const {historymodalStore: {his_subDevice, getGrandsonMenu}} = this.props;
+    const {
+      historymodalStore: {his_subDevice, getGrandsonMenu},
+    } = this.props;
     const subDev = _.filter(his_subDevice, (item, i) => {
       return item.deviceID === value;
     });
@@ -287,7 +295,10 @@ class Regional extends Component {
       : historymodalStore.findDeviceData(params);
   }
   export(item) {
-    const {historymodalStore: {currentDevice}, isFsu} = this.props;
+    const {
+      historymodalStore: {currentDevice},
+      isFsu,
+    } = this.props;
     if (!isFsu) {
       location.href =
         '/collect/device_hisdata/toExcel.do?F_DeviceID=' +
@@ -408,24 +419,24 @@ class Regional extends Component {
             format="YYYY-MM-DD HH:mm:ss"
             onChange={this.onChange}
           />
-          {isFsu && (
-            <Select
-              className={styles['sub_dev_wrap']}
-              allowClear
-              optionFilterProp="children"
-              placeholder={'请选择子设备'}
-              value={this.state.subDeviceValue}
-              onChange={this.onSubDevChange}>
-              {sunDev}
-            </Select>
-          )}
+          {/* {isFsu && ( */}
+          {/*   <Select */}
+          {/*     className={styles['sub_dev_wrap']} */}
+          {/*     allowClear */}
+          {/*     optionFilterProp="children" */}
+          {/*     placeholder={'请选择子设备'} */}
+          {/*     value={this.state.subDeviceValue} */}
+          {/*     onChange={this.onSubDevChange}> */}
+          {/*     {sunDev} */}
+          {/*   </Select> */}
+          {/* )} */}
           <Select
             mode="multiple"
             className={styles['drop_down']}
             allowClear
-            disabled={
-              isFsu ? (this.state.subDeviceValue ? false : true) : false
-            }
+            // disabled={
+            //   isFsu ? (this.state.subDeviceValue ? false : true) : false
+            // }
             optionFilterProp="children"
             placeholder={isFsu ? '请选择监控点' : '请选择设备通道'}
             value={this.state.value}

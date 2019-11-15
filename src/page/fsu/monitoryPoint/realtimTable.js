@@ -9,7 +9,7 @@ import columnData from './realtimeColumns.js';
 import Toolbar from '../../../components/Toolbar';
 const Option = Select.Option;
 //实例
-@inject('fsu_devicemanagementStore')
+@inject('fsu_monitorypointStore')
 @observer
 class Regional extends Component {
   constructor(props) {
@@ -29,10 +29,10 @@ class Regional extends Component {
   //table分页
   onShowSizeChange(current, pageSize) {
     let FsuTypeID = JSON.parse(localStorage.getItem('FsuTypeID'));
-    const {fsu_devicemanagementStore} = this.props;
+    const {fsu_monitorypointStore} = this.props;
 
     const params = {
-      ...fsu_devicemanagementStore.r_tableParmas,
+      ...fsu_monitorypointStore.tableParmas,
       page: current,
       number: pageSize,
     };
@@ -41,13 +41,13 @@ class Regional extends Component {
       params['type'] = this.state.type;
       params['typeID'] = FsuTypeID;
     }
-    fsu_devicemanagementStore.getRealtimeTable(params);
+    fsu_monitorypointStore.getRealtimeTable(params);
   }
   onPageChange(pageNumber) {
     let FsuTypeID = JSON.parse(localStorage.getItem('FsuTypeID'));
-    const {fsu_devicemanagementStore} = this.props;
+    const {fsu_monitorypointStore} = this.props;
     const params = {
-      ...fsu_devicemanagementStore.r_tableParmas,
+      ...fsu_monitorypointStore.tableParmas,
       page: pageNumber,
     };
     if (FsuTypeID === 2) {
@@ -55,7 +55,7 @@ class Regional extends Component {
       params['type'] = this.state.type;
       params['typeID'] = FsuTypeID;
     }
-    fsu_devicemanagementStore.getRealtimeTable(params);
+    fsu_monitorypointStore.getRealtimeTable(params);
   }
   onSearch(value) {
     let FsuTypeID = JSON.parse(localStorage.getItem('FsuTypeID'));
@@ -65,10 +65,10 @@ class Regional extends Component {
         return;
       }
     }
-    const {fsu_devicemanagementStore, singleLineData} = this.props;
+    const {fsu_monitorypointStore, singleLineData} = this.props;
     const params = {
       number: 10,
-      ...fsu_devicemanagementStore.r_tableParmas,
+      ...fsu_monitorypointStore.tableParmas,
       keywords: encodeURIComponent(value),
       page: 1,
       F_Suid: singleLineData.suID,
@@ -79,7 +79,7 @@ class Regional extends Component {
       params['type'] = this.state.type;
       params['typeID'] = FsuTypeID;
     }
-    fsu_devicemanagementStore.realtimeSearch(params);
+    fsu_monitorypointStore.realtimeSearch(params);
   }
   real() {
     let FsuTypeID = JSON.parse(localStorage.getItem('FsuTypeID'));
@@ -89,14 +89,14 @@ class Regional extends Component {
         return;
       }
     }
-    const {fsu_devicemanagementStore, singleLineData} = this.props;
-    let realtimeSubDevMenu = fsu_devicemanagementStore.realtimeSubDevMenu;
+    const {fsu_monitorypointStore, singleLineData} = this.props;
+    let realtimeSubDevMenu = fsu_monitorypointStore.realtimeSubDevMenu;
     let current = realtimeSubDevMenu.filter(item => {
       return item.deviceID === this.state.subDeviceValue;
     });
     const params = {
       F_Suid: singleLineData.suID,
-      ...fsu_devicemanagementStore.r_tableParmas,
+      ...fsu_monitorypointStore.tableParmas,
     };
     if (FsuTypeID === 2) {
       params['deviceID'] = this.state.subDeviceValue;
@@ -105,7 +105,7 @@ class Regional extends Component {
       params['surID'] = singleLineData.surID;
       params['devicerID'] = current[0] ? current[0].devicerID : '';
     }
-    fsu_devicemanagementStore.getRealTimeCall(params);
+    fsu_monitorypointStore.getRealTimeCall(params);
   }
   onSubDevSelect(value) {
     this.setState({
@@ -118,33 +118,16 @@ class Regional extends Component {
     });
   }
   render() {
-    const {fsu_devicemanagementStore, needRealtime} = this.props;
-    const r_tableData = toJS(fsu_devicemanagementStore.r_tableData);
+    const {fsu_monitorypointStore, needRealtime} = this.props;
+    const r_tableData = toJS(fsu_monitorypointStore.tableData);
     const tableData = (r_tableData && r_tableData.Data) || [];
     const pagination = r_tableData || {};
     const columns = columnData();
     let FsuTypeID = JSON.parse(localStorage.getItem('FsuTypeID'));
     return (
       <div>
-        {/* <Toolbar */}
-        {/*   onSearch={this.onSearch} */}
-        {/*   onClick={this.real} */}
-        {/*   showValue={ */}
-        {/*     FsuTypeID === 2 */}
-        {/*       ? ['real', 'realtimeSubDev', 'realtimeMonitorPoint'] */}
-        {/*       : ['real'] */}
-        {/*   } */}
-        {/*   needRealtime={needRealtime} */}
-        {/*   realLoding={fsu_devicemanagementStore.r_loading} */}
-        {/*   realtimeSubDevChange={this.onSubDevSelect} */}
-        {/*   realtimeMonitorPointChange={this.onMonitorPointSelect} */}
-        {/*   realtimeSubDev={toJS(fsu_devicemanagementStore.realtimeSubDevMenu)} */}
-        {/*   realtimeMonitorPointMenu={toJS( */}
-        {/*     fsu_devicemanagementStore.realtimeMonitorPointMenu, */}
-        {/*   )} */}
-        {/* /> */}
         <Table
-          loading={fsu_devicemanagementStore.r_loading}
+          loading={fsu_monitorypointStore.loading}
           pageIndex={pagination.page}
           pageSize={pagination.number}
           total={pagination.count}

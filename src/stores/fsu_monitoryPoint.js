@@ -9,17 +9,22 @@ import {
   getZone,
   fsuCancelAlarm,
   getFSUType,
+  getFsuSp,
   fsuConfirmAlarm,
+  getFsuRealtimeTable,
+  getSubDeviceTree,
 } from '../services/api.js';
 import {message} from 'antd';
 class Historyalarm {
-  @observable tableData = {};
+  @observable tableData = [];
   @observable tableParmas = {};
+  @observable loading = false;
   @observable c_tableData = {};
   @observable c_tableParmas = {};
-  @observable loading = false;
   @observable c_loading = false;
   @observable currentDevice = '';
+  @observable subDeviceTree = [];
+  @observable subDeviceLoading = false;
 
   @action.bound
   async getZone(params) {
@@ -27,10 +32,32 @@ class Historyalarm {
     return data.areaTree || [];
   }
   @action.bound
+  async getSubDeviceTree(params) {
+    this.subDeviceLoading = true;
+    const data = await getSubDeviceTree(params);
+    this.subDeviceLoading = false;
+    if (data.Result == 'success') {
+      this.subDeviceTree = data.Data.map((item, index) => {
+        return {
+          ...item,
+          deviceID: index.toString(36) + index,
+          deviceName: `${item.typeName} (${item.children.length})`,
+          isParent: true,
+        };
+      });
+      this.tableData = [];
+      return this.subDeviceTree[0] || {};
+    } else {
+      message.error(data.Msg);
+    }
+  }
+  @action.bound
   async getFSUType(params) {
     const data = await getFSUType(params);
     if (data.Result == 'success') {
-      this.fsuAddTypes = data.Data;
+      this.fsuAddTypes = data.Data.map(item => {
+        return {name: item.typeName, value: item.typeId};
+      });
     } else {
       message.error(data.Msg);
     }
@@ -79,14 +106,12 @@ class Historyalarm {
   @action.bound
   async getTable(params) {
     this.loading = true;
-    const data = await getFsu_realtimealarmTable(params);
+    const data = await getFsuRealtimeTable(params);
     this.loading = false;
-
-    params.number = data.Data.number;
-    params.page = data.Data.page;
-    this.tableParmas = params;
     if (data.Result == 'success') {
+      this.tableParmas = params;
       this.tableData = data.Data;
+      return data.Data;
     } else {
       message.error(data.Msg);
     }

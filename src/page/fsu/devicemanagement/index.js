@@ -215,7 +215,6 @@ class Information extends Component {
     });
   }
   timingChange(value) {
-    console.log(value);
     this.setState({
       timing: value,
     });
@@ -224,15 +223,20 @@ class Information extends Component {
     let time = this.state.timing;
     let item = this.state.singleLineData;
 
-    const {fsu_devicemanagementStore: {fsuSetTime}} = this.props;
+    const {
+      fsu_devicemanagementStore: {fsuSetTime},
+    } = this.props;
     const params = {
       suID: item.suID,
       time,
+      fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
     };
     if (JSON.parse(localStorage.getItem('FsuTypeID')) === 2) {
       params['surID'] = item.surID;
     }
-    fsuSetTime(params);
+    fsuSetTime(params).then(data => {
+      data && this.setState({timingShow: false});
+    });
   }
   //重启
   restartClick(item) {
@@ -240,9 +244,12 @@ class Information extends Component {
       message.error('设备不在线不能重启！');
       return;
     }
-    const {fsu_devicemanagementStore: {fsuRestart}} = this.props;
+    const {
+      fsu_devicemanagementStore: {fsuRestart},
+    } = this.props;
     const params = {
       suID: item.suID,
+      fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
     };
     if (JSON.parse(localStorage.getItem('FsuTypeID')) === 2) {
       params['surID'] = item.surID;
@@ -266,9 +273,12 @@ class Information extends Component {
       message.error('设备不在线！');
       return;
     }
-    const {fsu_devicemanagementStore: {getFsuPortInfo}} = this.props;
+    const {
+      fsu_devicemanagementStore: {getFsuPortInfo},
+    } = this.props;
     let params = {
       suID: item.suID,
+      fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
     };
     if (JSON.parse(localStorage.getItem('FsuTypeID')) === 2) {
       params['surID'] = item.surID;
@@ -287,10 +297,13 @@ class Information extends Component {
   }
   //遥测
   telemeteryClick(item) {
-    const {fsu_devicemanagementStore: {getTelemetrySpList}} = this.props;
+    const {
+      fsu_devicemanagementStore: {getTelemetrySpList},
+    } = this.props;
     let params = {
       suID: item.suID,
       deviceID: item.deviceID,
+      fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
     };
     getTelemetrySpList(params).then(() => {
       this.setState({
@@ -377,7 +390,9 @@ class Information extends Component {
     this.setState({
       realtimeShow: false,
     });
-    const {fsu_devicemanagementStore: {getTable, tableParmas}} = this.props;
+    const {
+      fsu_devicemanagementStore: {getTable, tableParmas},
+    } = this.props;
     const params = {
       ...tableParmas,
       status: this.state.devStatus,
@@ -406,7 +421,9 @@ class Information extends Component {
   }
   selectChange(value) {
     const status = {status: value};
-    const {fsu_devicemanagementStore: {getTable, tableParmas}} = this.props;
+    const {
+      fsu_devicemanagementStore: {getTable, tableParmas},
+    } = this.props;
     const params = {
       ...tableParmas,
       ...status,
@@ -506,7 +523,9 @@ class Information extends Component {
         };
       });
     } else {
-      const {fsu_devicemanagementStore: {remoteOperationSp}} = this.props;
+      const {
+        fsu_devicemanagementStore: {remoteOperationSp},
+      } = this.props;
       let item = this.state.singleLineData;
       const params = {
         suID: item.suID,
@@ -583,13 +602,17 @@ class Information extends Component {
   }
   //详情
   detailClick(item, e) {
-    const {fsu_devicemanagementStore: {goFind2, ztreeChild}} = this.props;
+    const {
+      fsu_devicemanagementStore: {goFind2, ztreeChild},
+    } = this.props;
     goFind2({Area_ID: ztreeChild, suID: item.suID}).then(data => {
       this.initFromValue(data, 'detail');
     });
   }
   onRowDoubleClick(item, index, e) {
-    const {fsu_devicemanagementStore: {goFind2, ztreeChild}} = this.props;
+    const {
+      fsu_devicemanagementStore: {goFind2, ztreeChild},
+    } = this.props;
     goFind2({Area_ID: ztreeChild, suID: item.suID}).then(data => {
       this.initFromValue(data, 'detail');
     });
@@ -598,7 +621,9 @@ class Information extends Component {
     this.setState({
       alarmTableVisible: false,
     });
-    const {fsu_devicemanagementStore: {getTable, tableParmas}} = this.props;
+    const {
+      fsu_devicemanagementStore: {getTable, tableParmas},
+    } = this.props;
     const params = {
       ...tableParmas,
       status: this.state.devStatus,
@@ -726,7 +751,7 @@ class Information extends Component {
     } = this.props;
     currentDeviceChange(item.suID);
 
-    getDeviceTypes();
+    getDeviceTypes({fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID'))});
     const field =
       JSON.parse(localStorage.getItem('FsuTypeID')) === 3
         ? addFsuLevelOne
@@ -797,7 +822,9 @@ class Information extends Component {
     });
     if (!isNumber) return false;
 
-    const {fsu_devicemanagementStore: {alarmBatchSave}} = this.props;
+    const {
+      fsu_devicemanagementStore: {alarmBatchSave},
+    } = this.props;
     const params = {
       suID: item.suID,
       deviceID: item.deviceID,
@@ -1094,18 +1121,24 @@ class Information extends Component {
     });
   }
   childDetailClick(item) {
-    const {fsu_devicemanagementStore: {getDeviceTypes}} = this.props;
-    getDeviceTypes();
+    const {
+      fsu_devicemanagementStore: {getDeviceTypes},
+    } = this.props;
+    getDeviceTypes({fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID'))});
     this.getRowData(item, 'detail');
   }
   childEditClick(item) {
-    const {fsu_devicemanagementStore: {getDeviceTypes}} = this.props;
-    getDeviceTypes();
+    const {
+      fsu_devicemanagementStore: {getDeviceTypes},
+    } = this.props;
+    getDeviceTypes({fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID'))});
     this.getRowData(item, 'modify');
   }
   //子集点击设值
   getSunRowData(item, mode) {
-    const {fsu_devicemanagementStore: {expandedRows}} = this.props;
+    const {
+      fsu_devicemanagementStore: {expandedRows},
+    } = this.props;
     this.setState(({childDevicefields}) => {
       let value =
         JSON.parse(localStorage.getItem('FsuTypeID')) === 3
@@ -1154,7 +1187,9 @@ class Information extends Component {
     this.setState({singleLineData: item});
   }
   childAlarmClick(item) {
-    const {fsu_devicemanagementStore: {getAlarmTable}} = this.props;
+    const {
+      fsu_devicemanagementStore: {getAlarmTable},
+    } = this.props;
     const params = {
       suID: item.suID,
       deviceID: item.deviceID,
@@ -1394,6 +1429,7 @@ class Information extends Component {
     const {fsu_devicemanagementStore} = this.props;
     const params = {
       suID: item.suID,
+      fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
     };
     if (JSON.parse(localStorage.getItem('FsuTypeID')) === 2) {
       params['surID'] = item.surID;
@@ -1410,7 +1446,9 @@ class Information extends Component {
   }
 
   downDevChange() {
-    const {fsuconfigStore: {getTable}} = this.props;
+    const {
+      fsuconfigStore: {getTable},
+    } = this.props;
     getTable();
     this.setState({
       downShow: true,

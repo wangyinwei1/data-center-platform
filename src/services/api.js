@@ -870,3 +870,8 @@ export function getSpTypeList(params) {
     params,
   });
 }
+export function getSubDeviceTree(params) {
+  return request.get(base + '/FSU_device/listSubDevice', {
+    params,
+  });
+}

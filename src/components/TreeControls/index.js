@@ -1,6 +1,7 @@
 import React, {PureComponent} from 'react';
 import classnames from 'classnames';
 import styles from './index.less';
+import {toJS} from 'mobx';
 
 import {Tree} from 'antd';
 
@@ -10,12 +11,22 @@ class TreeControls extends React.Component {
   renderTreeNodes = (data, index = 0) =>
     data.map(item => {
       let fixPaddingLeft = 30;
-      const {rowKey, rowNameKey} = this.props;
+      const {rowKey, rowNameKey, itemClick} = this.props;
+
       if (item.children) {
         return (
           <TreeNode
             title={
-              <div style={{paddingLeft: index * 14 + 'px'}}>
+              <div
+                style={{paddingLeft: index * 14 + 'px'}}
+                onClick={
+                  itemClick
+                    ? e => {
+                        e.stopPropagation();
+                        itemClick(item);
+                      }
+                    : null
+                }>
                 {item[rowNameKey]}
               </div>
             }
