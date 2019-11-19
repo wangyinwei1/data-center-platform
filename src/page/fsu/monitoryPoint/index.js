@@ -380,7 +380,11 @@ class Passageway extends Component {
               <span>实时数据</span>
             </Row>
             <Row className={styles['table-wrap']}>
-              <Toolbar modules={toolbar} className={styles['toolbar-wrap']} />
+              <Toolbar
+                modules={toolbar}
+                leftSpan={18}
+                className={styles['toolbar-wrap']}
+              />
               <RealtimeTable
                 isCall={this.state.isCall}
                 spValue={this.state.spValue}

@@ -52,7 +52,7 @@ const columns = ({_this, controlClick, remoteControlClick, rest}) => {
         case '遥调':
         case '遥测告警':
         case '遥信告警':
-          currentText = name;
+          currentText = '遥调';
           if (JSON.parse(localStorage.getItem('FsuTypeID')) !== 2) {
             notAllowed = true;
           } else {
