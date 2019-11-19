@@ -13,7 +13,7 @@ import {Form, Button, Input, Row, Col} from 'antd';
 const FormItem = Form.Item;
 
 //实例
-@inject('informationStore')
+@inject('fsu_devicemanagementStore')
 @observer
 class AddChild extends Component {
   constructor(props) {
@@ -25,18 +25,13 @@ class AddChild extends Component {
     handleFormChange(changedFields);
   }
   render() {
-    const {fields, mode, informationStore: {addData}} = this.props;
+    const {
+      fields,
+      mode,
+      fsu_devicemanagementStore: {fsuSpType},
+    } = this.props;
     let disabled = false;
     mode == 'detail' && (disabled = true);
-    const devType =
-      mode == 'new'
-        ? _.map(toJS(addData.dev_type), item => {
-            return {
-              value: item.Id_Version,
-              name: item.F_TypeName,
-            };
-          })
-        : [];
     let F_FsuTypeID = JSON.parse(localStorage.getItem('FsuTypeID'));
     let spType = fields.spType.value;
     let width = 390;
@@ -54,15 +49,7 @@ class AddChild extends Component {
           placeholder={'请选择类型'}
           width={width}
           rules={[{required: true, message: '请必须填写!'}]}
-          children={[
-            {name: '阈值', value: 7},
-            {name: '遥信', value: 3},
-            {name: '遥测', value: 1},
-            {name: '遥控', value: 5},
-            {name: '遥调', value: 6},
-            {name: '遥信告警', value: 2},
-            {name: '遥测告警', value: 4},
-          ]}
+          children={fsuSpType || []}
         />
         <FormSelect
           {...fields}

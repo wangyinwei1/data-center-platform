@@ -32,7 +32,10 @@ class Regional extends Component {
     sunEditChange(item);
   }
   deleteClick(item) {
-    const {sunDeleteChange, informationStore: {expandedRows}} = this.props;
+    const {
+      sunDeleteChange,
+      informationStore: {expandedRows},
+    } = this.props;
     sunDeleteChange(item, toJS(expandedRows));
   }
   detailClick(item) {
@@ -40,7 +43,10 @@ class Regional extends Component {
     sunDetailChange(item);
   }
   disableClick(item) {
-    const {sunDisableChange, informationStore: {expandedRows}} = this.props;
+    const {
+      sunDisableChange,
+      informationStore: {expandedRows},
+    } = this.props;
     sunDisableChange(item, toJS(expandedRows));
   }
   //实时数据

@@ -21,9 +21,7 @@ import TelemetryTable from './telemetryTable.js';
 import HistoryModal from './../../equ/information/historyModal.js';
 import ChildTable from './childTable.js';
 import ControlModal from './controlModal.js';
-import ControlContent from './controlContent.js';
 import TimingContent from './timingContent.js';
-import RemoteControlContent from './rumorContent.js';
 import AddLevelOne from './addLevelOne.js';
 import FsuStatusEcharts from './FsuStatusEcharts.js';
 import PortInfoContent from './portInfoContent.js';
@@ -35,7 +33,6 @@ import {
   addFsuLevelOne,
   addChildFsuDevice,
   addChildDevice,
-  remoteControlFields,
 } from './tplJson.js';
 //实例
 @inject(
@@ -66,7 +63,6 @@ class Information extends Component {
     this.onDeleteCancel = this.onDeleteCancel.bind(this);
     this.fsuStatusClick = this.fsuStatusClick.bind(this);
     this.onSearch = this.onSearch.bind(this);
-    this.remoteControlChange = this.remoteControlChange.bind(this);
     this.telemeteryClick = this.telemeteryClick.bind(this);
     this.onShowSizeChange = this.onShowSizeChange.bind(this);
     this.onEditCancel = this.onEditCancel.bind(this);
@@ -84,7 +80,6 @@ class Information extends Component {
     this.onTimingOk = this.onTimingOk.bind(this);
     this.expandedRowRender = this.expandedRowRender.bind(this);
     this.onExpand = this.onExpand.bind(this);
-    this.onRemoteControlOk = this.onRemoteControlOk.bind(this);
     this.restartClick = this.restartClick.bind(this);
     this.realtimeChange = this.realtimeChange.bind(this);
     this.exportMonitor = this.exportMonitor.bind(this);
@@ -92,11 +87,7 @@ class Information extends Component {
     this.historyChange = this.historyChange.bind(this);
     this.childDeleteChange = this.childDeleteChange.bind(this);
     this.disableClick = this.disableClick.bind(this);
-    this.remoteControlClick = this.remoteControlClick.bind(this);
-    this.controlChange = this.controlChange.bind(this);
     this.onHistoryCancel = this.onHistoryCancel.bind(this);
-    this.onControlCancel = this.onControlCancel.bind(this);
-    this.onRemoteControlCancel = this.onRemoteControlCancel.bind(this);
     this.handleFormChange = this.handleFormChange.bind(this);
     this.onAddLevelOneOk = this.onAddLevelOneOk.bind(this);
     this.onAddLevelOneCancel = this.onAddLevelOneCancel.bind(this);
@@ -128,7 +119,6 @@ class Information extends Component {
     this.onDownShowCancel = this.onDownShowCancel.bind(this);
 
     this.state = {
-      controlShow: false,
       historyShow: false,
       realtimeShow: false,
       addLevelOneShow: false,
@@ -173,7 +163,6 @@ class Information extends Component {
       ...formParams,
       ...addLevelOne,
       ...addChildDevice,
-      ...remoteControlFields,
     };
   }
   //以下级联方法
@@ -435,31 +424,6 @@ class Information extends Component {
       devStatus: value,
     });
   }
-  //控制
-  controlClick(item, e) {
-    e.stopPropagation();
-    e.nativeEvent.stopImmediatePropagation();
-    if (item.onOff === 0) {
-      message.error('离线设备不支持远程控制！');
-      return;
-    }
-    const {fsu_devicemanagementStore} = this.props;
-    const params = {
-      F_Suid: item.suID,
-    };
-    fsu_devicemanagementStore.getControlChannel(params).then(data => {
-      data &&
-        this.setState({
-          controlShow: true,
-          singleLineData: item,
-        });
-    });
-  }
-  onControlCancel() {
-    this.setState({
-      controlShow: false,
-    });
-  }
   //谣调设置告警
   remoteControlClick(item) {
     if (item.onOff === 0) {
@@ -502,56 +466,6 @@ class Information extends Component {
           };
         });
       }
-    });
-  }
-  onRemoteControlCancel() {
-    this.setState({
-      remoteControlShow: false,
-    });
-  }
-  onRemoteControlOk() {
-    const fields = this.state.remoteControlFields;
-    const showError = this.test(fields);
-    const hasError = _.keys(showError);
-    if (hasError[0]) {
-      this.setState(({remoteControlFields}) => {
-        return {
-          remoteControlFields: {
-            ...remoteControlFields,
-            ...showError,
-          },
-        };
-      });
-    } else {
-      const {
-        fsu_devicemanagementStore: {remoteOperationSp},
-      } = this.props;
-      let item = this.state.singleLineData;
-      const params = {
-        suID: item.suID,
-        deviceID: item.deviceID,
-        spID: item.spID,
-      };
-      if (JSON.parse(localStorage.getItem('FsuTypeID')) === 2) {
-        params['devicerID'] = item.devicerID;
-        params['surID'] = item.surID;
-      }
-
-      _.forIn(fields, (value, key) => {
-        params[key] = value.value;
-      });
-      remoteOperationSp(params).then(() => {
-        this.setState({
-          remoteControlShow: false,
-        });
-      });
-    }
-  }
-  remoteControlChange(changedFields) {
-    this.setState(({remoteControlFields}) => {
-      return {
-        remoteControlFields: {...remoteControlFields, ...changedFields},
-      };
     });
   }
   onExportTplClick() {
@@ -881,6 +795,7 @@ class Information extends Component {
             this.state.selectedChildRowKey[0] === this.state.currentDeviceID &&
               getGrandsonTable({
                 ...F_Suid,
+                fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
                 F_DeviceID: this.state.currentDeviceID,
               });
           })
@@ -888,6 +803,7 @@ class Information extends Component {
             this.state.selectedChildRowKey[0] === this.state.currentDeviceID &&
               getGrandsonTable({
                 ...F_Suid,
+                fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
                 F_DeviceID: this.state.currentDeviceID,
               });
           });
@@ -1072,11 +988,6 @@ class Information extends Component {
       historyShow: true,
     });
   }
-  controlChange() {
-    this.setState({
-      controlShow: true,
-    });
-  }
   addChildShow(item, selectedChildRowKey) {
     const field =
       JSON.parse(localStorage.getItem('FsuTypeID')) === 3
@@ -1210,6 +1121,7 @@ class Information extends Component {
       selectedChildRowKey[0] === this.state.currentDeviceID &&
         getGrandsonTable({
           ...F_DeviceID,
+          fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
           F_DeviceID: this.state.currentDeviceID,
           F_Suid: item.suID,
         });
@@ -1230,6 +1142,7 @@ class Information extends Component {
     fsu_devicemanagementStore
       .getGrandsonTable({
         F_Suid: item.suID,
+        fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
         F_DeviceID: item.deviceID,
       })
       .then(data => {
@@ -1272,10 +1185,8 @@ class Information extends Component {
     return (
       <ChildTable
         historyChange={this.historyChange}
-        remoteControlClick={this.remoteControlClick}
         realtimeChange={this.realtimeChange}
         telemeteryClick={this.telemeteryClick}
-        controlChange={this.controlChange}
         addChildShow={this.addChildShow}
         childDetailClick={this.childDetailClick}
         childEditClick={this.childEditClick}
@@ -1482,7 +1393,6 @@ class Information extends Component {
       exportSub: this.exportSub,
       realtimeClick: this.realtimeClick,
       historyClick: this.historyClick,
-      controlClick: this.controlClick,
       portInfoClick: this.portInfoClick,
       disableClick: this.disableClick,
       fsuStatusClick: this.fsuStatusClick,
@@ -1607,6 +1517,7 @@ class Information extends Component {
             message.success(`${info.file.name} 导入成功！`);
             const params = {
               F_Suid: item.suID,
+              fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
               F_DeviceID: item.deviceID,
             };
 
@@ -1718,30 +1629,6 @@ class Information extends Component {
             isShow={this.state.historyShow}>
             <HistoryModal isFsu={true} currentSuID={this.state.currentSuID} />
           </Panel>
-          <ControlModal
-            width={
-              JSON.parse(localStorage.getItem('FsuTypeID')) === 2 ? 900 : 730
-            }
-            isShow={this.state.controlShow}
-            title={'远程控制'}
-            onCancel={this.onControlCancel}>
-            <ControlContent item={this.state.singleLineData} />
-          </ControlModal>
-
-          <ControlModal
-            width={852}
-            isShow={this.state.remoteControlShow}
-            title={
-              this.state.singleLineData.spType === 6 ? '远程调配' : '告警量设置'
-            }
-            buttons={true}
-            onOk={this.onRemoteControlOk}
-            onCancel={this.onRemoteControlCancel}>
-            <RemoteControlContent
-              fields={this.state.remoteControlFields}
-              handleFormChange={this.remoteControlChange}
-            />
-          </ControlModal>
 
           <ControlModal
             width={852}

@@ -18,8 +18,6 @@ class Regional extends Component {
     this.editClick = this.editClick.bind(this);
     this.realtimeClick = this.realtimeClick.bind(this);
     this.historyClick = this.historyClick.bind(this);
-    this.remoteControlClick = this.remoteControlClick.bind(this);
-    this.controlClick = this.controlClick.bind(this);
     this.onRowDoubleClick = this.onRowDoubleClick.bind(this);
     this.state = {
       realtimeShow: false,
@@ -67,30 +65,6 @@ class Regional extends Component {
     fsu_devicemanagementStore.getByDevice(params);
     historyChange();
   }
-  controlClick(item, e) {
-    e.stopPropagation();
-    e.nativeEvent.stopImmediatePropagation();
-    const {fsu_devicemanagementStore, controlChange} = this.props;
-    const params = {
-      F_DeviceID: item.subDeviceID,
-    };
-    fsu_devicemanagementStore.getControlChannel(params).then(data => {
-      data && controlChange();
-    });
-  }
-  remoteControlClick(item, e) {
-    const {fsu_devicemanagementStore, remoteControlClick} = this.props;
-    const params = {
-      deviceID: item.deviceID,
-      spID: item.spID,
-      suID: item.suID,
-    };
-    remoteControlClick(item);
-    // fsu_devicemanagementStore.getRegulatChannel(params).then(data => {
-    //   data && rumorClick();
-    // });
-  }
-
   componentDidMount() {
     $('.ant-table-expanded-row .ant-table-expanded-row > td:last-child').attr(
       'colspan',
@@ -107,8 +81,6 @@ class Regional extends Component {
       detailClick: this.detailClick,
       realtimeClick: this.realtimeClick,
       historyClick: this.historyClick,
-      controlClick: this.controlClick,
-      remoteControlClick: this.remoteControlClick,
       _this: this,
     });
     return (

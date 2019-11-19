@@ -4,10 +4,91 @@
     cursor: pointer;
     font-size: 22px;
   }
+  .control_ct {
+    padding: 20px;
+    padding-top: 20px;
+    padding-bottom: 0px;
+    .search {
+      display: inline-block;
+      vertical-align: top;
+      margin-left: 12px;
+      margin-top: 1px;
+      :global {
+        .ant-btn {
+          &.ant-btn-clicked {
+            &:after {
+              border-color: #40bc7e;
+            }
+          }
+          width: auto;
+          height: 36px;
+          line-height: 36px;
+          color: #fff;
+          span,
+          i {
+            color: #fff;
+          }
+          background-color: #50e399;
+          border-color: #50e399;
+          &:hover {
+            background-color: #7fffbe;
+            border-color: #7fffbe;
+          }
+          &:active {
+            background-color: #40bc7e;
+            border-color: #40bc7e;
+          }
+          &:focus {
+            background-color: #50e399;
+            border-color: #50e399;
+          }
+        }
+      }
+    }
+    .fsu_operation {
+      display: inline-block;
+      vertical-align: top;
+      :global {
+        .ant-form-item-label {
+          min-width: 90px;
+        }
+        .ant-form-item-control-wrapper {
+          width: 290px;
+          .ant-input {
+            line-height: 36px;
+            height: 36px;
+            &:hover {
+              border-color: #56eca1;
+            }
+            &:focus {
+              border-color: #56eca1;
+              box-shadow: 0 0 0 2px rgba(86, 236, 161, 0.2);
+            }
+          }
+        }
+      }
+      width: 380px;
+    }
+  }
+  .icon_style {
+    cursor: pointer;
+    .dis-none {
+      display: none;
+    }
+    .pd-right {
+      padding-right: 6px;
+    }
+  }
+  .not-allowed {
+    cursor: not-allowed;
+    color: rgba(0, 0, 0, 0.35);
+  }
   .information_wrap {
     box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
     height: 100%;
-    background-color: #fff;
+    margin-bottom: 12px;
+    position: relative;
+    background: #fff;
     .left,
     .right {
       display: inline-block;
@@ -23,6 +104,7 @@
       width: -o-calc(~'100% - 252px');
       width: calc(~'100% - 252px');
       border-left: 1px solid #e5e6e6;
+      overflow: auto;
       .scrollCommon();
       .realtime-wrap,
       .alarm-wrap {
@@ -59,7 +141,7 @@
         min-height: calc(~'100% - 350px');
       }
       .alarm-wrap {
-        padding-top: 12px;
+        padding: 12px 0;
         .table-wrap {
           padding-top: 12px;
         }

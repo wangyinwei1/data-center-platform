@@ -11,7 +11,7 @@ import RealtimeTable from './realtimeTable.js';
 import {cascader} from '../../bsifm/common';
 import Toolbar from '../../../components/Toolbarnew';
 import Table from '../../../components/Table';
-import columnData from './columns.js';
+// import columnData from './columns.js';
 import Panel from '../../../components/Panel';
 import ChildTable from './childTable.js';
 import TreeControls from '../../../components/TreeControls';
@@ -37,8 +37,9 @@ class Passageway extends Component {
       currentArea: {},
       currentSubDevice: {},
       historyShow: false,
-      spValue: 1,
+      spValue: '',
       nodata: false,
+      isCall: false,
     };
   }
   componentDidMount() {
@@ -68,59 +69,9 @@ class Passageway extends Component {
       areaList: data,
       selectedKeys: data[0] ? ['' + data[0].code] : [],
       currentArea: data[0] || {},
+      isCall: false,
     });
   };
-  //搜索
-  onSearch = value => {
-    const {fsu_monitorypointStore} = this.props;
-    const params = {
-      ...fsu_monitorypointStore.tableParmas,
-      keywords: encodeURIComponent(value),
-      F_FsuTypeID: JSON.parse(localStorage.getItem('FsuTypeID')),
-      page: 1,
-    };
-    fsu_monitorypointStore.search(params);
-  };
-  //table分页
-  onShowSizeChange = (current, pageSize) => {
-    const {fsu_monitorypointStore} = this.props;
-
-    const params = {
-      ...fsu_monitorypointStore.tableParmas,
-      page: current,
-      number: pageSize,
-      F_FsuTypeID: JSON.parse(localStorage.getItem('FsuTypeID')),
-    };
-    fsu_monitorypointStore.getTable(params);
-  };
-  onPageChange = pageNumber => {
-    const {fsu_monitorypointStore} = this.props;
-    this.c_onPageChange({pageNumber}, fsu_monitorypointStore);
-  };
-  //获取子集表格
-  getChildTable = (item, e) => {
-    e.stopPropagation();
-    e.nativeEvent.stopImmediatePropagation();
-    const {fsu_monitorypointStore} = this.props;
-
-    const params = {
-      keywords: '',
-      page: 1,
-      ztreeChild: item.suID,
-      number: 10,
-    };
-    fsu_monitorypointStore.getChildTable(params);
-    this.setState({
-      childTableVisible: true,
-      childTableTitle: item.name,
-    });
-  };
-  onCancel = () => {
-    this.setState({
-      childTableVisible: false,
-    });
-  };
-
   onLoadData = async treeNode => {
     return new Promise(async resolve => {
       if (treeNode.props.children) {
@@ -143,9 +94,15 @@ class Passageway extends Component {
       resolve();
     });
   };
+  componentWillUnmount() {
+    const {
+      fsu_monitorypointStore: {clear},
+    } = this.props;
+    clear();
+  }
   getSubDeviceAndMoniter = async record => {
     const {
-      fsu_monitorypointStore: {getSubDeviceTree, getTable},
+      fsu_monitorypointStore: {getSubDeviceTree},
     } = this.props;
     let params = {
       fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
@@ -176,15 +133,26 @@ class Passageway extends Component {
   };
   getTableData = children => {
     const {fsu_realtimealarmStore, fsu_monitorypointStore} = this.props;
+    let fsuTypeId = JSON.parse(localStorage.getItem('FsuTypeID'));
 
-    //实时数据
-    fsu_monitorypointStore.getTable({
+    let params = {
+      ...fsu_monitorypointStore.tableParmas,
       page: 1,
-      number: 10,
-      spTypeId: this.state.spValue,
-      F_Suid: children.suID,
-      fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
-    });
+      number: 5,
+      spType: this.state.spValue,
+      deviceId: children.deviceID,
+      suId: children.suID,
+      fsuTypeId,
+    };
+    //实时数据
+    if (this.state.isCall) {
+      fsuTypeId === 2 && (params['devicerId'] = devicerID);
+      fsuTypeId === 2 && (params['surId'] = surID);
+
+      fsu_monitorypointStore.getRealTimeCall(params);
+    } else {
+      fsu_monitorypointStore.getTable(params);
+    }
 
     //告警
     fsu_realtimealarmStore.getChildTable({
@@ -199,16 +167,21 @@ class Passageway extends Component {
     const {
       fsu_monitorypointStore: {getTable, getFsuSpType, tableParmas},
     } = this.props;
+    let {deviceID, suID} = this.state.currentSubDevice;
     const params = {
-      ...tableParmas,
       page: 1,
+      number: 10,
+      ...tableParmas,
+      spTypeId: this.state.spValue,
+      F_Suid: suID,
+      F_DeviceID: deviceID,
       F_FsuTypeID: value,
     };
     localStorage.setItem('FsuTypeID', value);
     await getFsuSpType({
       fsuTypeId: value,
     }).then(data => {
-      this.setState({spValue: data[0] ? 1 : undefined});
+      this.setState({spValue: data[0] ? '' : undefined});
     });
     await this.getSubDeviceAndMoniter(this.state.currentArea);
   };
@@ -216,8 +189,6 @@ class Passageway extends Component {
     this.setState({
       historyShow: false,
     });
-    // const {fsu_devicemanagementStore} = this.props;
-    // fsu_devicemanagementStore.clearHisData(); //离开情况列表
   };
   render() {
     const {fsu_monitorypointStore, regionalStore} = this.props;
@@ -229,17 +200,34 @@ class Passageway extends Component {
       tableData,
       tableParmas,
     } = fsu_monitorypointStore;
-    const columns = columnData({
-      getChildTable: this.getChildTable,
-      _this: this,
-    });
     let toolbar = [
       {
         type: 'button',
         pos: 'right',
         name: '实时召测',
         disabled: this.state.nodata,
-        handleClick: () => {},
+        handleClick: () => {
+          let {deviceID, suID, surID, devicerID} = this.state.currentSubDevice;
+          let fsuTypeId = JSON.parse(localStorage.getItem('FsuTypeID'));
+          const {
+            fsu_monitorypointStore: {getRealTimeCall},
+          } = this.props;
+          let params = {
+            deviceId: deviceID,
+            suId: suID,
+            number: 5,
+            page: 1,
+            fsuTypeId,
+            spTypeId: this.state.spValue,
+          };
+          fsuTypeId === 2 && (params['devicerId'] = devicerID);
+          fsuTypeId === 2 && (params['surId'] = surID);
+          getRealTimeCall(params).then(() => {
+            this.setState({
+              isCall: true,
+            });
+          });
+        },
       },
       {
         type: 'button',
@@ -278,19 +266,24 @@ class Passageway extends Component {
         type: 'selectItem',
         pos: 'left',
         name: '监控点类型',
-        children: spType || [],
+        children: spType[0] ? [{name: '全部', value: ''}, ...spType] : [],
         width: 210,
         defaultValue: this.state.spValue,
         disabled: this.state.nodata,
         labelCol: 10,
         wrapperCol: 14,
         handleChange: value => {
+          let {deviceID, suID} = this.state.currentSubDevice;
           this.setState({
             spValue: value,
           });
           let params = {
-            ...tableParmas,
-            spTypeId: value,
+            page: 1,
+            number: 5,
+            suId: suID,
+            deviceId: deviceID,
+            spType: value,
+            page: 1,
             fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
           };
           fsu_monitorypointStore.getTable(params);
@@ -344,6 +337,7 @@ class Passageway extends Component {
                       this.getTableData(selectedNodes[0].props.dataRef);
                       this.setState({
                         subSelectedKeys: record,
+                        isCall: false,
                         currentSubDevice: selectedNodes[0].props.dataRef,
                       });
                     }}
@@ -387,7 +381,11 @@ class Passageway extends Component {
             </Row>
             <Row className={styles['table-wrap']}>
               <Toolbar modules={toolbar} className={styles['toolbar-wrap']} />
-              <RealtimeTable spValue={this.state.spValue} />
+              <RealtimeTable
+                isCall={this.state.isCall}
+                spValue={this.state.spValue}
+                subDevItem={this.state.currentSubDevice}
+              />
             </Row>
           </div>
           <div className={styles['alarm-wrap']}>
@@ -396,7 +394,7 @@ class Passageway extends Component {
               <span>实时告警</span>
             </Row>
             <Row className={styles['table-wrap']}>
-              <RealtimeAlarmTable />
+              <RealtimeAlarmTable noSearch={true} />
             </Row>
           </div>
         </div>

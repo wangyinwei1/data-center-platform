@@ -4,6 +4,7 @@ import {
   getFsuDevicemanagementTable,
   getFsuSunDevice,
   getFsuSp,
+  getFsuSpType,
   findStation,
   findFSU2,
   delFSU2,
@@ -81,6 +82,7 @@ class Devicemanagement {
   @observable fsuPortInfoList = [];
   @observable p_loading = false;
   @observable spInfo = {};
+  @observable fsuSpType = [];
 
   @action.bound
   async expandedRowsChange(value) {
@@ -409,6 +411,18 @@ class Devicemanagement {
     if (data.Result == 'success') {
       this.fsuStatusData = data.Data;
       return data.data;
+    } else {
+      message.error(data.Msg);
+    }
+  }
+  @action.bound
+  async getFsuSpType(params) {
+    const data = await getFsuSpType(params);
+    if (data.Result == 'success') {
+      this.fsuSpType = data.Data.map(item => {
+        return {name: item.spTypaName, value: item.spTypeId};
+      });
+      return this.fsuSpType;
     } else {
       message.error(data.Msg);
     }

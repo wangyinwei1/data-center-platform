@@ -32,7 +32,10 @@ class Regional extends Component {
     } = this.props;
     if (expanded) {
       c_expandedRowsChange([record.portID]);
-      getGrandsonTable({...s_tableParmas, portID: record.portID});
+      getGrandsonTable({
+        ...s_tableParmas,
+        portID: record.portID,
+      });
     } else {
       c_expandedRowsChange([]);
     }

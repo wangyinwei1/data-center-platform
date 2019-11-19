@@ -7,14 +7,19 @@ import {
   fsu_realtimealarmChild_search,
   fsuDealAlarm,
   fsuEndAlarm,
+  fsuDeviceControl,
   getZone,
   fsuCancelAlarm,
+  findSpInfoAndDeviceData,
   getFSUType,
   getFsuSp,
   fsuConfirmAlarm,
-  getFsuRealtimeTable,
   getSubDeviceTree,
+  findSpInfoAndRealData,
   getFsuSunDeviceTable,
+  getSpInfo,
+  remoteOperationSp,
+  fsuDeviceRealTimeCall,
 } from '../services/api.js';
 import {message} from 'antd';
 class Historyalarm {
@@ -29,7 +34,27 @@ class Historyalarm {
   @observable subDeviceLoading = false;
   @observable spType = [];
   @observable fsuAddTypes = [];
+  @observable spInfo = {};
 
+  @action.bound
+  async getSpInfo(params) {
+    const data = await getSpInfo(params);
+    if (data.Result == 'success') {
+      this.spInfo = data.Data;
+      return data.Data;
+    } else {
+      message.error(data.Msg);
+    }
+  }
+  @action.bound
+  async remoteOperationSp(params) {
+    const data = await remoteOperationSp(params);
+    if (data.Result == 'success') {
+      message.success(data.Msg);
+    } else {
+      message.error(data.Msg);
+    }
+  }
   @action.bound
   async getZone(params) {
     const data = await getZone(params);
@@ -56,6 +81,16 @@ class Historyalarm {
     }
   }
   @action.bound
+  async clear(params) {
+    this.tableParmas = {};
+    this.tableData = [];
+    this.loading = false;
+    this.subDeviceTree = [];
+    this.subDeviceLoading = false;
+    this.spType = [];
+    this.fsuAddTypes = [];
+  }
+  @action.bound
   async getFsuSpType(params) {
     const data = await getFsuSpType(params);
     if (data.Result == 'success') {
@@ -75,6 +110,29 @@ class Historyalarm {
     } else {
       message.error(data.Msg);
       return false;
+    }
+  }
+  @action.bound
+  async getRealTimeCall(params) {
+    this.loading = true;
+    const data = await findSpInfoAndDeviceData(params);
+    this.loading = false;
+    if (data.Result == 'success') {
+      params.page = data.Data.page;
+      this.tableParmas = params;
+      this.tableData = data.Data;
+    } else {
+      message.error(data.Msg);
+    }
+  }
+  @action.bound
+  async postDeviceControl(params) {
+    const data = await fsuDeviceControl(params);
+    if (data.Result == 'success') {
+      message.success(data.Msg);
+      return true;
+    } else {
+      message.error(data.Msg);
     }
   }
   @action.bound
@@ -132,7 +190,7 @@ class Historyalarm {
   @action.bound
   async getTable(params) {
     this.loading = true;
-    const data = await getFsuRealtimeTable(params);
+    const data = await findSpInfoAndRealData(params);
     this.loading = false;
     if (data.Result == 'success') {
       this.tableParmas = params;

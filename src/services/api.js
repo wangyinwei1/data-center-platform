@@ -587,6 +587,9 @@ export function findStation(params) {
 export function fsuDeviceRealTimeCall(params) {
   return request.get(base + '/FSU_device/FsuDeviceRealTimeCall', {params});
 }
+export function findSpInfoAndDeviceData(params) {
+  return request.get(base + '/FSU_device/findSpInfoAndDeviceData', {params});
+}
 export function fsuDevicemanagementSave(data) {
   return request.post(base + '/FSU_device/save_FSU2.do', data);
 }
@@ -622,6 +625,9 @@ export function delFSU_Sp2(data) {
 }
 export function getFsuRealtimeTable(params) {
   return request.get(base + '/FSU_device/realdata.do', {params});
+}
+export function findSpInfoAndRealData(params) {
+  return request.get(base + '/FSU_device//findSpInfoAndRealData', {params});
 }
 export function getFsuSunDeviceTable(params) {
   return request.get(base + '/FSU_device/FsuSunDevice_list2.do', {params});

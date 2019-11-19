@@ -31,20 +31,16 @@ class Regional extends Component {
       fsu_devicemanagementStore,
       realtimeChange,
       historyChange,
-      controlChange,
       sunEditChange,
       sunDeleteChange,
       sunDetailChange,
-      remoteControlClick,
       sunDisableChange,
     } = this.props;
 
     return (
       <GrandsonTable
         historyChange={historyChange}
-        controlChange={controlChange}
         realtimeChange={realtimeChange}
-        remoteControlClick={remoteControlClick}
         sunEditChange={sunEditChange}
         sunDeleteChange={sunDeleteChange}
         sunDetailChange={sunDetailChange}
@@ -64,7 +60,11 @@ class Regional extends Component {
     currentPortChange(record);
     if (expanded) {
       expandedRowsChange([record.deviceID]);
-      getGrandsonTable({...s_tableParmas, F_DeviceID: record.deviceID});
+      getGrandsonTable({
+        ...s_tableParmas,
+        fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
+        F_DeviceID: record.deviceID,
+      });
     } else {
       expandedRowsChange([]);
     }
@@ -96,11 +96,19 @@ class Regional extends Component {
 
   addClick(item) {
     const {
-      fsu_devicemanagementStore: {getGoAdd, ztreeChild, expandedRows},
+      fsu_devicemanagementStore: {
+        getGoAdd,
+        getFsuSpType,
+        ztreeChild,
+        expandedRows,
+      },
       addChildShow,
     } = this.props;
     getGoAdd({Area_ID: ztreeChild}).then(() => {
       addChildShow(item, expandedRows);
+    });
+    getFsuSpType({
+      fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
     });
   }
   render() {
