@@ -35,6 +35,7 @@ const menu = ({editClick, deleteClick, detailClick, _this, record}) => {
     </Menu>
   );
 };
+
 const columns = ({
   editClick,
   deleteClick,

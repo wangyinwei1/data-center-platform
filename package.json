@@ -54,7 +54,7 @@
     "webpack-dev-server": "^1.14.1"
   },
   "dependencies": {
-    "antd": "^3.5.3",
+    "antd": "3.6.6",
     "axios-mock-adapter": "^1.11.0",
     "classnames": "^2.2.5",
     "document-offset": "^1.0.4",
@@ -68,6 +68,7 @@
     "prop-types": "^15.5.10",
     "react": "^15.3.0",
     "react-dom": "^15.3.0",
+    "react-highlight-words": "^0.16.0",
     "react-redux": "^4.4.5",
     "react-router": "^3.0.2"
   }

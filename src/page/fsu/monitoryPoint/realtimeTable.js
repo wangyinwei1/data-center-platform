@@ -61,18 +61,17 @@ class Regional extends Component {
     }
   }
   remoteControlClick = (item, e) => {
-    const {fsu_monitorypointStore} = this.props;
-    console.log(item);
+    const {fsu_monitorypointStore, subDevItem} = this.props;
     const params = {
       suID: item.suID,
-      // F_FsuTypeID: JSON.parse(localStorage.getItem('FsuTypeID')),
+      fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
       deviceID: item.deviceID,
       spID: item.spID,
     };
 
     if (JSON.parse(localStorage.getItem('FsuTypeID')) === 2) {
-      params['devicerID'] = item.devicerID;
-      params['surID'] = item.surID;
+      params['devicerID'] = subDevItem.devicerID;
+      params['surID'] = subDevItem.surID;
     }
 
     fsu_monitorypointStore.getSpInfo(params).then(data => {
@@ -104,11 +103,11 @@ class Regional extends Component {
   };
 
   //控制
-  controlClick = (item, e) => {
+  controlClick = item => {
     if (JSON.parse(localStorage.getItem('FsuTypeID')) === 2) {
       const {
         fsu_monitorypointStore: {postDeviceControl},
-        item,
+        subDevItem,
       } = this.props;
       const params = {
         F_DeviceID: item.deviceID,
@@ -116,8 +115,8 @@ class Regional extends Component {
         F_Suid: item.suID,
         value: this.state.value,
         fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
-        surID: item.surID,
-        devicerID: item.devicerID,
+        surID: subDevItem.surID,
+        devicerID: subDevItem.devicerID,
       };
       postDeviceControl(params).then(data => {
         data &&
@@ -166,6 +165,7 @@ class Regional extends Component {
     } else {
       const {
         fsu_monitorypointStore: {remoteOperationSp},
+        subDevItem,
       } = this.props;
       let item = this.state.currentData;
       const params = {
@@ -174,8 +174,8 @@ class Regional extends Component {
         spID: item.spID,
       };
       if (JSON.parse(localStorage.getItem('FsuTypeID')) === 2) {
-        params['devicerID'] = item.devicerID;
-        params['surID'] = item.surID;
+        params['devicerID'] = subDevItem.devicerID;
+        params['surID'] = subDevItem.surID;
       }
 
       _.forIn(fields, (value, key) => {

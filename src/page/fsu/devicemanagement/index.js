@@ -519,7 +519,11 @@ class Information extends Component {
     const {
       fsu_devicemanagementStore: {goFind2, ztreeChild},
     } = this.props;
-    goFind2({Area_ID: ztreeChild, suID: item.suID}).then(data => {
+    goFind2({
+      Area_ID: ztreeChild,
+      suID: item.suID,
+      fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
+    }).then(data => {
       this.initFromValue(data, 'detail');
     });
   }
@@ -527,7 +531,11 @@ class Information extends Component {
     const {
       fsu_devicemanagementStore: {goFind2, ztreeChild},
     } = this.props;
-    goFind2({Area_ID: ztreeChild, suID: item.suID}).then(data => {
+    goFind2({
+      Area_ID: ztreeChild,
+      suID: item.suID,
+      fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
+    }).then(data => {
       this.initFromValue(data, 'detail');
     });
   }
@@ -553,7 +561,7 @@ class Information extends Component {
       formValue.F_SuIP.value = data.pd.suIP;
       formValue.F_SuPort.value = data.pd.suPort;
       formValue.F_UserName.value = data.pd.userName;
-      formValue.F_Pwd.value = data.pd.passWord;
+      formValue.F_Pwd.value = data.pd.password;
       formValue.F_SuVendor.value = data.pd.suVendor;
       formValue.F_SuModel.value = data.pd.suModel;
       formValue.F_SuHardVer.value = data.pd.suHardVer;
@@ -830,7 +838,11 @@ class Information extends Component {
       fsu_devicemanagementStore: {goFind2, getFSUType, ztreeChild},
     } = this.props;
     getFSUType();
-    goFind2({Area_ID: ztreeChild, suID: item.suID}).then(data => {
+    goFind2({
+      Area_ID: ztreeChild,
+      suID: item.suID,
+      fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
+    }).then(data => {
       this.initFromValue(data, 'modify');
     });
   }
@@ -865,23 +877,28 @@ class Information extends Component {
   }
   deleteClick(item, e) {
     const {fsu_devicemanagementStore} = this.props;
-    fsu_devicemanagementStore.getSportTable({F_Suid: item.suID}).then(data => {
-      if (data && data[0]) {
-        this.setState({
-          deleteContent: '该设备下拥有子设备,是否继续删除？',
-          deleteShow: true,
-          deleteType: 'subDev',
-          singleLineData: item,
-        });
-      } else {
-        this.setState({
-          deleteContent: '此操作将删除该条数据, 是否继续?',
-          deleteShow: true,
-          deleteType: 'subDev',
-          singleLineData: item,
-        });
-      }
-    });
+    fsu_devicemanagementStore
+      .getSportTable({
+        F_Suid: item.suID,
+        fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
+      })
+      .then(data => {
+        if (data && data[0]) {
+          this.setState({
+            deleteContent: '该设备下拥有子设备,是否继续删除？',
+            deleteShow: true,
+            deleteType: 'subDev',
+            singleLineData: item,
+          });
+        } else {
+          this.setState({
+            deleteContent: '此操作将删除该条数据, 是否继续?',
+            deleteShow: true,
+            deleteType: 'subDev',
+            singleLineData: item,
+          });
+        }
+      });
   }
   //编辑回调
   onEditOk() {
@@ -1035,15 +1052,21 @@ class Information extends Component {
     const {
       fsu_devicemanagementStore: {getDeviceTypes},
     } = this.props;
-    getDeviceTypes({fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID'))});
-    this.getRowData(item, 'detail');
+    getDeviceTypes({
+      fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
+    }).then(() => {
+      this.getRowData(item, 'modify');
+    });
   }
   childEditClick(item) {
     const {
       fsu_devicemanagementStore: {getDeviceTypes},
     } = this.props;
-    getDeviceTypes({fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID'))});
-    this.getRowData(item, 'modify');
+    getDeviceTypes({
+      fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
+    }).then(() => {
+      this.getRowData(item, 'modify');
+    });
   }
   //子集点击设值
   getSunRowData(item, mode) {
@@ -1093,9 +1116,17 @@ class Information extends Component {
     });
   }
   sunEditChange(item) {
-    this.getSunRowData(item, 'modify');
-    this.childAlarmClick(item);
-    this.setState({singleLineData: item});
+    const {
+      fsu_devicemanagementStore: {getFsuSpType},
+      addChildShow,
+    } = this.props;
+    getFsuSpType({
+      fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
+    }).then(() => {
+      this.getSunRowData(item, 'modify');
+      this.childAlarmClick(item);
+      this.setState({singleLineData: item});
+    });
   }
   childAlarmClick(item) {
     const {
@@ -1115,22 +1146,30 @@ class Information extends Component {
     delectSun({
       F_Spid: item.spID,
       F_Suid: item.suID,
-      F_DeviceID: this.state.currentDeviceID,
+      F_DeviceID: item.deviceID,
     }).then(() => {
       const F_DeviceID = {F_DeviceID: currentDevice};
-      selectedChildRowKey[0] === this.state.currentDeviceID &&
+      selectedChildRowKey[0] === item.deviceID &&
         getGrandsonTable({
           ...F_DeviceID,
           fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
-          F_DeviceID: this.state.currentDeviceID,
+          F_DeviceID: item.deviceID,
           F_Suid: item.suID,
         });
     });
   }
 
   sunDetailChange(item) {
-    this.getSunRowData(item, 'detail');
-    this.childAlarmClick(item);
+    const {
+      fsu_devicemanagementStore: {getFsuSpType},
+      addChildShow,
+    } = this.props;
+    getFsuSpType({
+      fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
+    }).then(() => {
+      this.getSunRowData(item, 'detail');
+      this.childAlarmClick(item);
+    });
   }
   currentPortChange(item) {
     this.setState({
@@ -1189,6 +1228,7 @@ class Information extends Component {
         telemeteryClick={this.telemeteryClick}
         addChildShow={this.addChildShow}
         childDetailClick={this.childDetailClick}
+        searchValue={this.state.searchValue}
         childEditClick={this.childEditClick}
         childDeleteClick={this.childDeleteClick}
         sunEditChange={this.sunEditChange}

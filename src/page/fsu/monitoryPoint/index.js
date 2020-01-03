@@ -135,6 +135,7 @@ class Passageway extends Component {
     const {fsu_realtimealarmStore, fsu_monitorypointStore} = this.props;
     let fsuTypeId = JSON.parse(localStorage.getItem('FsuTypeID'));
 
+    let currentSubDevice = this.state.currentSubDevice;
     let params = {
       ...fsu_monitorypointStore.tableParmas,
       page: 1,
@@ -146,8 +147,8 @@ class Passageway extends Component {
     };
     //实时数据
     if (this.state.isCall) {
-      fsuTypeId === 2 && (params['devicerId'] = devicerID);
-      fsuTypeId === 2 && (params['surId'] = surID);
+      fsuTypeId === 2 && (params['devicerId'] = currentSubDevice.devicerID);
+      fsuTypeId === 2 && (params['surId'] = currentSubDevice.surID);
 
       fsu_monitorypointStore.getRealTimeCall(params);
     } else {

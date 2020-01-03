@@ -100,10 +100,10 @@ var devPlugins = [
   // 允许错误不打断程序, 仅开发模式需要
   new webpack.NoErrorsPlugin(),
   // 打开浏览器页面
-  new OpenBrowserPlugin({
-    url: 'http://localhost:9080',
-    browser: 'Google Chrome',
-  }),
+  // new OpenBrowserPlugin({
+  //   url: 'http://localhost:9080',
+  //   browser: 'Google Chrome',
+  // }),
   // css打包
   new ExtractTextPlugin('css.css', {
     allChunks: true,

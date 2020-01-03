@@ -8,6 +8,8 @@ import columnData from './grandsonColumns.js';
 import Toolbar from '../../../components/Toolbar';
 import Panel from '../../../components/Panel';
 import RealtimeTable from './realtimeTable.js';
+import {Button, Icon, Input} from 'antd';
+import Highlighter from 'react-highlight-words';
 //实例
 @inject('informationStore', 'fsu_devicemanagementStore')
 @observer
@@ -21,6 +23,8 @@ class Regional extends Component {
     this.onRowDoubleClick = this.onRowDoubleClick.bind(this);
     this.state = {
       realtimeShow: false,
+      searchText: '',
+      searchedColumn: '',
     };
   }
   editClick(item) {
