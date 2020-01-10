@@ -9,6 +9,7 @@ import {decorate as mixin} from 'react-mixin';
 import columnData from './historyColumns.js';
 import Toolbar from '../../../components/Toolbar';
 import Detail from './detail.js';
+import moment from 'moment';
 //实例
 @inject('towerStore')
 @observer
@@ -23,6 +24,8 @@ class Regional extends Component {
     this.state = {
       show: false,
       record: {},
+      startTime: moment().startOf('day'),
+      endTime: moment().endOf('day'),
     };
   }
   componentDidMount() {}
@@ -65,6 +68,10 @@ class Regional extends Component {
       startTime: dateStrings[0],
       endTime: dateStrings[1],
     };
+    this.setState({
+      startTime: dateStrings[0],
+      endTime: dateStrings[1],
+    });
     this.getData(params);
   }
   getData = params => {
@@ -86,17 +93,28 @@ class Regional extends Component {
   onOk = () => {
     this.setState({show: false});
   };
+  onExportClick = () => {
+    const {currentData} = this.props;
+    location.href =
+      '/tower/device/electricEnergyToExcel?id=' +
+      currentData.id +
+      '&startTime=' +
+      this.state.startTime +
+      '&endTime=' +
+      this.state.endTime;
+  };
   render() {
-    const {towerStore, currentType} = this.props;
+    const {towerStore, currentType, currentData} = this.props;
     const e_tableData = toJS(towerStore.e_tableData);
     const tableData = (e_tableData && e_tableData.list) || [];
     const pagination = e_tableData || {};
-    const columns = columnData(currentType, this.detailClick);
+    const columns = columnData(currentType, this.detailClick, currentData);
     return (
       <div>
         <Toolbar
-          showValue={['time']}
+          showValue={['time', currentType === 'electricEnergy' && 'export']}
           timeChange={this.timeChange}
+          onExportClick={this.onExportClick}
           closeAdd={true}
         />
         <Table

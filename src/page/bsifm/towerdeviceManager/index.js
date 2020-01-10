@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {action, observer, inject} from 'mobx-react';
-import {Form} from 'antd';
+import {Form, message} from 'antd';
 import styles from './index.less';
 import Panel from '../../../components/Panel';
 import Cascader from '../../../components/Cascader';
@@ -40,12 +40,15 @@ class Passageway extends Component {
       areaName: '',
       expandedRows: [],
       deleteShow: false,
+      isBatch: false,
       currentData: {},
       editShow: false,
       issuedVisiable: false,
       type: 'new',
       historyShow: false,
       currentType: '',
+      selectedRowKeys: [],
+      hintContent: '',
       ...formParams,
       ...issuedParams,
     };
@@ -121,15 +124,24 @@ class Passageway extends Component {
   deleteClick = record => {
     this.setState({
       deleteShow: true,
+      hintContent: '此操作将删除该条数据, 是否继续?',
       currentData: record,
     });
   };
   onDeleteOk = () => {
     const {towerStore} = this.props;
-    const params = {id: this.state.currentData.id};
+
+    let params = {};
+    if (this.state.isBatch) {
+      params['id'] = this.state.selectedRowKeys.join(',');
+    } else {
+      params['id'] = this.state.currentData.id;
+    }
+
     towerStore.delete(params).then(() => {
       this.setState({
         deleteShow: false,
+        isBatch: false,
       });
     });
   };
@@ -263,6 +275,7 @@ class Passageway extends Component {
       towerStore.getElectricEnergy(params);
     }
     this.setState({
+      currentData: record,
       historyShow: true,
       currentType: type,
     });
@@ -331,6 +344,18 @@ class Passageway extends Component {
     };
     sendRRPC(params, rrpc);
   };
+  onBatchDeleteClick = () => {
+    const selectedRowKeys = this.state.selectedRowKeys;
+    if (!selectedRowKeys[0]) {
+      message.error('请选择设备!');
+      return;
+    }
+    this.setState({
+      hintContent: '此操作将批量删除所选中数据, 是否继续?',
+      deleteShow: true,
+      isBatch: true,
+    });
+  };
   render() {
     const {towerStore, regionalStore} = this.props;
     const tableData = toJS(towerStore.tableData.list) || [];
@@ -343,6 +368,15 @@ class Passageway extends Component {
       remoteClick: this.remoteClick,
       _this: this,
     });
+    const {selectedRowKeys} = this.state;
+    const rowSelection = {
+      onChange: (selectedRowKeys, selectedRows) => {
+        this.setState({
+          selectedRowKeys,
+        });
+      },
+      selectedRowKeys,
+    };
     return (
       <div className={styles['information_wrap']}>
         <Cascader
@@ -358,6 +392,8 @@ class Passageway extends Component {
         <div className={styles['information_ct']}>
           <div className={styles['min_width']}>
             <Toolbar
+              showValue={['batchDelete', 'add']}
+              onBatchDeleteClick={this.onBatchDeleteClick}
               onSearch={this.onSearch}
               devStateChange={this.devStateChange}
               onClick={this.add}
@@ -368,6 +404,8 @@ class Passageway extends Component {
                   const rowClassName = [];
                   return rowClassName.join(' ');
                 }}
+                rowSelection={rowSelection}
+                rowKey={'id'}
                 pageIndex={pagination.page}
                 pageSize={pagination.number}
                 total={pagination.allCount}
@@ -384,6 +422,7 @@ class Passageway extends Component {
           isShow={this.state.deleteShow}
           onOk={this.onDeleteOk}
           onCancel={this.onDeleteCancel}
+          hintContent={this.state.hintContent}
         />
         <EditModal
           isShow={this.state.editShow}
@@ -427,7 +466,10 @@ class Passageway extends Component {
               : '电能'
           }数据`}
           isShow={this.state.historyShow}>
-          <HistoryModal currentType={this.state.currentType} />
+          <HistoryModal
+            currentType={this.state.currentType}
+            currentData={this.state.currentData}
+          />
         </Panel>
       </div>
     );

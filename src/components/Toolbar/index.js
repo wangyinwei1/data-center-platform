@@ -185,7 +185,7 @@ class Regional extends Component {
       <div className={styles['action_bar']}>
         {showValue &&
           showValue.indexOf('realtimeSubDev') != -1 &&
-          (realtimeSubDev && (
+          realtimeSubDev && (
             <div className={styles['subdev']}>
               <Select
                 value={this.state.subDevValue}
@@ -200,10 +200,10 @@ class Regional extends Component {
                 })}
               </Select>
             </div>
-          ))}
+          )}
         {showValue &&
           showValue.indexOf('realtimeMonitorPoint') != -1 &&
-          (realtimeSubDev && (
+          realtimeSubDev && (
             <div className={styles['subdev']}>
               <Select
                 defaultValue={1}
@@ -224,7 +224,7 @@ class Regional extends Component {
                 )}
               </Select>
             </div>
-          ))}
+          )}
         {showValue && showValue.indexOf('time') != -1 && (
           <div className={styles['device_time']}>
             <RangePicker
@@ -319,6 +319,19 @@ class Regional extends Component {
 
         {/* <Remarks /> */}
         <div className={styles['btn_wrap']}>
+          {showValue && showValue.indexOf('exportTpl') != -1 && (
+            <Button
+              className={styles['exportTpl_btn']}
+              onClick={this.exportTpl}>
+              <i
+                className={classnames(
+                  'icon iconfont icon-xiazai',
+                  styles['common_icon'],
+                )}
+              />
+              <span>下载模板</span>
+            </Button>
+          )}
           {showValue && showValue.indexOf('upload') != -1 && (
             <Button className={styles['add_btn']} onClick={this.import}>
               <i
@@ -394,19 +407,6 @@ class Regional extends Component {
                 style={{paddingRight: '4px'}}
               />
               <span>实时刷新</span>
-            </Button>
-          )}
-          {showValue && showValue.indexOf('exportTpl') != -1 && (
-            <Button
-              className={styles['exportTpl_btn']}
-              onClick={this.exportTpl}>
-              <i
-                className={classnames(
-                  'icon iconfont icon-xiazai',
-                  styles['common_icon'],
-                )}
-              />
-              <span>下载模板</span>
             </Button>
           )}
           {showValue && showValue.indexOf('import') != -1 && (

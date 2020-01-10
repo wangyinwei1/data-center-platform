@@ -19,9 +19,6 @@ class Detail extends Component {
     const {record} = this.props;
     const RowData = ({data, title}) => {
       let text = '';
-      if (!data && data !== 0) {
-        return null;
-      }
       if (data) {
         let arr = data.split('$');
         let s = ['A相:', 'B相:', 'C相:'];
@@ -32,7 +29,7 @@ class Detail extends Component {
           }
         });
       } else {
-        text = '无';
+        text = '-';
       }
       return (
         <Row className={styles['row']}>
@@ -71,6 +68,12 @@ class Detail extends Component {
         <RowData data={record.loop4insq} title={'第四路瞬时无功功率'} />
         <RowData data={record.loop5insq} title={'第五路瞬时无功功率'} />
         <RowData data={record.loop6insq} title={'第六路瞬时无功功率'} />
+        <RowData data={record.loop1pwrf} title={'第一路功率因数'} />
+        <RowData data={record.loop2pwrf} title={'第二路功率因数'} />
+        <RowData data={record.loop3pwrf} title={'第三路功率因数'} />
+        <RowData data={record.loop4pwrf} title={'第四路功率因数'} />
+        <RowData data={record.loop5pwrf} title={'第五路功率因数'} />
+        <RowData data={record.loop6pwrf} title={'第六路功率因数'} />
       </div>
     );
   }

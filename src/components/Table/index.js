@@ -31,6 +31,7 @@ class Cl_Table extends Component {
       useDefaultRowKey,
       expandIconAsCell,
       rowSelection,
+      rowKey,
       scroll,
     } = this.props;
     const onRow = onRowDoubleClick
@@ -68,6 +69,10 @@ class Cl_Table extends Component {
         )}>
         <Table
           rowKey={(record, index) => {
+            if (rowKey) {
+              return record[rowKey];
+            }
+
             return !useDefaultRowKey
               ? (record && record.spID) ||
                   (record && record.deviceID) ||

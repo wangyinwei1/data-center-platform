@@ -168,7 +168,9 @@ class Regional extends Component {
     });
   }
   initFromValue(data, mode, item) {
-    const {basicchannelStore: {virtualList}} = this.props;
+    const {
+      basicchannelStore: {virtualList},
+    } = this.props;
     const record = _.filter(toJS(virtualList), app => {
       return app.channelID === data.pd.F_ChannelID;
     });
@@ -210,7 +212,9 @@ class Regional extends Component {
     });
   }
   editClick(item) {
-    const {basicchannelStore: {initEdit, getVirtualList}} = this.props;
+    const {
+      basicchannelStore: {initEdit, getVirtualList},
+    } = this.props;
     getVirtualList({
       F_TypeID: item.F_DeviceType,
       F_Version: item.F_Version,
@@ -281,7 +285,9 @@ class Regional extends Component {
     });
   }
   valueTypeClick() {
-    const {basicchannelStore: {getValuePropertyList}} = this.props;
+    const {
+      basicchannelStore: {getValuePropertyList},
+    } = this.props;
     const item = this.state.singleLineData;
     const params = {
       F_ChannelID: item.F_ChannelID,
@@ -381,7 +387,9 @@ class Regional extends Component {
     });
   }
   detailClick(item) {
-    const {basicchannelStore: {initEdit, getVirtualList}} = this.props;
+    const {
+      basicchannelStore: {initEdit, getVirtualList},
+    } = this.props;
     getVirtualList({
       F_TypeID: item.F_DeviceType,
       F_Version: item.F_Version,
@@ -395,7 +403,9 @@ class Regional extends Component {
     this.alarmClick(item, 'detail');
   }
   alarmClick(item, detail) {
-    const {basicchannelStore: {getAlarmTable}} = this.props;
+    const {
+      basicchannelStore: {getAlarmTable},
+    } = this.props;
     const params = {
       F_DeviceType: item.F_DeviceType,
       F_Version: item.F_Version,
@@ -410,7 +420,9 @@ class Regional extends Component {
     });
   }
   channelTypeChange(value) {
-    const {basicchannelStore: {getTable, tableParmas}} = this.props;
+    const {
+      basicchannelStore: {getTable, tableParmas},
+    } = this.props;
     const params = {
       ...tableParmas,
       F_ChannelType: value,
@@ -419,7 +431,9 @@ class Regional extends Component {
   }
 
   onExportClick() {
-    const {basicchannelStore: {tableParmas}} = this.props;
+    const {
+      basicchannelStore: {tableParmas},
+    } = this.props;
     location.href =
       '/collect/device_basechannel/toExcel.do?F_DeviceType=' +
       tableParmas.F_TypeID +
@@ -582,7 +596,9 @@ class Regional extends Component {
           obj['F_ShowPrecision'] = {...fields.F_ShowPrecision, value: 0};
         }
       } else if (key[0] === 'virtual') {
-        const {basicchannelStore: {virtualList}} = this.props;
+        const {
+          basicchannelStore: {virtualList},
+        } = this.props;
         const item = _.filter(virtualList, item => {
           return item.fid === changedFields[key].value;
         });
@@ -601,7 +617,9 @@ class Regional extends Component {
     });
   }
   onRowDoubleClick(item, e) {
-    const {basicchannelStore: {initEdit}} = this.props;
+    const {
+      basicchannelStore: {initEdit},
+    } = this.props;
     const params = {
       F_ID: item.F_ID,
     };

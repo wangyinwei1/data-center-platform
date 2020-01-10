@@ -10,7 +10,7 @@ import columnData from './childColumns.js';
  * @param {editClick} 切换按钮的回调
  * @return {array}
  */
-const columns = (type, detailClick) => {
+const columns = (type, detailClick, currentData) => {
   if (type === 'electricQuantity') {
     return [
       {
@@ -117,8 +117,26 @@ const columns = (type, detailClick) => {
   } else {
     return [
       {
-        title: '设备编号',
-        dataIndex: 'meternum',
+        title: '电压',
+        dataIndex: 'loop1vol',
+        render: (text, record) => {
+          if (currentData.metertype !== 101 && currentData.metertype !== 301) {
+            return <span>{'-'}</span>;
+          }
+          if (text === undefined) {
+            return null;
+          }
+          let arr = text.split('$');
+          let s = ['A相:', 'B相:', 'C相:'];
+          let str = '';
+          arr.forEach((item, index) => {
+            str += s[index] + arr[index];
+            if (index !== arr.length - 1) {
+              str += ',';
+            }
+          });
+          return <span>{str}</span>;
+        },
       },
       {
         title: '电流',
@@ -158,7 +176,7 @@ const columns = (type, detailClick) => {
           return <span>{str}</span>;
         },
       },
-      {
+      /*{
         title: '瞬时无功功率',
         dataIndex: 'insq',
         render: (text, record) => {
@@ -176,7 +194,7 @@ const columns = (type, detailClick) => {
           });
           return <span>{str}</span>;
         },
-      },
+      },*/
       {
         title: '创建时间',
         dataIndex: 'time',
