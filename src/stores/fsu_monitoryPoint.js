@@ -81,6 +81,10 @@ class Historyalarm {
     }
   }
   @action.bound
+  async changePaging(params) {
+    this.tableParmas = {...toJS(this.tableParmas), ...params};
+  }
+  @action.bound
   async clear(params) {
     this.tableParmas = {};
     this.tableData = [];

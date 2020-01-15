@@ -116,7 +116,7 @@ class Passageway extends Component {
 
   render() {
     const {realtimealarmStore, regionalStore} = this.props;
-    const tableData = toJS(realtimealarmStore.tableData.varList) || [];
+    const tableData = toJS(realtimealarmStore.tableData.dataList) || [];
     const pagination = toJS(realtimealarmStore.tableData) || {};
     const columns = columnData({
       getChildTable: this.getChildTable,
@@ -143,7 +143,7 @@ class Passageway extends Component {
               <Table
                 pageIndex={pagination.page}
                 pageSize={pagination.number}
-                total={pagination.count}
+                total={pagination.totalCount}
                 columns={columns}
                 rowClassName={(record, index) => {
                   const rowClassName = [];

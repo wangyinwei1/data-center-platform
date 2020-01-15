@@ -25,6 +25,8 @@ class BasicLayout extends Component {
     this.state = {
       openKeys: [],
       storage: [],
+      // scaleX: 1,
+      // scaleY: 1,
     };
   }
   monitorWindowWidth(globalStore, collapsed) {
@@ -45,6 +47,7 @@ class BasicLayout extends Component {
     this.ws && this.ws.close();
   }
   componentDidUpdate() {
+    // location.pathname === '/shouye' && this.adaptive();
     const {globalStore, layoutStore, location} = this.props;
     if (globalStore.isTimeout) {
       const path = location.pathname.replace('/', '');
@@ -77,11 +80,31 @@ class BasicLayout extends Component {
     getFsuAlarmNum({...params, sort: 'F_AlarmLevel'});
     getAlarmNum({...params, sort: 'F_AlarmGrade'});
   }
+  // adaptive() {
+  //   const width = 1920;
+  //   const height = 1080;
+  //   const c_width = document.body.offsetWidth;
+  //   const c_height = document.body.offsetHeight;
+  //   let update =
+  //     this.state.scaleX === c_width / width &&
+  //     this.state.scaleY === c_height / height;
+  //
+  //   !update &&
+  //     this.setState({
+  //       scaleX: c_width / width,
+  //       scaleY: c_height / height,
+  //     });
+  // }
 
+  componentWillMount() {
+    // location.pathname === '/shouye' && this.adaptive();
+  }
   componentDidMount() {
+    //
     const {globalStore, layoutStore, location} = this.props;
     const path = location.pathname.replace('/', '');
     let collapsed = false;
+
     const _this = this;
     //获取菜单接口
     layoutStore.getMenu().then(() => {
@@ -90,6 +113,7 @@ class BasicLayout extends Component {
       this.monitorWindowWidth(globalStore, collapsed);
       $(window).on('resize.leftnav', () => {
         this.monitorWindowWidth(globalStore, collapsed);
+        // location.pathname === '/shouye' && this.adaptive();
       });
     });
 
@@ -325,9 +349,30 @@ class BasicLayout extends Component {
         currentLink = item;
       }
     });
+    // let minScale =
+    //   this.state.scaleX < this.state.scaleY
+    //     ? this.state.scaleX
+    //     : this.state.scaleY;
+    //           console.log(1920 * this.state.scaleX + 'px',
+    //            1080 * this.state.scaleY + 'px')
+    // console.log(1920 * this.state.scaleX + 'px'/1080 * this.state.scaleY + 'px')
 
     return (
-      <div className={styles['layout_wrap']} id={'layout_wrap'}>
+      <div
+        className={classnames(
+          styles['layout_wrap'],
+          location.pathname === '/shouye' && styles['index'],
+        )}
+        id={'layout_wrap'}
+        // style={
+        //   location.pathname === '/shouye'
+        //     ? {
+        //         // width: 1920 * this.state.scaleX + 'px',
+        //         // height: 1080 * this.state.scaleY + 'px',
+        //       }
+        //     : {width: '100%', height: '100%'}
+        // }
+      >
         <TopNav title={title} username={username} router={router} />
         <Layout>
           <LeftNav

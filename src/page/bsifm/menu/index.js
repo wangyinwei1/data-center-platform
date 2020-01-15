@@ -18,7 +18,6 @@ class BsifmMenu extends Component {
     location.pathname == '/bsifm-deviceversion' && selectedKeys.push('type');
     location.pathname == '/bsifm-devicetype' && selectedKeys.push('largeClass');
 
-    console.log(1111);
     const equipments = [
       {
         type: 'type',

@@ -8,6 +8,7 @@ import {
   fsuEndAlarm,
   fsuCancelAlarm,
   getFSUType,
+  getFsuAlarmDeviceList,
   fsuConfirmAlarm,
 } from '../services/api.js';
 import {message} from 'antd';
@@ -73,7 +74,7 @@ class Historyalarm {
   @action.bound
   async getTable(params) {
     this.loading = true;
-    const data = await getFsu_realtimealarmTable(params);
+    const data = await getFsuAlarmDeviceList(params);
     this.loading = false;
 
     params.number = data.Data.number;

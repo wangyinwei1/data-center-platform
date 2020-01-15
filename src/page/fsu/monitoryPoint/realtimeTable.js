@@ -41,7 +41,7 @@ class Regional extends Component {
       number: pageSize,
     };
     if (isCall) {
-      fsu_monitorypointStore.getRealTimeCall(params);
+      fsu_monitorypointStore.changePaging(params);
     } else {
       fsu_monitorypointStore.getTable(params);
     }
@@ -55,7 +55,7 @@ class Regional extends Component {
       page: pageNumber,
     };
     if (isCall) {
-      fsu_monitorypointStore.getRealTimeCall(params);
+      fsu_monitorypointStore.changePaging(params);
     } else {
       fsu_monitorypointStore.getTable(params);
     }

@@ -51,6 +51,9 @@ class FsuMenu extends Component {
         authorization: 'authorization-text',
       },
       showUploadList: false,
+      data: {
+        fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
+      },
       onChange(info) {
         if (info.file.status !== 'uploading') {
           console.log(info.file, info.fileList);
@@ -63,6 +66,7 @@ class FsuMenu extends Component {
               page: 1,
               keywords: '',
               number: 10,
+              fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
             };
             getDeviceTypeList(params);
             getSpTypeList(params);
@@ -102,7 +106,8 @@ class FsuMenu extends Component {
               <FsuSpType />
             </div>
           </TabPane>
-        </Tabs>,
+        </Tabs>
+        ,
         <Upload {...props}>
           <span
             style={{display: 'none'}}

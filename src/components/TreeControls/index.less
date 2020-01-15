@@ -135,3 +135,63 @@
     }
   }
 }
+.tooltip {
+  transform-origin: -4px 50%;
+  position: fixed;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  color: rgba(0, 0, 0, 0.65);
+  font-size: 14px;
+  font-variant: tabular-nums;
+  line-height: 1.5;
+  list-style: none;
+  font-feature-settings: 'tnum';
+  z-index: 1060;
+  display: block;
+  max-width: 250px;
+  visibility: visible;
+  padding-left: 8px;
+  .tooltip-content {
+    .tooltip-inner {
+      min-width: 30px;
+      min-height: 32px;
+      padding: 6px 8px;
+      color: #fff;
+      text-align: left;
+      text-decoration: none;
+      word-wrap: break-word;
+      background-color: rgba(0, 0, 0, 0.65);
+      border-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+    .tooltip-arrow {
+      position: absolute;
+      display: block;
+      width: 13.07106781px;
+      height: 13.07106781px;
+      overflow: hidden;
+      background: transparent;
+      pointer-events: none;
+      top: 50%;
+      left: -5.07106781px;
+      transform: translateY(-50%);
+      &::before {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        display: block;
+        width: 5px;
+        height: 5px;
+        margin: auto;
+        background-color: rgba(0, 0, 0, 0.75);
+        content: '';
+        pointer-events: auto;
+        box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.07);
+        transform: translateX(6.53553391px) rotate(45deg);
+      }
+    }
+  }
+}

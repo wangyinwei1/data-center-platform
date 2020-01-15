@@ -84,7 +84,13 @@
     color: rgba(0, 0, 0, 0.35);
   }
   .information_wrap {
-    min-width: 1080px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    .scrollCommon();
+    .min-width {
+      min-width: 1080px;
+      height: 100%;
+    }
     box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
     height: 100%;
     margin-bottom: 12px;

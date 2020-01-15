@@ -850,7 +850,10 @@ class Information extends Component {
   onDeleteOk() {
     if (this.state.deleteType === 'subDev') {
       const {fsu_devicemanagementStore} = this.props;
-      const params = {F_Suid: this.state.singleLineData.suID};
+      const params = {
+        F_Suid: this.state.singleLineData.suID,
+        typeID: JSON.parse(localStorage.getItem('FsuTypeID')),
+      };
       this.c_onDeleteOk(fsu_devicemanagementStore, params);
     } else {
       const {

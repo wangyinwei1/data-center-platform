@@ -20,11 +20,14 @@ class Site extends Component {
   }
   //以下级联方法
   componentDidMount() {
-    const {fsu_basicconfigStore: {getSpTypeList}} = this.props;
+    const {
+      fsu_basicconfigStore: {getSpTypeList},
+    } = this.props;
     const params = {
       page: 1,
       keywords: '',
       number: 10,
+      fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
     };
     getSpTypeList(params);
   }
@@ -37,6 +40,7 @@ class Site extends Component {
       ...fsu_basicconfigStore.tableParmas,
       number: pageSize,
       page: current,
+      fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
     };
     fsu_basicconfigStore.getSpTypeList(params);
   }
@@ -48,6 +52,7 @@ class Site extends Component {
       keywords: '',
       ...fsu_basicconfigStore.tableParmas,
       page: pageNumber,
+      fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
     };
     fsu_basicconfigStore.getSpTypeList(params);
   }

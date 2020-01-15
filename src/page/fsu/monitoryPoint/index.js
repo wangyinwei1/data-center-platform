@@ -182,7 +182,7 @@ class Passageway extends Component {
     await getFsuSpType({
       fsuTypeId: value,
     }).then(data => {
-      this.setState({spValue: data[0] ? '' : undefined});
+      this.setState({spValue: data[0] ? '' : undefined, isCall: false});
     });
     await this.getSubDeviceAndMoniter(this.state.currentArea);
   };
@@ -201,12 +201,13 @@ class Passageway extends Component {
       tableData,
       tableParmas,
     } = fsu_monitorypointStore;
+
     let toolbar = [
       {
         type: 'button',
         pos: 'right',
         name: '实时召测',
-        disabled: this.state.nodata,
+        disabled: this.state.currentSubDevice.status === 0 || this.state.nodata,
         handleClick: () => {
           let {deviceID, suID, surID, devicerID} = this.state.currentSubDevice;
           let fsuTypeId = JSON.parse(localStorage.getItem('FsuTypeID'));
@@ -287,120 +288,130 @@ class Passageway extends Component {
             page: 1,
             fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
           };
-          fsu_monitorypointStore.getTable(params);
+          if (this.state.isCall) {
+            fsu_monitorypointStore.getRealTimeCall(params);
+          } else {
+            fsu_monitorypointStore.getTable(params);
+          }
         },
       },
     ];
     return (
       <div className={styles['information_wrap']}>
-        <div className={styles['left']}>
-          <div className={styles['top']}>
-            <Row className={styles['tree-title']}>
-              <i />
-              <span>区域</span>
-            </Row>
-            <Row className={styles['tree-wrap']}>
-              {this.state.areaList[0] ? (
-                <TreeControls
-                  onSelect={(record, {selected, selectedNodes}) => {
-                    if (!selected) return;
-                    this.getSubDeviceAndMoniter(selectedNodes[0].props.dataRef);
-                    this.setState({
-                      selectedKeys: record,
-                      currentArea: selectedNodes[0].props.dataRef,
-                      subSelectedKeys: [],
-                      subExpandedKeys: [],
-                    });
-                  }}
-                  loadData={this.onLoadData}
-                  selectedKeys={this.state.selectedKeys}
-                  treeData={this.state.areaList}
-                  rowNameKey={'name'}
-                  rowKey={'code'}
-                />
-              ) : (
-                <Empty />
-              )}
-            </Row>
-          </div>
-          <div className={styles['bottom']}>
-            <Row className={styles['tree-title']}>
-              <i />
-              <span>子设备</span>
-            </Row>
-            <Row className={styles['tree-wrap']}>
-              {/* 子设备 */}
-              <Spin spinning={subDeviceLoading}>
-                {subDeviceTree[0] ? (
+        <div className={styles['min-width']}>
+          <div className={styles['left']}>
+            <div className={styles['top']}>
+              <Row className={styles['tree-title']}>
+                <i />
+                <span>区域</span>
+              </Row>
+              <Row className={styles['tree-wrap']}>
+                {this.state.areaList[0] ? (
                   <TreeControls
                     onSelect={(record, {selected, selectedNodes}) => {
                       if (!selected) return;
-                      this.getTableData(selectedNodes[0].props.dataRef);
+                      this.getSubDeviceAndMoniter(
+                        selectedNodes[0].props.dataRef,
+                      );
                       this.setState({
-                        subSelectedKeys: record,
-                        isCall: false,
-                        currentSubDevice: selectedNodes[0].props.dataRef,
+                        selectedKeys: record,
+                        currentArea: selectedNodes[0].props.dataRef,
+                        subSelectedKeys: [],
+                        subExpandedKeys: [],
                       });
                     }}
-                    itemClick={record => {
-                      let key = record.deviceID;
-                      let subExpandedKeys = [...this.state.subExpandedKeys];
-                      let index = subExpandedKeys.indexOf(key);
-                      let hasKey = index !== -1;
-                      if (hasKey) {
-                        subExpandedKeys.splice(index, 1);
-                      } else {
-                        subExpandedKeys.push(key);
-                      }
-                      this.setState({
-                        subExpandedKeys: subExpandedKeys,
-                      });
-                    }}
-                    onExpand={(expandedKeys, {expanded, node}) => {
-                      this.setState({
-                        subExpandedKeys: expandedKeys,
-                      });
-                    }}
-                    expandedKeys={this.state.subExpandedKeys}
-                    selectedKeys={this.state.subSelectedKeys}
-                    treeData={subDeviceTree}
-                    rowNameKey={'deviceName'}
-                    rowKey={'deviceID'}
+                    loadData={this.onLoadData}
+                    selectedKeys={this.state.selectedKeys}
+                    treeData={this.state.areaList}
+                    rowNameKey={'name'}
+                    rowKey={'code'}
                   />
                 ) : (
                   <Empty />
                 )}
-              </Spin>
-            </Row>
+              </Row>
+            </div>
+            <div className={styles['bottom']}>
+              <Row className={styles['tree-title']}>
+                <i />
+                <span>子设备</span>
+              </Row>
+              <Row className={styles['tree-wrap']}>
+                {/* 子设备 */}
+                <Spin spinning={subDeviceLoading}>
+                  {subDeviceTree[0] ? (
+                    <TreeControls
+                      isNeedHover
+                      onSelect={(record, {selected, selectedNodes}) => {
+                        if (!selected) return;
+                        this.getTableData(selectedNodes[0].props.dataRef);
+                        this.setState({
+                          subSelectedKeys: record,
+                          isCall: false,
+                          currentSubDevice: selectedNodes[0].props.dataRef,
+                        });
+                      }}
+                      itemClick={record => {
+                        let key = record.deviceID;
+                        let subExpandedKeys = [...this.state.subExpandedKeys];
+                        let index = subExpandedKeys.indexOf(key);
+                        let hasKey = index !== -1;
+                        if (hasKey) {
+                          subExpandedKeys.splice(index, 1);
+                        } else {
+                          subExpandedKeys.push(key);
+                        }
+                        this.setState({
+                          subExpandedKeys: subExpandedKeys,
+                          isCall: false,
+                        });
+                      }}
+                      onExpand={(expandedKeys, {expanded, node}) => {
+                        this.setState({
+                          subExpandedKeys: expandedKeys,
+                        });
+                      }}
+                      expandedKeys={this.state.subExpandedKeys}
+                      selectedKeys={this.state.subSelectedKeys}
+                      treeData={subDeviceTree}
+                      rowNameKey={'deviceName'}
+                      rowKey={'deviceID'}
+                    />
+                  ) : (
+                    <Empty />
+                  )}
+                </Spin>
+              </Row>
+            </div>
           </div>
-        </div>
-        <div className={styles['right']}>
-          <div className={styles['realtime-wrap']}>
-            <Row className={styles['title']}>
-              <i />
-              <span>实时数据</span>
-            </Row>
-            <Row className={styles['table-wrap']}>
-              <Toolbar
-                modules={toolbar}
-                leftSpan={18}
-                className={styles['toolbar-wrap']}
-              />
-              <RealtimeTable
-                isCall={this.state.isCall}
-                spValue={this.state.spValue}
-                subDevItem={this.state.currentSubDevice}
-              />
-            </Row>
-          </div>
-          <div className={styles['alarm-wrap']}>
-            <Row className={styles['title']}>
-              <i />
-              <span>实时告警</span>
-            </Row>
-            <Row className={styles['table-wrap']}>
-              <RealtimeAlarmTable noSearch={true} />
-            </Row>
+          <div className={styles['right']}>
+            <div className={styles['realtime-wrap']}>
+              <Row className={styles['title']}>
+                <i />
+                <span>实时数据</span>
+              </Row>
+              <Row className={styles['table-wrap']}>
+                <Toolbar
+                  modules={toolbar}
+                  leftSpan={18}
+                  className={styles['toolbar-wrap']}
+                />
+                <RealtimeTable
+                  isCall={this.state.isCall}
+                  spValue={this.state.spValue}
+                  subDevItem={this.state.currentSubDevice}
+                />
+              </Row>
+            </div>
+            <div className={styles['alarm-wrap']}>
+              <Row className={styles['title']}>
+                <i />
+                <span>实时告警</span>
+              </Row>
+              <Row className={styles['table-wrap']}>
+                <RealtimeAlarmTable noSearch={true} />
+              </Row>
+            </div>
           </div>
         </div>
         <Panel

@@ -496,8 +496,8 @@ export function getRealtimealarmChildTable(params) {
   return request.get(base + '/device_runalarm/list2.do', {params});
 }
 
-export function realtimealarmChild_search(params) {
-  return request.get(base + '/device_runalarm/list2.do', {params});
+export function getAlarmDeviceList(params) {
+  return request.get(base + '/device_alarm/alarmDeviceList', {params});
 }
 export function realtimealarm_search(params) {
   return request.get(base + '/device_dev/list2.do', {params});
@@ -710,6 +710,9 @@ export function getFsu_realtimealarmTable(params) {
 }
 export function getFsu_realtimealarmChildTable(params) {
   return request.get('collect/FSU_runalarm/runalarm_list2.do', {params});
+}
+export function getFsuAlarmDeviceList(params) {
+  return request.get(base + '/FSU_runalarm/alarmDeviceList', {params});
 }
 export function fsu_realtimealarmChild_search(params) {
   return request.get(base + '/FSU_runalarm/runalarm_list2.do', {params});

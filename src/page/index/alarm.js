@@ -77,7 +77,9 @@ class Pie extends Component {
     clearInterval(this.alarmTimer);
   }
   componentDidMount() {
-    const {home_pageStore: {getFsuAlarmNum, getAlarmNum}} = this.props;
+    const {
+      home_pageStore: {getFsuAlarmNum, getAlarmNum},
+    } = this.props;
     const params = {
       page: 1,
       number: 10,
@@ -144,7 +146,9 @@ class Pie extends Component {
     });
   }
   alarmItemClick(type) {
-    const {home_pageStore: {getTable, getFsuTable}} = this.props;
+    const {
+      home_pageStore: {getTable, getFsuTable},
+    } = this.props;
     this.setState({
       show: true,
     });
@@ -169,7 +173,9 @@ class Pie extends Component {
       type: '',
       des: 1,
     };
-    const {home_pageStore: {getFsuAlarmNum, getAlarmNum}} = this.props;
+    const {
+      home_pageStore: {getFsuAlarmNum, getAlarmNum},
+    } = this.props;
     this.state.isFsu
       ? getFsuAlarmNum({...params, sort: 'F_AlarmLevel'})
       : getAlarmNum({...params, sort: 'F_AlarmGrade'});

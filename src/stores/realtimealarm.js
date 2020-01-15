@@ -6,6 +6,7 @@ import {
   realtimealarmChild_search,
   confirmAlarm,
   cancelAlarm,
+  getAlarmDeviceList,
   dealAlarm,
   endAlarm,
   getSportTable,
@@ -97,7 +98,7 @@ class Realtimealarme {
   @action.bound
   async getTable(params) {
     this.loading = true;
-    const data = await getRealtimealarmTable(params);
+    const data = await getAlarmDeviceList(params);
     this.loading = false;
     params.number = data.Data.number;
     params.page = data.Data.page;

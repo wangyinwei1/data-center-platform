@@ -55,7 +55,7 @@ class Passageway extends Component {
       keywords: '',
       number: 10,
       ztreeChild: selectedOptions[0].code,
-      F_FsuTypeID: localStorage.getItem('FsuTypeID'),
+      typeID: localStorage.getItem('FsuTypeID'),
     };
     const {fsu_realtimealarmStore} = this.props;
     fsu_realtimealarmStore.getTable(params);
@@ -67,7 +67,7 @@ class Passageway extends Component {
       sing: 'area',
       keywords: '',
       number: 10,
-      F_FsuTypeID: localStorage.getItem('FsuTypeID'),
+      typeID: localStorage.getItem('FsuTypeID'),
     };
     fsu_realtimealarmStore.getFSUType();
     this.initLoading(fsu_realtimealarmStore, params);
@@ -138,7 +138,7 @@ class Passageway extends Component {
   }
   render() {
     const {fsu_realtimealarmStore, regionalStore} = this.props;
-    const tableData = toJS(fsu_realtimealarmStore.tableData.varList) || [];
+    const tableData = toJS(fsu_realtimealarmStore.tableData.dataList) || [];
     const pagination = toJS(fsu_realtimealarmStore.tableData) || {};
     const columns = columnData({
       getChildTable: this.getChildTable,
@@ -168,7 +168,7 @@ class Passageway extends Component {
               <Table
                 pageIndex={pagination.page}
                 pageSize={pagination.number}
-                total={pagination.count}
+                total={pagination.totalCount}
                 columns={columns}
                 rowClassName={(record, index) => {
                   const rowClassName = [];
