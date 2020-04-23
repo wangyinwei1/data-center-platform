@@ -1,13 +1,18 @@
 @import '../../theme/sorollbar.less';
 :local {
+  .wrap {
+    height: 100%;
+    width: 100%;
+  }
   .min_width {
     position: relative;
     width: 100%;
     height: 100%;
   }
   .index_wrap {
-    height: 100%;
-    width: 100%;
+    height: 1080px;
+    width: 1920px;
+    transform-origin: left top 0px;
     min-width: 1210px;
     min-height: 560px;
     overflow: auto;
@@ -1117,7 +1122,7 @@
     width: 100%;
     box-sizing: border-box;
     border-top: 1px solid #253446;
-    padding-top: 25/16em;
+    padding-top: 10/16em;
     text-align: center;
   }
   .services_icon {

@@ -55,7 +55,7 @@ class Passageway extends Component {
       keywords: '',
       number: 10,
       ztreeChild: selectedOptions[0].code,
-      typeID: localStorage.getItem('FsuTypeID'),
+      typeID: JSON.parse(localStorage.getItem('FsuTypeID')),
     };
     const {fsu_realtimealarmStore} = this.props;
     fsu_realtimealarmStore.getTable(params);
@@ -67,7 +67,7 @@ class Passageway extends Component {
       sing: 'area',
       keywords: '',
       number: 10,
-      typeID: localStorage.getItem('FsuTypeID'),
+      typeID: JSON.parse(localStorage.getItem('FsuTypeID')),
     };
     fsu_realtimealarmStore.getFSUType();
     this.initLoading(fsu_realtimealarmStore, params);
@@ -78,7 +78,7 @@ class Passageway extends Component {
     const params = {
       ...fsu_realtimealarmStore.tableParmas,
       keywords: encodeURIComponent(value),
-      F_FsuTypeID: localStorage.getItem('FsuTypeID'),
+      typeID: JSON.parse(localStorage.getItem('FsuTypeID')),
       page: 1,
     };
     fsu_realtimealarmStore.search(params);
@@ -91,7 +91,7 @@ class Passageway extends Component {
       ...fsu_realtimealarmStore.tableParmas,
       page: current,
       number: pageSize,
-      F_FsuTypeID: localStorage.getItem('FsuTypeID'),
+      typeID: localStorage.getItem('FsuTypeID'),
     };
     fsu_realtimealarmStore.getTable(params);
   }
@@ -131,7 +131,7 @@ class Passageway extends Component {
     const params = {
       ...tableParmas,
       page: 1,
-      F_FsuTypeID: value,
+      typeID: value,
     };
     localStorage.setItem('FsuTypeID', value);
     getTable(params);

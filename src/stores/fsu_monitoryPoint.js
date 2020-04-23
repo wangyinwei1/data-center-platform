@@ -204,7 +204,7 @@ class Historyalarm {
       message.error(data.Msg);
     }
   }
-  @action
+  @action.bound
   async search(params) {
     this.loading = true;
     const data = await fsu_realtimealarm_search(params);

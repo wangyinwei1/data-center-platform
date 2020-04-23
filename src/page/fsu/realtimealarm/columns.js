@@ -51,7 +51,7 @@ const columns = ({getChildTable, _this}) => {
     },
     {
       title: '告警',
-      dataIndex: 'alerm_count',
+      dataIndex: 'alarmAmount',
       widht: '5%',
     },
     {

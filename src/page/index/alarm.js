@@ -100,9 +100,9 @@ class Pie extends Component {
     });
     $('#cl_box_alarm').on('mouseleave.alarm', e => {
       e.stopPropagation();
-      this.openSetInterval(params);
+      // this.openSetInterval(params);
     });
-    this.openSetInterval(params);
+    // this.openSetInterval(params);
   }
   openSetInterval(params) {
     const {

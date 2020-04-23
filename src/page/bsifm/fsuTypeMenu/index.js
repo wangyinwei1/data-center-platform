@@ -3,13 +3,19 @@ import {action, observer, inject} from 'mobx-react';
 import {Menu, Icon, Upload, message, Button, Tabs} from 'antd';
 import styles from './index.less';
 import {Link} from 'react-router';
+import Toolbar from '../../../components/Toolbarnew';
 import _ from 'lodash';
 import classnames from 'classnames';
 const {TabPane} = Tabs;
 import FsuSpType from '../fsuSpType';
 import FsuSubDeviceType from '../fsuSubDeviceType';
 //实例
-@inject('globalStore', 'layoutStore', 'fsu_basicconfigStore')
+@inject(
+  'globalStore',
+  'layoutStore',
+  'fsu_monitorypointStore',
+  'fsu_basicconfigStore',
+)
 @observer
 class FsuMenu extends Component {
   constructor(props) {
@@ -18,17 +24,27 @@ class FsuMenu extends Component {
     this.import = this.import.bind(this);
     this.state = {
       current: 'deviceType',
+      fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
     };
   }
-  componentDidMount() {}
-  handleClick(key) {}
+  componentDidMount() {
+    const {fsu_monitorypointStore} = this.props;
+    fsu_monitorypointStore.getFSUType();
+  }
+  handleClick(key) {
+    this.setState({
+      current: key,
+    });
+  }
   import() {
     $(this.upload).click();
   }
+  typesChange = async value => {};
   render() {
     const {
       location,
       fsu_basicconfigStore: {getDeviceTypeList, getSpTypeList},
+      fsu_monitorypointStore: {fsuAddTypes},
     } = this.props;
     const selectedKeys = [];
     location.pathname == '/fsu-deviceType' && selectedKeys.push('deviceType');
@@ -52,7 +68,7 @@ class FsuMenu extends Component {
       },
       showUploadList: false,
       data: {
-        fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
+        fsuTypeId: this.state.fsuTypeId,
       },
       onChange(info) {
         if (info.file.status !== 'uploading') {
@@ -79,16 +95,50 @@ class FsuMenu extends Component {
       },
     };
     const ImportButton = () => {
+      let toolbar = [
+        {
+          type: 'button',
+          pos: 'right',
+          name: '导入',
+          handleClick: () => {
+            this.import();
+          },
+        },
+        {
+          type: 'selectItem',
+          pos: 'left',
+          name: '设备类型',
+          children: fsuAddTypes || [],
+          width: 200,
+          defaultValue: this.state.fsuTypeId,
+          labelCol: 9,
+          wrapperCol: 15,
+          handleChange: value => {
+            this.setState({fsuTypeId: value});
+            const params = {
+              page: 1,
+              keywords: '',
+              number: 10,
+              fsuTypeId: value,
+            };
+            const {
+              fsu_basicconfigStore: {getDeviceTypeList, getSpTypeList},
+            } = this.props;
+
+            if (this.state.current === 'deviceType') {
+              getDeviceTypeList(params);
+            } else {
+              getSpTypeList(params);
+            }
+          },
+        },
+      ];
       return (
-        <Button className={styles['import_btn']} onClick={this.import}>
-          <i
-            className={classnames(
-              'icon iconfont icon-daoru',
-              styles['common_icon'],
-            )}
-          />
-          <span>导入</span>
-        </Button>
+        <Toolbar
+          modules={toolbar}
+          leftSpan={18}
+          className={styles['toolbar-wrap']}
+        />
       );
     };
     return (

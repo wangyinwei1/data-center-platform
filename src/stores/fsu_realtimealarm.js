@@ -89,7 +89,7 @@ class Historyalarm {
   @action
   async search(params) {
     this.loading = true;
-    const data = await fsu_realtimealarm_search(params);
+    const data = await getFsuAlarmDeviceList(params);
     this.loading = false;
     if (data.Result == 'success') {
       params.number = data.Data.number;

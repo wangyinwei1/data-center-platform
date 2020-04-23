@@ -1,5 +1,46 @@
-@import '../../../theme/sorollbar.less';
+@import "../../../theme/sorollbar.less";
 :local {
+  .control_ct {
+    :global {
+      // .ant-form-item {
+      //   margin-bottom: 16px;
+      // }
+    }
+    .params-wrap {
+      padding-top: 20px;
+      .item {
+        :global {
+          .ant-input-number-focused,
+          .ant-input-number:hover {
+            border-color: #56eca1;
+            box-shadow: 0 0 0 2px rgba(86, 236, 161, 0.2);
+          }
+          .ant-input-number:focus {
+            border-color: #56eca1;
+            box-shadow: 0 0 0 2px rgba(86, 236, 161, 0.2);
+          }
+          .ant-input-number-input-wrap {
+            outline: none;
+          }
+        }
+        padding: 0 12px;
+        :global {
+          .ant-input-number,
+          .ant-form-item-children {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+  .remote-type {
+    border-bottom: 1px solid #eee;
+    :global {
+      .ant-form-item {
+        margin-bottom: 16px;
+      }
+    }
+  }
   .information_wrap {
     height: 100%;
   }
@@ -17,11 +58,11 @@
     overflow: auto;
     margin-top: 14px;
     background: #fff;
-    height: -webkit-calc(~'100% - 97px');
-    height: -moz-calc(~'100% - 97px');
-    height: -ms-calc(~'100% - 97px');
-    height: -o-calc(~'100% - 97px');
-    height: calc(~'100% - 97px');
+    height: -webkit-calc(~"100% - 97px");
+    height: -moz-calc(~"100% - 97px");
+    height: -ms-calc(~"100% - 97px");
+    height: -o-calc(~"100% - 97px");
+    height: calc(~"100% - 97px");
     .table_wrap {
       :global {
         .cl_hidden_selcted_icon {
@@ -244,11 +285,11 @@
       height: 100%;
       min-height: 36px;
       min-width: 290px;
-      max-width: -webkit-calc(~'100% - 450px');
-      max-width: -moz-calc(~'100% - 450px');
-      max-width: -ms-calc(~'100% - 450px');
-      max-width: -o-calc(~'100% - 450px');
-      max-width: calc(~'100% - 450px');
+      max-width: -webkit-calc(~"100% - 450px");
+      max-width: -moz-calc(~"100% - 450px");
+      max-width: -ms-calc(~"100% - 450px");
+      max-width: -o-calc(~"100% - 450px");
+      max-width: calc(~"100% - 450px");
       margin-left: 10px;
       line-height: 36px;
       position: relative;

@@ -126,7 +126,7 @@ class Realtimealarme {
   @action.bound
   async childSearch(params) {
     this.c_loading = true;
-    const data = await realtimealarmChild_search(params);
+    const data = await getRealtimealarmChildTable(params);
     this.c_loading = false;
     if (data.Result == 'success') {
       params.number = data.Data.number;
@@ -140,7 +140,7 @@ class Realtimealarme {
   @action
   async search(params) {
     this.loading = true;
-    const data = await realtimealarm_search(params);
+    const data = await getAlarmDeviceList(params);
     this.loading = false;
     if (data.Result == 'success') {
       params.number = data.Data.number;
