@@ -265,16 +265,19 @@ class Regional extends Component {
       message.error('请选择时间!');
       return;
     }
-    const {historymodalStore, isFsu} = this.props;
+    const {historymodalStore, currentSuDevice, currentSuID, isFsu} = this.props;
     if (!isFsu && !this.state.Channels) {
       message.error('请选择通道!');
       return;
     }
-
+    console.log(currentSuDevice);
     const needParams = isFsu
       ? {
-          suID: historymodalStore.currentDevice,
-          deviceIDs: this.state.subDeviceValue || '',
+          suID: currentSuID || historymodalStore.currentDevice,
+          deviceIDs:
+            (currentSuDevice && currentSuDevice.deviceID) ||
+            this.state.subDeviceValue ||
+            '',
           spIDs: this.state.value.join(','),
         }
       : {
