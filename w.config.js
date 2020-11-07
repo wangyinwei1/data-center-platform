@@ -160,7 +160,7 @@ var devServer = {
   proxy: [
     {
       context: ["/collect/**"],
-      target: "http://172.16.7.249:8080/",
+      target: "http://172.16.7.242:8080/",
       // target: "http://172.17.3.53:8080/",
       // target: 'http://172.16.4.254:8080/',
     },

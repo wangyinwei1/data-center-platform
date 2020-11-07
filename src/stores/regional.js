@@ -1,4 +1,4 @@
-import {observable, action, toJS} from 'mobx';
+import { observable, action, toJS } from "mobx"
 import {
   getAsynArea,
   regional_delete,
@@ -9,164 +9,164 @@ import {
   save,
   addArea,
   regionalEdit,
-} from '../services/api.js';
-import _ from 'lodash';
-import {message} from 'antd';
+} from "../services/api.js"
+import _ from "lodash"
+import { message } from "antd"
 
 class Regional {
-  @observable areaTree = [];
+  @observable areaTree = []
 
-  @observable tableData = {};
-  @observable tableParmas = {};
-  @observable topZoneCode = 0;
-  @observable addLists = {};
-  @observable editData = {};
-  @observable belongRegion = '';
+  @observable tableData = {}
+  @observable tableParmas = {}
+  @observable topZoneCode = 0
+  @observable addLists = {}
+  @observable editData = {}
+  @observable belongRegion = ""
 
-  @observable zTreeLevel = 1;
-  @observable initialArea = '';
-  @observable currentCode = 0;
-  @observable loading = false;
+  @observable zTreeLevel = 1
+  @observable initialArea = ""
+  @observable currentCode = 0
+  @observable loading = false
   @action
   async getAsynArea() {
-    const data = await getAsynArea();
-    const areaTree = (data && data.areaTree) || [];
-    const newData = areaTree.map(item => {
+    const data = await getAsynArea()
+    const areaTree = (data && data.areaTree) || []
+    const newData = areaTree.map((item) => {
       return {
         ...item,
         value: item.name,
-      };
-    });
+      }
+    })
     if (newData.length == 1) {
-      this.topZoneCode = newData[0].code;
+      this.topZoneCode = newData[0].code
     }
 
-    this.areaTree = [newData];
-    return newData;
+    this.areaTree = [newData]
+    return newData
   }
   @action
   async matchArea(text) {
-    var city = /^\d{3}[1-9]00\b/; //市下的编码匹配
-    var province = /^\d{2}0{4}\b/; //省下的编码匹配
-    var area = /^\d{4}((0?[1-9])|([1-9][0-9]))$/; //区下的编码匹配
-    var zone = /^\d{8}\b/; //片区的编码匹配
+    var city = /^\d{3}[1-9]00\b/ //市下的编码匹配
+    var province = /^\d{2}0{4}\b/ //省下的编码匹配
+    var area = /^\d{4}((0?[1-9])|([1-9][0-9]))$/ //区下的编码匹配
+    var zone = /^\d{8}\b/ //片区的编码匹配
     if (text === 0) {
-      return 'country';
+      return "country"
     } else if (province.test(text)) {
-      return 'province';
+      return "province"
     } else if (city.test(text)) {
-      return 'city';
+      return "city"
     } else if (area.test(text)) {
-      return 'area';
+      return "area"
     } else if (zone.test(text)) {
-      return 'zone';
+      return "zone"
     } else {
-      return 'site';
+      return "site"
     }
   }
   @action
   async delete(params) {
-    const data = await regional_delete(params);
-    if (data.Result == 'success') {
-      this.getTable(this.tableParmas);
-      message.success('删除成功!');
+    const data = await regional_delete(params)
+    if (data.Result == "success") {
+      this.getTable(this.tableParmas)
+      message.success("删除成功!")
     } else {
-      message.error(data.Msg);
+      message.error(data.Msg)
     }
-    return data;
+    return data
   }
 
   @action
   async getEidtData(params) {
-    const data = await getEidtData(params);
-    this.editData = data;
-    return data;
+    const data = await getEidtData(params)
+    this.editData = data
+    return data
   }
 
   @action.bound
   async searchArea(params) {
-    const data = await searchArea(params);
-    if (data.Result == 'success') {
-      this.areaTree = data.allArr;
+    const data = await searchArea(params)
+    if (data.Result == "success") {
+      this.areaTree = data.allArr
     } else {
-      message.error(data.Msg);
+      message.error(data.Msg)
     }
-    return data;
+    return data
   }
 
   @action
   async search(params) {
-    this.loading = true;
-    const data = await getTable(params);
-    this.loading = false;
-    this.tableParmas = params;
-    this.tableData = data;
-    this.currentCode = params.ztreeChild;
-    this.matchArea(params.ztreeChild).then(data => {
-      this.belongRegion = data;
-    });
+    this.loading = true
+    const data = await getTable(params)
+    this.loading = false
+    this.tableParmas = params
+    this.tableData = data
+    this.currentCode = params.ztreeChild
+    this.matchArea(params.ztreeChild).then((data) => {
+      this.belongRegion = data
+    })
   }
   @action
   async getTable(params) {
-    this.loading = true;
-    const data = await getTable(params);
-    this.loading = false;
-    this.tableParmas = params;
-    this.tableData = data;
-    this.currentCode = params.ztreeChild;
-    this.matchArea(params.ztreeChild).then(data => {
-      this.belongRegion = data;
-    });
+    this.loading = true
+    const data = await getTable(params)
+    this.loading = false
+    this.tableParmas = params
+    this.tableData = data
+    this.currentCode = params.ztreeChild
+    this.matchArea(params.ztreeChild).then((data) => {
+      this.belongRegion = data
+    })
   }
   @action.bound
   async save(params) {
-    const data = await save(params);
+    const data = await save(params)
 
-    if (data.Result == 'success') {
-      this.getTable(this.tableParmas);
-      message.success('保存成功!');
-      return true;
+    if (data.Result == "success") {
+      this.getTable(this.tableParmas)
+      message.success("保存成功!")
+      return true
     } else {
-      message.error(data.Msg);
-      return false;
+      message.error(data.Msg)
+      return false
     }
   }
   @action.bound
   async edit(params) {
-    const data = await regionalEdit(params);
+    const data = await regionalEdit(params)
 
-    if (data.Result == 'success') {
-      this.getTable(this.tableParmas);
-      message.success('保存成功!');
-      return true;
+    if (data.Result == "success") {
+      this.getTable(this.tableParmas)
+      message.success("保存成功!")
+      return true
     } else {
-      message.error(data.Msg);
-      return false;
+      message.error(data.Msg)
+      return false
     }
   }
   @action.bound
   async addArea(params) {
-    const data = await addArea(params);
-    this.addLists = data;
-    return data;
+    const data = await addArea(params)
+    this.addLists = data
+    return data
   }
 
   @action
   async getZone(params, index) {
-    const data = await getZone(params);
-    if (data instanceof Array) return;
-    const newData = data.areaTree.map(item => {
+    const data = await getZone(params)
+    if (data instanceof Array) return
+    const newData = data.areaTree.map((item) => {
       return {
         ...item,
         value: item.name,
-      };
-    });
-    const areaTree = toJS(this.areaTree);
-    const sliceTree = areaTree.slice(0, index + 1);
-    sliceTree[index + 1] = newData;
+      }
+    })
+    const areaTree = toJS(this.areaTree)
+    const sliceTree = areaTree.slice(0, index + 1)
+    sliceTree[index + 1] = newData
 
-    this.areaTree = sliceTree;
+    this.areaTree = sliceTree
   }
 }
 
-export default Regional;
+export default Regional

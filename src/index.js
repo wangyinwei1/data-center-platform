@@ -1,7 +1,7 @@
-import React from 'react';
-import {render} from 'react-dom';
-import {Provider} from 'mobx-react';
-import 'babel-polyfill';
+import React from "react"
+import { render } from "react-dom"
+import { Provider } from "mobx-react"
+import "babel-polyfill"
 import {
   Router,
   Route,
@@ -11,23 +11,24 @@ import {
   Redirect,
   hashHistory,
   browserHistory,
-} from 'react-router';
-import './index.css';
-import './ant.less';
+} from "react-router"
+import "./index.css"
+import "./ant.less"
 
-import {stores} from './stores';
-if (process.env.NODE_ENV !== 'production') {
+import { stores } from "./stores"
+if (process.env.NODE_ENV !== "production") {
   //联调时可注释掉
   // require('./utils/mock');
 }
 
-import {LocaleProvider} from 'antd';
-import zhCN from 'antd/lib/locale-provider/zh_CN';
+import { LocaleProvider } from "antd"
+import zhCN from "antd/lib/locale-provider/zh_CN"
 import {
   Loginer,
   Layout,
   Regional,
   Site,
+  ComputerRoom,
   Fsuconfig,
   Deviceversion,
   Agreement,
@@ -46,11 +47,13 @@ import {
   Basicchannel,
   Historicaldata,
   Passivedevicechangerecord,
+  DataDictionary,
   Fsu_Controlrecord,
   Fsu_MonitoryPoint,
   Fsu_Historicaldata,
   Fsu_Realtimedata,
   Fsu_Realtimealarm,
+  NotFound,
   Fsu_Historyalarm,
   Fsu_Alarminformation,
   Fsu_Devicemanagement,
@@ -61,7 +64,7 @@ import {
   Other_Workorders,
   Site_Monitoring,
   Index,
-} from './page';
+} from "./page"
 render(
   <Provider {...stores}>
     <LocaleProvider locale={zhCN}>
@@ -94,6 +97,7 @@ render(
             />
 
             <Route path="/bsifm-regional" component={Regional} />
+            <Route path="/bsifm-computer-room" component={ComputerRoom} />
             <Route path="/bsifm-site" component={Site} />
 
             <Route path="/bsifm-Menu" component={Menu}>
@@ -109,6 +113,7 @@ render(
             <Route path="/bsifm-applicationuser" component={Applicationuser} />
             <Route path="/bsifm-valuetype" component={Valuetype} />
             <Route path="/bsifm-fsuconfig" component={Fsuconfig} />
+            <Route path="/data-dictionary" component={DataDictionary} />
             <Route path="/bsifm-subdevicetype" component={SubDeviceType} />
 
             <Route path="/fsu-baseConfig" component={FSuTypeMenu} />
@@ -129,11 +134,13 @@ render(
             <Route path="/equ-historyalarm" component={Historyalarm} />
             <Route path="/equ-realtimealarm" component={Realtimealarm} />
             <Route path="/equ-vchannel" component={Vchannel} />
+            <Route path="/:id" component={NotFound}></Route>
           </Route>
         </Route>
+        <Route component={Vchannel} />
       </Router>
     </LocaleProvider>
   </Provider>,
 
-  document.getElementById('content'),
-);
+  document.getElementById("content")
+)

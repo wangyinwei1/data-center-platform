@@ -885,3 +885,26 @@ export function getFsuSpType(params) {
     params,
   })
 }
+
+//
+export function getEngineRoomList(params) {
+  return request.get(base + "/device_engineRoom/list", {
+    params,
+  })
+}
+export function saveEngineRoom(data) {
+  return request.post(base + "/device_engineRoom/save", data)
+}
+export function deleteEngineRoom(data) {
+  return request.post(base + "/device_engineRoom/del", data)
+}
+export function editEngineRoom(data) {
+  return request.post(base + "/device_engineRoom/edit", data)
+}
+export function getEngineRoomEditData(params) {
+  return request.get(base + "/device_engineRoom/initEdit", { params })
+}
+
+export function findSignaldic(params) {
+  return request.get(base + "/fsuSignaldic/findSignaldic", { params })
+}

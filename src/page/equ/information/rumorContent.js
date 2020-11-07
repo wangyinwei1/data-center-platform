@@ -1,157 +1,160 @@
-import React, {Component} from 'react';
-import {action, observer, inject} from 'mobx-react';
-import {toJS} from 'mobx';
-import styles from './index.less';
-import Empty from '../../../components/Empty';
-import {Form, oButton, Input, Select, InputNumber, Row, Col} from 'antd';
-import ControlModal from './controlModal.js';
-const {Option} = Select;
+import React, { Component } from "react"
+import { action, observer, inject } from "mobx-react"
+import { toJS } from "mobx"
+import styles from "./index.less"
+import Empty from "../../../components/Empty"
+import { Form, oButton, Input, Select, InputNumber, Row, Col } from "antd"
+import ControlModal from "./controlModal.js"
+const { Option } = Select
 
 class RumorContent extends Component {
   constructor(props) {
-    super(props);
+    super(props)
   }
   state = {
     typeIndex: 0,
-  };
+  }
   componentDidMount() {}
   render() {
-    const {form, regulatChannel} = this.props;
-    const {getFieldDecorator} = form;
+    const { form, regulatChannel } = this.props
+    const { getFieldDecorator } = form
 
-    let data = regulatChannel.alters || [];
+    let data = regulatChannel.alters || []
 
     const formItemLayout = {
       labelCol: {
-        sm: {span: 4},
+        sm: { span: 4 },
       },
       wrapperCol: {
-        sm: {span: 8},
+        sm: { span: 8 },
       },
-    };
+    }
     const paramsItemLayout = {
       labelCol: {
-        sm: {span: 12},
+        sm: { span: 12 },
       },
       wrapperCol: {
-        sm: {span: 12},
+        sm: { span: 12 },
       },
-    };
-    const {typeIndex} = this.state;
-    let alterParams = [];
+    }
+    const { typeIndex } = this.state
+    let alterParams = []
     if (
       data[0] &&
       data[typeIndex] &&
       data[typeIndex].alterParams &&
       data[typeIndex].alterParams[0]
     ) {
-      alterParams = data[typeIndex].alterParams;
+      alterParams = data[typeIndex].alterParams
     }
-    console.log(toJS(alterParams), toJS(data), typeIndex);
     return (
-      <Form className={styles['control_ct']}>
-        <Row className={styles['remote-type']}>
+      <Form className={styles["control_ct"]}>
+        <Row className={styles["remote-type"]}>
           <Form.Item label="谣调类型" {...formItemLayout}>
-            {getFieldDecorator('remote-type', {
+            {getFieldDecorator("remote-type", {
               initialValue: data[0] ? 0 : undefined,
-              rules: [{required: true, message: '必须填写内容!'}],
+              rules: [{ required: true, message: "必须填写内容!" }],
             })(
               <Select
                 placeholder="请选择遥调类型"
-                onChange={value => {
+                onChange={(value) => {
                   this.setState({
                     typeIndex: value,
-                  });
-                }}>
+                  })
+                }}
+              >
                 {data.map((item, index) => {
                   return (
                     <Option key={index.toString(36) + index} value={index}>
                       {item.name}
                     </Option>
-                  );
+                  )
                 })}
-              </Select>,
+              </Select>
             )}
           </Form.Item>
         </Row>
-        <Row className={styles['params-wrap']}>
+        <Row className={styles["params-wrap"]}>
           {!alterParams[0] && <Empty />}
           {alterParams.map((item, index) => {
-            if (item.paramType === 'int' && item.enums) {
+            if (item.paramType === "int" && item.enums) {
               return (
                 <Col
                   span={12}
                   key={index.toString(36) + index}
-                  className={styles['item']}>
+                  className={styles["item"]}
+                >
                   <Form.Item label={item.paramName} {...paramsItemLayout}>
                     {getFieldDecorator(index.toString(), {
                       initialValue: item.value || undefined,
-                      rules: [{required: true, message: '必须填写内容!'}],
+                      rules: [{ required: true, message: "必须填写内容!" }],
                     })(
                       <Select placeholder="请选择内容">
                         {Object.entries(item.enums).map((app, i) => {
-                          let name = app[0];
-                          let value = app[1];
+                          let name = app[0]
+                          let value = app[1]
                           return (
                             <Option key={i.toString(36) + i} value={value}>
                               {name}
                             </Option>
-                          );
+                          )
                         })}
-                      </Select>,
+                      </Select>
                     )}
                   </Form.Item>
                 </Col>
-              );
+              )
             }
-            if (item.paramType === 'int') {
+            if (item.paramType === "int") {
               return (
                 <Col
                   span={12}
                   key={index.toString(36) + index}
-                  className={styles['item']}>
+                  className={styles["item"]}
+                >
                   <Form.Item label={item.paramName} {...paramsItemLayout}>
                     {getFieldDecorator(index.toString(), {
                       initialValue: item.value || item.min,
-                      rules: [{required: true, message: '必须填写内容!'}],
+                      rules: [{ required: true, message: "必须填写内容!" }],
                     })(<InputNumber min={item.min} max={item.max} />)}
                   </Form.Item>
                 </Col>
-              );
+              )
             }
-            if (item.paramType === 'string' || item.paramType === 'hex') {
+            if (item.paramType === "string" || item.paramType === "hex") {
               return (
                 <Col
                   span={12}
                   key={index.toString(36) + index}
-                  className={styles['item']}>
+                  className={styles["item"]}
+                >
                   <Form.Item label={item.paramName} {...paramsItemLayout}>
                     {getFieldDecorator(index.toString(), {
                       initialValue: item.value || item.min,
-                      rules: [{required: true, message: '必须填写内容!'}],
+                      rules: [{ required: true, message: "必须填写内容!" }],
                     })(<Input maxLength={item.length} />)}
                   </Form.Item>
                 </Col>
-              );
+              )
             }
           })}
         </Row>
       </Form>
-    );
+    )
   }
 }
 //实例
-@inject('informationStore')
+@inject("informationStore")
 @Form.create()
 @observer
 class RumorModal extends Component {
   render() {
     const {
-      informationStore: {regulatChannel, currentDevice, deviceAlter},
+      informationStore: { regulatChannel, currentDevice, deviceAlter },
       rumorShow,
       form,
       onRumorCancel,
-    } = this.props;
+    } = this.props
 
     return (
       <ControlModal
@@ -161,32 +164,33 @@ class RumorModal extends Component {
         onOk={() => {
           form.validateFields(async (errors, values) => {
             if (!errors) {
-              const feilds = {...regulatChannel};
-              const remoteType = values['remote-type'];
-              const item = feilds.alters[remoteType];
+              const feilds = { ...regulatChannel }
+              const remoteType = values["remote-type"]
+              const item = feilds.alters[remoteType]
               const result =
                 item.alterParams[0] &&
                 item.alterParams.map((app, index) => {
-                  return {...app, value: values[index.toString()]};
-                });
+                  return { ...app, value: values[index.toString()] }
+                })
               const params = {
                 deviceId: currentDevice,
                 cmd: item.cmd,
                 alterParams: result || [],
-              };
+              }
               //遥调操作
-              let res = await deviceAlter(params);
+              let res = await deviceAlter(params)
               //取消
-              res && onRumorCancel();
+              res && onRumorCancel()
             }
-          });
+          })
         }}
-        title={'远程调配'}
-        onCancel={onRumorCancel}>
+        title={"远程调配"}
+        onCancel={onRumorCancel}
+      >
         <RumorContent form={form} regulatChannel={regulatChannel} />
       </ControlModal>
-    );
+    )
   }
 }
 
-export default Form.create()(RumorModal);
+export default Form.create()(RumorModal)
