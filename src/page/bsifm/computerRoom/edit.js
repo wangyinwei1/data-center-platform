@@ -51,7 +51,6 @@ class DeleteModal extends Component {
         isShow={isShow}
         mask={false}
         width={width}
-        confirmLoading={true}
         okProps={okProps}
         cancelProps={cancelProps}
       >

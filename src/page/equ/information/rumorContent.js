@@ -3,8 +3,19 @@ import { action, observer, inject } from "mobx-react"
 import { toJS } from "mobx"
 import styles from "./index.less"
 import Empty from "../../../components/Empty"
-import { Form, oButton, Input, Select, InputNumber, Row, Col } from "antd"
+import {
+  Form,
+  oButton,
+  Input,
+  DatePicker,
+  Select,
+  InputNumber,
+  Row,
+  Col,
+} from "antd"
 import ControlModal from "./controlModal.js"
+import moment from "moment"
+
 const { Option } = Select
 
 class RumorContent extends Component {
@@ -46,6 +57,13 @@ class RumorContent extends Component {
       data[typeIndex].alterParams[0]
     ) {
       alterParams = data[typeIndex].alterParams
+    }
+    console.log(toJS(data))
+    const monthFormat = "YYYY/MM"
+
+    function disabledDate(current) {
+      // Can not select days before today and today
+      return current && current < moment().endOf("day")
     }
     return (
       <Form className={styles["control_ct"]}>

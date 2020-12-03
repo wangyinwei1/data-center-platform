@@ -37,7 +37,7 @@ class BasicLayout extends Component {
         this.setOrGetOpenKeys()
         globalStore.changeCollapsed(false)
       }
-    }, 100)
+    }, 30)
   }
   componentWillUnmount() {
     $(window).off("resize.panel")

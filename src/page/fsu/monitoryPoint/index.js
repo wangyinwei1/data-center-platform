@@ -270,7 +270,7 @@ class Passageway extends Component {
         name: "监控点类型",
         children: spType[0] ? [{ name: "全部", value: "" }, ...spType] : [],
         width: 210,
-        defaultValue: this.state.spValue,
+        defaultValue: this.state.nodata ? [] : this.state.spValue,
         disabled: this.state.nodata,
         labelCol: 10,
         wrapperCol: 14,

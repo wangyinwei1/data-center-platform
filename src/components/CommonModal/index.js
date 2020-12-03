@@ -1,6 +1,6 @@
-import React, {Component, PropTypes} from 'react';
-import {Modal, Button} from 'antd';
-import styles from './index.less';
+import React, { Component, PropTypes } from "react"
+import { Modal, Button } from "antd"
+import styles from "./index.less"
 
 const CommonModal = function({
   title,
@@ -12,40 +12,43 @@ const CommonModal = function({
   cancelProps = {},
   isShow,
   children,
-  confirmLoading,
+  confirmLoading = false,
   wrapClassName,
   localeMessage,
 }) {
-  const modalFooter = [];
+  const modalFooter = []
   if (!buttons) {
     modalFooter.push(
       <div className="modal-footer" key={1}>
         <Button
           type="ghost"
           disabled={cancelProps.disabled}
-          className={'ghostBtn' + (cancelProps.className || '')}
+          className={"ghostBtn" + (cancelProps.className || "")}
           onClick={() => {
-            cancelProps.onClick && cancelProps.onClick(data);
-          }}>
-          {cancelProps.title || '取消'}
+            cancelProps.onClick && cancelProps.onClick(data)
+          }}
+        >
+          {cancelProps.title || "取消"}
         </Button>
         <Button
           type="primary"
+          loading={confirmLoading}
           disabled={okProps.disabled || undefined}
-          className={okProps.className || ''}
+          className={okProps.className || ""}
           onClick={() => {
-            okProps.onClick && okProps.onClick(data);
-          }}>
-          {okProps.title || '确定'}
+            okProps.onClick && okProps.onClick(data)
+          }}
+        >
+          {okProps.title || "确定"}
         </Button>
-      </div>,
-    );
+      </div>
+    )
   } else {
     modalFooter.push(
-      <div className={'modal-footer'} key={1}>
+      <div className={"modal-footer"} key={1}>
         {buttons}
-      </div>,
-    );
+      </div>
+    )
   }
 
   return (
@@ -53,25 +56,26 @@ const CommonModal = function({
       title={title}
       destroyOnClose={true}
       width={width}
-      wrapClassName={wrapClassName || ''}
+      wrapClassName={wrapClassName || ""}
       maskClosable="true"
       confirmLoading={confirmLoading}
       onCancel={() => {
-        cancelProps.onClick && cancelProps.onClick();
+        cancelProps.onClick && cancelProps.onClick()
       }}
       visible={isShow}
-      footer={modalFooter}>
+      footer={modalFooter}
+    >
       {iconClass ? (
-        <div className={'withIconDiv'}>
-          <i className={'iconClass'} />
+        <div className={"withIconDiv"}>
+          <i className={"iconClass"} />
           <div>{children}</div>
         </div>
       ) : (
         children
       )}
     </Modal>
-  );
-};
+  )
+}
 
 CommonModal.propTypes = {
   title: PropTypes.string,
@@ -91,6 +95,6 @@ CommonModal.propTypes = {
   }),
   isShow: PropTypes.bool.isRequired,
   iconClass: PropTypes.string,
-};
+}
 
-export default CommonModal;
+export default CommonModal

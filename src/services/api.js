@@ -604,6 +604,9 @@ export function fsuAddSunDev(data) {
 export function editFSU2(data) {
   return request.post(base + "/FSU_device/edit_FSU2.do", data)
 }
+export function getFsuDevEngineRoomList(params) {
+  return request.get(base + "/device_engineRoom/roomList", { params })
+}
 export function fsuAddSpID(data) {
   return request.post(base + "/FSU_device/fsuAddSpID", data)
 }
@@ -710,9 +713,6 @@ export function getFsu_realtimealarmChildTable(params) {
 export function getFsuAlarmDeviceList(params) {
   return request.get(base + "/FSU_runalarm/alarmDeviceList", { params })
 }
-export function fsu_realtimealarmChild_search(params) {
-  return request.get(base + "/FSU_runalarm/runalarm_list2.do", { params })
-}
 export function fsu_realtimealarm_search(params) {
   return request.get(base + "/FSU_device/list2.do", { params })
 }
@@ -813,6 +813,14 @@ export function confimWorkOrder(data) {
   return request.post(base + "/workOrder/auditingWorkOrder", data)
 }
 
+export function save_SysGX(data) {
+  return request.post(base + "/FSU_device/save_SysGX", data)
+}
+
+export function edit_SysGX(data) {
+  return request.post(base + "/FSU_device/edit_SysGX", data)
+}
+
 export function findInspectionInfoByBelongId(params) {
   return request.get(base + "/inspection/findInspectionInfoByBelongId", {
     params,
@@ -840,6 +848,12 @@ export function getImage(params) {
 }
 export function getStationAlarm(params) {
   return request.get(base + "/monitor/stationAlarm", {
+    params,
+  })
+}
+//systemsubtype
+export function findDeviceSysType(params) {
+  return request.get(base + "/fsuBaseConfig/deviceSysType", {
     params,
   })
 }
@@ -903,6 +917,9 @@ export function editEngineRoom(data) {
 }
 export function getEngineRoomEditData(params) {
   return request.get(base + "/device_engineRoom/initEdit", { params })
+}
+export function FSURunalarm(data) {
+  return request.post(base + "/FSU_runalarm/runalarm_list3", data)
 }
 
 export function findSignaldic(params) {

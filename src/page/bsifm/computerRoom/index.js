@@ -338,7 +338,6 @@ class Regional extends Component {
       editClick: this.editClick,
       _this: this,
     })
-    console.log(this.state.fields)
     return (
       <div className={styles["regional_wrap"]}>
         <Cascader

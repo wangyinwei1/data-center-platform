@@ -100,6 +100,7 @@ class Regional extends Component {
         }
       }
     )
+    console.log(provinceList)
 
     return (
       <Form layout="inline" className={styles["edit_wrap"]}>

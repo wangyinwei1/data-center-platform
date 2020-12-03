@@ -21,7 +21,7 @@ class Fsuconfig {
     this.loading = false
     this.tableParmas = params
     if (data.Result === "success") {
-      this.tableData = data.varList || []
+      this.tableData = { Data: data.varList || [], ...data.pd }
     } else {
       message.error(data.Msg)
     }

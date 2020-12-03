@@ -1,23 +1,23 @@
 const formParams = {
   fields: {
     F_Name: {
-      value: '',
+      value: "",
       require: true,
     },
     F_SuID: {
-      value: '',
+      value: "",
       require: true,
     },
     F_SuIP: {
-      value: '',
+      value: "",
       require: true,
     },
     F_SuPort: {
-      value: '',
+      value: "",
       require: true,
     },
     F_UserName: {
-      value: '',
+      value: "",
       require: true,
     },
     F_TypeID: {
@@ -25,36 +25,36 @@ const formParams = {
       require: true,
     },
     F_Pwd: {
-      value: '',
+      value: "",
       require: true,
     },
     F_SuVendor: {
-      value: '',
+      value: "",
     },
     F_SuModel: {
-      value: '',
+      value: "",
     },
     F_SuHardVer: {
-      value: '',
+      value: "",
     },
     F_SuSoftVer: {
-      value: '',
+      value: "",
     },
-    F_StationID: {
+    roomNO: {
       require: true,
       value: undefined,
     },
   },
-};
+}
 
 const addFsuLevelOne = {
   oneFields: {
     F_DeviceID: {
-      value: '',
+      value: "",
       require: true,
     },
     deviceName: {
-      value: '',
+      value: "",
       require: true,
     },
     deviceSubType: {
@@ -62,60 +62,72 @@ const addFsuLevelOne = {
       require: true,
     },
     roomName: {
-      value: '',
+      value: "",
     },
     model: {
-      value: '',
+      value: "",
     },
     brand: {
-      value: '',
+      value: "",
     },
     ratedCapacity: {
-      value: '',
+      value: "",
     },
     devDescribe: {
-      value: '',
+      value: "",
     },
   },
-};
+}
 const addLevelOne = {
   oneFields: {
     F_DeviceID: {
-      value: '',
+      value: "",
+      require: false,
+    },
+    dsType: {
+      value: 1,
       require: true,
     },
+    // sysName: {
+    //   value: "",
+    //   require: true,
+    // },
     deviceName: {
-      value: '',
+      value: "",
       require: true,
     },
     deviceSubType: {
-      value: 234234,
+      value: undefined,
       require: true,
     },
+    // sysSubType: {
+    //   value: undefined,
+    //   require: true,
+    // },
   },
-};
+}
 const addChildFsuDevice = {
   childDevicefields: {
     spUnit: {
-      value: '',
+      value: "",
     },
     nmAlarmID: {
-      value: '',
+      value: "",
     },
     describe: {
-      value: '',
+      value: "",
     },
     relativeVal: {
-      value: '',
+      value: "",
     },
     absoluteVal: {
-      value: '',
+      value: "",
     },
     threshold: {
-      value: '',
+      value: "",
     },
     alarmLevel: {
-      value: '',
+      value: "",
     },
     spType: {
       value: undefined,
@@ -126,22 +138,22 @@ const addChildFsuDevice = {
       value: undefined,
     },
     spName: {
-      value: '',
+      value: "",
       require: true,
     },
     F_SpID: {
-      value: '',
+      value: "",
       require: true,
     },
   },
-};
+}
 const addChildDevice = {
   childDevicefields: {
     spUnit: {
-      value: '',
+      value: "",
     },
     threshold: {
-      value: '',
+      value: "",
     },
     spType: {
       value: undefined,
@@ -152,11 +164,11 @@ const addChildDevice = {
       value: undefined,
     },
     spName: {
-      value: '',
+      value: "",
       require: true,
     },
     F_SpID: {
-      value: '',
+      value: "",
       require: true,
     },
     // sVal: {
@@ -187,7 +199,7 @@ const addChildDevice = {
     //   value: '',
     // },
   },
-};
+}
 
 export {
   formParams,
@@ -195,4 +207,4 @@ export {
   addChildFsuDevice,
   addFsuLevelOne,
   addChildDevice,
-};
+}

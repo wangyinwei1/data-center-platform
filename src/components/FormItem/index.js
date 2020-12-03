@@ -66,8 +66,12 @@ const FormSelect = Form.create({
     placeholder,
     width,
     disabled,
+    visiable,
     mode,
   } = props
+  if (visiable === false) {
+    return null
+  }
   const customWidth = width
     ? { width: typeof width === "number" ? `${width}px` : width }
     : {}
@@ -102,14 +106,14 @@ const FormSelect = Form.create({
   )
 })
 const FormRadio = Form.create({
-  onFieldsChange(props, changedFields) {
+  onFieldsChange(props, changedFields, a) {
     props.onChange(changedFields)
   },
   mapPropsToFields(props) {
     return mapPropsToFields(props)
   },
   onValuesChange(_, values) {
-    // console.log((_, values));
+    _.onValuesChange(values)
   },
 })((props) => {
   const { getFieldDecorator } = props.form

@@ -19,6 +19,7 @@ class Site extends Component {
     this.onDeleteOk = this.onDeleteOk.bind(this)
     this.state = {
       deleteShow: false,
+      importLoading: false,
       singleLineData: {},
       fsuTypeId: JSON.parse(localStorage.getItem("FsuTypeID")),
     }
@@ -68,10 +69,36 @@ class Site extends Component {
     })
   }
 
+  //table分页
+  onShowSizeChange = (current, pageSize) => {
+    const { data_dictionaryStore } = this.props
+    const params = {
+      number: 10,
+      keywords: "",
+      ...data_dictionaryStore.tableParmas,
+      page: current,
+      number: pageSize,
+      fsuTypeId: JSON.parse(localStorage.getItem("FsuTypeID")),
+    }
+    data_dictionaryStore.getTable(params)
+  }
+  onPageChange = (pageNumber) => {
+    const { data_dictionaryStore } = this.props
+    const params = {
+      number: 10,
+      page: 1,
+      keywords: "",
+      ...data_dictionaryStore.tableParmas,
+      page: pageNumber,
+      fsuTypeId: JSON.parse(localStorage.getItem("FsuTypeID")),
+    }
+    data_dictionaryStore.getTable(params)
+  }
   render() {
     const { data_dictionaryStore } = this.props
     const { fsuAddTypes = [], getTable } = data_dictionaryStore
-    const tableData = toJS(data_dictionaryStore.tableData) || []
+    const tableData = toJS(data_dictionaryStore.tableData.Data) || []
+    const pagination = toJS(data_dictionaryStore.tableData) || {}
     const columns = columnData({
       deleteClick: this.deleteClick,
       editClick: this.editClick,
@@ -85,7 +112,11 @@ class Site extends Component {
         authorization: "authorization-text",
       },
       showUploadList: false,
-      onChange(info) {
+      beforeUpload: () => {
+        this.setState({ importLoading: true })
+        return true
+      },
+      onChange: (info) => {
         if (info.file.status !== "uploading") {
           console.log(info.file, info.fileList)
         }
@@ -99,6 +130,7 @@ class Site extends Component {
         } else if (info.file.status === "error") {
           message.error(`${info.file.name} 导入失败！`)
         }
+        this.setState({ importLoading: false })
       },
     }
     const ImportButton = () => {
@@ -107,6 +139,7 @@ class Site extends Component {
           type: "button",
           pos: "right",
           name: "导入",
+          loading: this.state.importLoading,
           handleClick: () => {
             this.onImportClick()
           },
@@ -138,6 +171,7 @@ class Site extends Component {
               F_TypeID: value,
             }
             getTable(params)
+            localStorage.setItem("FsuTypeID", value)
           },
         },
       ]
@@ -159,7 +193,11 @@ class Site extends Component {
                 columns={columns}
                 loading={data_dictionaryStore.loading}
                 data={tableData}
-                pagination={false}
+                pageIndex={pagination.page}
+                pageSize={pagination.number}
+                total={pagination.allCount}
+                onShowSizeChange={this.onShowSizeChange}
+                onChange={this.onPageChange}
               />
             </div>
           </div>

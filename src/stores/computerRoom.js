@@ -4,7 +4,9 @@ import {
   saveEngineRoom,
   editEngineRoom,
   getEngineRoomEditData,
+  siteInitAdd,
   deleteEngineRoom,
+  getAreaSonList,
 } from "../services/api.js"
 import { message } from "antd"
 class Site {
@@ -91,6 +93,7 @@ class Site {
   }
   @action.bound
   async addArea(params) {
+    console.log(11)
     const data = await siteInitAdd(params)
     this.addLists = data
     return data

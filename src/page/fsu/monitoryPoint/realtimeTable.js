@@ -3,7 +3,7 @@ import { action, observer, inject } from "mobx-react"
 import { toJS } from "mobx"
 import styles from "./index.less"
 import RemoteControlContent from "./rumorContent.js"
-import { Select, message } from "antd"
+import { Select, Modal, message } from "antd"
 import Table from "../../../components/Table"
 import { decorate as mixin } from "react-mixin"
 import columnData from "./realtimeColumns.js"
@@ -60,45 +60,49 @@ class Regional extends Component {
     }
   }
   remoteControlClick = (item, e) => {
-    const { fsu_monitorypointStore, subDevItem } = this.props
-    const params = {
-      suID: item.suID,
-      fsuTypeId: JSON.parse(localStorage.getItem("FsuTypeID")),
-      deviceID: item.deviceID,
-      spID: item.spID,
-    }
-
-    if (JSON.parse(localStorage.getItem("FsuTypeID")) === 2) {
-      params["devicerID"] = subDevItem.devicerID
-      params["surID"] = subDevItem.surID
-    }
-
-    fsu_monitorypointStore.getSpInfo(params).then((data) => {
-      if (data) {
-        this.setState(({ remoteControlFields }) => {
-          let formValue = { ...remoteControlFields }
-          formValue.sVal.value = data.sVal
-          formValue.hLimit.value = data.hLimit
-          formValue.sHLimit.value = data.sHLimit
-          formValue.lLimit.value = data.lLimit
-          formValue.sLLimit.value = data.sLLimit
-          formValue.relativeVal.value = data.relativeVal
-          formValue.threshold.value = data.threshold
-          formValue.intervalTime.value = data.intervalTime
-          formValue.bDelay.value = data.bDelay
-          formValue.eDelay.value = data.eDelay
-          formValue.spType.value = item.spType
-          return {
-            remoteControlFields: {
-              ...remoteControlFields,
-              ...formValue,
-            },
-            currentData: item,
-            remoteControlShow: true,
-          }
-        })
-      }
+    this.setState({
+      currentData: item,
+      controlShow: true,
     })
+    // const { fsu_monitorypointStore, subDevItem } = this.props
+    // const params = {
+    //   suID: item.suID,
+    //   fsuTypeId: JSON.parse(localStorage.getItem("FsuTypeID")),
+    //   deviceID: item.deviceID,
+    //   spID: item.spID,
+    // }
+
+    // if (JSON.parse(localStorage.getItem("FsuTypeID")) === 2) {
+    //   params["devicerID"] = subDevItem.devicerID
+    //   params["surID"] = subDevItem.surID
+    // }
+
+    // fsu_monitorypointStore.getSpInfo(params).then((data) => {
+    //   if (data) {
+    //     this.setState(({ remoteControlFields }) => {
+    //       let formValue = { ...remoteControlFields }
+    //       formValue.sVal.value = data.sVal
+    //       formValue.hLimit.value = data.hLimit
+    //       formValue.sHLimit.value = data.sHLimit
+    //       formValue.lLimit.value = data.lLimit
+    //       formValue.sLLimit.value = data.sLLimit
+    //       formValue.relativeVal.value = data.relativeVal
+    //       formValue.threshold.value = data.threshold
+    //       formValue.intervalTime.value = data.intervalTime
+    //       formValue.bDelay.value = data.bDelay
+    //       formValue.eDelay.value = data.eDelay
+    //       formValue.spType.value = item.spType
+    //       return {
+    //         remoteControlFields: {
+    //           ...remoteControlFields,
+    //           ...formValue,
+    //         },
+    //         currentData: item,
+    //         remoteControlShow: true,
+    //       }
+    //     })
+    //   }
+    // })
   }
 
   //控制
@@ -124,11 +128,37 @@ class Regional extends Component {
           })
       })
     } else {
-      this.setState({
-        currentData: item,
-        controlShow: true,
-      })
+      // this.setState({
+      //   currentData: item,
+      //   controlShow: true,
+      // })
+      this.ModalConfirm(item)
     }
+  }
+  ModalConfirm(item) {
+    const {
+      fsu_monitorypointStore: { postDeviceControl },
+    } = this.props
+    Modal.confirm({
+      title: "确定要遥控下发监控点?",
+      content: "下发了设备之就会直接遥控设备!",
+      onOk() {
+        return new Promise((resolve, reject) => {
+          const params = {
+            F_DeviceID: item.deviceID,
+            F_Spid: item.spID,
+            F_Suid: item.suID,
+            F_SpTypeID: item.spType,
+            fsuTypeId: JSON.parse(localStorage.getItem("FsuTypeID")),
+            value: 2,
+          }
+          postDeviceControl(params).then((data) => {
+            data ? resolve() : reject()
+          })
+        }).catch((error) => console.log(error))
+      },
+      onCancel() {},
+    })
   }
 
   onRemoteControlCancel = () => {
@@ -232,7 +262,7 @@ class Regional extends Component {
         <ControlModal
           width={530}
           isShow={this.state.controlShow}
-          title={"远程控制"}
+          title={"远程调配"}
           onCancel={this.onControlCancel}
         >
           <ControlContent
@@ -240,7 +270,7 @@ class Regional extends Component {
             cancle={this.onControlCancel}
           />
         </ControlModal>
-        <ControlModal
+        {/* <ControlModal
           width={852}
           isShow={this.state.remoteControlShow}
           title={
@@ -254,7 +284,7 @@ class Regional extends Component {
             fields={this.state.remoteControlFields}
             handleFormChange={this.remoteControlChange}
           />
-        </ControlModal>
+        </ControlModal> */}
       </div>
     )
   }

@@ -1,69 +1,69 @@
-import React, {Component} from 'react';
-import classNames from 'classnames';
-import './index.less';
-import CommonModal from '../../../components/CommonModal';
-import {Button, Form, Input, Select} from 'antd';
-import classnames from 'classnames';
-import styles from './index.less';
-const FormItem = Form.Item;
-const Option = Select.Option;
+import React, { Component } from "react"
+import classNames from "classnames"
+import "./index.less"
+import CommonModal from "../../../components/CommonModal"
+import { Button, Form, Input, Select } from "antd"
+import classnames from "classnames"
+import styles from "./index.less"
+const FormItem = Form.Item
+const Option = Select.Option
 class DeleteModal extends Component {
   constructor(props) {
-    super(props);
-    this.onChange = this.onChange.bind(this);
+    super(props)
+    this.onChange = this.onChange.bind(this)
   }
   componentDidMount() {}
 
   componentWillUnmount() {}
   onChange(e) {
-    const value = e.target.value;
-    const {onChange} = this.props;
+    const value = e.target.value
+    const { onChange } = this.props
   }
   render() {
-    const {isShow, onOk, onCancel, width, mode} = this.props;
+    const { isShow, onOk, onCancel, width, mode } = this.props
     const okProps = {
       onClick: () => {
-        onOk();
+        onOk()
       },
-    };
+    }
     const cancelProps = {
       onClick: () => {
-        onCancel();
+        onCancel()
       },
-    };
-    let title = '';
+    }
+    let title = ""
     switch (mode) {
-      case 'new':
+      case "new":
         title = {
-          zh: '告警新增',
-          en: '',
-        };
+          zh: "告警新增",
+          en: "",
+        }
 
-        break;
-      case 'modify':
+        break
+      case "modify":
         title = {
-          zh: '告警修改',
-          en: '',
-        };
-        break;
+          zh: "告警修改",
+          en: "",
+        }
+        break
     }
     return (
       <CommonModal
         isShow={isShow}
         mask={false}
         width={width}
-        confirmLoading={true}
         okProps={okProps}
-        cancelProps={cancelProps}>
-        <div className={styles['delete_wrap']}>
-          <div className={styles['delete_title']}>
-            <span>{title.zh || ''}</span>
-            <span style={{fontSize: '10px'}}>&nbsp;{title.en || ''}</span>
+        cancelProps={cancelProps}
+      >
+        <div className={styles["delete_wrap"]}>
+          <div className={styles["delete_title"]}>
+            <span>{title.zh || ""}</span>
+            <span style={{ fontSize: "10px" }}>&nbsp;{title.en || ""}</span>
           </div>
           {this.props.children}
         </div>
       </CommonModal>
-    );
+    )
   }
 }
-export default DeleteModal;
+export default DeleteModal
