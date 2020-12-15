@@ -1,0 +1,80 @@
+:local {
+  .form-item-wrap {
+    :global {
+      .ant-form-item {
+        margin-bottom: 20px !important;
+      }
+      .ant-input {
+        &:-webkit-autofill {
+          -webkit-box-shadow: 0 0 0 1000px white inset;
+          background-color: #fff !important;
+          -webkit-text-fill-color: rgba(0, 0, 0, 0.65);
+        }
+        line-height: 36px;
+        height: 36px;
+        &:hover {
+          border-color: #56eca1;
+        }
+        &:focus {
+          border-color: #56eca1;
+          box-shadow: 0 0 0 2px rgba(86, 236, 161, 0.2);
+        }
+      }
+    }
+  }
+  //   .form_radio {
+  //     width: 372px;
+  //     margin-bottom: 20px !important;
+  //     :global {
+  //       .ant-form-item-label {
+  //         min-width: 82px;
+  //       }
+  //       .ant-form-item-control {
+  //         line-height: 36px;
+  //       }
+  //       .ant-radio-checked .ant-radio-inner {
+  //         border-color: #5deda4;
+  //       }
+  //       .ant-radio-wrapper:hover .ant-radio .ant-radio-inner,
+  //       .ant-radio:hover .ant-radio-inner,
+  //       .ant-radio-focused .ant-radio-inner {
+  //         border-color: #5deda4;
+  //       }
+  //       .ant-radio-checked .ant-radio-inner {
+  //         border-color: #5deda4;
+  //       }
+  //       .ant-radio-checked:after {
+  //         border-color: #5deda4;
+  //       }
+  //       .ant-radio-inner:after {
+  //         background-color: #5deda4;
+  //       }
+  //     }
+  //   }
+  //   .form_select {
+  //     width: 372px;
+  //     margin-bottom: 20px !important;
+  //     :global {
+  //       .ant-select-selection--multiple
+  //         .ant-select-selection__rendered
+  //         > ul
+  //         > li {
+  //         margin-top: 6px;
+  //       }
+  //       .ant-form-item-label {
+  //         min-width: 82px;
+  //       }
+  //       .ant-form-item-control-wrapper {
+  //         width: 290px;
+  //       }
+  //       .ant-select .ant-select-selection {
+  //         height: 100%;
+  //       }
+  //       .ant-select-open .ant-select-selection {
+  //         height: 100%;
+  //         border-color: #5deda4;
+  //         box-shadow: 0 0 0 2px rgba(86, 236, 161, 0.2);
+  //       }
+  //     }
+  //   }
+}

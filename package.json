@@ -57,6 +57,7 @@
     "antd": "3.6.6",
     "axios-mock-adapter": "^1.11.0",
     "classnames": "^2.2.5",
+    "crypto-js": "^4.0.0",
     "document-offset": "^1.0.4",
     "echarts": "^3.8.5",
     "echarts-for-react": "^2.0.12",

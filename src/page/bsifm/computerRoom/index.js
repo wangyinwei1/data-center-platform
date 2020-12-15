@@ -185,7 +185,9 @@ class Regional extends Component {
       formValue.region.value =
         (data.area.regionCode && parseInt(data.area.regionCode)) || undefined
       formValue.site.value =
-        (data.pd && data.pd.F_StationID && parseInt(data.pd.F_StationID)) ||
+        (data.area &&
+          data.area.stationCode &&
+          parseInt(data.area.stationCode)) ||
         undefined
 
       formValue.F_RoomName.value = (data.pd && data.pd.F_RoomName) || ""

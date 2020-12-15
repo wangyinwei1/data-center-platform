@@ -46,6 +46,7 @@ class Regional extends Component {
         data = editData
         break
     }
+    console.log(data)
 
     let currentClass = "cl_regional_select_157"
 
@@ -71,8 +72,8 @@ class Regional extends Component {
       siteMenu[0] ? siteMenu : toJS(data.stationList),
       (item) => {
         return {
-          value: item.code || item.F_ID,
-          name: item.name || item.F_Name,
+          value: item.code || item.F_ID || item.F_AreaID,
+          name: item.name || item.F_Name || item.F_AreaName,
         }
       }
     )
@@ -100,7 +101,7 @@ class Regional extends Component {
         }
       }
     )
-    console.log(provinceList)
+    console.log(regionList, fields)
 
     return (
       <Form layout="inline" className={styles["edit_wrap"]}>
@@ -141,9 +142,7 @@ class Regional extends Component {
           {...fields}
           onChange={this.handleFormChange}
           label={""}
-          disabled={
-            data.area.regionCode ? true : fields["county"].value ? false : true
-          }
+          disabled={data.area.regionCode ? true : regionList[0] ? false : true}
           getAreaSonList={getAreaSonList}
           name={"region"}
           className={currentClass}
@@ -154,9 +153,7 @@ class Regional extends Component {
           {...fields}
           onChange={this.handleFormChange}
           label={""}
-          disabled={
-            data.area.regionCode ? true : fields["region"].value ? false : true
-          }
+          disabled={data.area.stationCode ? true : siteList[0] ? false : true}
           name={"site"}
           className={currentClass}
           rules={[{ required: true, message: "请必须填写!" }]}

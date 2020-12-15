@@ -921,6 +921,9 @@ export function getEngineRoomEditData(params) {
 export function FSURunalarm(data) {
   return request.post(base + "/FSU_runalarm/runalarm_list3", data)
 }
+export function updatePassword(data) {
+  return request.post(base + "/user/updatePaw", data)
+}
 
 export function findSignaldic(params) {
   return request.get(base + "/fsuSignaldic/findSignaldic", { params })

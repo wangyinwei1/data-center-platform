@@ -141,7 +141,7 @@ class Regional extends Component {
     } = this.props
     Modal.confirm({
       title: "确定要遥控下发监控点?",
-      content: "下发了设备之就会直接遥控设备!",
+      content: "下发完成会对设备执行遥控设置!",
       onOk() {
         return new Promise((resolve, reject) => {
           const params = {

@@ -13,6 +13,9 @@ import DeleteModal from "../regional/delete.js"
 import EditContent from "./editContent.js"
 import EditModal from "./edit.js"
 import { formParams, clearCity, clearCounty } from "./tplJson.js"
+import PublicModal from "@/components/PublicModal"
+import ChangePasswordForm from "./changePasswordForm"
+
 //实例
 @inject("regionalStore", "siteStore", "applicationuserStore")
 @observer
@@ -20,18 +23,6 @@ import { formParams, clearCity, clearCounty } from "./tplJson.js"
 class Site extends Component {
   constructor(props) {
     super(props)
-    this.add = this.add.bind(this)
-    this.deleteClick = this.deleteClick.bind(this)
-    this.editClick = this.editClick.bind(this)
-    this.onDeleteOk = this.onDeleteOk.bind(this)
-    this.onDeleteCancel = this.onDeleteCancel.bind(this)
-    this.onSearch = this.onSearch.bind(this)
-    this.onShowSizeChange = this.onShowSizeChange.bind(this)
-    this.onEditCancel = this.onEditCancel.bind(this)
-    this.onEditOk = this.onEditOk.bind(this)
-    this.onPageChange = this.onPageChange.bind(this)
-    this.handleFormChange = this.handleFormChange.bind(this)
-    this.getAreaSonList = this.getAreaSonList.bind(this)
     this.state = {
       singleLineData: {},
       deleteShow: false,
@@ -58,16 +49,16 @@ class Site extends Component {
     getTable(params)
   }
   //添加功能
-  add() {
+  add = () => {
     const { applicationuserStore } = this.props
     applicationuserStore.getFSUType()
     applicationuserStore.getGoAdd()
     this.setState({
-      editShow: true,
       type: "new",
     })
+    this.editModal.changeVisible(true)
   }
-  initFromValue(data, mode, item) {
+  initFromValue = (data, mode, item) => {
     this.setState(({ fields }) => {
       let formValue = _.cloneDeep([fields])[0]
       formValue.EMAIL.value = data.pd.F_EMAIL || ""
@@ -100,13 +91,13 @@ class Site extends Component {
           ...formValue,
         },
         singleLineData: item,
-        editShow: true,
         type: mode,
       }
     })
+    this.editModal.changeVisible(true)
   }
   //点击编辑
-  editClick(item) {
+  editClick = (item) => {
     const { applicationuserStore } = this.props
     applicationuserStore.getFSUType()
     applicationuserStore
@@ -116,7 +107,7 @@ class Site extends Component {
       })
   }
   //删除回调
-  onDeleteOk() {
+  onDeleteOk = () => {
     const { applicationuserStore } = this.props
     const item = this.state.singleLineData
     const params = {
@@ -124,68 +115,73 @@ class Site extends Component {
     }
     this.c_onDeleteOk(applicationuserStore, params)
   }
-  onDeleteCancel() {
+  onDeleteCancel = () => {
     this.c_onDeleteCancel()
   }
-  deleteClick(item, e) {
+  deleteClick = (item, e) => {
     this.setState({
       deleteShow: true,
       singleLineData: item,
     })
   }
   //编辑确定
-  onEditOk() {
+  onEditOk = () => {
     const fields = this.state.fields
     const showError = this.test(fields)
     const hasError = _.keys(showError)
-
-    if (hasError[0]) {
-      this.setState(({ fields }) => {
-        return {
-          fields: {
-            ...fields,
-            ...showError,
-          },
-        }
-      })
-    } else {
-      const {
-        applicationuserStore: { save, editSave },
-      } = this.props
-      const params = {}
-      this.state.type === "modify" &&
-        (params.USER_ID = this.state.singleLineData.F_UserID)
-      _.forIn(fields, (value, key) => {
-        if (key === "DevTypes") {
-          params[key] = value.value.join(",")
-        } else if (key === "F_FsuTypeID") {
-          params[key] = value.value ? value.value : 0
-        } else {
-          params[key] = value.value
-        }
-      })
-      this.state.type === "new"
-        ? save(params).then((data) => {
-            this.clearState(data)
-          })
-        : editSave(params).then((data) => {
-            this.clearState(data)
-          })
-    }
+    return new Promise((resolve, reject) => {
+      if (hasError[0]) {
+        this.setState(({ fields }) => {
+          return {
+            fields: {
+              ...fields,
+              ...showError,
+            },
+          }
+        })
+        reject()
+      } else {
+        const {
+          applicationuserStore: { save, editSave },
+        } = this.props
+        const params = {}
+        this.state.type === "modify" &&
+          (params.USER_ID = this.state.singleLineData.F_UserID)
+        _.forIn(fields, (value, key) => {
+          if (key === "DevTypes") {
+            params[key] = value.value.join(",")
+          } else if (key === "F_FsuTypeID") {
+            params[key] = value.value ? value.value : 0
+          } else {
+            params[key] = value.value
+          }
+        })
+        this.state.type === "new"
+          ? save(params).then((data) => {
+              this.clearState(data, resolve)
+            })
+          : editSave(params).then((data) => {
+              this.clearState(data, resolve)
+            })
+      }
+    })
   }
-  clearState(data) {
-    data &&
+  clearState = (data, resolve) => {
+    if (data) {
       this.setState({
         ...formParams,
-        editShow: false,
         cityList: [],
         countyList: [],
         districtList: [],
       })
+      resolve()
+    } else {
+      reject()
+    }
   }
 
   //校验循环
-  test(fields) {
+  test = (fields) => {
     let showError = {}
     let emailReg = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
     let phoneReg = /^[1][3,4,5,7,8][0-9]{9}$/
@@ -205,17 +201,16 @@ class Site extends Component {
   }
 
   //取消
-  onEditCancel() {
+  onEditCancel = () => {
     this.setState({
       ...formParams,
-      editShow: false,
       cityList: [],
       districtList: [],
       countyList: [],
     })
   }
   //搜索
-  onSearch(value) {
+  onSearch = (value) => {
     const { applicationuserStore } = this.props
     const params = {
       ...applicationuserStore.tableParmas,
@@ -224,15 +219,15 @@ class Site extends Component {
     applicationuserStore.search(params)
   }
   //table分页
-  onShowSizeChange(current, pageSize) {
+  onShowSizeChange = (current, pageSize) => {
     const { applicationuserStore } = this.props
     this.c_onShowSizeChange({ current, pageSize }, applicationuserStore)
   }
-  onPageChange(pageNumber) {
+  onPageChange = (pageNumber) => {
     const { applicationuserStore } = this.props
     this.c_onPageChange({ pageNumber }, applicationuserStore)
   }
-  getAreaSonList(changedFields) {
+  getAreaSonList = (changedFields) => {
     const {
       applicationuserStore: { getAreaSonList },
     } = this.props
@@ -274,7 +269,7 @@ class Site extends Component {
       }
     })
   }
-  handleFormChange(changedFields) {
+  handleFormChange = (changedFields) => {
     const key = _.keys(changedFields)
     //showError让自己校验字段
     const obj = {}
@@ -285,8 +280,30 @@ class Site extends Component {
       }
     })
   }
+  publicModalObject = null
+  editModal = null
+  changePasswordForm = null
+
   changePasswordClick = (item) => {
-    console.log(item)
+    this.publicModalObject.changeVisible(true)
+    this.setState({
+      singleLineData: item,
+    })
+  }
+  changePasswordOk = () => {
+    return new Promise((resolve, reject) => {
+      const { applicationuserStore } = this.props
+
+      const form = this.changePasswordForm.form
+      const fields = form.getFieldsValue()
+      const params = {
+        password: fields.password,
+        F_UserID: this.state.singleLineData.F_UserID,
+      }
+      applicationuserStore.updatePassword(params).then((data) => {
+        data ? resolve() : reject()
+      })
+    })
   }
 
   render() {
@@ -323,12 +340,14 @@ class Site extends Component {
           onOk={this.onDeleteOk}
           onCancel={this.onDeleteCancel}
         />
-        <EditModal
-          isShow={this.state.editShow}
+        <PublicModal
+          modalRef={(ref) => {
+            this.editModal = ref
+          }}
           onOk={this.onEditOk}
-          width={880}
           onCancel={this.onEditCancel}
-          mode={this.state.type}
+          width={880}
+          title={this.state.type === "new" ? "用户新增" : "用户修改"}
         >
           <EditContent
             handleFormChange={this.handleFormChange}
@@ -339,7 +358,20 @@ class Site extends Component {
             countyMenu={this.state.countyList}
             districtMenu={this.state.districtList}
           />
-        </EditModal>
+        </PublicModal>
+        <PublicModal
+          title={"更改密码"}
+          modalRef={(ref) => {
+            this.publicModalObject = ref
+          }}
+          onOk={this.changePasswordOk}
+        >
+          <ChangePasswordForm
+            formRef={(_this) => {
+              this.changePasswordForm = _this
+            }}
+          />
+        </PublicModal>
       </div>
     )
   }

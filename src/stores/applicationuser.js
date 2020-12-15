@@ -1,6 +1,7 @@
-import {observable, action} from 'mobx';
+import { observable, action } from "mobx"
 import {
   applicationuser_search,
+  updatePassword,
   getApplicationuserTable,
   applicationuser_delete,
   applicationuserInitAdd,
@@ -9,100 +10,116 @@ import {
   applicationuserInitEdit,
   applicationuserEditSave,
   getFSUType,
-} from '../services/api.js';
-import {message} from 'antd';
+} from "../services/api.js"
+import { message } from "antd"
 class Site {
-  @observable tableData = {};
-  @observable tableParmas = {};
-  @observable addData = {};
-  @observable editData = {};
-  @observable loading = false;
-  @observable fsuTypes = [];
+  @observable tableData = {}
+  @observable tableParmas = {}
+  @observable addData = {}
+  @observable editData = {}
+  @observable loading = false
+  @observable fsuTypes = []
 
   @action.bound
   async getGoAdd(params) {
-    const data = await applicationuserInitAdd(params);
-    this.addData = data;
-    return data;
+    const data = await applicationuserInitAdd(params)
+    this.addData = data
+    return data
   }
   @action.bound
   async getFSUType(params) {
-    const data = await getFSUType(params);
-    if (data.Result == 'success') {
-      this.fsuTypes = data.Data;
+    const data = await getFSUType(params)
+    if (data.Result == "success") {
+      this.fsuTypes = data.Data
     } else {
-      message.error(data.Msg);
+      message.error(data.Msg)
     }
   }
   @action.bound
   async getEidtData(params) {
-    const data = await applicationuserInitEdit(params);
-    this.editData = data;
-    return data;
+    const data = await applicationuserInitEdit(params)
+    this.editData = data
+    return data
   }
   @action.bound
   async getAreaSonList(params) {
-    const data = await getApplicationuserArea(params);
-    return data.varList;
+    const data = await getApplicationuserArea(params)
+    return data.varList
   }
   @action.bound
   async getTable(params) {
-    this.loading = true;
-    const data = await getApplicationuserTable(params);
-    this.loading = false;
-    params.number = data.pd.number;
-    params.page = data.pd.page;
-    this.tableParmas = params;
-    this.tableData = data;
+    this.loading = true
+    const data = await getApplicationuserTable(params)
+    this.loading = false
+    params.number = data.pd.number
+    params.page = data.pd.page
+    this.tableParmas = params
+    this.tableData = data
   }
   @action.bound
   async search(params) {
-    this.loading = true;
-    const data = await applicationuser_search(params);
-    this.loading = false;
-    params.number = data.pd.number;
-    params.page = data.pd.page;
-    this.tableParmas = params;
-    this.tableData = data;
+    this.loading = true
+    const data = await applicationuser_search(params)
+    this.loading = false
+    params.number = data.pd.number
+    params.page = data.pd.page
+    this.tableParmas = params
+    this.tableData = data
   }
 
   @action
   async delete(params) {
-    const data = await applicationuser_delete(params);
-    if (data.Result == 'success') {
-      this.getTable(this.tableParmas);
-      message.success('删除成功!');
+    const data = await applicationuser_delete(params)
+    if (data.Result == "success") {
+      this.getTable(this.tableParmas)
+      message.success("删除成功!")
     } else {
-      message.error(data.Msg);
+      message.error(data.Msg)
     }
-    return data;
+    return data
+  }
+  @action.bound
+  async updatePassword(params) {
+    const data = await updatePassword(params)
+    if (!data) {
+      return false
+    }
+    if (data.Result == "success") {
+      this.getTable(this.tableParmas)
+      message.success(data.Msg)
+      return true
+    } else {
+      message.error(data.Msg)
+      return false
+    }
+    return data
   }
   @action.bound
   async editSave(params) {
-    const data = await applicationuserEditSave(params);
-    if (data.Result == 'success') {
-      this.getTable(this.tableParmas);
-      message.success(data.Msg);
-      return true;
+    const data = await applicationuserEditSave(params)
+    if (data.Result == "success") {
+      this.getTable(this.tableParmas)
+      message.success(data.Msg)
+      return true
     } else {
-      message.error(data.Msg);
-      return false;
+      message.error(data.Msg)
+      return false
     }
-    return data;
+    return data
   }
   @action.bound
   async save(params) {
-    const data = await applicationuserSave(params);
-    if (data.Result == 'success') {
-      this.getTable(this.tableParmas);
-      message.success(data.Msg);
-      return true;
+    const data = await applicationuserSave(params)
+    if (data.Result == "success") {
+      this.getTable(this.tableParmas)
+      message.success(data.Msg)
+      return true
     } else {
-      message.error(data.Msg);
-      return false;
+      message.error(data.Msg)
+      return false
     }
-    return data;
+    return data
   }
 }
 
-export default Site;
+export default Site
