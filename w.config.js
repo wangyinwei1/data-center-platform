@@ -157,14 +157,15 @@ var devServer = {
   inline: true, // Livereload
   host: "0.0.0.0",
   disableHostCheck: true,
-  proxy: [
-    {
-      context: ["/collect/**"],
-      target: "http://172.16.7.249:8080/",
+  proxy: {
+    "/collect/": {
+      target: "http://172.16.7.242:8080/",
       // target: "http://172.17.3.53:8080/",
       // target: 'http://172.16.4.254:8080/',
+      changeOrigin: true,
+      pathRewrite: { "^": "" },
     },
-  ],
+  },
 }
 
 module.exports = {

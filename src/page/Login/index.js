@@ -1,135 +1,142 @@
-import React, {Component} from 'react';
-import {action, observer, inject} from 'mobx-react';
-import Cookies from 'js-cookie';
-import {Button, Input, Form, Row, Col, Checkbox} from 'antd';
-import classnames from 'classnames';
-import {Link} from 'react-router';
-import styles from './index.less';
-import _ from 'lodash';
-const logo = 'static/images/logo.png';
-const FormItem = Form.Item;
+import React, { Component } from "react"
+import { action, observer, inject } from "mobx-react"
+import Cookies from "js-cookie"
+import { Button, Input, Form, Row, Col, Checkbox } from "antd"
+import classnames from "classnames"
+import { Link } from "react-router"
+import Secret from "../../utils/secret"
+import styles from "./index.less"
+import _ from "lodash"
+const logo = "static/images/logo.png"
+const FormItem = Form.Item
 //实例
-@inject('loginStore', 'globalStore', 'layoutStore')
+@inject("loginStore", "globalStore", "layoutStore")
 @Form.create()
 @observer
 class Loginer extends Component {
   constructor(props) {
-    super(props);
-    this.changeIdImg = this.changeIdImg.bind(this);
-    this.userLogin = this.userLogin.bind(this);
-    this.onPressEnter = this.onPressEnter.bind(this);
+    super(props)
+    this.changeIdImg = this.changeIdImg.bind(this)
+    this.userLogin = this.userLogin.bind(this)
+    this.onPressEnter = this.onPressEnter.bind(this)
     this.state = {
-      errorMessage: '',
-    };
+      errorMessage: "",
+    }
   }
   setBgImage() {
-    this.idImg.style.backgroundImage = `url(/collect/code.do?t=${new Date().getTime()})`;
+    this.idImg.style.backgroundImage = `url(/collect/code.do?t=${new Date().getTime()})`
   }
   componentDidMount() {
-    this.setBgImage();
+    this.setBgImage()
   }
   changeIdImg() {
-    this.setBgImage();
+    this.setBgImage()
   }
   onPressEnter(e) {
-    this.userLogin(e);
+    this.userLogin(e)
   }
   userLogin(e) {
-    const {loginStore, globalStore, layoutStore, form, router} = this.props;
-    e.preventDefault();
+    const { loginStore, globalStore, layoutStore, form, router } = this.props
+    e.preventDefault()
     form.validateFields((err, values) => {
       if (!err) {
-        this.setState({errorMessage: ''});
-        const values = form.getFieldsValue();
-        const password = encodeURIComponent(values.password);
-        const username = values.username;
-        const params = {
-          username,
-          password,
-          code: values.code,
-        };
-        loginStore.userLogin(params).then(data => {
+        this.setState({ errorMessage: "" })
+        const values = form.getFieldsValue()
+        const password = encodeURIComponent(values.password)
+        const username = values.username
+        const params = Secret.Encrypt(
+          JSON.stringify({
+            username,
+            password,
+            code: values.code,
+          })
+        )
+        loginStore.userLogin(params).then((data) => {
           if (data) {
             //保存serviceip
             // globalStore.saveIp_name({
             //   ip: data.ip,
             // }),
-            localStorage.setItem('FsuTypeID', data.FsuTypeID);
-            localStorage.setItem('serviceip', data.ip);
-            localStorage.setItem('isAdmin', data.isAdmin);
-            localStorage.setItem('isNotArea', data.isNotArea);
-            localStorage.setItem('AppID', data.AppID);
-            localStorage.setItem('screenUrl', data.screenUrl);
-            localStorage.setItem('ECPUrl', data.ECPUrl);
-            const timeoutUrl = localStorage.getItem('timeoutUrl');
+            localStorage.setItem("FsuTypeID", data.FsuTypeID)
+            localStorage.setItem("serviceip", data.ip)
+            localStorage.setItem("isAdmin", data.isAdmin)
+            localStorage.setItem("isNotArea", data.isNotArea)
+            localStorage.setItem("AppID", data.AppID)
+            localStorage.setItem("screenUrl", data.screenUrl)
+            localStorage.setItem("ECPUrl", data.ECPUrl)
+            const timeoutUrl = localStorage.getItem("timeoutUrl")
 
             //记住密码设置cookies
             values.remember
-              ? Cookies.set('remember', {username, password}, {expires: 7})
-              : Cookies.remove('remember');
+              ? Cookies.set("remember", params, { expires: 7 })
+              : Cookies.remove("remember")
             //保存用户名
-            Cookies.set('cl_username', {username: values.username});
-            globalStore.changeOvertime(false);
+            Cookies.set("cl_username", { username: values.username })
+            globalStore.changeOvertime(false)
 
             //跳转路由
 
             if (globalStore.isTimeout) {
-              router.goBack();
+              router.goBack()
             } else {
               //setSelectedKeys
 
-              layoutStore.setSelectedKeys('shouye');
-              router.push('/shouye');
+              layoutStore.setSelectedKeys("shouye")
+              router.push("/shouye")
             }
           } else {
-            this.setBgImage();
+            this.setBgImage()
           }
-        });
+        })
       } else {
-        const keys = _.keys(err);
-        const firstKey = keys[0];
-        const errorMessage = err[firstKey].errors[0].message;
-        this.setState({errorMessage});
+        const keys = _.keys(err)
+        const firstKey = keys[0]
+        const errorMessage = err[firstKey].errors[0].message
+        this.setState({ errorMessage })
       }
-    });
+    })
   }
   render() {
-    const {getFieldDecorator} = this.props.form;
-    const {globalStore, loginStore} = this.props;
-    const rememberCookies =
-      Cookies.get('remember') && JSON.parse(Cookies.get('remember'));
+    const { getFieldDecorator } = this.props.form
+    const { globalStore, loginStore } = this.props
+    let rememberCookies = {}
+    if (Cookies.get("remember")) {
+      const decryptRemember = Secret.Decrypt(Cookies.get("remember"))
+      rememberCookies = (decryptRemember && JSON.parse(decryptRemember)) || {}
+    }
+
     return (
-      <div className={styles['login_wrap']}>
-        <div className={classnames(styles['login_ct'], 'clearfix')}>
-          <img src={logo} className={styles['logo']} />
-          <div className={styles['logo_title']}>
+      <div className={styles["login_wrap"]}>
+        <div className={classnames(styles["login_ct"], "clearfix")}>
+          <img src={logo} className={styles["logo"]} />
+          <div className={styles["logo_title"]}>
             <p>物联网数据中心平台</p>
             <span>IOT &nbsp;DATA &nbsp;CENTER &nbsp;PLATFORM</span>
           </div>
-          <div className={styles['line']} />
-          <div className={styles['login_form']}>
+          <div className={styles["line"]} />
+          <div className={styles["login_form"]}>
             <Form>
-              <FormItem className={styles['form_title']}>登录/Login</FormItem>
-              <FormItem className={styles['account']}>
-                {getFieldDecorator('username', {
-                  initialValue: rememberCookies ? rememberCookies.username : '',
+              <FormItem className={styles["form_title"]}>登录/Login</FormItem>
+              <FormItem className={styles["account"]}>
+                {getFieldDecorator("username", {
+                  initialValue: rememberCookies ? rememberCookies.username : "",
                   rules: [
                     {
                       required: true,
-                      message: '账号不能为空！',
+                      message: "账号不能为空！",
                     },
                   ],
                 })(
-                  <Input placeholder="账号" onPressEnter={this.onPressEnter} />,
+                  <Input placeholder="账号" onPressEnter={this.onPressEnter} />
                 )}
               </FormItem>
-              <FormItem className={styles['password']}>
-                {getFieldDecorator('password', {
-                  initialValue: rememberCookies ? rememberCookies.password : '',
+              <FormItem className={styles["password"]}>
+                {getFieldDecorator("password", {
+                  initialValue: rememberCookies ? rememberCookies.password : "",
                   rules: [
                     {
                       required: true,
-                      message: '密码不能为空！',
+                      message: "密码不能为空！",
                     },
                   ],
                 })(
@@ -137,18 +144,18 @@ class Loginer extends Component {
                     type="password"
                     placeholder="密码"
                     onPressEnter={this.onPressEnter}
-                  />,
+                  />
                 )}
               </FormItem>
-              <FormItem className={styles['id_verification']}>
+              <FormItem className={styles["id_verification"]}>
                 <Row>
-                  <Col span={8} className={styles['id_code']}>
-                    {getFieldDecorator('code', {
-                      initialValue: '',
+                  <Col span={8} className={styles["id_code"]}>
+                    {getFieldDecorator("code", {
+                      initialValue: "",
                       rules: [
                         {
                           required: true,
-                          message: '验证码不能为空！',
+                          message: "验证码不能为空！",
                         },
                       ],
                     })(
@@ -156,42 +163,43 @@ class Loginer extends Component {
                         type="text"
                         placeholder="验证码"
                         onPressEnter={this.onPressEnter}
-                        autoComplete={'off'}
-                      />,
+                        autoComplete={"off"}
+                      />
                     )}
                   </Col>
-                  <Col span={8} className={styles['id_img']}>
+                  <Col span={8} className={styles["id_img"]}>
                     <div
-                      className={styles['img']}
-                      ref={c => (this.idImg = c)}
+                      className={styles["img"]}
+                      ref={(c) => (this.idImg = c)}
                       onClick={this.changeIdImg}
                     />
                   </Col>
                 </Row>
               </FormItem>
-              <FormItem className={styles['error_message']}>
+              <FormItem className={styles["error_message"]}>
                 {this.state.errorMessage}
               </FormItem>
-              <FormItem className={styles['login_button']}>
+              <FormItem className={styles["login_button"]}>
                 <Button
                   onClick={this.userLogin}
                   loading={loginStore.isLogin}
-                  ref={c => {
-                    this.userLoginBtn = c;
-                  }}>
+                  ref={(c) => {
+                    this.userLoginBtn = c
+                  }}
+                >
                   登录
                 </Button>
               </FormItem>
-              <FormItem className={styles['remeber_forgot']}>
-                {getFieldDecorator('remember', {
-                  valuePropName: 'checked',
+              <FormItem className={styles["remeber_forgot"]}>
+                {getFieldDecorator("remember", {
+                  valuePropName: "checked",
                   initialValue: true,
                 })(
                   <Checkbox>
-                    <span className={styles['remeber_me']}>记住密码</span>
-                  </Checkbox>,
+                    <span className={styles["remeber_me"]}>记住密码</span>
+                  </Checkbox>
                 )}
-                <Link to="#" className={styles['forgot']}>
+                <Link to="#" className={styles["forgot"]}>
                   忘记密码?
                 </Link>
               </FormItem>
@@ -199,8 +207,8 @@ class Loginer extends Component {
           </div>
         </div>
       </div>
-    );
+    )
   }
 }
 
-export default Loginer;
+export default Loginer
