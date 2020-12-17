@@ -664,6 +664,7 @@ class Regional extends Component {
       action: '/collect/device_basechannel/readExcel.do',
       headers: {
         authorization: 'authorization-text',
+        token:Cookies.get('token')
       },
       data: {
         F_TypeID: basicchannelStore.tableParmas.F_TypeID,

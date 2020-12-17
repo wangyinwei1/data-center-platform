@@ -3,6 +3,7 @@ import { action, observer, inject } from "mobx-react"
 import { Menu, Icon, Upload, message, Button, Tabs } from "antd"
 import styles from "./index.less"
 import { Link } from "react-router"
+import Cookies from "js-cookie"
 import Toolbar from "../../../components/Toolbarnew"
 import _ from "lodash"
 import classnames from "classnames"
@@ -65,6 +66,7 @@ class FsuMenu extends Component {
       action: "/collect/fsuBaseConfig/readExcel",
       headers: {
         authorization: "authorization-text",
+        token: Cookies.get("token"),
       },
       showUploadList: false,
       data: {

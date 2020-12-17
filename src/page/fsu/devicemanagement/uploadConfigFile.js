@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import { action, observer, inject } from "mobx-react"
 import { toJS } from "mobx"
 import Table from "../../../components/Table"
+import Cookies from "js-cookie"
 import { message, Icon, Modal, Button, Upload } from "antd"
 import styles from "./index.less"
 import ConfigFileColumnData from "./ConfigFileColumn"
@@ -80,6 +81,7 @@ class ConfigFile extends Component {
       name: "file",
       headers: {
         authorization: "authorization-text",
+        token: Cookies.get("token"),
       },
       action: "/collect/FSU_device/uploadConfigFile",
       multiple: true,

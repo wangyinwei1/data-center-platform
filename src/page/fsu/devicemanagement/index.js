@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 import { action, observer, inject } from "mobx-react"
 import { Spin, Form, message, Upload } from "antd"
+import Cookies from "js-cookie"
 import styles from "./index.less"
 import RealtimeAlarmTable from "../realtimealarm/childTable.js"
 import Cascader from "../../../components/Cascader"
@@ -1571,6 +1572,7 @@ class Information extends Component {
       action: "/collect/FSU_device/readExcel",
       headers: {
         authorization: "authorization-text",
+        token: Cookies.get("token"),
       },
       data: {
         suID: item.suID,

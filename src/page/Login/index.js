@@ -101,12 +101,11 @@ class Loginer extends Component {
     const { getFieldDecorator } = this.props.form
     const { globalStore, loginStore } = this.props
 
-    const decryptRemember = Secret.Decrypt(Cookies.get("remember"))
-    const rememberCookies =
-      (Cookies.get("remember") &&
-        decryptRemember &&
-        JSON.parse(decryptRemember)) ||
-      {}
+    let rememberCookies = {}
+    if (Cookies.get("remember")) {
+      const decryptRemember = Secret.Decrypt(Cookies.get("remember"))
+      rememberCookies = (decryptRemember && JSON.parse(decryptRemember)) || {}
+    }
 
     return (
       <div className={styles["login_wrap"]}>

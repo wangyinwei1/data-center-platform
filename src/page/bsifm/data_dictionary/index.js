@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import { action, observer, inject } from "mobx-react"
 import { Upload, message } from "antd"
 import styles from "./index.less"
+import Cookies from "js-cookie"
 import { toJS } from "mobx"
 import Toolbar from "../../../components/Toolbarnew"
 import Table from "../../../components/Table"
@@ -110,6 +111,7 @@ class Site extends Component {
       data: { F_TypeID: this.state.fsuTypeId },
       headers: {
         authorization: "authorization-text",
+        token: Cookies.get("token"),
       },
       showUploadList: false,
       beforeUpload: () => {

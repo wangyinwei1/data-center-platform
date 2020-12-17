@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import { action, observer, inject } from "mobx-react"
 import { Upload, message } from "antd"
 import styles from "./index.less"
+import Cookies from "js-cookie"
 import { toJS } from "mobx"
 import Toolbar from "../../../components/Toolbar"
 import Table from "../../../components/Table"
@@ -70,6 +71,7 @@ class Site extends Component {
       action: "/collect/FSU_device/uploadConfigFile",
       headers: {
         authorization: "authorization-text",
+        token: Cookies.get("token"),
       },
       showUploadList: false,
       onChange(info) {

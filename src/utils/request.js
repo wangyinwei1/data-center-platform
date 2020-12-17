@@ -2,6 +2,8 @@ import axios from "axios"
 import globalStore from "../stores/global.js"
 import { stores } from "../stores/index.js"
 import { message, notification } from "antd"
+import Cookies from "js-cookie"
+
 let once401 = false
 
 function checkStatus(response) {
@@ -38,11 +40,19 @@ function catchError(error) {
   return error
 }
 
+const getCookies = Cookies.get("token")
+const Authorization = getCookies
+  ? {
+      token: getCookies,
+    }
+  : {}
+
 const request = axios.create({
   baseURL: "/",
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json; charset=utf-8",
+    ...Authorization,
   },
 })
 
