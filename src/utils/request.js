@@ -39,20 +39,49 @@ function catchError(error) {
   return error
 }
 
-const getCookies = Cookies.get("token")
-const Authorization = getCookies
-  ? {
-      token: getCookies,
-    }
-  : {}
+// const getCookies = Cookies.get("token")
+// const Authorization = getCookies
+//   ? {
+//       token: getCookies,
+//     }
+//   : {}
 
 const request = axios.create({
   baseURL: "/",
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json; charset=utf-8",
-    ...Authorization,
   },
+})
+
+request.interceptors.request.use((res) => {
+  const { url, headers, ...rest } = res
+  let token = Cookies.get("token")
+
+  if (token) {
+    const headers = {
+      Accept: "application/json",
+      "Content-Type": "application/json; charset=utf-8",
+      token,
+      ...headers,
+    }
+    return {
+      url: url,
+      headers: headers,
+      ...rest,
+    }
+  } else {
+    const headers = {
+      ...headers,
+      "Content-Type": "application/json; charset=utf-8",
+      Accept: "application/json",
+    }
+    return {
+      url: url,
+      headers: headers,
+      ...rest,
+    }
+  }
 })
 
 request.interceptors.response.use(checkStatus, catchError)
