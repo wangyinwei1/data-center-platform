@@ -1,10 +1,10 @@
 const formParams = {
   fields: {
     F_DeviceName: {
-      value: '',
+      value: "",
       require: true,
     },
-    F_StationID: {
+    roomNO: {
       value: undefined,
       require: true,
     },
@@ -13,24 +13,24 @@ const formParams = {
       require: true,
     },
     F_IP: {
-      value: '',
+      value: "",
       require: true,
     },
     F_Port: {
-      value: '',
+      value: "",
       require: true,
     },
     F_OutDevID: {
-      value: '',
+      value: "",
     },
     rec: {
-      value: '',
+      value: "",
     },
     F_Latitude: {
-      value: '',
+      value: "",
     },
     F_Longitude: {
-      value: '',
+      value: "",
     },
     F_CollectSpan: {
       value: 0,
@@ -39,21 +39,21 @@ const formParams = {
       value: 0,
     },
     F_SimCardNO: {
-      value: '',
+      value: "",
     },
     F_NetInTime: {
-      value: '',
+      value: "",
       require: true,
     },
     adr: {
-      value: '',
+      value: "",
     },
   },
-};
+}
 const clearFormParams = {
   fields: {
     F_DeviceName: {
-      value: '',
+      value: "",
       require: true,
     },
     F_StationID: {
@@ -73,24 +73,24 @@ const clearFormParams = {
       require: true,
     },
     F_IP: {
-      value: '',
+      value: "",
       require: true,
     },
     F_Port: {
-      value: '',
+      value: "",
       require: true,
     },
     F_OutDevID: {
-      value: '',
+      value: "",
     },
     rec: {
-      value: '',
+      value: "",
     },
     F_Latitude: {
-      value: '',
+      value: "",
     },
     F_Longitude: {
-      value: '',
+      value: "",
     },
     F_CollectSpan: {
       value: 0,
@@ -99,48 +99,48 @@ const clearFormParams = {
       value: 0,
     },
     F_SimCardNO: {
-      value: '',
+      value: "",
     },
     F_NetInTime: {
-      value: '',
+      value: "",
       require: true,
     },
     adr: {
-      value: '',
+      value: "",
     },
   },
-};
+}
 const addLevelOne = {
   oneFields: {
     F_Port: {
-      value: '',
+      value: "",
       require: true,
     },
     F_PortName: {
-      value: '',
+      value: "",
       require: true,
     },
-    F_Rec: {value: ''},
+    F_Rec: { value: "" },
   },
-};
+}
 const addChildDevice = {
   childDevicefields: {
     F_Adr: {
-      value: '',
+      value: "",
       require: true,
     },
     F_SubDeviceName: {
-      value: '',
+      value: "",
       require: true,
     },
     Id_Version: {
       value: undefined,
       require: true,
     },
-    F_IdentyNO: {value: ''},
-    F_SubDeviceID: {value: ''},
-    F_Rec: {value: ''},
-    cl_typeName: {value: ''},
+    F_IdentyNO: { value: "" },
+    F_SubDeviceID: { value: "" },
+    F_Rec: { value: "" },
+    cl_typeName: { value: "" },
   },
-};
-export {formParams, clearFormParams, addLevelOne, addChildDevice};
+}
+export { formParams, clearFormParams, addLevelOne, addChildDevice }

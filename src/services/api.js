@@ -918,6 +918,13 @@ export function editEngineRoom(data) {
 export function getEngineRoomEditData(params) {
   return request.get(base + "/device_engineRoom/initEdit", { params })
 }
+export function getDeviceChannelDownExcel(params) {
+  return request.get(base + "/device_channel/downExcel", {
+    params,
+    responseType: "blob",
+    getResponse: true,
+  })
+}
 export function FSURunalarm(data) {
   return request.post(base + "/FSU_runalarm/runalarm_list3", data)
 }

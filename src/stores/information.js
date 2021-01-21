@@ -13,6 +13,7 @@ import {
   getDeviceAlterInfo,
   getGoAdd,
   deviceAlter,
+  getFsuDevEngineRoomList,
   goFind2,
   informationSave,
   informationEditSave,
@@ -55,6 +56,7 @@ class Information {
   @observable detailData = []
   @observable ztreeChild = 0
   @observable expandedRows = []
+  @observable roomList = []
   @action.bound
   async expandedRowsChange(value) {
     this.expandedRows = value
@@ -154,6 +156,11 @@ class Information {
     } else {
       message.error(data.Msg)
     }
+  }
+  @action.bound
+  async getRoomList(params) {
+    const data = await getFsuDevEngineRoomList(params)
+    this.roomList = data.Data || []
   }
   @action.bound
   async getOperateList(params) {

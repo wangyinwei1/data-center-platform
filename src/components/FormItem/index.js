@@ -68,6 +68,9 @@ const FormSelect = Form.create({
     disabled,
     visiable,
     mode,
+    showSearch,
+    optionFilterProp,
+    filterOption,
   } = props
   if (visiable === false) {
     return null
@@ -75,6 +78,7 @@ const FormSelect = Form.create({
   const customWidth = width
     ? { width: typeof width === "number" ? `${width}px` : width }
     : {}
+  const rest = { showSearch, optionFilterProp, filterOption }
   return (
     <FormItem
       label={label || ""}
@@ -90,6 +94,7 @@ const FormSelect = Form.create({
       })(
         <Select
           mode={mode}
+          {...rest}
           placeholder={placeholder ? placeholder : "请选择内容"}
           disabled={disabled ? disabled : false}
         >

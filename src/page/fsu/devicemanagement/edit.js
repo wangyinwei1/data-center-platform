@@ -143,6 +143,14 @@ class Edit extends Component {
           name={"roomNO"}
           rules={[{ required: true, message: "请必须填写!" }]}
           children={devBelongunit}
+          showSearch
+          filterOption={(input, option) => {
+            return (
+              option.props.children
+                .toLowerCase()
+                .indexOf(input.toLowerCase()) >= 0
+            )
+          }}
         />
         <FormInput
           {...fields}

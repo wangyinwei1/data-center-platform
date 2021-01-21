@@ -55,7 +55,7 @@ class Edit extends Component {
   }
   render() {
     const {
-      informationStore: { detailData, addData },
+      informationStore: { detailData, addData, roomList },
       fields,
       mode,
     } = this.props
@@ -75,10 +75,10 @@ class Edit extends Component {
         break
     }
 
-    const devBelongunit = _.map(toJS(data.dev_belongunit), (item) => {
+    const devBelongunit = _.map(toJS(roomList), (item) => {
       return {
-        value: item.F_ID,
-        name: item.F_Name,
+        value: item.F_RoomNO,
+        name: item.F_RoomName,
       }
     })
     let F_ConnectType = null
@@ -109,11 +109,19 @@ class Edit extends Component {
           {...fields}
           onChange={this.handleFormChange}
           disabled={disabled}
-          label={"站点选择"}
-          placeholder={"请选择站点"}
-          name={"F_StationID"}
+          label={"所属机房"}
+          placeholder={"请选择机房"}
+          name={"roomNO"}
           rules={[{ required: true, message: "请必须填写!" }]}
           children={devBelongunit}
+          showSearch
+          filterOption={(input, option) => {
+            return (
+              option.props.children
+                .toLowerCase()
+                .indexOf(input.toLowerCase()) >= 0
+            )
+          }}
         />
         <FormSelect
           {...fields}

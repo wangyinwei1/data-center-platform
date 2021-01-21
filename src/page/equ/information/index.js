@@ -303,7 +303,7 @@ class Information extends Component {
         formValue.F_Port.require = true
       }
       formValue.Id_Version.require = true
-      formValue.F_StationID.value = data.pd.stationID || undefined
+      formValue.roomNO.value = data.pd.roomNO || undefined
       formValue.F_CollectSpan.value = data.pd.collectSpan
       formValue.Id_Version.value = data.pd.Id_Version
       formValue.F_HeartSpan.value = data.pd.heartSpan
@@ -373,8 +373,9 @@ class Information extends Component {
   //添加功能
   add() {
     const {
-      informationStore: { getGoAdd, ztreeChild },
+      informationStore: { getRoomList, getGoAdd, ztreeChild },
     } = this.props
+    getRoomList({ Area_ID: ztreeChild })
     getGoAdd({ Area_ID: ztreeChild }).then(() => {
       this.setState({
         editShow: true,
@@ -522,8 +523,9 @@ class Information extends Component {
   //点击编辑
   editClick(item) {
     const {
-      informationStore: { goFind2, ztreeChild },
+      informationStore: { goFind2, getRoomList, ztreeChild },
     } = this.props
+    getRoomList({ Area_ID: ztreeChild })
     goFind2({ Area_ID: ztreeChild, F_DeviceID: item.devID }).then((data) => {
       this.initFromValue(data, "modify")
     })
