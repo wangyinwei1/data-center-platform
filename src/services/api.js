@@ -393,6 +393,14 @@ export function getAlarmTable(params) {
     params,
   })
 }
+export function downGeneralExcel(url, params) {
+  return request.get(base + url, {
+    params,
+    responseType: "blob",
+    getResponse: true,
+  })
+}
+
 export function getInitAlarmConditionsAdd(params) {
   return request.get(base + "/device_basechannel/initAlarmConditionsAdd.do", {
     params,

@@ -16,6 +16,7 @@ import EditContent from "./editContent.js"
 import ValueTypeContent from "./valueTypeTable.js"
 import DeleteModal from "../../../components/DeleteModal"
 import AlarmContent from "./alarmTable.js"
+import { downExcel } from "../../../utils/tool.js"
 import VirtualContent from "./virtualContent.js"
 import { formParams, virtualParams } from "./tplJson.js"
 //实例
@@ -435,11 +436,12 @@ class Regional extends Component {
     const {
       basicchannelStore: { tableParmas },
     } = this.props
-    location.href =
-      "/collect/device_basechannel/toExcel.do?F_DeviceType=" +
-      tableParmas.F_TypeID +
-      "&F_Version=" +
-      tableParmas.F_Version
+    downExcel(
+      "/device_basechannel/toExcel.do?F_DeviceType=" +
+        tableParmas.F_TypeID +
+        "&F_Version=" +
+        tableParmas.F_Version
+    )
   }
   onImportClick() {
     this.setState({
@@ -447,7 +449,7 @@ class Regional extends Component {
     })
   }
   onExportTplClick() {
-    location.href = "/collect/device_basechannel/downExcel.do"
+    downExcel("/device_basechannel/downExcel.do")
   }
   //校验循环
   test(fields) {

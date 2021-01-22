@@ -9,6 +9,7 @@ import columnData from "./childColumns.js"
 import Toolbar from "../../../components/Toolbar"
 import { message, Upload } from "antd"
 import DeleteModal from "../../../components/DeleteModal"
+import { downExcel } from "../../../utils/tool"
 //实例
 @inject("passagewayStore")
 @observer
@@ -43,7 +44,7 @@ class Regional extends Component {
     passagewayStore.getChildTable(params)
   }
   onExportTplClick() {
-    location.href = "/collect/device_channel/downExcel"
+    downExcel("/device_channel/downExcel")
   }
   onImportClick() {
     this.setState({
