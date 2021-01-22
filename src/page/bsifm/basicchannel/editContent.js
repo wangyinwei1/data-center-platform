@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import { action, observer, inject } from "mobx-react"
 import { toJS } from "mobx"
 import { Upload, message } from "antd"
+import FileSaver from "file-saver"
 import AlarmContent from "./alarmTable.js"
 import AlarmCondition from "./alarmCondition.js"
 import classnames from "classnames"
@@ -15,6 +16,7 @@ import {
   CustomizedForm,
 } from "../../../components/FormItem"
 import { Form, Button, Input, Row, Col } from "antd"
+import { downExcel } from "@/utils/tool"
 const FormItem = Form.Item
 
 //实例
@@ -44,7 +46,7 @@ class Edit extends Component {
     handleFormChange(changedFields)
   }
   exportTpl() {
-    location.href = "/collect/device_alarmCondition/downExcel"
+    downExcel("/device_alarmCondition/downExcel")
   }
   copeToChannel() {
     const { basicchannelStore, currentDevice } = this.props
@@ -70,13 +72,13 @@ class Edit extends Component {
       !record[0].condition &&
       (!record[0].alarmDelay || record[0].alarmDelay === 0)
     ) {
-      location.href =
-        "/collect/device_alarmCondition/exportExcel?alarmConditions=" +
-        encodeURIComponent(JSON.stringify(toJS([])))
+      downExcel("/device_alarmCondition/exportExcel", {
+        alarmConditions: encodeURIComponent(JSON.stringify([])),
+      })
     } else {
-      location.href =
-        "/collect/device_alarmCondition/exportExcel?alarmConditions=" +
-        encodeURIComponent(JSON.stringify(toJS(a_tableData)))
+      downExcel("/device_alarmCondition/exportExcel?alarmConditions=", {
+        alarmConditions: encodeURIComponent(JSON.stringify(toJS(a_tableData))),
+      })
     }
   }
   import() {

@@ -14,11 +14,13 @@ import columnData from "./columns.js"
 import Panel from "../../../components/Panel"
 import ChildTable from "./childTable.js"
 import ClModal from "../information/controlModal.js"
+import FileSaver from "file-saver"
 import { formParams, alarmFormParams, virtualParams } from "./tplJson.js"
 import DeleteModal from "../../../components/DeleteModal"
 import EditContent from "./edit.js"
 import VirtualContent from "./virtualContent.js"
 import E_ChildTable from "./e_childTable.js"
+import { downExcel } from "@/utils/tool"
 //实例
 @inject("regionalStore", "passagewayStore")
 @observer
@@ -478,30 +480,9 @@ class Passageway extends Component {
     getChildTable(params)
   }
   onExportClick() {
-    const { passagewayStore } = this.props
-    passagewayStore
-      .getDeviceChannelDownExcel({ deviceID: this.state.currentDevice })
-      .then((res) => {
-        console.log(res)
-        // // 文件回调
-        // if (!res.response) {
-        //   return
-        // }
-        // var disposition = res.response.headers.get("Content-Disposition")
-        // var filename
-        // if (disposition && disposition.match(/attachment;/)) {
-        //   filename = disposition
-        //     .replace(/attachment;.*filename=/, "")
-        //     .replace(/"/g, "")
-        // }
-        const blob = new Blob([res], { type: "application/vnd.ms-excel;" })
-        const url = window.URL.createObjectURL(blob)
-        const a = document.createElement("a")
-        a.href = url
-        a.download = "default.xls"
-        a.click()
-        window.URL.revokeObjectURL(url)
-      })
+    downExcel("/device_channel/toExcel.do", {
+      deviceID: this.state.currentDevice,
+    })
   }
   editVirtual() {
     const fields = this.state.fields

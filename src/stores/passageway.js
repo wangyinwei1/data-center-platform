@@ -6,7 +6,6 @@ import {
   getPassagewayChildTable,
   passagewayChild_search,
   initAdd,
-  getDeviceChannelDownExcel,
   getBasicchannelTable,
   passageway_save,
   passageway_edit,
@@ -60,17 +59,6 @@ class Passageway {
   @action.bound
   async c_expandedRowsChange(value) {
     this.c_expandedRows = value
-  }
-  @action.bound
-  async getDeviceChannelDownExcel(params) {
-    const data = await getDeviceChannelDownExcel(params)
-    return data
-    // if (data.Result == 'success') {
-    //   this.s_tableParmas = params;
-    //   this.s_tableData = data;
-    // } else {
-    //   message.error(data.Msg);
-    // }
   }
   @action.bound
   async getSportTable(params) {

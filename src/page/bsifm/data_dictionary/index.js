@@ -2,12 +2,14 @@ import React, { Component } from "react"
 import { action, observer, inject } from "mobx-react"
 import { Upload, message } from "antd"
 import styles from "./index.less"
+import FileSaver from "file-saver"
 import Cookies from "js-cookie"
 import { toJS } from "mobx"
 import Toolbar from "../../../components/Toolbarnew"
 import Table from "../../../components/Table"
 import columnData from "./columns.js"
 import DeleteModal from "../regional/delete.js"
+import { downExcel } from "@/utils/tool"
 //实例
 @inject("data_dictionaryStore")
 @observer
@@ -48,8 +50,8 @@ class Site extends Component {
   }
   onExportClick() {
     const fsuTypeId = this.state.fsuTypeId
-    fsuTypeId &&
-      (location.href = `/collect/fsuSignaldic/toExcel?F_TypeID=${fsuTypeId}`)
+    const { data_dictionaryStore } = this.props
+    fsuTypeId && downExcel("/fsuSignaldic/toExcel", { F_TypeID: fsuTypeId })
   }
   onDeleteOk() {
     const { data_dictionaryStore } = this.props

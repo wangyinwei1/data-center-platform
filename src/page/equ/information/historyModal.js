@@ -21,6 +21,8 @@ import styles from "./index.less"
 import ReactEcharts from "echarts-for-react"
 import options from "./baseOptions"
 import _ from "lodash"
+import FileSaver from "file-saver"
+import { downExcel } from "@/utils/tool"
 class EchartsOrList extends Component {
   constructor(props) {
     super(props)
@@ -305,33 +307,26 @@ class Regional extends Component {
       ? historymodalStore.getFsuHisdataTable(params)
       : historymodalStore.findDeviceData(params)
   }
-  export(item) {
+  export = async (item) => {
     const {
       historymodalStore: { currentDevice },
       isFsu,
     } = this.props
     if (!isFsu) {
-      location.href =
-        "/collect/device_hisdata/toExcel.do?F_DeviceID=" +
-        currentDevice +
-        "&Channels=" +
-        item.channelID +
-        "&lastLoginStart=" +
-        this.state.lastLoginStart +
-        "&lastLoginEnd=" +
-        this.state.lastLoginEnd
+      downExcel("/device_hisdata/toExcel", {
+        F_DeviceID: currentDevice,
+        lastLoginStart: this.state.lastLoginStart,
+        lastLoginEnd: this.state.lastLoginEnd,
+        Channels: item.channelID,
+      })
     } else {
-      location.href =
-        "/collect/FSU_hisdata/toExcel?suID=" +
-        currentDevice +
-        "&deviceIDs=" +
-        item.deviceID +
-        "&spIDs=" +
-        item.spID +
-        "&lastLoginStart=" +
-        this.state.lastLoginStart +
-        "&lastLoginEnd=" +
-        this.state.lastLoginEnd
+      downExcel("/FSU_hisdata/toExcel", {
+        suID: currentDevice,
+        deviceID: item.deviceID,
+        spIDs: item.spID,
+        lastLoginStart: this.state.lastLoginStart,
+        lastLoginEnd: this.state.lastLoginEnd,
+      })
     }
   }
   exportChange(item) {

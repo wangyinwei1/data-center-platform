@@ -22,41 +22,43 @@ class Regional extends Component {
 
     this.timer = setTimeout(() => {
       this.adaptive()
-      window.onresize = () => {
-        clearTimeout(this.timer)
-        this.timer = setTimeout(() => {
-          this.adaptive()
-        }, 50)
-      }
+      window.addEventListener("resize", this.onResize)
+    }, 50)
+  }
+  onResize = () => {
+    clearTimeout(this.timer)
+    this.timer = setTimeout(() => {
+      this.adaptive()
     }, 50)
   }
   componentDidMount() {
     clearTimeout(this.timer)
     this.timer = setTimeout(() => {
       this.adaptive()
-      window.onresize = () => {
-        clearTimeout(this.timer)
-        this.timer = setTimeout(() => {
-          this.adaptive()
-        }, 50)
-      }
+      window.addEventListener("resize", this.onResize)
     }, 50)
+  }
+  componentWillUnmount() {
+    clearTimeout(this.timer)
+    window.removeEventListener("resize", this.onResize)
   }
 
   adaptive() {
-    const width = 1920 - 46
-    const height = 1080 - 44
-    const c_width = this.root.offsetWidth
-    const c_height = this.root.offsetHeight
+    if (this.root) {
+      const width = 1920 - 46
+      const height = 1080 - 44
+      const c_width = this.root.offsetWidth
+      const c_height = this.root.offsetHeight
 
-    let update =
-      this.state.scaleX === c_width / width &&
-      this.state.scaleY === c_height / height
-    !update &&
-      this.setState({
-        scaleX: c_width / width,
-        scaleY: c_height / height,
-      })
+      let update =
+        this.state.scaleX === c_width / width &&
+        this.state.scaleY === c_height / height
+      !update &&
+        this.setState({
+          scaleX: c_width / width,
+          scaleY: c_height / height,
+        })
+    }
   }
   render() {
     let width = 1920 - 46

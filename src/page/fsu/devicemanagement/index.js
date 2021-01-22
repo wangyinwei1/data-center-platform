@@ -36,6 +36,7 @@ import {
   addChildFsuDevice,
   addChildDevice,
 } from "./tplJson.js"
+import { downExcel } from "@/utils/tool"
 //实例
 @inject(
   "regionalStore",
@@ -470,7 +471,7 @@ class Information extends Component {
     })
   }
   onExportTplClick() {
-    location.href = "/collect/FSU_device/downExcel"
+    downExcel("/FSU_device/downExcel")
   }
   onDisableCancel() {
     this.setState({
@@ -1432,10 +1433,13 @@ class Information extends Component {
     })
   }
   exportMonitor(item) {
-    location.href = "/collect/FSU_device/exportFSUSp?F_Suid=" + item.suID
+    downExcel("/FSU_device/exportFSUSp", {
+      F_Suid: item.suID,
+      fsuTypeId: JSON.parse(localStorage.getItem("FsuTypeID")),
+    })
   }
   exportSub(item) {
-    location.href = "/collect/FSU_device/exportFSUSundevice?F_Suid=" + item.suID
+    downExcel("/FSU_device/exportFSUSundevice", { F_Suid: item.suID })
   }
   synchronousActivityAlertsClick = (item) => {
     const {

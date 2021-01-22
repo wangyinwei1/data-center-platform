@@ -8,6 +8,7 @@ import AlarmCondition from "./alarmCondition.js"
 import classnames from "classnames"
 import styles from "./index.less"
 import EditModal from "../../../components/EditModal"
+import { downExcel } from "@/utils/tool"
 import {
   FormInput,
   FormRadio,
@@ -77,10 +78,10 @@ class Edit extends Component {
       })
     })
   }
-  exportTpl() {
-    location.href = "/collect/device_alarmCondition/downExcel"
+  exportTpl = async () => {
+    downExcel("/device_alarmCondition/downExcel")
   }
-  export() {
+  export = async () => {
     const {
       passagewayStore: { a_tableData },
     } = this.props
@@ -92,13 +93,13 @@ class Edit extends Component {
       !record[0].condition &&
       (!record[0].alarmDelay || record[0].alarmDelay === 0)
     ) {
-      location.href =
-        "/collect/device_alarmCondition/exportExcel?alarmConditions=" +
-        encodeURIComponent(JSON.stringify(toJS([])))
+      downExcel("/device_alarmCondition/exportExcel", {
+        alarmConditions: [],
+      })
     } else {
-      location.href =
-        "/collect/device_alarmCondition/exportExcel?alarmConditions=" +
-        encodeURIComponent(JSON.stringify(toJS(a_tableData)))
+      downExcel("/device_alarmCondition/exportExcel", {
+        alarmConditions: toJS(a_tableData),
+      })
     }
   }
   import() {

@@ -373,8 +373,12 @@ export function alarmConditionAdd(data) {
 export function passageway_initEdit(params) {
   return request.get(base + "/device_channel/initEdit.do", { params })
 }
-export function passageway_export(params) {
-  return request.get(base + "/device_channel/toExcel.do", { params })
+export function downGeneralExcel(url, params) {
+  return request.get(base + url, {
+    params,
+    responseType: "blob",
+    getResponse: true,
+  })
 }
 export function passageway_getDev(params) {
   return request.get(base + "/device_dev/getDevListByDeviceType.do", { params })
@@ -917,13 +921,6 @@ export function editEngineRoom(data) {
 }
 export function getEngineRoomEditData(params) {
   return request.get(base + "/device_engineRoom/initEdit", { params })
-}
-export function getDeviceChannelDownExcel(params) {
-  return request.get(base + "/device_channel/downExcel", {
-    params,
-    responseType: "blob",
-    getResponse: true,
-  })
 }
 export function FSURunalarm(data) {
   return request.post(base + "/FSU_runalarm/runalarm_list3", data)

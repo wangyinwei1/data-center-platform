@@ -61,6 +61,7 @@
     "document-offset": "^1.0.4",
     "echarts": "^3.8.5",
     "echarts-for-react": "^2.0.12",
+    "file-saver": "^2.0.5",
     "immutable": "^3.8.1",
     "js-cookie": "^2.2.0",
     "mobx": "3.2.0",
