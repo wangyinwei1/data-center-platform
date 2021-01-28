@@ -100,7 +100,11 @@ const FormSelect = Form.create({
         >
           {_.map(children, (item, i) => {
             return (
-              <Option key={i.toString(36) + i} value={item.value}>
+              <Option
+                title={item.name}
+                key={i.toString(36) + i}
+                value={item.value}
+              >
                 {item.name}
               </Option>
             )
