@@ -16,6 +16,7 @@ class Regional extends Component {
     super(props);
     this.onShowSizeChange = this.onShowSizeChange.bind(this);
     this.onPageChange = this.onPageChange.bind(this);
+    this.onTimeOk = this.onTimeOk.bind(this);
     this.onSearch = this.onSearch.bind(this);
     this.timeChange = this.timeChange.bind(this);
   }
@@ -44,17 +45,25 @@ class Regional extends Component {
     const params = {
       ...fsu_historyalarmStore.c_tableParmas,
       keywords: encodeURIComponent(value),
+      page: 1,
     };
     fsu_historyalarmStore.getChildTable(params);
   }
   timeChange(dates, dateStrings) {
-    const {fsu_historyalarmStore} = this.props;
     const params = {
-      ...fsu_historyalarmStore.c_tableParmas,
       lastLoginStart: dateStrings[0],
       lastLoginEnd: dateStrings[1],
     };
-    fsu_historyalarmStore.childSearch(params);
+    this.timeParams = params;
+  }
+  onTimeOk() {
+    const {fsu_historyalarmStore} = this.props;
+    let obj = {
+      ...fsu_historyalarmStore.c_tableParmas,
+      page: 1,
+      ...this.timeParams,
+    };
+    fsu_historyalarmStore.childSearch(obj);
   }
   render() {
     const {fsu_historyalarmStore} = this.props;
@@ -72,6 +81,7 @@ class Regional extends Component {
           closeAdd={true}
           showValue={['time']}
           timeChange={this.timeChange}
+          onTimeOk={this.onTimeOk}
         />
         <Table
           pageIndex={pagination.page}

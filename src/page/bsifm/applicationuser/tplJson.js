@@ -46,6 +46,10 @@ const formParams = {
       value: undefined,
       require: true,
     },
+    F_FsuTypeID: {
+      value: undefined,
+      require: false,
+    },
     DevTypes: {
       value: [],
     },

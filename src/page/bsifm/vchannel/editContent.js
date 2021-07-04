@@ -63,7 +63,13 @@ class Regional extends Component {
           disabled={mode === 'new' ? false : true}
           name={'F_ChannelID'}
           className={currentClass}
-          rules={[{required: true, message: '请必须填写!'}]}
+          rules={[
+            {required: true, message: '请必须填写!'},
+            {
+              pattern: /^[^\u3220-\uFA29]+$/,
+              message: '通道ID不能为中文!',
+            },
+          ]}
         />
         <FormSelect
           {...fields}

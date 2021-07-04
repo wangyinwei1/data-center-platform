@@ -25,7 +25,7 @@ class Regional extends Component {
   }
   render() {
     const {
-      applicationuserStore: {editData, addData},
+      applicationuserStore: {fsuTypes, editData, addData},
       fields,
       cityMenu,
       countyMenu,
@@ -40,14 +40,11 @@ class Regional extends Component {
 
     let data = {};
     let disabled = false,
-      currentClass = 'cl_regional_select_157',
-      provinceDisable = false,
-      cityDisable = false,
-      areaDisable = false,
-      zoneDisable = false;
+      currentClass = 'cl_regional_select_157';
     switch (mode) {
       case 'new':
         data = addData;
+        fields.STATUS.value = 1;
 
         break;
       case 'modify':
@@ -95,6 +92,12 @@ class Regional extends Component {
         name: item.F_TypeName,
       };
     });
+    const fsuTypeArray = _.map(toJS(fsuTypes), item => {
+      return {
+        value: item.typeId,
+        name: item.typeName,
+      };
+    });
     return (
       <Form layout="inline" className={styles['edit_wrap']}>
         <Row>
@@ -104,6 +107,7 @@ class Regional extends Component {
             label={'用户名'}
             disabled={disabled}
             name={'USERNAME'}
+            className={'applicationuser_edit'}
             rules={[{required: true, message: '请必须填写!'}]}
           />
           <FormInput
@@ -111,6 +115,7 @@ class Regional extends Component {
             onChange={this.handleFormChange}
             label={'姓名'}
             disabled={disabled}
+            className={'applicationuser_edit'}
             name={'NAME'}
             rules={[{required: true, message: '请必须填写!'}]}
           />
@@ -118,6 +123,7 @@ class Regional extends Component {
             {...fields}
             onChange={this.handleFormChange}
             label={'手机号'}
+            className={'applicationuser_edit'}
             disabled={disabled}
             name={'PHONE'}
             rules={[
@@ -133,6 +139,7 @@ class Regional extends Component {
             onChange={this.handleFormChange}
             label={'邮箱'}
             disabled={disabled}
+            className={'applicationuser_edit'}
             name={'EMAIL'}
             rules={[
               {required: false},
@@ -146,10 +153,21 @@ class Regional extends Component {
             {...fields}
             onChange={this.handleFormChange}
             label={'状态'}
-            disabled={disabled}
+            disabled={mode === 'new' ? true : disabled}
             name={'STATUS'}
+            className={'applicationuser_edit'}
             rules={[{required: true, message: '请必须填写!'}]}
             children={[{value: 1, name: '正常'}, {value: 0, name: '冻结'}]}
+          />
+          <FormSelect
+            {...fields}
+            onChange={this.handleFormChange}
+            label={'FSU设备类型'}
+            disabled={disabled}
+            name={'F_FsuTypeID'}
+            className={'applicationuser_edit'}
+            rules={[{required: false, message: '请必须填写!'}]}
+            children={fsuTypeArray}
           />
           {/* <FormSelect */}
           {/*   {...fields} */}
@@ -176,7 +194,6 @@ class Regional extends Component {
             {...fields}
             onChange={this.handleFormChange}
             label={'区域ID'}
-            disabled={provinceDisable}
             name={'proCode'}
             rules={[{required: true, message: '请必须填写!'}]}
             className={currentClass}

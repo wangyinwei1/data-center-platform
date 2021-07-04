@@ -1,11 +1,13 @@
-import axios from 'axios';
-import globalStore from '../stores/global.js';
-import {stores} from '../stores/index.js';
-import {message, notification} from 'antd';
+import axios from "axios"
+import globalStore from "../stores/global.js"
+import { stores } from "../stores/index.js"
+import { message, notification } from "antd"
+import Cookies from "js-cookie"
+let once401 = false
 
 function checkStatus(response) {
   if (response.status >= 200 && response.status < 300) {
-    return response;
+    return response
   }
 
   // notification.error({
@@ -13,53 +15,94 @@ function checkStatus(response) {
   //   description: response.statusText,
   // });
 
-  const error = new Error(response.statusText);
+  const error = new Error(response.statusText)
 
-  error.response = response;
+  error.response = response
 
-  throw error;
+  throw error
 }
 function catchError(error) {
   if (error.code) {
-    notification.error({
-      message: error.name,
-      description: error.message,
-    });
+    // !once401 &&
+    //   notification.error({
+    //     message: error.name,
+    //     description: error.message,
+    //   });
   }
-  if ('stack' in error && 'message' in error) {
-    notification.error({
-      description: error.message,
-    });
+  if ("stack" in error && "message" in error) {
+    // !once401 &&
+    //   notification.error({
+    //     description: error.message,
+    //   });
+    console.log("异常捕获" + error.message)
   }
-  return error;
+  return error
 }
 
+// const getCookies = Cookies.get("token")
+// const Authorization = getCookies
+//   ? {
+//       token: getCookies,
+//     }
+//   : {}
+
 const request = axios.create({
-  baseURL: '/',
+  baseURL: "/",
   headers: {
-    Accept: 'application/json',
-    'Content-Type': 'application/json; charset=utf-8',
+    Accept: "application/json",
+    "Content-Type": "application/json; charset=utf-8",
   },
-});
+})
 
-request.interceptors.response.use(checkStatus, catchError);
-request.interceptors.response.use(res => {
-  if (res.response && res.response.status == 401) {
-    const timeoutUrl = location.hash.replace(/#/, '');
+request.interceptors.request.use((res) => {
+  const { url, headers, ...rest } = res
+  let token = Cookies.get("token")
 
-    localStorage.setItem('timeoutUrl', timeoutUrl);
-    setTimeout(() => {
-      stores.globalStore.changeIsTimeout(true);
-      message.error('登录超时,请重新登录！');
-      if (process.env.NODE_ENV == 'production') {
-        location.href = location.origin + '/collect/#/login';
-      } else {
-        location.href = location.origin + '/#/login';
-      }
-    }, 50);
-    return response;
+  if (token) {
+    const headers = {
+      Accept: "application/json",
+      "Content-Type": "application/json; charset=utf-8",
+      token,
+      ...headers,
+    }
+    return {
+      url: url,
+      headers: headers,
+      ...rest,
+    }
+  } else {
+    const headers = {
+      ...headers,
+      "Content-Type": "application/json; charset=utf-8",
+      Accept: "application/json",
+    }
+    return {
+      url: url,
+      headers: headers,
+      ...rest,
+    }
   }
-  return res.data;
-});
+})
 
-export default request;
+request.interceptors.response.use(checkStatus, catchError)
+request.interceptors.response.use((res) => {
+  if (res.response && res.response.status == 401) {
+    const timeoutUrl = location.hash.replace(/#/, "")
+
+    localStorage.setItem("timeoutUrl", timeoutUrl)
+    setTimeout(() => {
+      stores.globalStore.changeIsTimeout(true)
+      !once401 && message.error("登录超时,请重新登录！")
+      res.status === 200 ? (once401 = false) : (once401 = true)
+      if (process.env.NODE_ENV == "production") {
+        location.href = location.origin + "/collect/#/login"
+      } else {
+        location.href = location.origin + "/#/login"
+      }
+    }, 50)
+    return response
+  }
+  return res.data
+})
+
+export default request

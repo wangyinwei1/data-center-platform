@@ -3,6 +3,7 @@ import styles from './index.less';
 import classnames from 'classnames';
 import {Tooltip, Dropdown, Menu} from 'antd';
 import columnData from './childColumns.js';
+import TextOverflow from '../../../components/TextOverflow';
 /**
  * {anction表格的culumns}
  * @param {deleteClick} 删除按钮的回调
@@ -31,14 +32,6 @@ const menu = ({
           <span>编辑</span>
         </div>
       </Menu.Item>
-      {record.isConcentrator === 0 && (
-        <Menu.Item key="c_disable" onClick={disableClick.bind(_this, record)}>
-          <div className={styles['disable']}>
-            <i className={classnames('icon iconfont icon-jinyong')} />
-            <span>{record.status === 1 ? '启用' : '禁用'}</span>
-          </div>
-        </Menu.Item>
-      )}
       <Menu.Item key="c_delete" onClick={deleteClick.bind(_this, record)}>
         <div className={styles['delete']}>
           <i className={classnames('icon iconfont icon-shanchu')} />
@@ -57,6 +50,9 @@ const columns = ({editClick, deleteClick, alarmClick, detailClick, _this}) => {
     {
       title: '通道名称',
       dataIndex: 'channelName',
+      render: (text, record, index) => {
+        return <TextOverflow>{text}</TextOverflow>;
+      },
     },
     {
       title: '通道类型',

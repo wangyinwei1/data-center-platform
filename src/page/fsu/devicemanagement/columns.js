@@ -10,104 +10,7 @@ import TextOverflow from '../../../components/TextOverflow';
  * @return {array}
  */
 
-const menu = ({
-  editClick,
-  deleteClick,
-  detailClick,
-  _this,
-  record,
-  disableClick,
-  addLevelOneClick,
-}) => {
-  return (
-    <Menu className={styles['operation']}>
-      <Menu.Item key="c_add" onClick={addLevelOneClick.bind(_this, record)}>
-        <div className={styles['add_child']}>
-          <i className={classnames('icon iconfont icon-xinzeng')} />
-          <span>新增</span>
-        </div>
-      </Menu.Item>
-      <Menu.Item key="c_detail" onClick={detailClick.bind(_this, record)}>
-        <div className={styles['detail']}>
-          <i className={classnames('icon iconfont icon-xiangqing')} />
-          <span>详情</span>
-        </div>
-      </Menu.Item>
-      <Menu.Item key="c_edit" onClick={editClick.bind(_this, record)}>
-        <div className={styles['edit']}>
-          <i className={classnames('icon iconfont icon-bianji')} />
-          <span>编辑</span>
-        </div>
-      </Menu.Item>
-      <Menu.Item key="c_disable" onClick={disableClick.bind(_this, record)}>
-        <div className={styles['disable']}>
-          <i className={classnames('icon iconfont icon-jinyong')} />
-          <span>{record.status === 1 ? '启用' : '禁用'}</span>
-        </div>
-      </Menu.Item>
-      <Menu.Item key="c_delete" onClick={deleteClick.bind(_this, record)}>
-        <div className={styles['delete']}>
-          <i className={classnames('icon iconfont icon-shanchu')} />
-          <span>删除</span>
-        </div>
-      </Menu.Item>
-    </Menu>
-  );
-};
-const columns = ({
-  deleteClick,
-  realtimeClick,
-  historyClick,
-  controlClick,
-  disableClick,
-  editClick,
-  rumorClick,
-  addLevelOneClick,
-  detailClick,
-  getAlarmTable,
-  _this,
-}) => {
-  return [
-    {
-      title: 'FSU编号',
-      dataIndex: 'suID',
-      width: '15%',
-      className: 'information_th',
-      render: (text, record, index) => {
-        return <TextOverflow inlay={true}>{text}</TextOverflow>;
-      },
-    },
-    {
-      title: '名称',
-      dataIndex: 'name',
-      width: '12%',
-      className: 'information_th',
-      render: (text, record, index) => {
-        return <TextOverflow>{text}</TextOverflow>;
-      },
-    },
-    {
-      title: '端口',
-      dataIndex: 'suPort',
-      className: 'information_th',
-      width: '6%',
-    },
-    {
-      title: 'IP',
-      dataIndex: 'suIP',
-      className: 'information_th',
-      width: '11%',
-    },
-    {
-      title: '所属区域',
-      dataIndex: 'stationName',
-      className: 'information_th',
-      width: '25%',
-      render: (text, record, index) => {
-        return <TextOverflow>{text}</TextOverflow>;
-      },
-    },
-    {
+/*{
       title: '告警',
       width: '5%',
       className: 'information_th',
@@ -178,21 +81,158 @@ const columns = ({
           />
         );
       },
+    },*/
+const menu = ({
+  editClick,
+  deleteClick,
+  detailClick,
+  _this,
+  record,
+  disableClick,
+  exportMonitor,
+  portInfoClick,
+  exportSub,
+  addLevelOneClick,
+  fsuStatusClick,
+  restartClick,
+  fsuSetTimeClick,
+}) => {
+  return (
+    <Menu className={styles['operation']}>
+      <Menu.Item key="c_add" onClick={addLevelOneClick.bind(_this, record)}>
+        <div className={styles['add_child']}>
+          <i className={classnames('icon iconfont icon-xinzeng')} />
+          <span>新增</span>
+        </div>
+      </Menu.Item>
+      <Menu.Item key="c_detail" onClick={detailClick.bind(_this, record)}>
+        <div className={styles['detail']}>
+          <i className={classnames('icon iconfont icon-xiangqing')} />
+          <span>详情</span>
+        </div>
+      </Menu.Item>
+      <Menu.Item key="c_edit" onClick={editClick.bind(_this, record)}>
+        <div className={styles['edit']}>
+          <i className={classnames('icon iconfont icon-bianji')} />
+          <span>编辑</span>
+        </div>
+      </Menu.Item>
+      <Menu.Item key="c_restart" onClick={restartClick.bind(_this, record)}>
+        <div className={styles['edit']}>
+          <i className={classnames('icon iconfont icon-bianji')} />
+          <span>重启</span>
+        </div>
+      </Menu.Item>
+      {JSON.parse(localStorage.getItem('FsuTypeID')) === 2 && (
+        <Menu.Item key="c_portInfo" onClick={portInfoClick.bind(_this, record)}>
+          <div className={styles['edit']}>
+            <i className={classnames('icon iconfont icon-bianji')} />
+            <span>获取端口信息</span>
+          </div>
+        </Menu.Item>
+      )}
+      <Menu.Item
+        key="c_fsuSetTime"
+        onClick={fsuSetTimeClick.bind(_this, record)}>
+        <div className={styles['edit']}>
+          <i className={classnames('icon iconfont icon-bianji')} />
+          <span>校时</span>
+        </div>
+      </Menu.Item>
+      <Menu.Item key="c_disable" onClick={disableClick.bind(_this, record)}>
+        <div className={styles['disable']}>
+          <i className={classnames('icon iconfont icon-jinyong')} />
+          <span>{record.status === 1 ? '启用' : '禁用'}</span>
+        </div>
+      </Menu.Item>
+      <Menu.Item key="c_status" onClick={fsuStatusClick.bind(_this, record)}>
+        <div className={styles['fsu_status']}>
+          <i className={classnames('icon iconfont icon-shebeizhuangtai')} />
+          <span>状态</span>
+        </div>
+      </Menu.Item>
+      <Menu.Item key="c_exportSub" onClick={exportSub.bind(_this, record)}>
+        <div className={styles['export_sub']}>
+          <i className={classnames('icon iconfont icon-daochu2')} />
+          <span>导出子设备</span>
+        </div>
+      </Menu.Item>
+      <Menu.Item
+        key="c_exportMonitor"
+        onClick={exportMonitor.bind(_this, record)}>
+        <div className={styles['export_monitor']}>
+          <i className={classnames('icon iconfont icon-daochu2')} />
+          <span>导出监控点</span>
+        </div>
+      </Menu.Item>
+      <Menu.Item key="c_delete" onClick={deleteClick.bind(_this, record)}>
+        <div className={styles['delete']}>
+          <i className={classnames('icon iconfont icon-shanchu')} />
+          <span>删除</span>
+        </div>
+      </Menu.Item>
+    </Menu>
+  );
+};
+const columns = ({
+  deleteClick,
+  realtimeClick,
+  historyClick,
+  controlClick,
+  disableClick,
+  editClick,
+  fsuStatusClick,
+  exportMonitor,
+  fsuSetTimeClick,
+  exportSub,
+  portInfoClick,
+  restartClick,
+  rumorClick,
+  addLevelOneClick,
+  detailClick,
+  getAlarmTable,
+  _this,
+}) => {
+  return [
+    {
+      title: 'FSU编号',
+      dataIndex: 'suID',
+      width: '15%',
+      className: 'information_th',
+      render: (text, record, index) => {
+        return <TextOverflow inlay={true}>{text}</TextOverflow>;
+      },
     },
-    // {
-    //   title: '连接方式',
-    //   dataIndex: '',
-    //   render: (text, record, index) => {
-    //     return record.connectType == 0 ? '被动' : '主动';
-    //   },
-    // },
-    // {
-    //   title: '状态',
-    //   dataIndex: '',
-    //   render: (text, record, index) => {
-    //     return record.statustwo == 0 ? '离线' : '在线';
-    //   },
-    // },
+    {
+      title: '名称',
+      dataIndex: 'name',
+      width: '12%',
+      className: 'information_th',
+      render: (text, record, index) => {
+        return <TextOverflow>{text}</TextOverflow>;
+      },
+    },
+    {
+      title: 'IP',
+      dataIndex: 'suIP',
+      className: 'information_th',
+      width: '11%',
+    },
+    {
+      title: '端口',
+      dataIndex: 'suPort',
+      className: 'information_th',
+      width: '6%',
+    },
+    {
+      title: '所属区域',
+      dataIndex: 'station',
+      className: 'information_th',
+      width: '25%',
+      render: (text, record, index) => {
+        return <TextOverflow>{text}</TextOverflow>;
+      },
+    },
     {
       title: '操作',
       width: '5%',
@@ -206,7 +246,13 @@ const columns = ({
               deleteClick,
               detailClick,
               addLevelOneClick,
+              exportMonitor,
+              exportSub,
+              restartClick,
+              portInfoClick,
+              fsuStatusClick,
               disableClick,
+              fsuSetTimeClick,
               _this,
               record,
             })}

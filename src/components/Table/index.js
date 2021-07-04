@@ -27,6 +27,7 @@ class Cl_Table extends Component {
       rowClassName,
       pagination,
       theme,
+      pageSizeOptions,
       onRowDoubleClick,
       useDefaultRowKey,
       expandIconAsCell,
@@ -76,8 +77,12 @@ class Cl_Table extends Component {
             typeof pagination === 'undefined'
               ? {
                   total,
-                  pageSize,
+                  pageSize: parseInt(pageSize),
+                  current: parseInt(pageIndex),
                   showQuickJumper: true,
+                  pageSizeOptions: pageSizeOptions
+                    ? pageSizeOptions
+                    : ['10', '20', '30', '40'],
                   showSizeChanger: true,
                   showTotal: total => {
                     return `共 ${total} 条`;

@@ -49,21 +49,14 @@ const columns = ({getChildTable, _this}) => {
       dataIndex: 'suPort',
       widht: '5%',
     },
-    // {
-    //   title: '状态',
-    //   dataIndex: 'statustwo',
-    //   render: (text, record, index) => {
-    //     return record.statustwo == 0 ? '离线' : '在线';
-    //   },
-    // },
     {
       title: '告警',
-      dataIndex: 'alerm_count',
+      dataIndex: 'alarmAmount',
       widht: '5%',
     },
     {
       title: '所属区域',
-      dataIndex: 'stationName',
+      dataIndex: 'station',
       width: '30%',
       render: (text, record, index) => {
         return (

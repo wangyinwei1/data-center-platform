@@ -8,6 +8,8 @@ import columnData from './grandsonColumns.js';
 import Toolbar from '../../../components/Toolbar';
 import Panel from '../../../components/Panel';
 import RealtimeTable from './realtimeTable.js';
+import {Button, Icon, Input} from 'antd';
+import Highlighter from 'react-highlight-words';
 //实例
 @inject('informationStore', 'fsu_devicemanagementStore')
 @observer
@@ -18,11 +20,11 @@ class Regional extends Component {
     this.editClick = this.editClick.bind(this);
     this.realtimeClick = this.realtimeClick.bind(this);
     this.historyClick = this.historyClick.bind(this);
-    this.rumorClick = this.rumorClick.bind(this);
-    this.controlClick = this.controlClick.bind(this);
     this.onRowDoubleClick = this.onRowDoubleClick.bind(this);
     this.state = {
       realtimeShow: false,
+      searchText: '',
+      searchedColumn: '',
     };
   }
   editClick(item) {
@@ -67,33 +69,10 @@ class Regional extends Component {
     fsu_devicemanagementStore.getByDevice(params);
     historyChange();
   }
-  controlClick(item, e) {
-    e.stopPropagation();
-    e.nativeEvent.stopImmediatePropagation();
-    const {fsu_devicemanagementStore, controlChange} = this.props;
-    const params = {
-      F_DeviceID: item.subDeviceID,
-    };
-    fsu_devicemanagementStore.getControlChannel(params).then(data => {
-      data && controlChange();
-    });
-  }
-  rumorClick(item, e) {
-    e.stopPropagation();
-    e.nativeEvent.stopImmediatePropagation();
-    const {fsu_devicemanagementStore, rumorChange} = this.props;
-    const params = {
-      F_DeviceID: item.subDeviceID,
-    };
-    fsu_devicemanagementStore.getRegulatChannel(params).then(data => {
-      data && rumorChange();
-    });
-  }
-
   componentDidMount() {
     $('.ant-table-expanded-row .ant-table-expanded-row > td:last-child').attr(
       'colspan',
-      8,
+      JSON.parse(localStorage.getItem('FsuTypeID')) === 3 ? 10 : 8,
     );
   }
   render() {
@@ -106,8 +85,6 @@ class Regional extends Component {
       detailClick: this.detailClick,
       realtimeClick: this.realtimeClick,
       historyClick: this.historyClick,
-      controlClick: this.controlClick,
-      rumorClick: this.rumorClick,
       _this: this,
     });
     return (

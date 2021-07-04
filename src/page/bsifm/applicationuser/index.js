@@ -58,6 +58,7 @@ class Site extends Component {
   //添加功能
   add() {
     const {applicationuserStore} = this.props;
+    applicationuserStore.getFSUType();
     applicationuserStore.getGoAdd();
     this.setState({
       editShow: true,
@@ -80,10 +81,11 @@ class Site extends Component {
       //     ? 0
       //     : parseInt(data.pd.userType) || undefined;
       formValue.proCode.value = parseInt(data.pd.property.proCode) || '';
+      formValue.F_FsuTypeID.value = parseInt(data.pd.FsuTypeID) || undefined;
       formValue.countyCode.value = parseInt(data.pd.property.countyCode) || '';
       formValue.cityCode.value = parseInt(data.pd.property.cityCode) || '';
       formValue.districtCode.value =
-        parseInt(data.pd.property.districtCode) || '';
+        parseInt(data.pd.property.districtCode) || undefined;
       formValue.DevTypes.value =
         (data.pd.property.F_DevTypes &&
           data.pd.property.F_DevTypes.split(',').map(item => {
@@ -104,6 +106,7 @@ class Site extends Component {
   //点击编辑
   editClick(item) {
     const {applicationuserStore} = this.props;
+    applicationuserStore.getFSUType();
     applicationuserStore.getEidtData({USER_ID: item.F_UserID}).then(data => {
       this.initFromValue(data, 'modify', item);
     });
@@ -149,6 +152,8 @@ class Site extends Component {
       _.forIn(fields, (value, key) => {
         if (key === 'DevTypes') {
           params[key] = value.value.join(',');
+        } else if (key === 'F_FsuTypeID') {
+          params[key] = value.value ? value.value : 0;
         } else {
           params[key] = value.value;
         }
@@ -309,7 +314,7 @@ class Site extends Component {
         <EditModal
           isShow={this.state.editShow}
           onOk={this.onEditOk}
-          width={816}
+          width={880}
           onCancel={this.onEditCancel}
           mode={this.state.type}>
           <EditContent

@@ -68,6 +68,7 @@ class Passageway extends Component {
     const params = {
       ...realtimedataStore.tableParmas,
       keywords: encodeURIComponent(value),
+      page: 1,
     };
     realtimedataStore.search(params);
   }

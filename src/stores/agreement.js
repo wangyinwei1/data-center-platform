@@ -17,8 +17,8 @@ class Site {
     this.loading = true;
     const data = await getAgreementTable(params);
     this.loading = false;
-    params.number = data.pd.number;
-    params.page = data.pd.page;
+    params.number = data.pd.number || 10;
+    params.page = data.pd.page || 0;
     this.tableParmas = params;
     this.tableData = data;
   }
@@ -35,12 +35,12 @@ class Site {
   @action.bound
   async editSave(params) {
     const data = await agreementEditSave(params);
-    if (data.result == 'success') {
+    if (data.Result == 'success') {
       this.getTable(this.tableParmas);
-      message.success(data.msg);
+      message.success(data.Msg);
       return true;
     } else {
-      message.error(data.msg);
+      message.error(data.Msg);
       return false;
     }
     return data;
@@ -48,12 +48,12 @@ class Site {
   @action.bound
   async save(params) {
     const data = await agreementSave(params);
-    if (data.result == 'success') {
+    if (data.Result == 'success') {
       this.getTable(this.tableParmas);
-      message.success(data.msg);
+      message.success(data.Msg);
       return true;
     } else {
-      message.error(data.msg);
+      message.error(data.Msg);
       return false;
     }
     return data;
@@ -62,9 +62,11 @@ class Site {
   @action
   async delete(params) {
     const data = await agreement_delete(params);
-    if (data.result == 'success') {
+    if (data.Result == 'success') {
       this.getTable(this.tableParmas);
       message.success('删除成功!');
+    } else {
+      message.error(data.Msg);
     }
     return data;
   }

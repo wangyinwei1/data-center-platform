@@ -43,27 +43,28 @@ class Regional extends Component {
     const params = {
       ...realtimealarmStore.c_tableParmas,
       keywords: encodeURIComponent(value),
+      page: 1,
     };
     realtimealarmStore.childSearch(params);
   }
   endClick(item) {
     const {realtimealarmStore: {endAlarm}} = this.props;
-    endAlarm({F_AlarmID: item.AlarmID});
+    endAlarm({F_AlarmID: item.alarmID});
   }
   handleClick(item) {
     const {realtimealarmStore: {dealAlarm}} = this.props;
-    dealAlarm({F_AlarmID: item.AlarmID});
+    dealAlarm({F_AlarmID: item.alarmID});
   }
   cancelClick(item) {
     const {realtimealarmStore: {cancelAlarm}} = this.props;
-    cancelAlarm({F_AlarmID: item.AlarmID});
+    cancelAlarm({F_AlarmID: item.alarmID});
   }
   confirmClick(item) {
     const {realtimealarmStore: {confirmAlarm}} = this.props;
-    confirmAlarm({F_AlarmID: item.AlarmID});
+    confirmAlarm({F_AlarmID: item.alarmID});
   }
   render() {
-    const {realtimealarmStore} = this.props;
+    const {realtimealarmStore, theme} = this.props;
     const c_tableData = toJS(realtimealarmStore.c_tableData);
     const tableData = (c_tableData && c_tableData.varList) || [];
     const pagination = c_tableData || {};
@@ -76,16 +77,18 @@ class Regional extends Component {
     });
     return (
       <div>
-        <Toolbar onSearch={this.onSearch} closeAdd={true} />
+        <Toolbar onSearch={this.onSearch} theme={theme} closeAdd={true} />
         <Table
           pageIndex={pagination.page}
           pageSize={pagination.number}
           total={pagination.count}
           columns={columns}
+          theme={theme}
           loading={realtimealarmStore.c_loading}
           onShowSizeChange={this.onShowSizeChange}
           onChange={this.onPageChange}
           data={tableData}
+          useDefaultRowKey={true}
         />
       </div>
     );

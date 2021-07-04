@@ -27,6 +27,7 @@ class EditModal extends Component {
       onCancel,
       buttons,
       title,
+      theme,
       width,
       mode,
     } = this.props;
@@ -45,6 +46,7 @@ class EditModal extends Component {
       : {
           buttons: [],
         };
+
     return (
       <CommonModal
         isShow={isShow}
@@ -52,10 +54,16 @@ class EditModal extends Component {
         mask={false}
         width={width}
         confirmLoading={true}
-        wrapClassName={wrapClassName}
+        wrapClassName={
+          wrapClassName + ` ${theme === 'darker' && 'index_modal_darker'}`
+        }
         okProps={okProps}
         cancelProps={cancelProps}>
-        <div className={styles['edit_wrap']}>
+        <div
+          className={classnames(
+            styles['edit_wrap'],
+            theme === 'darker' && styles['darker'],
+          )}>
           <div className={styles['edit_title']}>
             <span>{title || ''}</span>
           </div>

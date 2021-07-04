@@ -25,6 +25,7 @@ class Passageway extends Component {
     this.onShowSizeChange = this.onShowSizeChange.bind(this);
     this.onKeyPress = this.onKeyPress.bind(this);
     this.onPageChange = this.onPageChange.bind(this);
+    this.typesChange = this.typesChange.bind(this);
     this.getChildTable = this.getChildTable.bind(this);
     this.onCancel = this.onCancel.bind(this);
     this.state = {
@@ -54,13 +55,22 @@ class Passageway extends Component {
       keywords: '',
       number: 10,
       ztreeChild: selectedOptions[0].code,
+      typeID: JSON.parse(localStorage.getItem('FsuTypeID')),
     };
     const {fsu_realtimealarmStore} = this.props;
     fsu_realtimealarmStore.getTable(params);
   }
   componentDidMount() {
     const {fsu_realtimealarmStore} = this.props;
-    this.initLoading(fsu_realtimealarmStore);
+    const params = {
+      page: 1,
+      sing: 'area',
+      keywords: '',
+      number: 10,
+      typeID: JSON.parse(localStorage.getItem('FsuTypeID')),
+    };
+    fsu_realtimealarmStore.getFSUType();
+    this.initLoading(fsu_realtimealarmStore, params);
   }
   //搜索
   onSearch(value) {
@@ -68,6 +78,8 @@ class Passageway extends Component {
     const params = {
       ...fsu_realtimealarmStore.tableParmas,
       keywords: encodeURIComponent(value),
+      typeID: JSON.parse(localStorage.getItem('FsuTypeID')),
+      page: 1,
     };
     fsu_realtimealarmStore.search(params);
   }
@@ -79,6 +91,7 @@ class Passageway extends Component {
       ...fsu_realtimealarmStore.tableParmas,
       page: current,
       number: pageSize,
+      typeID: localStorage.getItem('FsuTypeID'),
     };
     fsu_realtimealarmStore.getTable(params);
   }
@@ -97,6 +110,7 @@ class Passageway extends Component {
       page: 1,
       ztreeChild: item.suID,
       number: 10,
+      fsuTypeId: JSON.parse(localStorage.getItem('FsuTypeID')),
     };
     fsu_realtimealarmStore.getChildTable(params);
     this.setState({
@@ -110,9 +124,21 @@ class Passageway extends Component {
     });
   }
 
+  typesChange(value) {
+    const {
+      fsu_realtimealarmStore: {getTable, tableParmas},
+    } = this.props;
+    const params = {
+      ...tableParmas,
+      page: 1,
+      typeID: value,
+    };
+    localStorage.setItem('FsuTypeID', value);
+    getTable(params);
+  }
   render() {
     const {fsu_realtimealarmStore, regionalStore} = this.props;
-    const tableData = toJS(fsu_realtimealarmStore.tableData.varList) || [];
+    const tableData = toJS(fsu_realtimealarmStore.tableData.dataList) || [];
     const pagination = toJS(fsu_realtimealarmStore.tableData) || {};
     const columns = columnData({
       getChildTable: this.getChildTable,
@@ -132,16 +158,26 @@ class Passageway extends Component {
         />
         <div className={styles['information_ct']}>
           <div className={styles['min_width']}>
-            <Toolbar onSearch={this.onSearch} closeAdd={true} />
+            <Toolbar
+              onSearch={this.onSearch}
+              closeAdd={true}
+              fsuAddTypes={fsu_realtimealarmStore.fsuAddTypes}
+              typesChange={this.typesChange}
+            />
             <div className={styles['table_wrap']}>
               <Table
                 pageIndex={pagination.page}
                 pageSize={pagination.number}
-                total={pagination.count}
+                total={pagination.totalCount}
                 columns={columns}
                 rowClassName={(record, index) => {
                   const rowClassName = [];
-                  record.statustwo == 0 && rowClassName.push('cl_online_state');
+                  record.onOff === 0 &&
+                    (record.status == 1
+                      ? rowClassName.push('cl_disabled_state')
+                      : rowClassName.push('cl_offline_state'));
+                  record.onOff === 1 && rowClassName.push('cl_online_state');
+                  record.onOff === 2 && rowClassName.push('cl_err_state');
                   return rowClassName.join(' ');
                 }}
                 loading={fsu_realtimealarmStore.loading}

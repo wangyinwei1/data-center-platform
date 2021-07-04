@@ -16,42 +16,13 @@ class Regional extends Component {
       widthClassName: '',
     };
   }
-  monitorWindowWidth(globalStore) {
-    const path = window.location.href;
-    const {globalStore: {collapsed}} = this.props;
-
-    clearTimeout(this.panelTimer);
-    this.panelTimer = setTimeout(() => {
-      if (collapsed) {
-        this.setState({
-          widthClassName: 'panel_active_1280',
-        });
-      } else if (path.indexOf('/shouye') != -1) {
-        this.setState({
-          widthClassName: 'panel_active_1280',
-        });
-      } else {
-        this.setState({
-          widthClassName: 'panel_active',
-        });
-      }
-    }, 100);
-  }
   shouldComponentUpdate(nextProps, nextState) {
     return (
       !shallowEqualImmutable(this.props, nextProps) ||
       !shallowEqualImmutable(this.state, nextState)
     );
   }
-  componentDidMount() {
-    // this.setState({
-    //   children: [this.props.children],
-    // });
-    this.monitorWindowWidth();
-    $(window).on('resize.panel', () => {
-      this.monitorWindowWidth();
-    });
-  }
+  componentDidMount() {}
   componentDidUpdate() {
     this.props.isShow &&
       !this.state.children[0] &&
@@ -69,7 +40,23 @@ class Regional extends Component {
     // $(document).off('click.panel');
   }
   render() {
-    const {isShow, title = '', theme, onCancel, left} = this.props;
+    const {
+      isShow,
+      title = '',
+      theme,
+      onCancel,
+      left,
+      globalStore: {collapsed},
+    } = this.props;
+    const path = window.location.href;
+    let classActive = '';
+    if (collapsed) {
+      classActive = 'panel_active_1280';
+    } else if (path.indexOf('/shouye') != -1) {
+      classActive = 'panel_active_1280';
+    } else {
+      classActive = 'panel_active';
+    }
 
     return (
       <div>
@@ -101,7 +88,7 @@ class Regional extends Component {
           }}
           className={classnames(
             styles['panel_wrap'],
-            isShow && styles[this.state.widthClassName],
+            isShow && styles[classActive],
           )}>
           <div className={styles['min_width']}>
             <div className={styles['panel_header']}>

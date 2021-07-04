@@ -299,7 +299,7 @@
         background: linear-gradient(to right, #dadfe9, #dadfe9);
       }
       .ant-layout-sider {
-        overflow-y: scroll;
+        overflow-y: auto;
         &::-webkit-scrollbar {
           width: 7px;
           height: 7px;
@@ -322,6 +322,10 @@
         background: -o-linear-gradient(bottom, #24262f 0%, #363c45 100%);
         background: -ms-linear-gradient(bottom, #24262f 0%, #363c45 100%);
       }
+      .ant-layout-sider {
+        overflow-x: hidden;
+      }
+
       .ant-spin-container,
       .ant-spin-nested-loading,
       .ant-layout-sider {
@@ -339,6 +343,15 @@
       .ant-menu-inline-collapsed > .ant-menu-item,
       .ant-menu-inline-collapsed > .ant-menu-submenu > .ant-menu-submenu-title {
         padding-left: 12px !important;
+        :local {
+          .menu_icon {
+            margin-right: 16px;
+
+            & + span {
+              display: none;
+            }
+          }
+        }
       }
       .ant-spin {
         color: #5deda4;
@@ -397,6 +410,19 @@
   .no_padding {
     padding: 0px;
     overflow: auto;
+  }
+  .index {
+    width: 100%;
+    height: 100%;
+    background: #343c54;
+    overflow: auto;
+    :global {
+      .ant-layout-sider-trigger {
+        left: 0;
+        position: absolute;
+        bottom: 0;
+      }
+    }
   }
 }
 :global {

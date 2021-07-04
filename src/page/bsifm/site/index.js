@@ -90,8 +90,8 @@ class Regional extends Component {
         F_AreaName: fields.region.value,
         F_ParentAreaID: fields.county.value,
         F_Name: fields.F_Name.value,
-        F_Leader: fields.F_Leader.value,
-        F_Tel: fields.F_Tel.value,
+        // F_Leader: fields.F_Leader.value,
+        // F_Tel: fields.F_Tel.value,
         F_Address: fields.F_Address.value,
       };
       fields.region.code
@@ -167,14 +167,18 @@ class Regional extends Component {
   initFromValue(data, mode, item) {
     this.setState(({fields}) => {
       let formValue = _.cloneDeep([fields])[0];
-      formValue.city.value = data.area.cityCode || undefined;
-      formValue.county.value = data.area.countyCode || undefined;
-      formValue.province.value = data.area.provinceCode || data.proCode;
-      formValue.region.value = data.area.regionCode || undefined;
-      formValue.region.value = data.area.regionCode || undefined;
+      formValue.city.value =
+        (data.area.cityCode && parseInt(data.area.cityCode)) || undefined;
+      formValue.county.value =
+        (data.area.countyCode && parseInt(data.area.countyCode)) || undefined;
+      formValue.province.value =
+        (data.area.provinceCode && parseInt(data.area.provinceCode)) ||
+        undefined;
+      formValue.region.value =
+        (data.area.regionCode && parseInt(data.area.regionCode)) || undefined;
       formValue.F_Name.value = (data.pd && data.pd.F_Name) || '';
-      formValue.F_Leader.value = (data.pd && data.pd.F_Leader) || '';
-      formValue.F_Tel.value = (data.pd && data.pd.F_AreaName) || '';
+      // formValue.F_Leader.value = (data.pd && data.pd.F_Leader) || '';
+      // formValue.F_Tel.value = (data.pd && data.pd.F_Tel) || '';
       formValue.F_Address.value = (data.pd && data.pd.F_Address) || '';
       formValue.F_AreaName.value = (data.pd && data.pd.F_AreaName) || '';
       return {
@@ -199,6 +203,14 @@ class Regional extends Component {
   }
   //级联组件方法
   loadData(selectedOptions, index, callback) {
+    const text = selectedOptions[0].code;
+    var area = /^\d{8}\b/; //区下的编码匹配
+    const isSite = area.test(text);
+
+    if (isSite) {
+      callback();
+      return;
+    }
     this.c_loadData(selectedOptions, index, callback);
   }
   onTextChange(value) {
@@ -224,6 +236,7 @@ class Regional extends Component {
     const params = {
       ...siteStore.tableParmas,
       keywords: encodeURIComponent(value),
+      page: 1,
     };
     siteStore.search(params);
   }

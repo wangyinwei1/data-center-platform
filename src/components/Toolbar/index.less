@@ -7,7 +7,6 @@
       right: 0;
       top: 0;
     }
-
     .exportTpl_btn,
     .export_btn,
     .import_btn {
@@ -104,7 +103,9 @@
         }
       }
     }
-    .device_status {
+
+    .device_status,
+    .subdev {
       display: inline-block;
       vertical-align: top;
       padding-left: 20px;
@@ -128,6 +129,31 @@
           width: 220px;
         }
       }
+    }
+    .subdev {
+      padding-left: 0px;
+      padding-right: 10px;
+      :global {
+        .ant-select {
+          margin-left: 0px;
+          width: 160px;
+        }
+      }
+    }
+    .device_types {
+      :global {
+        .ant-select {
+          width: 140px;
+        }
+      }
+    }
+  }
+}
+:global {
+  .batch_cl_option {
+    .ant-dropdown-menu-item:hover {
+      background-color: #ffdede;
+      color: #eb0a11;
     }
   }
 }

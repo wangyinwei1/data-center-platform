@@ -28,9 +28,11 @@ import {
   Layout,
   Regional,
   Site,
+  Fsuconfig,
   Deviceversion,
   Agreement,
   Alarminformation,
+  SubDeviceType,
   Controlrecord,
   Information,
   Historyalarm,
@@ -45,13 +47,19 @@ import {
   Historicaldata,
   Passivedevicechangerecord,
   Fsu_Controlrecord,
+  Fsu_MonitoryPoint,
   Fsu_Historicaldata,
   Fsu_Realtimedata,
-  Fsn_Realtimealarm,
+  Fsu_Realtimealarm,
   Fsu_Historyalarm,
+  Fsu_Alarminformation,
   Fsu_Devicemanagement,
   Menu,
+  FSuTypeMenu,
   Devicetype,
+  Other_Inspection,
+  Other_Workorders,
+  Site_Monitoring,
   Index,
 } from './page';
 render(
@@ -65,6 +73,9 @@ render(
           {/* <Route path="/resetmm" component={Resetmm} /> */}
           <Route path="/index" component={Layout}>
             <Route path="/shouye" component={Index} />
+            <Route path="/inspection" component={Other_Inspection} />
+            <Route path="/workorders" component={Other_Workorders} />
+            <Route path="/sitemonitoring" component={Site_Monitoring} />
 
             {/* fsu */}
             <Route
@@ -75,7 +86,12 @@ render(
             <Route path="/fsu-historyalarm" component={Fsu_Historyalarm} />
             <Route path="/fsu-realtimedata" component={Fsu_Realtimedata} />
             <Route path="/fsu-historicaldata" component={Fsu_Historicaldata} />
-            <Route path="/fsu-realtimealarm" component={Fsn_Realtimealarm} />
+            <Route path="/fsu-realtimealarm" component={Fsu_Realtimealarm} />
+            <Route path="/fsu-monitoryPoint" component={Fsu_MonitoryPoint} />
+            <Route
+              path="/fsu-alarminformation"
+              component={Fsu_Alarminformation}
+            />
 
             <Route path="/bsifm-regional" component={Regional} />
             <Route path="/bsifm-site" component={Site} />
@@ -92,6 +108,10 @@ render(
             />
             <Route path="/bsifm-applicationuser" component={Applicationuser} />
             <Route path="/bsifm-valuetype" component={Valuetype} />
+            <Route path="/bsifm-fsuconfig" component={Fsuconfig} />
+            <Route path="/bsifm-subdevicetype" component={SubDeviceType} />
+
+            <Route path="/fsu-baseConfig" component={FSuTypeMenu} />
             {/* <Route path="/systemuser" component={} /> */}
             {/* <Route path="/bsifm-alarmcondition" component={Alarminformation} /> */}
             {/* <Route path="/bsifm-channeltype" component={channel} /> */}

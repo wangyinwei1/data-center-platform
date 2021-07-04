@@ -86,7 +86,7 @@ const columns = ({endClick, handleClick, cancelClick, confirmClick, _this}) => {
       render: (text, record, index) => {
         return (
           <div>
-            <TextOverflow>{text}</TextOverflow>
+            <TextOverflow>{text ? text : '-'}</TextOverflow>
           </div>
         );
       },
@@ -99,7 +99,7 @@ const columns = ({endClick, handleClick, cancelClick, confirmClick, _this}) => {
       render: (text, record, index) => {
         return (
           <div>
-            <TextOverflow>{text}</TextOverflow>
+            <TextOverflow>{text ? text : '-'}</TextOverflow>
           </div>
         );
       },
@@ -112,7 +112,7 @@ const columns = ({endClick, handleClick, cancelClick, confirmClick, _this}) => {
       render: (text, record, index) => {
         return (
           <div>
-            <TextOverflow>{text}</TextOverflow>
+            <TextOverflow>{text ? text : '-'}</TextOverflow>
           </div>
         );
       },
@@ -137,18 +137,27 @@ const columns = ({endClick, handleClick, cancelClick, confirmClick, _this}) => {
       className: 'information_th',
       dataIndex: 'status',
       width: '6%',
+      render: (text, record, index) => {
+        return <span>{text ? text : '-'}</span>;
+      },
     },
     {
       title: '告警值',
       dataIndex: 'triggerVal',
       className: 'information_th',
       width: '6%',
+      render: (text, record, index) => {
+        return <span>{text ? text : '-'}</span>;
+      },
     },
     {
       title: '告警等级',
       dataIndex: 'alarmLevel',
       width: '8%',
       className: 'information_th',
+      render: (text, record, index) => {
+        return <span>{text ? text : '-'}</span>;
+      },
     },
     {
       title: '告警信息',
@@ -156,7 +165,7 @@ const columns = ({endClick, handleClick, cancelClick, confirmClick, _this}) => {
       dataIndex: 'alarmDesc',
       width: '12%',
       render: (text, record, index) => {
-        return <TextOverflow>{text}</TextOverflow>;
+        return <TextOverflow>{text ? text : '-'}</TextOverflow>;
       },
     },
     {

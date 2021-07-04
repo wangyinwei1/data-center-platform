@@ -6,6 +6,7 @@ import {
   realtimealarmChild_search,
   confirmAlarm,
   cancelAlarm,
+  getAlarmDeviceList,
   dealAlarm,
   endAlarm,
   getSportTable,
@@ -97,12 +98,12 @@ class Realtimealarme {
   @action.bound
   async getTable(params) {
     this.loading = true;
-    const data = await getRealtimealarmTable(params);
+    const data = await getAlarmDeviceList(params);
     this.loading = false;
+    params.number = data.Data.number;
+    params.page = data.Data.page;
+    this.tableParmas = params;
     if (data.Result == 'success') {
-      params.number = data.Data.number;
-      params.page = data.Data.page;
-      this.tableParmas = params;
       this.tableData = data.Data;
     } else {
       message.error(data.Msg);
@@ -125,7 +126,7 @@ class Realtimealarme {
   @action.bound
   async childSearch(params) {
     this.c_loading = true;
-    const data = await realtimealarmChild_search(params);
+    const data = await getRealtimealarmChildTable(params);
     this.c_loading = false;
     if (data.Result == 'success') {
       params.number = data.Data.number;
@@ -139,7 +140,7 @@ class Realtimealarme {
   @action
   async search(params) {
     this.loading = true;
-    const data = await realtimealarm_search(params);
+    const data = await getAlarmDeviceList(params);
     this.loading = false;
     if (data.Result == 'success') {
       params.number = data.Data.number;

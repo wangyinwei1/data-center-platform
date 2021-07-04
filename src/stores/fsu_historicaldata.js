@@ -4,6 +4,7 @@ import {
   getFsu_historicaldataTable,
   getFsu_historicaldataChildTable,
   fsu_historicaldataChild_search,
+  getFSUType,
 } from '../services/api.js';
 import {message} from 'antd';
 class Historyalarm {
@@ -21,10 +22,10 @@ class Historyalarm {
     const data = await getFsu_historicaldataTable(params);
     this.loading = false;
 
+    params.number = data.Data.number;
+    params.page = data.Data.page;
+    this.tableParmas = params;
     if (data.Result == 'success') {
-      params.number = data.Data.number;
-      params.page = data.Data.page;
-      this.tableParmas = params;
       this.tableData = data.Data;
     } else {
       message.error(data.Msg);

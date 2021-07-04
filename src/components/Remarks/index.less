@@ -1,9 +1,38 @@
 :local {
   .icon_active {
+    display: inline-block;
     color: #ff9c00;
   }
   .icon_passive {
+    display: inline-block;
     color: #5dccff;
+  }
+  .col {
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .online,
+  .offline,
+  .errline,
+  .alarm,
+  .disable {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background-color: #36b1ff;
+    margin-right: 4px;
+  }
+  .errline {
+    background-color: #ff8a00;
+  }
+  .offline {
+    background-color: #5c667d;
+  }
+  .disable {
+    background-color: #ddd;
+  }
+  .alarm {
+    background-color: #eb0a11;
   }
   .remarks {
     width: 100%;
@@ -16,6 +45,7 @@
   .passive {
     padding-right: 10px;
     color: #424242;
+    display: inline-block;
   }
   .theme_darker {
     position: absolute;

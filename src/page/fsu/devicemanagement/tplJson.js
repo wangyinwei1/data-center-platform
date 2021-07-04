@@ -20,6 +20,10 @@ const formParams = {
       value: '',
       require: true,
     },
+    F_TypeID: {
+      value: undefined,
+      require: true,
+    },
     F_Pwd: {
       value: '',
       require: true,
@@ -43,24 +47,77 @@ const formParams = {
   },
 };
 
+const addFsuLevelOne = {
+  oneFields: {
+    F_DeviceID: {
+      value: '',
+      require: true,
+    },
+    deviceName: {
+      value: '',
+      require: true,
+    },
+    deviceSubType: {
+      value: undefined,
+      require: true,
+    },
+    roomName: {
+      value: '',
+    },
+    model: {
+      value: '',
+    },
+    brand: {
+      value: '',
+    },
+    ratedCapacity: {
+      value: '',
+    },
+    devDescribe: {
+      value: '',
+    },
+  },
+};
 const addLevelOne = {
   oneFields: {
     F_DeviceID: {
       value: '',
       require: true,
     },
-    F_DeviceName: {
+    deviceName: {
       value: '',
+      require: true,
+    },
+    deviceSubType: {
+      value: 234234,
       require: true,
     },
   },
 };
-const addChildDevice = {
+const addChildFsuDevice = {
   childDevicefields: {
-    F_SpUnit: {
+    spUnit: {
       value: '',
     },
-    F_Type: {
+    nmAlarmID: {
+      value: '',
+    },
+    describe: {
+      value: '',
+    },
+    relativeVal: {
+      value: '',
+    },
+    absoluteVal: {
+      value: '',
+    },
+    threshold: {
+      value: '',
+    },
+    alarmLevel: {
+      value: '',
+    },
+    spType: {
       value: undefined,
       require: true,
     },
@@ -68,7 +125,7 @@ const addChildDevice = {
       require: true,
       value: undefined,
     },
-    F_SpName: {
+    spName: {
       value: '',
       require: true,
     },
@@ -78,4 +135,64 @@ const addChildDevice = {
     },
   },
 };
-export {formParams, addLevelOne, addChildDevice};
+const addChildDevice = {
+  childDevicefields: {
+    spUnit: {
+      value: '',
+    },
+    threshold: {
+      value: '',
+    },
+    spType: {
+      value: undefined,
+      require: true,
+    },
+    F_OptionID: {
+      require: true,
+      value: undefined,
+    },
+    spName: {
+      value: '',
+      require: true,
+    },
+    F_SpID: {
+      value: '',
+      require: true,
+    },
+    // sVal: {
+    //   value: '',
+    // },
+    // intervalTime: {
+    //   value: '',
+    // },
+    // sLimit: {
+    //   value: '',
+    // },
+    // sHLimit: {
+    //   value: '',
+    // },
+    // lLimit: {
+    //   value: '',
+    // },
+    // hLimit: {
+    //   value: '',
+    // },
+    // sLLimit: {
+    //   value: '',
+    // },
+    // bDelay: {
+    //   value: '',
+    // },
+    // eDelay: {
+    //   value: '',
+    // },
+  },
+};
+
+export {
+  formParams,
+  addLevelOne,
+  addChildFsuDevice,
+  addFsuLevelOne,
+  addChildDevice,
+};

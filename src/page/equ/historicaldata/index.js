@@ -68,6 +68,7 @@ class Passageway extends Component {
     const params = {
       ...historicaldataStore.tableParmas,
       keywords: encodeURIComponent(value),
+      page: 1,
     };
     historicaldataStore.search(params);
   }

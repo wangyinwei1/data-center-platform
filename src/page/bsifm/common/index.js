@@ -106,9 +106,6 @@ const cascader = {
       this.setState({
         deleteShow: false,
       });
-      if (data.result == 'error' || data.Result == 'error') {
-        message.error(data.msg || data.Msg);
-      }
     });
   },
   c_onDeleteCancel() {

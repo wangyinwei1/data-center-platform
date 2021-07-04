@@ -13,7 +13,7 @@ const columns = () => {
   return [
     {
       title: '设备名称',
-      dataIndex: 'deviceName',
+      dataIndex: 'devName',
     },
     {
       title: '通道名称',

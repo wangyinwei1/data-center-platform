@@ -1,0 +1,58 @@
+@import '../../../theme/sorollbar.less';
+:local {
+  .controlrecord_wrap {
+    height: 100%;
+    .controlrecord_ct {
+      .scrollCommon();
+      .min_width {
+        min-width: 1069px;
+        padding: 22px 22px 0;
+        height: 100%;
+      }
+      // height: -webkit-calc(~'100% - 48px');
+      // height: -moz-calc(~'100% - 48px');
+      // height: -ms-calc(~'100% - 48px');
+      // height: -o-calc(~'100% - 48px');
+      // height: calc(~'100% - 48px');
+      height: 100%;
+      overflow: auto;
+      background: #fff;
+    }
+  }
+  .operation {
+    .detail {
+      &:last-child {
+        margin-right: 0;
+      }
+      margin-right: 30px;
+      i {
+        cursor: pointer;
+        color: #7e7e7e;
+        font-size: 18px;
+        &:hover {
+          color: #5deda4;
+        }
+        &:active {
+          color: #40bc7e;
+        }
+      }
+      display: inline-block;
+    }
+  }
+  .operation {
+    .detail {
+      i,
+      span {
+        display: inline-block;
+        vertical-align: top;
+      }
+      i {
+        margin-right: 6px;
+      }
+    }
+  }
+  .more {
+    cursor: pointer;
+    font-size: 22px;
+  }
+}

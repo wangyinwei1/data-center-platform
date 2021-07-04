@@ -82,6 +82,9 @@ class Site extends Component {
       formValue.F_TypeName.value = data.pd.F_TypeName || '';
       formValue.F_SoftVersion.value = data.pd.F_SoftVersion || '';
       formValue.F_HardVersion.value = data.pd.F_HardVersion || '';
+      formValue.F_ConnectType.value = data.pd.F_ConnectType || 0;
+      formValue.F_CommunicatID.value = data.pd.F_CommunicatID || undefined;
+      formValue.F_ReportType.value = data.pd.F_ReportType || 0;
       formValue.F_Name['F_Protocol'] = F_Protocol;
       return {
         fields: {
@@ -191,6 +194,7 @@ class Site extends Component {
     const params = {
       ...deviceversionStore.tableParmas,
       keywords: encodeURIComponent(value),
+      page: 1,
     };
     deviceversionStore.search(params);
   }

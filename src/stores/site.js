@@ -108,9 +108,11 @@ class Site {
   @action
   async delete(params) {
     const data = await site_delete(params);
-    if (data.result == 'success') {
+    if (data.Result == 'success') {
       this.getTable(this.tableParmas);
       message.success('删除成功!');
+    } else {
+      message.error(data.Msg);
     }
     return data;
   }

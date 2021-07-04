@@ -1,0 +1,43 @@
+.tool-wrap {
+  .btn {
+    width: auto;
+    &[disabled] {
+      background-color: #f5f5f5;
+      border-color: #d9d9d9;
+      text-shadow: none;
+      box-shadow: none;
+      span {
+        color: rgba(0, 0, 0, 0.25);
+      }
+    }
+  }
+  padding: 10px 0;
+  .select-wrap {
+    :global {
+      .ant-select-selection .ant-select-selection__rendered {
+        line-height: 32px;
+      }
+      .ant-select-selection {
+        line-height: 32px;
+        height: 32px;
+        background-color: #fff;
+        border-color: #d9d9d9;
+        border-radius: 4px;
+        &:hover {
+          border-color: #56eca1;
+        }
+      }
+    }
+  }
+  .right {
+    :global {
+      .ant-form-item {
+        float: right;
+        margin-right: 0px;
+      }
+      .ant-form-item-control {
+        line-height: 100%;
+      }
+    }
+  }
+}
