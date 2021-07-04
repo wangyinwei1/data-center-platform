@@ -14,10 +14,10 @@ const menu = ({
   handleClick,
   cancelClick,
   confirmClick,
+  createOrderClick,
   _this,
   record,
 }) => {
-  console.log(record.F_Status !== '已确认');
   return (
     <Menu className={styles['operation']}>
       {record.F_Status !== '待确认' &&
@@ -73,10 +73,32 @@ const menu = ({
           <span>结束告警</span>
         </div>
       </Menu.Item>
+      {record.F_Status === '待确认' && (
+        <Menu.Item
+          key="workorders"
+          onClick={createOrderClick.bind(_this, record)}>
+          <div className={styles['confirm']}>
+            <i
+              className={classnames(
+                'icon iconfont icon-chuangjian',
+                styles['confirm_alarm'],
+              )}
+            />
+            <span>派发工单</span>
+          </div>
+        </Menu.Item>
+      )}
     </Menu>
   );
 };
-const columns = ({endClick, handleClick, cancelClick, confirmClick, _this}) => {
+const columns = ({
+  endClick,
+  handleClick,
+  createOrderClick,
+  cancelClick,
+  confirmClick,
+  _this,
+}) => {
   return [
     {
       title: '等级',
@@ -109,6 +131,9 @@ const columns = ({endClick, handleClick, cancelClick, confirmClick, _this}) => {
       width: '5%',
       className: 'information_th',
       dataIndex: 'F_TriggerVal',
+      render: (text, record, index) => {
+        return <TextOverflow>{text}</TextOverflow>;
+      },
     },
     {
       title: '时间',
@@ -116,6 +141,9 @@ const columns = ({endClick, handleClick, cancelClick, confirmClick, _this}) => {
       dataIndex: 'F_StartTime',
       width: '7%',
       render: (text, record, index) => {
+        if (!text) {
+          return '';
+        }
         const value = text.split(' ');
         return (
           <div className={styles['list_time']}>
@@ -226,6 +254,7 @@ const columns = ({endClick, handleClick, cancelClick, confirmClick, _this}) => {
               handleClick,
               cancelClick,
               confirmClick,
+              createOrderClick,
               _this,
               record,
             })}

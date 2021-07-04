@@ -2,6 +2,7 @@ import axios from 'axios';
 import globalStore from '../stores/global.js';
 import {stores} from '../stores/index.js';
 import {message, notification} from 'antd';
+let once401 = false;
 
 function checkStatus(response) {
   if (response.status >= 200 && response.status < 300) {
@@ -21,15 +22,18 @@ function checkStatus(response) {
 }
 function catchError(error) {
   if (error.code) {
-    notification.error({
-      message: error.name,
-      description: error.message,
-    });
+    // !once401 &&
+    //   notification.error({
+    //     message: error.name,
+    //     description: error.message,
+    //   });
   }
   if ('stack' in error && 'message' in error) {
-    notification.error({
-      description: error.message,
-    });
+    // !once401 &&
+    //   notification.error({
+    //     description: error.message,
+    //   });
+    console.log('异常捕获' + error.message);
   }
   return error;
 }
@@ -50,9 +54,10 @@ request.interceptors.response.use(res => {
     localStorage.setItem('timeoutUrl', timeoutUrl);
     setTimeout(() => {
       stores.globalStore.changeIsTimeout(true);
-      message.error('登录超时,请重新登录！');
+      !once401 && message.error('登录超时,请重新登录！');
+      res.status === 200 ? (once401 = false) : (once401 = true);
       if (process.env.NODE_ENV == 'production') {
-        location.href = location.origin + '/collect/#/login';
+        location.href = location.origin + '/tower/#/login';
       } else {
         location.href = location.origin + '/#/login';
       }

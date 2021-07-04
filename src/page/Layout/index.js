@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {action, observer, inject} from 'mobx-react';
-import {Row, Col, Layout, Menu, notification} from 'antd';
+import {Row, Col, Layout, Menu, notification, Button} from 'antd';
 import {toJS} from 'mobx';
 import classnames from 'classnames';
 import {Link} from 'react-router';
@@ -11,7 +11,7 @@ import LeftNav from './leftNav.js';
 import _ from 'lodash';
 const {Content} = Layout;
 
-@inject('globalStore', 'layoutStore')
+@inject('globalStore', 'layoutStore', 'home_pageStore')
 @observer
 class BasicLayout extends Component {
   constructor(props) {
@@ -41,6 +41,8 @@ class BasicLayout extends Component {
   }
   componentWillUnmount() {
     $(window).off('resize.panel');
+    clearTimeout(this.timer);
+    this.ws && this.ws.close();
   }
   componentDidUpdate() {
     const {globalStore, layoutStore, location} = this.props;
@@ -59,11 +61,28 @@ class BasicLayout extends Component {
       globalStore.changeIsTimeout(false);
     }
   }
+  apiRender() {
+    const {
+      home_pageStore: {getCountInfo, getFsuAlarmNum, getAlarmNum},
+    } = this.props;
+
+    const params = {
+      page: 1,
+      number: 10,
+      keywords: '',
+      type: '',
+      des: 1,
+    };
+    getCountInfo();
+    getFsuAlarmNum({...params, sort: 'F_AlarmLevel'});
+    getAlarmNum({...params, sort: 'F_AlarmGrade'});
+  }
 
   componentDidMount() {
     const {globalStore, layoutStore, location} = this.props;
     const path = location.pathname.replace('/', '');
     let collapsed = false;
+    const _this = this;
     //获取菜单接口
     layoutStore.getMenu().then(() => {
       this.setOrGetOpenKeys();
@@ -75,45 +94,78 @@ class BasicLayout extends Component {
     });
 
     const serviceip = localStorage.getItem('serviceip');
+    const {
+      home_pageStore: {getCountInfo, getFsuAlarmNum, getAlarmNum},
+      layoutStore: {selectedKeys},
+    } = this.props;
 
-    if (serviceip) {
-      if ('WebSocket' in window) {
-        const ws = new WebSocket(
-          'ws://' + serviceip + ':11111/collect/websocket',
-        );
-        ws.onopen = function() {
-          console.log('已连接...');
-          ws.send('username' + 'QQ872474447');
-        };
-
-        ws.onmessage = function(evt) {
-          const msg = evt.data;
-          const result = JSON.parse(msg);
-          if (result.Result == 'success') {
-            notification.open({
-              message: '设备上线/下线通知:',
-              // getContainer: () => {
-              //   return <div>1111</div>;
-              // },
-              placement: 'bottomRight',
-              description: `平台ID:${result.Data.platId} 节点ID:${
-                result.Data.nodeId
-              } 状态:${result.Data.status}`,
-            });
-          } else if (result.Result == 'mssg') {
-          }
-
-          ws.onbeforeunload = function() {
-            ws.close();
-          };
-        };
-        ws.onclose = function() {
-          console.log('连接已关闭...');
-        };
-      } else {
-        console.log('暂不支持WebSocket!');
-      }
-    }
+    // if (serviceip) {
+    //   if ('WebSocket' in window) {
+    //     const ws = new WebSocket('ws://' + serviceip + '/collect/websocket');
+    //     ws.onopen = function() {
+    //       console.log('已连接...');
+    //       ws.send('username' + new Date().getTime() + 'QQ872474447');
+    //     };
+    //
+    //     ws.onmessage = function(evt) {
+    //       const msg = evt.data;
+    //       const result = JSON.parse(msg);
+    //       if (result.Type == 'module') {
+    //         notification.open({
+    //           message: '模块上线/下线通知:',
+    //           placement: 'bottomRight',
+    //           description: `平台ID:${result.platId} 节点ID:${result.nodeId} 状态:${result.status}`,
+    //         });
+    //       } else if (result.Type == 'AlarmMsg') {
+    //         notification.open({
+    //           message: '告警通知:',
+    //           placement: 'bottomRight',
+    //           description: (
+    //             <div>
+    //               <Row>
+    //                 <span>设备ID:</span>
+    //                 <span> {result.deviceID}</span>
+    //               </Row>
+    //               <Row>
+    //                 <span>通道ID:</span>
+    //                 <span> {result.channelID}</span>
+    //               </Row>
+    //               <Row>
+    //                 <span>告警ID:</span>
+    //                 <span> {result.alarmMsg}</span>
+    //               </Row>
+    //               <Row>
+    //                 <span>告警时间:</span>
+    //                 <span> {result.startTime}</span>
+    //               </Row>
+    //               <Row>
+    //                 <span>告警值</span>
+    //                 <span> {result.value}</span>
+    //               </Row>
+    //             </div>
+    //           ),
+    //         });
+    //       } else if (result.Type == 'DeviceStatus') {
+    //         notification.open({
+    //           message: '设备上线/下线通知',
+    //           placement: 'bottomRight',
+    //           description: `设备ID:${result.deviceID} 状态:${result.status}`,
+    //         });
+    //       }
+    //       location.pathname.indexOf('shouye') != -1 && _this.apiRender();
+    //
+    //       ws.onbeforeunload = function() {
+    //         ws.close();
+    //       };
+    //     };
+    //     ws.onclose = function() {
+    //       console.log('连接已关闭...');
+    //     };
+    //     this.ws = ws;
+    //   } else {
+    //     console.log('暂不支持WebSocket!');
+    //   }
+    // }
   }
   setOrGetOpenKeys(getOpenKeys, newPath) {
     //路由
@@ -135,6 +187,12 @@ class BasicLayout extends Component {
         break;
       case 'fsu-realtimealarm':
         path = 'equ-realtimealarm';
+        break;
+      case 'fsu-alarminformation':
+        path = 'bsifm-alarminformation';
+        break;
+      case 'bsifm-devicetype':
+        path = 'bsifm-deviceversion';
         break;
     }
     _.map(menu, item => {
@@ -258,6 +316,7 @@ class BasicLayout extends Component {
       ['fsu-realtimealarm', 'equ-realtimealarm'],
       ['fsu-historyalarm', 'equ-historyalarm'],
       ['fsu-controlrecord', 'equ-controlrecord'],
+      ['fsu-alarminformation', 'bsifm-alarminformation'],
     ];
 
     let currentLink = [];
@@ -294,14 +353,14 @@ class BasicLayout extends Component {
                     <Link
                       to={`/${currentLink[1]}`}
                       className={classnames(
-                        currentLink[1] === path && styles['active'],
+                        currentLink[1].indexOf(path) !== -1 && styles['active'],
                       )}>
                       基础设备
                     </Link>
                     <Link
                       to={`/${currentLink[0]}`}
                       className={classnames(
-                        currentLink[0] === path && styles['active'],
+                        currentLink[0].indexOf(path) !== -1 && styles['active'],
                       )}>
                       FSU设备
                     </Link>

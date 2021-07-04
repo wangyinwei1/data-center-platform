@@ -16,7 +16,7 @@ import Panel from '../../../components/Panel';
 import RealtimeTable from './realtimeTable.js';
 import RealtimeAlarmTable from '../realtimealarm/childTable.js';
 import HistoryModal from './historyModal.js';
-import ChildTable from './childTable.js';
+// import ChildTable from './childTable.js';
 import ControlModal from './controlModal.js';
 import BatchModal from '../../../components/DeleteModal';
 import ControlContent from './controlContent.js';
@@ -25,7 +25,13 @@ import AddLevelOne from './addLevelOne.js';
 import AddChildDevice from './addChildDevice.js';
 import {formParams, addLevelOne, addChildDevice} from './tplJson.js';
 //实例
-@inject('regionalStore', 'informationStore', 'realtimealarmStore')
+@inject(
+  'regionalStore',
+  'informationStore',
+  'realtimealarmStore',
+  'historymodalStore',
+  'layoutStore',
+)
 @observer
 @mixin(cascader)
 class Information extends Component {
@@ -47,12 +53,7 @@ class Information extends Component {
     this.onPageChange = this.onPageChange.bind(this);
     this.onRealtimeOk = this.onRealtimeOk.bind(this);
     this.onRealtimeCancel = this.onRealtimeCancel.bind(this);
-    this.expandedRowRender = this.expandedRowRender.bind(this);
     this.onExpand = this.onExpand.bind(this);
-    this.realtimeChange = this.realtimeChange.bind(this);
-    this.historyChange = this.historyChange.bind(this);
-    this.rumorChange = this.rumorChange.bind(this);
-    this.controlChange = this.controlChange.bind(this);
     this.onHistoryCancel = this.onHistoryCancel.bind(this);
     this.onControlCancel = this.onControlCancel.bind(this);
     this.onRumorCancel = this.onRumorCancel.bind(this);
@@ -65,14 +66,6 @@ class Information extends Component {
     this.addChildDeviceChange = this.addChildDeviceChange.bind(this);
     this.addChildDeviceCancel = this.addChildDeviceCancel.bind(this);
     this.addChildDeviceOk = this.addChildDeviceOk.bind(this);
-    this.addChildShow = this.addChildShow.bind(this);
-    this.childDetailClick = this.childDetailClick.bind(this);
-    this.childEditClick = this.childEditClick.bind(this);
-    this.sunEditChange = this.sunEditChange.bind(this);
-    this.sunDeleteChange = this.sunDeleteChange.bind(this);
-    this.sunDetailChange = this.sunDetailChange.bind(this);
-    this.currentPortChange = this.currentPortChange.bind(this);
-    this.sunDisableChange = this.sunDisableChange.bind(this);
     this.disableClick = this.disableClick.bind(this);
     this.selectChange = this.selectChange.bind(this);
     this.onRowDoubleClick = this.onRowDoubleClick.bind(this);
@@ -82,11 +75,11 @@ class Information extends Component {
     this.onBatchEnabledClick = this.onBatchEnabledClick.bind(this);
     this.onBatchOk = this.onBatchOk.bind(this);
     this.onBatchCancel = this.onBatchCancel.bind(this);
-    this.sunRowKeyChange = this.sunRowKeyChange.bind(this);
     this.getAlarmTable = this.getAlarmTable.bind(this);
 
     this.state = {
       disabledShow: false,
+      devStatus: '',
       controlShow: false,
       historyShow: false,
       realtimeShow: false,
@@ -96,10 +89,12 @@ class Information extends Component {
       alarmTableVisible: false,
       alarmTableTitle: '',
       rumorShow: false,
+      searchValue: '',
       modalTitle: '',
       cascaderText: '',
       cascaderLoading: false,
       singleLineData: {},
+      isDisable: false,
       deleteShow: false,
       cascaderValue: [],
       editShow: false,
@@ -142,14 +137,33 @@ class Information extends Component {
       keywords: '',
       number: 10,
       ztreeChild: selectedOptions[0].code,
+      status: this.state.devStatus,
     };
     const {informationStore} = this.props;
     informationStore.getTable(params);
     this.clearSelected();
   }
+  componentWillUnmount() {
+    const {layoutStore} = this.props;
+    layoutStore.recordReforePath('');
+  }
   componentDidMount() {
-    const {informationStore} = this.props;
-    this.initLoading(informationStore).then(() => {
+    const {informationStore, layoutStore, location} = this.props;
+    const fromSitemonitoring = layoutStore.beforePath === 'sitemonitoring';
+    let id;
+    fromSitemonitoring ? (id = location.query.id) : '';
+    //刷新之后设置为空
+    const params = {
+      page: 1,
+      sing: 'area',
+      keywords: id ? id : '',
+      number: 10,
+    };
+    id &&
+      this.setState({
+        searchValue: id,
+      });
+    this.initLoading(informationStore, params).then(() => {
       const tableData = toJS(informationStore.tableData.varList);
     });
   }
@@ -187,7 +201,7 @@ class Information extends Component {
     this.setState({
       realtimeShow: true,
       childTableTitle: item.devName,
-      needRealtime: item.statustwo === 0 ? false : true,
+      needRealtime: item.onOff === 0 ? false : true,
     });
   }
   onRealtimeOk() {}
@@ -195,12 +209,14 @@ class Information extends Component {
     this.setState({
       realtimeShow: false,
     });
+    const {informationStore: {getTable, tableParmas}} = this.props;
+    getTable({...tableParmas, status: this.state.devStatus});
   }
   //控制
   controlClick(item, e) {
     e.stopPropagation();
     e.nativeEvent.stopImmediatePropagation();
-    if (item.statustwo === 0) {
+    if (item.onOff === 0) {
       message.error('离线设备不支持远程控制！');
       return;
     }
@@ -224,6 +240,10 @@ class Information extends Component {
   rumorClick(item, e) {
     e.stopPropagation();
     e.nativeEvent.stopImmediatePropagation();
+    if (item.onOff === 0) {
+      message.error('离线设备不支持远程遥控！');
+      return;
+    }
     const {informationStore} = this.props;
     const params = {
       F_DeviceID: item.devID,
@@ -244,11 +264,11 @@ class Information extends Component {
   historyClick(item, e) {
     e.stopPropagation();
     e.nativeEvent.stopImmediatePropagation();
-    const {informationStore} = this.props;
+    const {historymodalStore} = this.props;
     const params = {
       F_DeviceID: item.devID,
     };
-    informationStore.getByDevice(params);
+    historymodalStore.getByDevice(params);
     this.setState({
       historyShow: true,
       childTableTitle: item.devName,
@@ -276,33 +296,19 @@ class Information extends Component {
         formValue.F_IP.require = true;
         formValue.F_Port.require = true;
       }
-      if (data.pd.isConcentrator === 1) {
-        formValue.Id_Version.require = false;
-        formValue.F_Port.require = false;
-        formValue.F_ConnectType.require = false;
-      } else {
-        formValue.Id_Version.require = true;
-        formValue.F_Port.require = true;
-        formValue.F_ConnectType.require = true;
-      }
-      formValue.F_BelongUnitID.value = data.pd.belongUnitID;
+      formValue.Id_Version.require = true;
+      formValue.F_StationID.value = data.pd.stationID || undefined;
       formValue.F_CollectSpan.value = data.pd.collectSpan;
-      formValue.Id_Version.value =
-        data.pd.isConcentrator === 1 ? undefined : data.pd.Id_Version;
+      formValue.Id_Version.value = data.pd.Id_Version;
       formValue.F_HeartSpan.value = data.pd.heartSpan;
-      formValue.F_ConnectType.value =
-        data.pd.isConcentrator === 1 ? undefined : data.pd.connectType;
       formValue.F_DeviceName.value = data.pd.devName;
-      formValue.F_IP.value =
-        data.pd.isConcentrator === 1 ? data.pd.concentratorIP : data.pd.ip;
+      formValue.F_IP.value = data.pd.ip;
       formValue.F_Latitude.value = data.pd.latitude;
       formValue.F_Longitude.value = data.pd.longitude;
-      formValue.F_IsConcentrator.value = data.pd.isConcentrator;
       formValue.F_NetInTime.value = data.pd.netInTime;
       formValue.F_OutDevID.value = data.pd.outDevID;
-      formValue.F_Port.value = data.pd.isConcentrator === 1 ? '' : data.pd.port;
+      formValue.F_Port.value = data.pd.port;
       formValue.rec.value = data.pd.rec;
-      formValue.F_ReportType.value = data.pd.reportType;
       formValue.F_SimCardNO.value = data.pd.simCardNo;
       formValue.adr.value = data.pd.adr || data.pd.adr === 0 ? data.pd.adr : '';
       return {
@@ -317,8 +323,10 @@ class Information extends Component {
   }
   //禁用
   disableClick(item) {
+    const isDisable = item.status;
     this.setState({
       disabledShow: true,
+      isDisable: isDisable === 1 ? false : true,
       singleLineData: item,
     });
   }
@@ -340,7 +348,7 @@ class Information extends Component {
     }).then(() => {
       const F_DeviceID = {F_DeviceID: currentDevice};
       item.devID
-        ? getTable(tableParmas)
+        ? getTable({...tableParmas, status: this.state.devStatus})
         : this.state.selectedChildRowKey[0] === this.state.currentPort &&
           getGrandsonTable({
             ...F_DeviceID,
@@ -563,9 +571,7 @@ class Information extends Component {
         F_NetInMode: 0,
       };
       _.forIn(fields, (value, key) => {
-        if (key === 'F_IP' && fields['F_IsConcentrator'].value === 1) {
-          params['F_ConcentratorIP'] = value.value;
-        } else if (key === 'adr') {
+        if (key === 'adr') {
           params[key] = parseInt(value.value);
         } else {
           params[key] = value.value;
@@ -591,12 +597,15 @@ class Information extends Component {
   //搜索
   onSearch(value) {
     const {informationStore} = this.props;
+
     const params = {
       ...informationStore.tableParmas,
       keywords: encodeURIComponent(value),
+      status: this.state.devStatus,
+      page: 1,
     };
     informationStore.search(params);
-    this.setState({expandedRows: []});
+    this.setState({expandedRows: [], searchValue: value});
     this.clearSelected();
   }
   //table分页
@@ -607,6 +616,7 @@ class Information extends Component {
       ...informationStore.tableParmas,
       page: current,
       number: pageSize,
+      status: this.state.devStatus,
     };
     informationStore.getTable(params);
     this.clearSelected();
@@ -621,38 +631,6 @@ class Information extends Component {
     const {informationStore} = this.props;
     this.c_onPageChange({pageNumber}, informationStore);
     this.clearSelected();
-  }
-  //孙集回调
-  realtimeChange(item) {
-    this.setState({
-      realtimeShow: true,
-      needRealtime: item.statustwo === 0 ? false : true,
-      childTableTitle: item.subDeviceName,
-    });
-  }
-  historyChange(item) {
-    this.setState({
-      historyShow: true,
-      childTableTitle: item.subDeviceName,
-    });
-  }
-  controlChange() {
-    this.setState({
-      controlShow: true,
-    });
-  }
-  rumorChange() {
-    this.setState({
-      rumorShow: true,
-    });
-  }
-  addChildShow(item, selectedChildRowKey) {
-    this.setState({
-      addChildDeviceShow: true,
-      sunType: 'new',
-      currentPort: item.portID,
-      selectedChildRowKey: selectedChildRowKey,
-    });
   }
   //子集点击设值
   getRowData(item, mode) {
@@ -671,12 +649,6 @@ class Information extends Component {
         childType: mode,
       };
     });
-  }
-  childDetailClick(item) {
-    this.getRowData(item, 'detail');
-  }
-  childEditClick(item) {
-    this.getRowData(item, 'modify');
   }
   //子集点击设值
   getSunRowData(item, mode) {
@@ -701,66 +673,6 @@ class Information extends Component {
       };
     });
   }
-  sunEditChange(item) {
-    this.getSunRowData(item, 'modify');
-  }
-  sunDeleteChange(item, selectedChildRowKey) {
-    const {
-      informationStore: {delectSun, currentDevice, getGrandsonTable},
-    } = this.props;
-    delectSun({F_SubDeviceID: item.subDeviceID}).then(() => {
-      const F_DeviceID = {F_DeviceID: currentDevice};
-      selectedChildRowKey[0] === this.state.currentPort &&
-        getGrandsonTable({
-          ...F_DeviceID,
-          portID: this.state.currentPort,
-        });
-    });
-  }
-
-  sunDetailChange(item) {
-    this.getSunRowData(item, 'detail');
-  }
-  sunDisableChange(item, selectedChildRowKey) {
-    this.setState({
-      disabledShow: true,
-      singleLineData: item,
-      selectedChildRowKey: selectedChildRowKey,
-    });
-  }
-  currentPortChange(item) {
-    this.setState({
-      currentPort: item.portID,
-    });
-  }
-  sunRowKeyChange(sunBatchField) {
-    this.setState({
-      sunBatchField,
-    });
-  }
-  //嵌套表格
-  expandedRowRender(record, i) {
-    const {informationStore} = this.props;
-
-    return (
-      <ChildTable
-        rumorChange={this.rumorChange}
-        historyChange={this.historyChange}
-        realtimeChange={this.realtimeChange}
-        controlChange={this.controlChange}
-        addChildShow={this.addChildShow}
-        childDetailClick={this.childDetailClick}
-        childEditClick={this.childEditClick}
-        sunEditChange={this.sunEditChange}
-        sunDeleteChange={this.sunDeleteChange}
-        sunDetailChange={this.sunDetailChange}
-        currentPortChange={this.currentPortChange}
-        sunRowKeyChange={this.sunRowKeyChange}
-        sunDisableChange={this.sunDisableChange}
-        getSunAlarmTable={this.getAlarmTable}
-      />
-    );
-  }
   onExpand(expanded, record) {
     const {informationStore} = this.props;
     const expandedRows = this.state.expandedRows;
@@ -779,40 +691,22 @@ class Information extends Component {
     informationStore.getSportTable({F_DeviceID: record.devID});
   }
   //得到编辑所有value
-  handleFormChange(changedFields) {
+  handleFormChange(changedFields, F_ConnectType) {
     //showError让自己校验字段
     const key = _.keys(changedFields);
     const fields = this.state.fields;
     const obj = {};
-    if (key[0] === 'F_ConnectType') {
-      if (changedFields[key].value === 1 && this.state.type === 'new') {
+    if (F_ConnectType !== null) {
+      if (F_ConnectType === 1 && this.state.type === 'new') {
         obj['F_Port'] = {...fields['F_Port'], value: ''};
         obj['F_IP'] = {...fields['F_Port'], value: ''};
       }
-      if (changedFields[key].value === 1) {
+      if (F_ConnectType === 1) {
         obj['F_Port'] = {...fields['F_Port'], require: false};
         obj['F_IP'] = {...fields['F_IP'], require: false};
       } else {
         obj['F_Port'] = {...fields['F_Port'], require: true};
         obj['F_IP'] = {...fields['F_IP'], require: true};
-      }
-    }
-    if (key[0] === 'F_IsConcentrator') {
-      if (changedFields[key].value === 1) {
-        obj['F_ConnectType'] = {
-          ...fields['F_ConnectType'],
-          value: undefined,
-          require: false,
-        };
-        obj['F_Port'] = {...fields['F_Port'], value: '', require: false};
-        obj['F_IP'] = {...fields['F_IP'], require: true};
-        obj['Id_Version'] = {
-          ...fields['Id_Version'],
-          value: undefined,
-          require: false,
-        };
-      } else {
-        obj['F_ConnectType'] = {...fields['F_ConnectType'], value: 0};
       }
     }
     obj[key] = {showError: false, ...changedFields[key]};
@@ -843,9 +737,13 @@ class Information extends Component {
     const params = {
       ...tableParmas,
       ...status,
+      page: 1,
     };
     getTable(params);
-    this.setState({expandedRows: []});
+    this.setState({
+      expandedRows: [],
+      devStatus: value,
+    });
   }
   onRowDoubleClick(item, index, e) {
     const {informationStore: {goFind2, ztreeChild}} = this.props;
@@ -874,6 +772,8 @@ class Information extends Component {
     this.setState({
       alarmTableVisible: false,
     });
+    const {informationStore: {getTable, tableParmas}} = this.props;
+    getTable({...tableParmas, status: this.state.devStatus});
   }
   //批量操作
   onBatchDeleteClick() {
@@ -985,15 +885,15 @@ class Information extends Component {
       getAlarmTable: this.getAlarmTable,
       _this: this,
     });
-    const showIconIndex = toJS(informationStore.showIconIndex);
-    const nesting =
-      showIconIndex[0] || showIconIndex[0] === 0
-        ? {
-            expandedRowRender: this.expandedRowRender,
-            onExpand: this.onExpand,
-            expandedRowKeys: this.state.expandedRows,
-          }
-        : {};
+    // const showIconIndex = toJS(informationStore.showIconIndex);
+    // const nesting =
+    //   showIconIndex[0] || showIconIndex[0] === 0
+    //     ? {
+    //         expandedRowRender: this.expandedRowRender,
+    //         onExpand: this.onExpand,
+    //         expandedRowKeys: this.state.expandedRows,
+    //       }
+    //     : {};
     let modalTitle = '';
     switch (this.state.type) {
       case 'new':
@@ -1089,10 +989,10 @@ class Information extends Component {
               onBatchDisableClick={this.onBatchDisableClick}
               onBatchEnabledClick={this.onBatchEnabledClick}
               onSearch={this.onSearch}
+              searchValue={this.state.searchValue}
             />
             <div className={styles['table_wrap']}>
               <Table
-                nesting={nesting}
                 pageIndex={pagination.page}
                 pageSize={pagination.number}
                 total={pagination.count}
@@ -1101,13 +1001,12 @@ class Information extends Component {
                 columns={columns}
                 rowClassName={(record, index) => {
                   const rowClassName = ['td_padding'];
-                  record.statustwo === 0 &&
-                    record.isConcentrator === 0 &&
-                    rowClassName.push('cl_online_state');
-                  record.isConcentrator === 0 &&
-                    rowClassName.push('cl_hidden_expand_icon');
-                  record.isConcentrator === 1 &&
-                    rowClassName.push('cl_hidden_selcted_icon');
+                  record.onOff === 0 &&
+                    (record.status == 1
+                      ? rowClassName.push('cl_disabled_state')
+                      : rowClassName.push('cl_offline_state'));
+                  record.onOff === 1 && rowClassName.push('cl_online_state');
+                  record.onOff === 2 && rowClassName.push('cl_err_state');
                   return rowClassName.join(' ');
                 }}
                 onRowDoubleClick={this.onRowDoubleClick}
@@ -1124,7 +1023,9 @@ class Information extends Component {
             onCancel={this.onDeleteCancel}
           />
           <DeleteModal
-            hintContent={'此操作将禁用该设备, 是否继续?'}
+            hintContent={`此操作将${
+              this.state.isDisable ? '禁用' : '启用'
+            }该设备, 是否继续?`}
             isShow={this.state.disabledShow}
             onOk={this.onDisableOk}
             onCancel={this.onDisableCancel}

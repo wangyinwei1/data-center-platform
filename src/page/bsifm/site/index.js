@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {action, observer, inject} from 'mobx-react';
 import styles from './index.less';
 import _ from 'lodash';
-import {Input, Row, Col, Button, message} from 'antd';
+import {Input, Row, Col, Upload, Button, message} from 'antd';
 import {toJS} from 'mobx';
 import classnames from 'classnames';
 import Cascader from '../../../components/Cascader';
@@ -10,6 +10,7 @@ import Table from '../../../components/Table';
 import columnData from './columns.js';
 import DeleteModal from './delete.js';
 import EditModal from './edit.js';
+import BatchModal from '../../../components/DeleteModal';
 import Search from '../../../components/Search';
 import {decorate as mixin} from 'react-mixin';
 import {cascader} from '../common';
@@ -56,6 +57,9 @@ class Regional extends Component {
       cityList: [],
       countyList: [],
       regionList: [],
+      selectedRowKeys: [],
+      batchShow: false,
+      hintContent: '',
     };
   }
 
@@ -84,14 +88,16 @@ class Regional extends Component {
         };
       });
     } else {
-      const {siteStore: {save, edit}} = this.props;
+      const {
+        siteStore: {save, edit},
+      } = this.props;
       const params = {
         F_AreaID: fields.region.code,
         F_AreaName: fields.region.value,
         F_ParentAreaID: fields.county.value,
         F_Name: fields.F_Name.value,
-        F_Leader: fields.F_Leader.value,
-        F_Tel: fields.F_Tel.value,
+        // F_Leader: fields.F_Leader.value,
+        // F_Tel: fields.F_Tel.value,
         F_Address: fields.F_Address.value,
       };
       fields.region.code
@@ -167,14 +173,18 @@ class Regional extends Component {
   initFromValue(data, mode, item) {
     this.setState(({fields}) => {
       let formValue = _.cloneDeep([fields])[0];
-      formValue.city.value = data.area.cityCode || undefined;
-      formValue.county.value = data.area.countyCode || undefined;
-      formValue.province.value = data.area.provinceCode || data.proCode;
-      formValue.region.value = data.area.regionCode || undefined;
-      formValue.region.value = data.area.regionCode || undefined;
+      formValue.city.value =
+        (data.area.cityCode && parseInt(data.area.cityCode)) || undefined;
+      formValue.county.value =
+        (data.area.countyCode && parseInt(data.area.countyCode)) || undefined;
+      formValue.province.value =
+        (data.area.provinceCode && parseInt(data.area.provinceCode)) ||
+        undefined;
+      formValue.region.value =
+        (data.area.regionCode && parseInt(data.area.regionCode)) || undefined;
       formValue.F_Name.value = (data.pd && data.pd.F_Name) || '';
-      formValue.F_Leader.value = (data.pd && data.pd.F_Leader) || '';
-      formValue.F_Tel.value = (data.pd && data.pd.F_AreaName) || '';
+      // formValue.F_Leader.value = (data.pd && data.pd.F_Leader) || '';
+      // formValue.F_Tel.value = (data.pd && data.pd.F_Tel) || '';
       formValue.F_Address.value = (data.pd && data.pd.F_Address) || '';
       formValue.F_AreaName.value = (data.pd && data.pd.F_AreaName) || '';
       return {
@@ -189,7 +199,9 @@ class Regional extends Component {
     });
   }
   add(e) {
-    const {siteStore: {tableParmas, addArea}} = this.props;
+    const {
+      siteStore: {tableParmas, addArea},
+    } = this.props;
     const params = {
       F_AreaID: tableParmas.ztreeChild,
     };
@@ -199,6 +211,14 @@ class Regional extends Component {
   }
   //级联组件方法
   loadData(selectedOptions, index, callback) {
+    const text = selectedOptions[0].code;
+    var area = /^\d{8}\b/; //区下的编码匹配
+    const isSite = area.test(text);
+
+    if (isSite) {
+      callback();
+      return;
+    }
     this.c_loadData(selectedOptions, index, callback);
   }
   onTextChange(value) {
@@ -224,11 +244,14 @@ class Regional extends Component {
     const params = {
       ...siteStore.tableParmas,
       keywords: encodeURIComponent(value),
+      page: 1,
     };
     siteStore.search(params);
   }
   getAreaSonList(changedFields) {
-    const {siteStore: {getAreaSonList}} = this.props;
+    const {
+      siteStore: {getAreaSonList},
+    } = this.props;
     const key = _.keys(changedFields);
     getAreaSonList({F_ParentAreaID: changedFields[key[0]]}).then(data => {
       switch (key[0]) {
@@ -282,6 +305,40 @@ class Regional extends Component {
       };
     });
   }
+  //批量操作
+  onBatchDeleteClick = () => {
+    const selectedRowKeys = this.state.selectedRowKeys;
+    if (!selectedRowKeys[0]) {
+      message.error('请选择设备!');
+      return;
+    }
+    this.setState({
+      hintContent: '此操作将批量删除所选中数据, 是否继续?',
+      batchShow: true,
+    });
+  };
+  onBatchCancel = () => {
+    this.setState({
+      batchShow: false,
+    });
+  };
+  onBatchOk = () => {
+    const {siteStore} = this.props;
+
+    siteStore.delete({
+      F_ID: this.state.selectedRowKeys.join(','),
+    });
+
+    this.setState({
+      batchShow: false,
+    });
+  };
+  onExportTplClick() {
+    location.href = '/tower/device_area/toExcelTemplate';
+  }
+  onImportClick = () => {
+    $(this.upload).click();
+  };
   //渲染
   render() {
     const {siteStore, regionalStore} = this.props;
@@ -296,6 +353,39 @@ class Regional extends Component {
       editClick: this.editClick,
       _this: this,
     });
+    const {selectedRowKeys} = this.state;
+    const rowSelection = {
+      onChange: (selectedRowKeys, selectedRows) => {
+        this.setState({
+          selectedRowKeys,
+        });
+      },
+      selectedRowKeys,
+    };
+    const props = {
+      name: 'file',
+      action: '/tower/device_area/importStation',
+      headers: {
+        authorization: 'authorization-text',
+      },
+      showUploadList: false,
+      onChange(info) {
+        if (info.file.status !== 'uploading') {
+          console.log(info.file, info.fileList);
+        }
+        if (info.file.status === 'done') {
+          if (info.file.response && info.file.response.Result === 'success') {
+            message.success(`${info.file.name} 导入成功！`);
+
+            siteStore.getTable({...siteStore.tableParmas, page: 1, number: 10});
+          } else {
+            message.error(info.file.response.Msg);
+          }
+        } else if (info.file.status === 'error') {
+          message.error(`${info.file.name} 导入失败！`);
+        }
+      },
+    };
     return (
       <div className={styles['regional_wrap']}>
         <Cascader
@@ -310,17 +400,26 @@ class Regional extends Component {
         />
         <div className={styles['regional_ct']}>
           <div className={styles['min_width']}>
-            <Toolbar onSearch={this.onSearch} onClick={this.add} />
+            <Toolbar
+              showValue={['exportTpl', 'batchDelete', 'upload', 'add']}
+              onBatchDeleteClick={this.onBatchDeleteClick}
+              onExportTplClick={this.onExportTplClick}
+              onSearch={this.onSearch}
+              onImportClick={this.onImportClick}
+              onClick={this.add}
+            />
             <div className={styles['table_wrap']}>
               <Table
                 pageIndex={pagination.page}
                 pageSize={pagination.number}
                 onShowSizeChange={this.onShowSizeChange}
+                rowSelection={rowSelection}
                 onChange={this.onPageChange}
                 total={pagination.allCount}
                 loading={siteStore.loading}
                 columns={columns}
                 data={tableData}
+                rowKey={'F_ID'}
               />
             </div>
           </div>
@@ -346,6 +445,20 @@ class Regional extends Component {
             getAreaSonList={this.getAreaSonList}
           />
         </EditModal>
+        <BatchModal
+          isShow={this.state.batchShow}
+          onOk={this.onBatchOk}
+          hintContent={this.state.hintContent}
+          onCancel={this.onBatchCancel}
+        />
+        <Upload {...props}>
+          <span
+            style={{display: 'none'}}
+            ref={c => {
+              this.upload = c;
+            }}
+          />
+        </Upload>
       </div>
     );
   }

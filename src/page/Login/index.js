@@ -23,7 +23,7 @@ class Loginer extends Component {
     };
   }
   setBgImage() {
-    this.idImg.style.backgroundImage = `url(/collect/code.do?t=${new Date().getTime()})`;
+    this.idImg.style.backgroundImage = `url(/tower/code.do?t=${new Date().getTime()})`;
   }
   componentDidMount() {
     this.setBgImage();
@@ -54,7 +54,13 @@ class Loginer extends Component {
             // globalStore.saveIp_name({
             //   ip: data.ip,
             // }),
+            localStorage.setItem('FsuTypeID', data.FsuTypeID);
             localStorage.setItem('serviceip', data.ip);
+            localStorage.setItem('isAdmin', data.isAdmin);
+            localStorage.setItem('isNotArea', data.isNotArea);
+            localStorage.setItem('AppID', data.AppID);
+            localStorage.setItem('screenUrl', data.screenUrl);
+            localStorage.setItem('ECPUrl', data.ECPUrl);
             const timeoutUrl = localStorage.getItem('timeoutUrl');
 
             //记住密码设置cookies
@@ -63,6 +69,7 @@ class Loginer extends Component {
               : Cookies.remove('remember');
             //保存用户名
             Cookies.set('cl_username', {username: values.username});
+            globalStore.changeOvertime(false);
 
             //跳转路由
 
@@ -70,8 +77,9 @@ class Loginer extends Component {
               router.goBack();
             } else {
               //setSelectedKeys
-              layoutStore.setSelectedKeys('shouye');
-              router.push('/shouye');
+
+              layoutStore.setSelectedKeys('towerdevice_manager');
+              router.push('/towerdevice_manager');
             }
           } else {
             this.setBgImage();
@@ -87,7 +95,7 @@ class Loginer extends Component {
   }
   render() {
     const {getFieldDecorator} = this.props.form;
-    const {globalStore} = this.props;
+    const {globalStore, loginStore} = this.props;
     const rememberCookies =
       Cookies.get('remember') && JSON.parse(Cookies.get('remember'));
     return (
@@ -95,8 +103,8 @@ class Loginer extends Component {
         <div className={classnames(styles['login_ct'], 'clearfix')}>
           <img src={logo} className={styles['logo']} />
           <div className={styles['logo_title']}>
-            <p>物联网数据中心平台</p>
-            <span>IOT &nbsp;DATA &nbsp;CENTER &nbsp;PLATFORM</span>
+            <p>创力能耗管理平台</p>
+            <span>MAKE POWER ENERGY CONSUMPTION MANAGEMENT</span>
           </div>
           <div className={styles['line']} />
           <div className={styles['login_form']}>
@@ -148,6 +156,7 @@ class Loginer extends Component {
                         type="text"
                         placeholder="验证码"
                         onPressEnter={this.onPressEnter}
+                        autoComplete={'off'}
                       />,
                     )}
                   </Col>
@@ -166,6 +175,7 @@ class Loginer extends Component {
               <FormItem className={styles['login_button']}>
                 <Button
                   onClick={this.userLogin}
+                  loading={loginStore.isLogin}
                   ref={c => {
                     this.userLoginBtn = c;
                   }}>

@@ -141,7 +141,6 @@ const columns = ({
       width: '6%',
       className: 'information_th',
       render: (text, record, index) => {
-        if (record.isConcentrator === 1) return null;
         return (
           <i
             className={classnames(

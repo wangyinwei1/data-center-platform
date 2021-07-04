@@ -148,6 +148,7 @@ class Regional extends Component {
     const params = {
       ...basicchannelStore.tableParmas,
       keywords: encodeURIComponent(value),
+      page: 1,
     };
     basicchannelStore.search(params);
   }
@@ -167,7 +168,9 @@ class Regional extends Component {
     });
   }
   initFromValue(data, mode, item) {
-    const {basicchannelStore: {virtualList}} = this.props;
+    const {
+      basicchannelStore: {virtualList},
+    } = this.props;
     const record = _.filter(toJS(virtualList), app => {
       return app.channelID === data.pd.F_ChannelID;
     });
@@ -209,7 +212,9 @@ class Regional extends Component {
     });
   }
   editClick(item) {
-    const {basicchannelStore: {initEdit, getVirtualList}} = this.props;
+    const {
+      basicchannelStore: {initEdit, getVirtualList},
+    } = this.props;
     getVirtualList({
       F_TypeID: item.F_DeviceType,
       F_Version: item.F_Version,
@@ -262,16 +267,16 @@ class Regional extends Component {
     }
     //过滤后端所需要的数据
     const item = this.state.singleLineData;
-    const valueMeanData = _.map(valueMeanTable, item => {
-      return `${item.value}:${item.valueMean}`;
-    });
+    // const valueMeanData = _.map(valueMeanTable, item => {
+    //   return `${item.value}:${item.valueMean}`;
+    // });
 
     const params = {
       F_DeviceType: item.F_DeviceType,
       F_Version: item.F_Version,
       F_ChannelID: item.F_ChannelID,
       F_ChannelType: item.F_ChannelType,
-      values: valueMeanData.join(','),
+      values: valueMeanTable,
     };
     valueMeanSave(params).then(() => {
       this.setState({
@@ -280,7 +285,9 @@ class Regional extends Component {
     });
   }
   valueTypeClick() {
-    const {basicchannelStore: {getValuePropertyList}} = this.props;
+    const {
+      basicchannelStore: {getValuePropertyList},
+    } = this.props;
     const item = this.state.singleLineData;
     const params = {
       F_ChannelID: item.F_ChannelID,
@@ -380,7 +387,9 @@ class Regional extends Component {
     });
   }
   detailClick(item) {
-    const {basicchannelStore: {initEdit, getVirtualList}} = this.props;
+    const {
+      basicchannelStore: {initEdit, getVirtualList},
+    } = this.props;
     getVirtualList({
       F_TypeID: item.F_DeviceType,
       F_Version: item.F_Version,
@@ -394,7 +403,9 @@ class Regional extends Component {
     this.alarmClick(item, 'detail');
   }
   alarmClick(item, detail) {
-    const {basicchannelStore: {getAlarmTable}} = this.props;
+    const {
+      basicchannelStore: {getAlarmTable},
+    } = this.props;
     const params = {
       F_DeviceType: item.F_DeviceType,
       F_Version: item.F_Version,
@@ -409,7 +420,9 @@ class Regional extends Component {
     });
   }
   channelTypeChange(value) {
-    const {basicchannelStore: {getTable, tableParmas}} = this.props;
+    const {
+      basicchannelStore: {getTable, tableParmas},
+    } = this.props;
     const params = {
       ...tableParmas,
       F_ChannelType: value,
@@ -418,7 +431,9 @@ class Regional extends Component {
   }
 
   onExportClick() {
-    const {basicchannelStore: {tableParmas}} = this.props;
+    const {
+      basicchannelStore: {tableParmas},
+    } = this.props;
     location.href =
       '/collect/device_basechannel/toExcel.do?F_DeviceType=' +
       tableParmas.F_TypeID +
@@ -551,7 +566,9 @@ class Regional extends Component {
         // key == 'F_ChannelName'
         //   ? (params[key] = encodeURIComponent(value.value))
         //   : (params[key] = value.value);
-        params[key] = value.value;
+        key == 'F_Ratio' && value.value
+          ? (params[key] = Number(value.value))
+          : (params[key] = value.value);
       });
       this.state.type == 'modify'
         ? edit(params).then(() => {
@@ -579,7 +596,9 @@ class Regional extends Component {
           obj['F_ShowPrecision'] = {...fields.F_ShowPrecision, value: 0};
         }
       } else if (key[0] === 'virtual') {
-        const {basicchannelStore: {virtualList}} = this.props;
+        const {
+          basicchannelStore: {virtualList},
+        } = this.props;
         const item = _.filter(virtualList, item => {
           return item.fid === changedFields[key].value;
         });
@@ -598,7 +617,9 @@ class Regional extends Component {
     });
   }
   onRowDoubleClick(item, e) {
-    const {basicchannelStore: {initEdit}} = this.props;
+    const {
+      basicchannelStore: {initEdit},
+    } = this.props;
     const params = {
       F_ID: item.F_ID,
     };
@@ -677,7 +698,7 @@ class Regional extends Component {
 
             basicchannelStore.getTable(basicchannelStore.tableParmas);
           } else {
-            message.error(`${info.file.name} 导入失败！`);
+            message.error(info.file.response.Msg);
           }
         } else if (info.file.status === 'error') {
           message.error(`${info.file.name} 导入失败！`);
@@ -770,6 +791,7 @@ class Regional extends Component {
             valueTypeClick={this.valueTypeClick}
             addVirtual={this.addVirtual}
             isVchannel={this.state.isVchannel}
+            currentDevice={this.state.singleLineData}
             handleFormChange={this.handleFormChange}
           />
         </EditModal>

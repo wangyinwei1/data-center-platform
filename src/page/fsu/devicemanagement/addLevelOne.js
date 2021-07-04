@@ -12,7 +12,7 @@ import {Form, Button, Input, Row, Col} from 'antd';
 const FormItem = Form.Item;
 
 //实例
-@inject('informationStore')
+@inject('fsu_devicemanagementStore')
 @observer
 class AddChild extends Component {
   constructor(props) {
@@ -29,10 +29,16 @@ class AddChild extends Component {
     handleFormChange(changedFields);
   }
   render() {
-    const {fields, mode} = this.props;
+    const {fields, mode, fsu_devicemanagementStore: {deviceTypes}} = this.props;
     let disabled = false;
     mode == 'detail' && (disabled = true);
 
+    const fsuDeviceTypes = _.map(toJS(deviceTypes), item => {
+      return {
+        name: item.typeName,
+        value: item.deviceType,
+      };
+    });
     return (
       <Form layout="inline" className={styles['edit_wrap']}>
         <FormInput
@@ -41,7 +47,6 @@ class AddChild extends Component {
           label={'设备ID'}
           name={'F_DeviceID'}
           disabled={mode === 'modify' ? true : disabled}
-          placeholder={'请输入端口号'}
           rules={[{required: true, message: '请必须填写!'}]}
         />
         <FormInput
@@ -49,10 +54,75 @@ class AddChild extends Component {
           onChange={this.handleFormChange}
           label={'设备名称'}
           disabled={disabled}
-          name={'F_DeviceName'}
-          placeholder={'请输入端口名称'}
+          name={'deviceName'}
           rules={[{required: true, message: '请必须填写!'}]}
         />
+        {JSON.parse(localStorage.getItem('FsuTypeID')) !== 3 && (
+          <FormSelect
+            {...fields}
+            onChange={this.handleFormChange}
+            label={'设备类型'}
+            disabled={disabled}
+            placeholder={'请选择设备类型'}
+            name={'deviceSubType'}
+            rules={[{required: true, message: '请必须填写!'}]}
+            children={fsuDeviceTypes}
+          />
+        )}
+        {JSON.parse(localStorage.getItem('FsuTypeID')) === 3 && (
+          <Row className={styles['type3_wrap']}>
+            <FormSelect
+              {...fields}
+              onChange={this.handleFormChange}
+              label={'设备类型'}
+              disabled={disabled}
+              placeholder={'请选择设备类型'}
+              name={'deviceSubType'}
+              rules={[{required: true, message: '请必须填写!'}]}
+              children={fsuDeviceTypes}
+            />
+            <FormInput
+              {...fields}
+              onChange={this.handleFormChange}
+              label={'机房名称'}
+              disabled={disabled}
+              name={'roomName'}
+              rules={[{required: false, message: '请必须填写!'}]}
+            />
+            <FormInput
+              {...fields}
+              onChange={this.handleFormChange}
+              label={'模型'}
+              disabled={disabled}
+              name={'model'}
+              rules={[{required: false, message: '请必须填写!'}]}
+            />
+            <FormInput
+              {...fields}
+              onChange={this.handleFormChange}
+              label={'品牌'}
+              disabled={disabled}
+              name={'brand'}
+              rules={[{required: false, message: '请必须填写!'}]}
+            />
+            <FormInput
+              {...fields}
+              onChange={this.handleFormChange}
+              label={'额定功率'}
+              disabled={disabled}
+              name={'ratedCapacity'}
+              rules={[{required: false, message: '请必须填写!'}]}
+            />
+            <FormInput
+              {...fields}
+              onChange={this.handleFormChange}
+              label={'设备描述'}
+              disabled={disabled}
+              name={'devDescribe'}
+              rules={[{required: false, message: '请必须填写!'}]}
+            />
+          </Row>
+        )}
       </Form>
     );
   }

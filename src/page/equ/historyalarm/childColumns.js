@@ -14,7 +14,7 @@ const columns = () => {
   return [
     {
       title: '告警编号',
-      dataIndex: 'AlarmID',
+      dataIndex: 'alarmID',
       className: 'cl_header_padding',
       width: '11%',
       render: (text, record, index) => {
@@ -24,24 +24,24 @@ const columns = () => {
     {
       title: '设备编号',
       className: 'cl_header_padding',
-      dataIndex: 'DeviceID',
+      dataIndex: 'deviceID',
       width: '8%',
     },
     {
       title: '通道编号',
-      dataIndex: 'ChannelID',
+      dataIndex: 'channelID',
       className: 'cl_header_padding',
       width: '10%',
     },
     {
       title: '告警值',
-      dataIndex: 'Value',
+      dataIndex: 'value',
       width: '6%',
       className: 'cl_header_padding',
     },
     {
       title: '告警时间',
-      dataIndex: 'StartTime',
+      dataIndex: 'startTime',
       width: '8%',
       className: 'cl_header_padding',
       render: (text, record, index) => {
@@ -52,7 +52,7 @@ const columns = () => {
     },
     {
       title: '告警信息',
-      dataIndex: 'AlarmMsg',
+      dataIndex: 'alarmMsg',
       className: 'cl_header_padding',
       width: '10%',
       render: (text, record, index) => {
@@ -61,13 +61,13 @@ const columns = () => {
     },
     {
       title: '告警等级',
-      dataIndex: 'AlarmGrade',
+      dataIndex: 'alarmGrade',
       className: 'cl_header_padding',
       width: '7%',
     },
     {
       title: '确认人',
-      dataIndex: 'Confirmer',
+      dataIndex: 'confirmer',
       width: '8%',
       className: 'cl_header_padding',
       render: (text, record, index) => {
@@ -76,7 +76,7 @@ const columns = () => {
     },
     {
       title: '确认时间',
-      dataIndex: 'ConfirmTime',
+      dataIndex: 'confirmTime',
       width: '8%',
       className: 'cl_header_padding',
       render: (text, record, index) => {
@@ -88,7 +88,7 @@ const columns = () => {
     {
       title: '处理人',
       width: '8%',
-      dataIndex: 'Dealer',
+      dataIndex: 'dealer',
       className: 'cl_header_padding',
       render: (text, record, index) => {
         return <TextOverflow>{text}</TextOverflow>;
@@ -96,7 +96,7 @@ const columns = () => {
     },
     {
       title: '处理时间',
-      dataIndex: 'DealTime',
+      dataIndex: 'dealTime',
       width: '8%',
       className: 'cl_header_padding',
       render: (text, record, index) => {
@@ -107,7 +107,7 @@ const columns = () => {
     },
     {
       title: '结束时间',
-      dataIndex: 'EndTime',
+      dataIndex: 'endTime',
       width: '8%',
       className: 'cl_header_padding',
       render: (text, record, index) => {

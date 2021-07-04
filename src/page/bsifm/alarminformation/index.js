@@ -57,6 +57,7 @@ class Site extends Component {
     alarminformationStore.getGoAdd();
     this.setState({
       editShow: true,
+      type: 'new',
     });
   }
   initFromValue(data, mode, item) {
@@ -170,6 +171,7 @@ class Site extends Component {
     const params = {
       ...alarminformationStore.tableParmas,
       keywords: encodeURIComponent(value),
+      page: 1,
     };
     alarminformationStore.search(params);
   }

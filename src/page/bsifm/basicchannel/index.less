@@ -23,9 +23,60 @@
     background-color: #ffd9d9;
   }
   .sub_title {
-    color: #999;
+    position: relative;
+    padding: 12px 0 12px 11px;
     font-size: 14px;
-    padding: 5px 0 10px 11px;
+    color: #999;
+
+    .alarm_operation {
+      position: absolute;
+      right: 0;
+      top: 5px;
+      .import_btn,
+      .copy_btn,
+      .tpl_btn,
+      .export_btn {
+        display: inline-block;
+        vertical-align: top;
+        border-radius: 17px;
+        margin-left: 10px;
+        width: auto;
+        background-color: #fff;
+        border-color: #fff;
+        padding: 0 2px;
+        span,
+        i {
+          color: #3c3c3c;
+        }
+        .common_icon {
+          padding-right: 5px;
+          font-size: 18px;
+        }
+        &:hover {
+          background-color: #fff;
+          border-color: #fff;
+        }
+        &:active {
+          background-color: #fff;
+          border-color: #fff;
+        }
+        &:focus {
+          background-color: #fff;
+          border-color: #fff;
+        }
+        &:global(.ant-btn-clicked) {
+          &:after {
+            border-color: #fff;
+          }
+        }
+      }
+    }
+    span {
+      font-size: 14px;
+      color: #999;
+      display: inline-block;
+      vertical-align: top;
+    }
   }
   .alarm_delete {
     margin-right: 8px;
@@ -158,8 +209,55 @@
   .valueType_wrap {
     padding: 20px 20px 20px 20px;
   }
+  .control_ct {
+    padding: 20px;
+    padding-top: 40px;
+    padding-bottom: 0px;
+    .channel_id {
+      :global {
+        .ant-form-item-control-wrapper {
+          width: 420px;
+        }
+      }
+      width: 500px;
+    }
+    .search {
+      margin-top: 1px;
+      :global {
+        .ant-btn {
+          &.ant-btn-clicked {
+            &:after {
+              border-color: #40bc7e;
+            }
+          }
+          width: auto;
+          height: 36px;
+          line-height: 36px;
+          color: #fff;
+          span,
+          i {
+            color: #fff;
+          }
+          background-color: #50e399;
+          border-color: #50e399;
+          &:hover {
+            background-color: #7fffbe;
+            border-color: #7fffbe;
+          }
+          &:active {
+            background-color: #40bc7e;
+            border-color: #40bc7e;
+          }
+          &:focus {
+            background-color: #50e399;
+            border-color: #50e399;
+          }
+        }
+      }
+    }
+  }
   .alarm_wrap {
-    padding: 20px 0px 20px 0px;
+    padding: 0px 0px 20px 0px;
     .alarm_down {
       position: absolute;
       right: 24px;
@@ -172,6 +270,15 @@
         cursor: pointer;
         line-height: 58px;
         height: 58px;
+        position: relative;
+        width: 100%;
+        span {
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          width: 88%;
+          display: block;
+        }
       }
       .padding0 {
         td {

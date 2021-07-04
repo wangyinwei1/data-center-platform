@@ -16,27 +16,12 @@ const columns = ({getChildTable, _this}) => {
       dataIndex: 'devName',
       width: '22%',
       render: (text, record, dex) => {
-        const children =
-          record.isConcentrator === 0 ? (
-            <a
-              className={styles['child_link']}
-              onClick={
-                getChildTable ? getChildTable.bind(_this, record) : () => {}
-              }>
-              <TextOverflow link={true}>
-                <i
-                  className={classnames(
-                    'icon iconfont',
-                    record.connectType == 0
-                      ? `icon-beidong ${styles['icon_passive']}`
-                      : `icon-zhudong ${styles['icon_active']}`,
-                    styles['connectType'],
-                  )}
-                />
-                {record.devName}
-              </TextOverflow>
-            </a>
-          ) : (
+        const children = (
+          <a
+            className={styles['child_link']}
+            onClick={
+              getChildTable ? getChildTable.bind(_this, record) : () => {}
+            }>
             <TextOverflow link={true}>
               <i
                 className={classnames(
@@ -49,7 +34,8 @@ const columns = ({getChildTable, _this}) => {
               />
               {record.devName}
             </TextOverflow>
-          );
+          </a>
+        );
         return <div>{children}</div>;
       },
     },
@@ -79,13 +65,6 @@ const columns = ({getChildTable, _this}) => {
       dataIndex: 'netInTime',
       width: '18%',
     },
-    // {
-    //   title: '状态',
-    //   dataIndex: '',
-    //   render: (text, record, index) => {
-    //     return record.statustwo == 0 ? '离线' : '在线';
-    //   },
-    // },
   ];
 };
 

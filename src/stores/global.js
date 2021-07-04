@@ -5,6 +5,7 @@ class Global {
   @observable serviceip = '';
   @observable collapsed = false;
   @observable isTimeout = false;
+  @observable isOvertime = false;
   @action
   async changeIsTimeout(bOk) {
     this.isTimeout = bOk;
@@ -17,6 +18,10 @@ class Global {
   @action
   async changeCollapsed(onOff) {
     this.collapsed = onOff;
+  }
+  @action
+  async changeOvertime(bOk) {
+    this.isOvertime = bOk;
   }
 }
 

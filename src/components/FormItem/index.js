@@ -2,35 +2,43 @@ import React, {Component} from 'react';
 import {toJS} from 'mobx';
 import styles from './index.less';
 import classnames from 'classnames';
-import {Form, Input, Radio, Row, Select} from 'antd';
+import {Form, Input, Radio, Row, Select, InputNumber} from 'antd';
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
 const {TextArea} = Input;
 const Option = Select.Option;
-const mapPropsToFields = props => {
-  const value = props[props.name].value;
+const mapPropsToFields = record => {
+  let fields = record.fields || {};
+  let props = {
+    ...record,
+    ...fields,
+    my_name: record.name,
+  };
+  if (props.visiable === false) return;
+  const value = props[props.my_name].value;
+  // console.log(value);
 
-  let object = {...props[props.name]};
+  let object = {...props[props.my_name]};
   if (
     ((value !== 0 && !value) || !value[0]) &&
     props.rules[0].required &&
-    props[props.name].showError
+    props[props.my_name].showError
   ) {
     const error = {
       errors: [
         {
-          field: props.name,
+          field: props.my_name,
           message: props.rules[0].message,
         },
       ],
     };
 
-    object = {...error, ...props[props.name]};
+    object = {...error, ...props[props.my_name]};
   }
   let obj = {};
-  obj[props.name] = Form.createFormField({
+  obj[props.my_name] = Form.createFormField({
     ...object,
-    value: props[props.name].value,
+    value: props[props.my_name].value,
     // typeof props[props.name].value === 'number'
     //   ? props[props.name].value.toString()
     //   : props[props.name].value,
@@ -43,6 +51,13 @@ const FormSelect = Form.create({
     props.onChange(changedFields);
   },
   mapPropsToFields(props) {
+    let value = props[props.name]
+      ? props[props.name]
+      : props.fields[props.name];
+    let hasValue = props.children.filter(item => {
+      return item.value === value['value'];
+    });
+    !hasValue[0] && (value['value'] = undefined);
     return mapPropsToFields(props);
   },
   onValuesChange(_, values) {
@@ -183,6 +198,60 @@ const FormTextArea = Form.create({
     </FormItem>
   );
 });
+const FormInputNumber = Form.create({
+  onFieldsChange(props, changedFields) {
+    props.onChange(changedFields);
+  },
+  mapPropsToFields(props) {
+    return mapPropsToFields(props);
+  },
+  onValuesChange(_, values) {
+    //console.log(values);
+  },
+})(props => {
+  const {getFieldDecorator} = props.form;
+  const {
+    name,
+    onFocus,
+    label,
+    rules,
+    placeholder,
+    disabled,
+    width,
+    className,
+    type,
+    visiable,
+  } = props;
+  const customWidth = width
+    ? {width: typeof width === 'number' ? `${width}px` : width}
+    : {};
+  if (visiable === false) {
+    return null;
+  }
+  return (
+    <FormItem
+      label={label}
+      className={classnames(
+        styles['form_input'],
+        width && styles['custom_input_width'],
+        className,
+      )}
+      style={customWidth}>
+      {getFieldDecorator(name, {
+        rules: rules
+          ? rules
+          : [{required: true, message: 'Username is required!'}],
+      })(
+        <InputNumber
+          onClick={onFocus ? onFocus : () => {}}
+          disabled={disabled ? disabled : false}
+          autoComplete={'off'}
+          placeholder={placeholder ? placeholder : '请输入内容'}
+        />,
+      )}
+    </FormItem>
+  );
+});
 const FormInput = Form.create({
   onFieldsChange(props, changedFields) {
     props.onChange(changedFields);
@@ -205,10 +274,14 @@ const FormInput = Form.create({
     width,
     className,
     type,
+    visiable,
   } = props;
   const customWidth = width
     ? {width: typeof width === 'number' ? `${width}px` : width}
     : {};
+  if (visiable === false) {
+    return null;
+  }
   return (
     <FormItem
       label={label}

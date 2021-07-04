@@ -13,7 +13,7 @@ const formParams = {
     // },
     STATUS: {
       value: undefined,
-      require: true,
+      require: false,
     },
     EMAIL: {
       value: '',
@@ -45,6 +45,10 @@ const formParams = {
     districtCode: {
       value: undefined,
       require: true,
+    },
+    F_FsuTypeID: {
+      value: undefined,
+      require: false,
     },
     DevTypes: {
       value: [],

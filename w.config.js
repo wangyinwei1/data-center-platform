@@ -159,8 +159,10 @@ var devServer = {
   disableHostCheck: true,
   proxy: [
     {
-      context: ['/collect/**'],
-      target: 'http://172.29.7.71:8989/',
+      context: ['/tower/**'],
+      target: 'http://172.16.7.19:9090/',
+      // target: 'http://172.17.3.53:8080/',
+      // target: 'http://172.16.4.254:8080/',
     },
   ],
 };

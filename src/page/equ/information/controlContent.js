@@ -49,7 +49,7 @@ class ControlContent extends Component {
       },
     } = this.props;
     const params = {
-      F_ChannelID: this.state.F_ChannelID || toJS(controlChannel)[0].channelId,
+      F_ChannelID: this.state.F_ChannelID || toJS(controlChannel)[0].channelID,
       controlValue: this.state.controlValue || toJS(operateList)[0].value,
       F_DeviceID: currentDevice,
     };
@@ -64,13 +64,13 @@ class ControlContent extends Component {
             <FormItem label="通道名称">
               <Select
                 value={
-                  this.state.F_ChannelID || toJS(controlChannel)[0].channelId
+                  this.state.F_ChannelID || toJS(controlChannel)[0].channelID
                 }
                 placeholder="请选择通道!"
                 onChange={this.channelChange}>
                 {_.map(toJS(controlChannel), item => {
                   return (
-                    <Option key={item.channelId} value={item.channelId}>
+                    <Option key={item.channelID} value={item.channelID}>
                       {item.channelName}
                     </Option>
                   );

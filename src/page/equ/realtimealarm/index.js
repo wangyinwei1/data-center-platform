@@ -12,7 +12,6 @@ import Table from '../../../components/Table';
 import columnData from './columns.js';
 import Panel from '../../../components/Panel';
 import ChildTable from './childTable.js';
-import E_ChildTable from './e_childTable.js';
 //实例
 @inject('regionalStore', 'realtimealarmStore')
 @observer
@@ -28,8 +27,6 @@ class Passageway extends Component {
     this.onKeyPress = this.onKeyPress.bind(this);
     this.onPageChange = this.onPageChange.bind(this);
     this.getChildTable = this.getChildTable.bind(this);
-    this.expandedRowRender = this.expandedRowRender.bind(this);
-    this.onExpand = this.onExpand.bind(this);
     this.onCancel = this.onCancel.bind(this);
     this.state = {
       cascaderText: '',
@@ -74,6 +71,7 @@ class Passageway extends Component {
     const params = {
       ...realtimealarmStore.tableParmas,
       keywords: encodeURIComponent(value),
+      page: 1,
     };
     realtimealarmStore.search(params);
   }
@@ -116,27 +114,6 @@ class Passageway extends Component {
     });
   }
 
-  //嵌套表格
-  expandedRowRender(record, i) {
-    return <E_ChildTable getChildTable={this.getChildTable} />;
-  }
-  onExpand(expanded, record) {
-    const {realtimealarmStore} = this.props;
-    const expandedRows = this.state.expandedRows;
-    //孙设备
-    if (expandedRows[0] && expandedRows[0] !== record.devID) {
-      realtimealarmStore.c_expandedRowsChange([]);
-    }
-
-    this.stopOperation = true;
-    if (expanded) {
-      this.setState({expandedRows: [record.devID]});
-    } else {
-      this.setState({expandedRows: []});
-    }
-
-    realtimealarmStore.getSportTable({F_DeviceID: record.devID});
-  }
   render() {
     const {realtimealarmStore, regionalStore} = this.props;
     const tableData = toJS(realtimealarmStore.tableData.varList) || [];
@@ -145,24 +122,7 @@ class Passageway extends Component {
       getChildTable: this.getChildTable,
       _this: this,
     });
-    const showIconIndex = _.map(tableData, (item, index) => {
-      if (item.isConcentrator == 1) {
-        return index;
-      } else {
-        return false;
-      }
-    }).filter(item => {
-      return item || item === 0;
-    });
 
-    const nesting =
-      showIconIndex[0] || showIconIndex[0] === 0
-        ? {
-            expandedRowRender: this.expandedRowRender,
-            onExpand: this.onExpand,
-            expandedRowKeys: this.state.expandedRows,
-          }
-        : {};
     return (
       <div className={styles['information_wrap']}>
         <Remarks />
@@ -184,15 +144,15 @@ class Passageway extends Component {
                 pageIndex={pagination.page}
                 pageSize={pagination.number}
                 total={pagination.count}
-                nesting={nesting}
                 columns={columns}
                 rowClassName={(record, index) => {
                   const rowClassName = [];
-                  record.statustwo == 0 &&
-                    record.isConcentrator === 0 &&
-                    rowClassName.push('cl_online_state');
-                  record.isConcentrator == 0 &&
-                    rowClassName.push('cl_hidden_expand_icon');
+                  record.onOff === 0 &&
+                    (record.status == 1
+                      ? rowClassName.push('cl_disabled_state')
+                      : rowClassName.push('cl_offline_state'));
+                  record.onOff === 1 && rowClassName.push('cl_online_state');
+                  record.onOff === 2 && rowClassName.push('cl_err_state');
                   return rowClassName.join(' ');
                 }}
                 loading={realtimealarmStore.loading}

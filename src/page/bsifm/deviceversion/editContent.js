@@ -5,6 +5,7 @@ import classnames from 'classnames';
 import styles from './index.less';
 import {
   FormInput,
+  FormRadio,
   FormTextArea,
   FormSelect,
 } from '../../../components/FormItem';
@@ -438,6 +439,15 @@ class Regional extends Component {
             name={'F_TypeName'}
             rules={[{required: true, message: '请必须填写!'}]}
           />
+          <FormSelect
+            {...fields}
+            onChange={this.handleFormChange}
+            label={'通讯方式'}
+            disabled={disabled}
+            name={'F_CommunicatID'}
+            rules={[{required: true, message: '请必须填写!'}]}
+            children={[{value: 1, name: 'TCP'}, {value: 2, name: 'UDP'}]}
+          />
           <FormInput
             {...fields}
             onChange={this.handleFormChange}
@@ -453,6 +463,24 @@ class Regional extends Component {
             disabled={disabled}
             name={'F_HardVersion'}
             rules={[{required: false}]}
+          />
+          <FormRadio
+            {...fields}
+            onChange={this.handleFormChange}
+            label={'数据上报'}
+            disabled={disabled}
+            name={'F_ReportType'}
+            rules={[{required: true, message: '请必须填写!'}]}
+            children={[{value: 0, name: '被动'}, {value: 1, name: '主动'}]}
+          />
+          <FormRadio
+            {...fields}
+            onChange={this.handleFormChange}
+            label={'链接方式'}
+            disabled={disabled}
+            name={'F_ConnectType'}
+            rules={[{required: true, message: '请必须填写!'}]}
+            children={[{value: 0, name: '被动'}, {value: 1, name: '主动'}]}
           />
         </Row>
       </Form>

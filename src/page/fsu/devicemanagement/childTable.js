@@ -18,6 +18,7 @@ class Regional extends Component {
     this.expandedRowRender = this.expandedRowRender.bind(this);
     this.onExpand = this.onExpand.bind(this);
     this.onRowDoubleClick = this.onRowDoubleClick.bind(this);
+    this.exportClick = this.exportClick.bind(this);
     this.state = {
       expandedRows: [],
     };
@@ -31,10 +32,10 @@ class Regional extends Component {
       realtimeChange,
       historyChange,
       controlChange,
-      rumorChange,
       sunEditChange,
       sunDeleteChange,
       sunDetailChange,
+      remoteControlClick,
       sunDisableChange,
     } = this.props;
 
@@ -43,7 +44,7 @@ class Regional extends Component {
         historyChange={historyChange}
         controlChange={controlChange}
         realtimeChange={realtimeChange}
-        rumorChange={rumorChange}
+        remoteControlClick={remoteControlClick}
         sunEditChange={sunEditChange}
         sunDeleteChange={sunDeleteChange}
         sunDetailChange={sunDetailChange}
@@ -61,9 +62,9 @@ class Regional extends Component {
       currentPortChange,
     } = this.props;
     currentPortChange(record);
-    getGrandsonTable({...s_tableParmas, F_DeviceID: record.deviceID});
     if (expanded) {
       expandedRowsChange([record.deviceID]);
+      getGrandsonTable({...s_tableParmas, F_DeviceID: record.deviceID});
     } else {
       expandedRowsChange([]);
     }
@@ -84,6 +85,15 @@ class Regional extends Component {
     const {childDetailClick} = this.props;
     childDetailClick(item);
   }
+  exportClick(item) {
+    const {childExportClick} = this.props;
+    childExportClick(item);
+  }
+  telemeteryClick(item) {
+    const {telemeteryClick} = this.props;
+    telemeteryClick(item);
+  }
+
   addClick(item) {
     const {
       fsu_devicemanagementStore: {getGoAdd, ztreeChild, expandedRows},
@@ -100,6 +110,8 @@ class Regional extends Component {
     const columns = columnData({
       deleteClick: this.deleteClick,
       editClick: this.editClick,
+      exportClick: this.exportClick,
+      telemeteryClick: this.telemeteryClick,
       detailClick: this.detailClick,
       addClick: this.addClick,
       _this: this,

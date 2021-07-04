@@ -26,21 +26,26 @@ const option = (allCount: {}, height) => {
       },
 
       data: [
-        {
-          name: `在线数量 : ${allCount.OnCount ? allCount.OnCount : 0}`,
-          icon: 'rect',
-        },
-        {
-          name: `告警数量 : ${allCount.alarmCount ? allCount.alarmCount : 0}`,
-          icon: 'rect',
-        },
-        {
-          name: `离线数量 : ${allCount.OffCount ? allCount.OffCount : 0}`,
-          icon: 'rect',
-        },
+        // {
+        //   name: `在线数量 : ${allCount.OnCount ? allCount.OnCount : 0}`,
+        //   icon: 'rect',
+        // },
+        // {
+        //   name: `告警数量 : ${allCount.alarmCount ? allCount.alarmCount : 0}`,
+        //   icon: 'rect',
+        // },
+        // {
+        //   name: `离线数量 : ${allCount.OffCount ? allCount.OffCount : 0}`,
+        //   icon: 'rect',
+        // },
+        // {
+        //   name: `异常数量 : ${allCount.ErrCount ? allCount.ErrCount : 0}`,
+        //   icon: 'rect',
+        // },
       ],
     },
-    color: ['#65e6a5', '#fff', '#5c667d'],
+    // color: ['#65e6a5', '#fff', '#5c667d', '#ff8a00', '#e8f000'],
+    color: ['#36b1ff', '#ff0000', '#5c667d', '#ff8a00', '#ddd'],
     series: [
       {
         name: '状态',
@@ -92,6 +97,18 @@ const option = (allCount: {}, height) => {
                 shadowOffsetX: 4,
               },
             },
+          },
+          {
+            value: allCount.ErrCount ? allCount.ErrCount : 0,
+            name: `异常数量 : ${allCount.ErrCount ? allCount.ErrCount : 0}`,
+            selected: true,
+          },
+          {
+            value: allCount.forbiddenCount ? allCount.forbiddenCount : 0,
+            name: `禁用数量 : ${
+              allCount.forbiddenCount ? allCount.forbiddenCount : 0
+            }`,
+            selected: true,
           },
         ],
       },

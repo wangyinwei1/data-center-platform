@@ -55,10 +55,10 @@ class Historyalarm {
     this.loading = true;
     const data = await getHistoryalarmTable(params);
     this.loading = false;
+    params.number = data.Data.number;
+    params.page = data.Data.page;
+    this.tableParmas = params;
     if (data.Result == 'success') {
-      params.number = data.Data.number;
-      params.page = data.Data.page;
-      this.tableParmas = params;
       this.tableData = data.Data;
     } else {
       message.error(data.Msg);

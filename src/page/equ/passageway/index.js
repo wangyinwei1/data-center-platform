@@ -51,8 +51,6 @@ class Passageway extends Component {
     this.onVirtualCancel = this.onVirtualCancel.bind(this);
     this.onVirtualOk = this.onVirtualOk.bind(this);
     this.virtualFormChange = this.virtualFormChange.bind(this);
-    this.expandedRowRender = this.expandedRowRender.bind(this);
-    this.onExpand = this.onExpand.bind(this);
 
     this.state = {
       cascaderText: '',
@@ -71,6 +69,7 @@ class Passageway extends Component {
       virtualShow: false,
       currentChannelID: '',
       currentVirtual: {},
+      item: [],
       expandedRows: [],
     };
   }
@@ -112,6 +111,7 @@ class Passageway extends Component {
     const params = {
       ...passagewayStore.tableParmas,
       keywords: encodeURIComponent(value),
+      page: 1,
     };
     passagewayStore.search(params);
   }
@@ -147,6 +147,7 @@ class Passageway extends Component {
       childTableTitle: item.devName || item.subDeviceName,
       currentDevice: item.devID || item.subDeviceID,
       singleLineData: item,
+      item: item,
     });
     passagewayStore.getChildTable(params);
   }
@@ -174,15 +175,18 @@ class Passageway extends Component {
   test(fields) {
     let showError = {};
     //循环找到必填字段是否是空并作出警告
+    let idReg = /^[^\u3220-\uFA29]+$/;
     _.forIn(fields, (v, k) => {
-      if (!v.value && v.value !== 0 && v.require) {
+      if (k === 'F_ChannelID' && v.require && !idReg.test(v.value)) {
+        showError[k] = {showError: true, ...v};
+      } else if (!v.value && v.value !== 0 && v.require) {
         showError[k] = {showError: true, ...v};
       }
     });
     return showError;
   }
 
-  alarmOk() {
+  async alarmOk() {
     const {passagewayStore: {a_tableData, alarmDataChange}} = this.props;
     let alarmTable = toJS(a_tableData);
     let hasAlarmError = [];
@@ -196,7 +200,8 @@ class Passageway extends Component {
           alarmTable.length === 1 &&
           !record.conType &&
           !record.msgID &&
-          !record.condition
+          !record.condition &&
+          (!record.alarmDelay || record.alarmDelay === 0)
         ) {
           alarmTable = [];
         } else {
@@ -242,10 +247,10 @@ class Passageway extends Component {
       F_ChannelID: this.state.currentChannelID,
       alarmConditions: alarmData,
     };
-    alarmBatchSave(params);
+    await alarmBatchSave(params);
     return true;
   }
-  onEditOk() {
+  async onEditOk() {
     const fields = this.state.fields;
     const showError = this.test(fields);
     const hasError = _.keys(showError);
@@ -262,7 +267,7 @@ class Passageway extends Component {
     } else {
       //告警条件确认
       if (this.state.type !== 'new') {
-        if (!this.alarmOk()) return;
+        if (await !this.alarmOk()) return;
       }
       const {
         passagewayStore: {save, edit, getChildTable, c_tableParmas},
@@ -276,14 +281,21 @@ class Passageway extends Component {
         key == 'F_ChannelName'
           ? (params[key] = value.value)
           : (params[key] = value.value);
+        key == 'ratio' && value.value
+          ? (params[key] = Number(value.value))
+          : (params[key] = value.value);
       });
-      this.state.type == 'modify'
-        ? edit(params).then(() => {
-            getChildTable(c_tableParmas);
-          })
-        : save(params).then(() => {
-            getChildTable(c_tableParmas);
-          });
+
+      let saveFun = () => {
+        this.state.type == 'modify'
+          ? edit(params).then(() => {
+              getChildTable(c_tableParmas);
+            })
+          : save(params).then(() => {
+              getChildTable(c_tableParmas);
+            });
+      };
+      await saveFun();
       this.setState({
         ...formParams,
         editShow: false,
@@ -308,6 +320,11 @@ class Passageway extends Component {
           obj['F_ShowPrecision'] = {...fields.F_ShowPrecision, value: 2};
         } else {
           obj['F_ShowPrecision'] = {...fields.F_ShowPrecision, value: 0};
+        }
+      }
+      if (key[0] === 'F_StoreMode') {
+        if (changedFields[key].value === 0) {
+          obj['F_Threshold'] = {...fields.F_Threshold, value: 0};
         }
       }
       if (key[0] === 'virtual') {
@@ -472,7 +489,7 @@ class Passageway extends Component {
         ? data.relateChannelID.split(',')
         : '';
 
-      _.map(relateChannelList, item => {
+      _.map(relateChannelList, (item, i) => {
         const {passagewayStore: {virtualDevList}} = this.props;
         const obj = {};
         const currentID = relateChannelID.filter(app => {
@@ -491,12 +508,13 @@ class Passageway extends Component {
             );
           }
         });
-        obj[item.relateChannelID] = {
-          value: currnetDev[0] ? currnetDev[0].deviceName : undefined,
+        obj[item.relateChannelID + '_clCode' + i] = {
+          value: currnetDev[0] ? currnetDev[0].deviceID : undefined,
         };
 
         this.setState(({virtualFields}) => {
           return {
+            currentVirtual: data,
             virtualFields: {
               ...virtualFields,
               ...obj,
@@ -530,7 +548,9 @@ class Passageway extends Component {
       const keys = _.keys(virtualFields);
       const relateChannelID = _.map(keys, app => {
         const value = virtualFields[app].value;
-        return `${value}.${app}`;
+        const channelId = app.substring(0, app.indexOf('_clCode'));
+
+        return `${value}.${channelId}`;
       });
 
       const params = {
@@ -572,27 +592,6 @@ class Passageway extends Component {
       };
     });
   }
-  //嵌套表格
-  expandedRowRender(record, i) {
-    return <E_ChildTable getChildTable={this.getChildTable} />;
-  }
-  onExpand(expanded, record) {
-    const {passagewayStore} = this.props;
-    const expandedRows = this.state.expandedRows;
-    //孙设备
-    if (expandedRows[0] && expandedRows[0] !== record.devID) {
-      passagewayStore.c_expandedRowsChange([]);
-    }
-
-    this.stopOperation = true;
-    if (expanded) {
-      this.setState({expandedRows: [record.devID]});
-    } else {
-      this.setState({expandedRows: []});
-    }
-
-    passagewayStore.getSportTable({F_DeviceID: record.devID});
-  }
   render() {
     const {passagewayStore, regionalStore} = this.props;
     const tableData = toJS(passagewayStore.tableData.varList) || [];
@@ -615,23 +614,6 @@ class Passageway extends Component {
         modalTitle = '设备通道详情';
         break;
     }
-    const showIconIndex = _.map(tableData, (item, index) => {
-      if (item.isConcentrator == 1) {
-        return index;
-      } else {
-        return false;
-      }
-    }).filter(item => {
-      return item || item === 0;
-    });
-    const nesting =
-      showIconIndex[0] || showIconIndex[0] === 0
-        ? {
-            expandedRowRender: this.expandedRowRender,
-            onExpand: this.onExpand,
-            expandedRowKeys: this.state.expandedRows,
-          }
-        : {};
     return (
       <div className={styles['information_wrap']}>
         <Remarks />
@@ -650,14 +632,14 @@ class Passageway extends Component {
             <Toolbar onSearch={this.onSearch} closeAdd={true} />
             <div className={styles['table_wrap']}>
               <Table
-                nesting={nesting}
                 rowClassName={(record, index) => {
                   const rowClassName = ['td_padding'];
-                  record.statustwo == 0 &&
-                    record.isConcentrator === 0 &&
-                    rowClassName.push('cl_online_state');
-                  record.isConcentrator == 0 &&
-                    rowClassName.push('cl_hidden_expand_icon');
+                  record.onOff === 0 &&
+                    (record.status == 1
+                      ? rowClassName.push('cl_disabled_state')
+                      : rowClassName.push('cl_offline_state'));
+                  record.onOff === 1 && rowClassName.push('cl_online_state');
+                  record.onOff === 2 && rowClassName.push('cl_err_state');
                   return rowClassName.join(' ');
                 }}
                 pageIndex={pagination.page}
@@ -682,6 +664,7 @@ class Passageway extends Component {
             detailClick={this.childDetailClick}
             deleteClick={this.childDeleteClick}
             channelTypeChange={this.channelTypeChange}
+            currentDevice={this.state.currentDevice}
             onExportClick={this.onExportClick}
           />
         </Panel>
@@ -713,9 +696,11 @@ class Passageway extends Component {
           <EditContent
             fields={this.state.fields}
             mode={this.state.type}
+            currentDevice={this.state.currentDevice}
             isVchannel={this.state.isVchannel}
             editVirtual={this.editVirtual}
             handleFormChange={this.handleFormChange}
+            item={this.state.item}
           />
         </ClModal>
       </div>

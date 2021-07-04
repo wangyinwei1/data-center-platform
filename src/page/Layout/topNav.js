@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import Cookies from 'js-cookie';
 import styles from './index.less';
 //实例
-@inject('globalStore')
+@inject('globalStore', 'loginStore')
 class TopNav extends Component {
   constructor(props) {
     super(props);
@@ -13,16 +13,23 @@ class TopNav extends Component {
   }
   exitLogin(e) {
     e.nativeEvent.stopImmediatePropagation();
-    Cookies.remove('cl_username');
-    this.props.router.push('/login');
+    const {
+      loginStore: {loginOut},
+    } = this.props;
+    loginOut().then(data => {
+      if (data) {
+        Cookies.remove('cl_username');
+        this.props.router.push('/login');
+      }
+    });
   }
   render() {
     const {title, username} = this.props;
     return (
       <Row className={styles['top_nav_wrap']}>
         <Col span={1} className={styles['logo']}>
-          <p>物联网数据中心平台</p>
-          <span>IOT DATA CENTER PLATFORM</span>
+          <p>创力能耗管理平台</p>
+          <span>ENERGY CONSUMPTION MANAGEMENT</span>
         </Col>
         <Col span={1} className={styles['top_nav_title']}>
           {title}

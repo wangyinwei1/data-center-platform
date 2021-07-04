@@ -1,0 +1,98 @@
+@import '../../../theme/sorollbar.less';
+:local {
+  .applicationuser_wrap {
+    height: 100%;
+  }
+  .applicationuser_ct {
+    .scrollCommon();
+    .min_width {
+      min-width: 1069px;
+      padding: 22px 38px 0;
+      height: 100%;
+    }
+    background: #fff;
+    height: 100%;
+    .table_wrap {
+      :global {
+        .information_th {
+          padding: 11px 6px !important;
+        }
+      }
+    }
+  }
+  .delete_wrap {
+    .delete_title {
+      background-color: #f9f9f9;
+      height: 40px;
+      line-height: 40px;
+      padding-left: 20px;
+      color: #4a4a4a;
+    }
+  }
+  .edit_wrap {
+    padding: 20px 20px 0 20px;
+    :global {
+      .cl_select_373 {
+        width: auto;
+        .ant-row {
+          width: auto;
+        }
+      }
+      .cl_regional_select_215 {
+        width: auto;
+        .ant-row {
+          width: auto;
+        }
+        .ant-form-item-control-wrapper {
+          width: 215px;
+        }
+      }
+    }
+  }
+  .operation {
+    .delete,
+    .detail,
+    .disable,
+    .add_child,
+    .edit {
+      i,
+      span {
+        display: inline-block;
+        vertical-align: top;
+      }
+      i {
+        margin-right: 6px;
+      }
+    }
+  }
+  .more {
+    cursor: pointer;
+    font-size: 22px;
+  }
+  .sub_title {
+    color: #999;
+    font-size: 14px;
+    padding: 5px 0 10px 11px;
+  }
+  .operation {
+    .delete,
+    .edit {
+      &:last-child {
+        margin-right: 0;
+      }
+      margin-right: 30px;
+      i {
+        cursor: pointer;
+        color: #7e7e7e;
+        font-size: 18px;
+        &:hover {
+          color: #5deda4;
+        }
+        &:active {
+          color: #40bc7e;
+        }
+      }
+      display: inline-block;
+    }
+  }
+}

@@ -8,6 +8,7 @@ import {
   applicationuserSave,
   applicationuserInitEdit,
   applicationuserEditSave,
+  getFSUType,
 } from '../services/api.js';
 import {message} from 'antd';
 class Site {
@@ -16,12 +17,22 @@ class Site {
   @observable addData = {};
   @observable editData = {};
   @observable loading = false;
+  @observable fsuTypes = [];
 
   @action.bound
   async getGoAdd(params) {
     const data = await applicationuserInitAdd(params);
     this.addData = data;
     return data;
+  }
+  @action.bound
+  async getFSUType(params) {
+    const data = await getFSUType(params);
+    if (data.Result == 'success') {
+      this.fsuTypes = data.Data;
+    } else {
+      message.error(data.Msg);
+    }
   }
   @action.bound
   async getEidtData(params) {
@@ -58,21 +69,23 @@ class Site {
   @action
   async delete(params) {
     const data = await applicationuser_delete(params);
-    if (data.result == 'success') {
+    if (data.Result == 'success') {
       this.getTable(this.tableParmas);
       message.success('删除成功!');
+    } else {
+      message.error(data.Msg);
     }
     return data;
   }
   @action.bound
   async editSave(params) {
     const data = await applicationuserEditSave(params);
-    if (data.result == 'success') {
+    if (data.Result == 'success') {
       this.getTable(this.tableParmas);
-      message.success(data.msg);
+      message.success(data.Msg);
       return true;
     } else {
-      message.error(data.msg);
+      message.error(data.Msg);
       return false;
     }
     return data;
@@ -80,12 +93,12 @@ class Site {
   @action.bound
   async save(params) {
     const data = await applicationuserSave(params);
-    if (data.result == 'success') {
+    if (data.Result == 'success') {
       this.getTable(this.tableParmas);
-      message.success(data.msg);
+      message.success(data.Msg);
       return true;
     } else {
-      message.error(data.msg);
+      message.error(data.Msg);
       return false;
     }
     return data;

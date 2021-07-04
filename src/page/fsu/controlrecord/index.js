@@ -5,6 +5,7 @@ import styles from './index.less';
 import Table from '../../../components/Table';
 import columnData from './columns.js';
 import Toolbar from '../../../components/Toolbar';
+import moment from 'moment';
 //实例
 @inject('fsu_controlrecordStore')
 @observer
@@ -15,16 +16,27 @@ class Regional extends Component {
     this.onPageChange = this.onPageChange.bind(this);
     this.onSearch = this.onSearch.bind(this);
     this.timeChange = this.timeChange.bind(this);
+    this.onTimeOk = this.onTimeOk.bind(this);
+    this.typesChange = this.typesChange.bind(this);
+    this.state = {
+      timeParams: {},
+    };
   }
   componentDidMount() {
-    const {fsu_controlrecordStore: {getTable}} = this.props;
+    const {fsu_controlrecordStore: {getTable, getFSUType}} = this.props;
     const params = {
       page: 1,
       keywords: '',
       number: 10,
-      lastLoginStart: '',
-      lastLoginEnd: '',
+      lastLoginStart: moment()
+        .startOf('day')
+        .format('YYYY-MM-DD HH:mm:ss'),
+      lastLoginEnd: moment()
+        .endOf('day')
+        .format('YYYY-MM-DD HH:mm:ss'),
+      F_FsuTypeID: localStorage.getItem('FsuTypeID'),
     };
+    getFSUType();
     getTable(params);
   }
   //table分页
@@ -34,6 +46,7 @@ class Regional extends Component {
     const params = {
       ...fsu_controlrecordStore.tableParmas,
       page: current,
+      F_FsuTypeID: localStorage.getItem('FsuTypeID'),
       number: pageSize,
     };
     fsu_controlrecordStore.getTable(params);
@@ -42,6 +55,7 @@ class Regional extends Component {
     const {fsu_controlrecordStore} = this.props;
     const params = {
       ...fsu_controlrecordStore.tableParmas,
+      F_FsuTypeID: localStorage.getItem('FsuTypeID'),
       page: pageNumber,
     };
     fsu_controlrecordStore.getTable(params);
@@ -50,19 +64,38 @@ class Regional extends Component {
     const {fsu_controlrecordStore} = this.props;
     const params = {
       ...fsu_controlrecordStore.tableParmas,
+      F_FsuTypeID: localStorage.getItem('FsuTypeID'),
       keywords: encodeURIComponent(value),
+      page: 1,
     };
     fsu_controlrecordStore.search(params);
   }
   timeChange(dates, dateStrings) {
-    const {fsu_controlrecordStore} = this.props;
     const params = {
-      ...fsu_controlrecordStore.tableParmas,
-      page: 1,
+      F_FsuTypeID: localStorage.getItem('FsuTypeID'),
       lastLoginStart: dateStrings[0],
       lastLoginEnd: dateStrings[1],
     };
-    fsu_controlrecordStore.getTable(params);
+    this.timeParams = params;
+  }
+  onTimeOk() {
+    const {fsu_controlrecordStore} = this.props;
+    let obj = {
+      ...fsu_controlrecordStore.tableParmas,
+      page: 1,
+      ...this.timeParams,
+    };
+    fsu_controlrecordStore.getTable(obj);
+  }
+  typesChange(value) {
+    const {fsu_controlrecordStore: {getTable, tableParmas}} = this.props;
+    const params = {
+      ...tableParmas,
+      page: 1,
+      F_FsuTypeID: value,
+    };
+    localStorage.setItem('FsuTypeID', value);
+    getTable(params);
   }
   render() {
     const {fsu_controlrecordStore} = this.props;
@@ -78,6 +111,9 @@ class Regional extends Component {
           showValue={['time']}
           timeChange={this.timeChange}
           onSearch={this.onSearch}
+          fsuAddTypes={fsu_controlrecordStore.fsuAddTypes}
+          typesChange={this.typesChange}
+          onTimeOk={this.onTimeOk}
           closeAdd={true}
         />
         <div className={styles['controlrecord_ct']}>

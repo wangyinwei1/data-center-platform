@@ -37,24 +37,14 @@ class Regional extends Component {
         break;
     }
 
-    let showIndex = 2,
-      currentClass = '';
-    switch (belongRegion) {
-      case 'city':
-        showIndex = 2;
-        currentClass = 'cl_regional_select_293';
-        break;
-      case 'area':
-        showIndex = 3;
-        currentClass = 'cl_regional_select_190';
-        break;
-      case 'zone':
-        showIndex = 4;
-        currentClass = 'cl_regional_select_138';
-        break;
-      case 'site':
-        showIndex = 5;
-        break;
+    let currentClass = '';
+
+    if (data.area.countyCode) {
+      currentClass = 'cl_regional_select_190';
+    } else if (data.area.regionCode) {
+      currentClass = 'cl_regional_select_138';
+    } else {
+      currentClass = 'cl_regional_select_293';
     }
     const cityList = _.map(toJS(data.cityList), item => {
       return {
@@ -103,7 +93,7 @@ class Regional extends Component {
           rules={[{required: true, message: '请必须填写!'}]}
           children={cityList}
         />
-        {showIndex >= 3 && (
+        {data.area.countyCode && (
           <FormSelect
             {...fields}
             onChange={this.handleFormChange}
@@ -115,7 +105,7 @@ class Regional extends Component {
             children={countyList}
           />
         )}
-        {showIndex >= 4 && (
+        {data.area.regionCode && (
           <FormSelect
             {...fields}
             onChange={this.handleFormChange}

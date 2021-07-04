@@ -3,8 +3,12 @@ import {action, observer, inject} from 'mobx-react';
 import {toJS} from 'mobx';
 import styles from './index.less';
 import {Form, Button, Input, Select, Row, Col} from 'antd';
-const FormItem = Form.Item;
-const Option = Select.Option;
+import {
+  FormInput,
+  FormRadio,
+  FormSelect,
+  CustomizedForm,
+} from '../../../components/FormItem';
 
 //实例
 @inject('informationStore')
@@ -13,73 +17,130 @@ const Option = Select.Option;
 class ControlContent extends Component {
   constructor(props) {
     super(props);
-    this.handleClick = this.handleClick.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.channelChange = this.channelChange.bind(this);
-    this.state = {
-      F_ChannelID: '',
-      controlValue: '',
-    };
+    this.handleFormChange = this.handleFormChange.bind(this);
   }
   componentDidMount() {}
-  handleChange(e) {
-    this.setState({
-      controlValue: e.target.value,
-    });
-  }
-  channelChange(value) {
-    this.setState({
-      F_ChannelID: value,
-      controlValue: '',
-    });
-  }
-  handleClick() {
-    const {
-      informationStore: {currentDevice, postDeviceControl, regulatChannel},
-    } = this.props;
-    const params = {
-      F_ChannelID: this.state.F_ChannelID || toJS(regulatChannel)[0].channelId,
-      controlValue: this.state.controlValue,
-      F_DeviceID: currentDevice,
-    };
-    postDeviceControl(params);
+  handleFormChange(changedFields) {
+    const {handleFormChange} = this.props;
+    handleFormChange(changedFields);
   }
   render() {
-    const {informationStore: {regulatChannel}} = this.props;
+    const {fields} = this.props;
+    let disabled = false;
+    let width = 390;
+    let spType = fields.spType.value;
     return (
-      <Form className={styles['control_ct']}>
-        <Row>
-          <Col span={1} className={styles['passageway']}>
-            <FormItem label="通道名称">
-              <Select
-                value={
-                  this.state.F_ChannelID || toJS(regulatChannel)[0].channelId
-                }
-                placeholder="请选择通道!"
-                onChange={this.channelChange}>
-                {_.map(toJS(regulatChannel), item => {
-                  return (
-                    <Option key={item.channelId} value={item.channelId}>
-                      {item.channelName}
-                    </Option>
-                  );
-                })}
-              </Select>
-            </FormItem>
-          </Col>
-          <Col span={1} className={styles['operation_text']}>
-            <FormItem label="操作">
-              <Input
-                placeholder={'请输入操作内容'}
-                value={this.state.controlValue}
-                onChange={this.handleChange}
-              />
-            </FormItem>
-          </Col>
-          <Col span={1} className={styles['search']}>
-            <Button onClick={this.handleClick}>确定</Button>
-          </Col>
-        </Row>
+      <Form layout="inline" className={styles['control_ct']}>
+        <FormInput
+          {...fields}
+          onChange={this.handleFormChange}
+          disabled={disabled}
+          label={'设置值'}
+          width={width}
+          name={'sVal'}
+          visiable={spType === 6}
+          placeholder={'请输入内容'}
+          rules={[{required: false}]}
+        />
+        <FormInput
+          {...fields}
+          onChange={this.handleFormChange}
+          disabled={disabled}
+          label={'过高值'}
+          width={width}
+          visiable={spType === 6}
+          name={'hLimit'}
+          placeholder={'请输入内容'}
+          rules={[{required: false}]}
+        />
+        <FormInput
+          {...fields}
+          onChange={this.handleFormChange}
+          disabled={disabled}
+          label={'超高值'}
+          width={width}
+          visiable={spType === 6}
+          name={'sHLimit'}
+          placeholder={'请输入内容'}
+          rules={[{required: false}]}
+        />
+        <FormInput
+          {...fields}
+          onChange={this.handleFormChange}
+          disabled={disabled}
+          label={'过低值'}
+          width={width}
+          visiable={spType === 6}
+          name={'lLimit'}
+          placeholder={'请输入内容'}
+          rules={[{required: false}]}
+        />
+        <FormInput
+          {...fields}
+          onChange={this.handleFormChange}
+          disabled={disabled}
+          label={'超低值'}
+          visiable={spType === 6}
+          width={width}
+          name={'sLLimit'}
+          placeholder={'请输入内容'}
+          rules={[{required: false}]}
+        />
+        <FormInput
+          {...fields}
+          onChange={this.handleFormChange}
+          disabled={disabled}
+          label={'相对值'}
+          width={width}
+          visiable={spType === 6}
+          name={'relativeVal'}
+          placeholder={'请输入内容'}
+          rules={[{required: false}]}
+        />
+        <FormInput
+          {...fields}
+          onChange={this.handleFormChange}
+          disabled={disabled}
+          label={'阈值'}
+          width={width}
+          visiable={spType === 6}
+          name={'threshold'}
+          placeholder={'请输入内容'}
+          rules={[{required: false}]}
+        />
+        <FormInput
+          {...fields}
+          onChange={this.handleFormChange}
+          disabled={disabled}
+          label={'时间间隔'}
+          width={width}
+          visiable={spType === 6}
+          name={'intervalTime'}
+          placeholder={'请输入内容'}
+          rules={[{required: false}]}
+        />
+        <FormInput
+          {...fields}
+          onChange={this.handleFormChange}
+          disabled={disabled}
+          label={'开始延迟时间'}
+          width={width}
+          visiable={spType === 2 || spType === 4}
+          name={'bDelay'}
+          placeholder={'请输入标识'}
+          rules={[{required: false}]}
+        />
+        <FormInput
+          {...fields}
+          onChange={this.handleFormChange}
+          disabled={disabled}
+          label={'结束延迟时间'}
+          visiable={spType === 2 || spType === 4}
+          width={width}
+          name={'eDelay'}
+          placeholder={'请输入标识'}
+          rules={[{required: false}]}
+        />
       </Form>
     );
   }

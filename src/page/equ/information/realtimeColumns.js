@@ -12,7 +12,7 @@ const columns = () => {
   return [
     {
       title: '通道编号',
-      dataIndex: 'channelId',
+      dataIndex: 'channelID',
     },
     {
       title: '通道名称',
@@ -28,7 +28,7 @@ const columns = () => {
     },
     {
       title: '采集时间',
-      dataIndex: 'RecordTime',
+      dataIndex: 'recordTime',
     },
   ];
 };

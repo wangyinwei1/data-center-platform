@@ -49,7 +49,7 @@ class Regional extends Component {
                 label={''}
                 className={currentClass}
                 disabled={disabled}
-                name={item.relateChannelID}
+                name={item.relateChannelID + '_clCode' + i}
                 rules={[{required: false}]}
                 children={newVirtualDevList}
               />

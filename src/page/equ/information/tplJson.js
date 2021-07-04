@@ -4,24 +4,12 @@ const formParams = {
       value: '',
       require: true,
     },
-    F_IsConcentrator: {
-      value: 0,
-      require: true,
-    },
-    F_BelongUnitID: {
+    F_StationID: {
       value: undefined,
       require: true,
     },
     Id_Version: {
       value: undefined,
-      require: true,
-    },
-    F_ReportType: {
-      value: 0,
-      require: true,
-    },
-    F_ConnectType: {
-      value: 0,
       require: true,
     },
     F_IP: {
@@ -68,11 +56,7 @@ const clearFormParams = {
       value: '',
       require: true,
     },
-    F_IsConcentrator: {
-      value: 0,
-      require: true,
-    },
-    F_BelongUnitID: {
+    F_StationID: {
       value: undefined,
       require: true,
     },

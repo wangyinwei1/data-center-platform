@@ -117,6 +117,7 @@ class Site extends Component {
     const params = {
       ...applicationuserStore.tableParmas,
       keywords: encodeURIComponent(value),
+      page: 1,
     };
     applicationuserStore.search(params);
   }

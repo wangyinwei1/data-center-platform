@@ -41,15 +41,23 @@ const columns = ({
     },
     {
       title: '设备类型',
+      width: '15%',
       dataIndex: 'F_TypeName',
+      render: (text, record, index) => {
+        return <TextOverflow>{text}</TextOverflow>;
+      },
     },
     {
-      title: '软件版本',
-      dataIndex: 'F_SoftVersion',
+      title: '链接方式',
+      dataIndex: 'F_ConnectType',
     },
     {
-      title: '硬件版本',
-      dataIndex: 'F_HardVersion',
+      title: '采集方式',
+      dataIndex: 'F_ReportType',
+    },
+    {
+      title: '通讯方式',
+      dataIndex: 'F_CommunicatID',
     },
     {
       title: '通道数',

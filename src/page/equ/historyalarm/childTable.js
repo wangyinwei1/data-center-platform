@@ -18,6 +18,10 @@ class Regional extends Component {
     this.onPageChange = this.onPageChange.bind(this);
     this.onSearch = this.onSearch.bind(this);
     this.timeChange = this.timeChange.bind(this);
+    this.onTimeOk = this.onTimeOk.bind(this);
+    this.state = {
+      timeParams: {},
+    };
   }
   componentDidMount() {}
   //table分页
@@ -44,17 +48,26 @@ class Regional extends Component {
     const params = {
       ...historyalarmStore.c_tableParmas,
       keywords: encodeURIComponent(value),
+      page: 1,
     };
     historyalarmStore.childSearch(params);
   }
   timeChange(dates, dateStrings) {
-    const {historyalarmStore} = this.props;
     const params = {
-      ...historyalarmStore.c_tableParmas,
       lastLoginStart: dateStrings[0],
       lastLoginEnd: dateStrings[1],
     };
-    historyalarmStore.childSearch(params);
+    this.timeParams = params;
+  }
+
+  onTimeOk() {
+    const {historyalarmStore} = this.props;
+    let obj = {
+      ...historyalarmStore.c_tableParmas,
+      page: 1,
+      ...this.timeParams,
+    };
+    historyalarmStore.childSearch(obj);
   }
   render() {
     const {historyalarmStore} = this.props;
@@ -69,6 +82,7 @@ class Regional extends Component {
           closeAdd={true}
           showValue={['time']}
           timeChange={this.timeChange}
+          onTimeOk={this.onTimeOk}
         />
         <Table
           pageIndex={pagination.page}

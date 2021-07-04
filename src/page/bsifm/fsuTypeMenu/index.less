@@ -1,0 +1,57 @@
+@import '../../../theme/sorollbar.less';
+:local {
+  .import_btn {
+    display: inline-block;
+    vertical-align: top;
+    border-radius: 17px;
+    width: auto;
+    margin-right: 37px;
+    margin-top: 13px;
+  }
+  .admin_wrap {
+    height: 100%;
+    overflow: hidden;
+    // .scrollCommon();
+    .type_wrap {
+      height: 100%;
+      .scrollCommon();
+      overflow: auto;
+    }
+    :global {
+      .ant-tabs {
+        height: 100%;
+      }
+      .ant-tabs-content {
+        height: -webkit-calc(~'100% - 68px');
+        height: -moz-calc(~'100% - 68px');
+        height: -ms-calc(~'100% - 68px');
+        height: -o-calc(~'100% - 68px');
+        height: calc(~'100% - 68px');
+      }
+      .ant-tabs-tabpane {
+        text-align: right;
+        background-color: #fff;
+      }
+      .ant-tabs-nav-wrap {
+        background-color: #fff;
+      }
+      .ant-tabs-ink-bar {
+        height: 3px;
+      }
+      .ant-tabs-nav .ant-tabs-tab {
+        &:hover {
+          color: #3c3c3c !important;
+          font-weight: bold;
+        }
+        &.ant-tabs-tab-active {
+          font-weight: bold;
+          color: #3c3c3c;
+        }
+        padding: 1px;
+        line-height: 50px;
+        margin: 0px 18px;
+        font-size: 16px;
+      }
+    }
+  }
+}

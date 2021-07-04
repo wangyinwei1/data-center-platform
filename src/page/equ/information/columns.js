@@ -21,14 +21,6 @@ const menu = ({
 }) => {
   return (
     <Menu className={styles['operation']}>
-      {record.isConcentrator === 1 && (
-        <Menu.Item key="c_add" onClick={addLevelOneClick.bind(_this, record)}>
-          <div className={styles['add_child']}>
-            <i className={classnames('icon iconfont icon-xinzeng')} />
-            <span>新增</span>
-          </div>
-        </Menu.Item>
-      )}
       <Menu.Item key="c_detail" onClick={detailClick.bind(_this, record)}>
         <div className={styles['detail']}>
           <i className={classnames('icon iconfont icon-xiangqing')} />
@@ -41,14 +33,12 @@ const menu = ({
           <span>编辑</span>
         </div>
       </Menu.Item>
-      {record.isConcentrator === 0 && (
-        <Menu.Item key="c_disable" onClick={disableClick.bind(_this, record)}>
-          <div className={styles['disable']}>
-            <i className={classnames('icon iconfont icon-jinyong')} />
-            <span>{record.status === 1 ? '启用' : '禁用'}</span>
-          </div>
-        </Menu.Item>
-      )}
+      <Menu.Item key="c_disable" onClick={disableClick.bind(_this, record)}>
+        <div className={styles['disable']}>
+          <i className={classnames('icon iconfont icon-jinyong')} />
+          <span>{record.status === 1 ? '启用' : '禁用'}</span>
+        </div>
+      </Menu.Item>
       <Menu.Item key="c_delete" onClick={deleteClick.bind(_this, record)}>
         <div className={styles['delete']}>
           <i className={classnames('icon iconfont icon-shanchu')} />
@@ -84,7 +74,7 @@ const columns = ({
               <i
                 className={classnames(
                   'icon iconfont',
-                  record.connectType == 0
+                  record.connectType === 0
                     ? `icon-beidong ${styles['icon_passive']}`
                     : `icon-zhudong ${styles['icon_active']}`,
                   styles['connectType'],
@@ -97,9 +87,18 @@ const columns = ({
       },
     },
     {
+      title: '设备ID',
+      dataIndex: 'devID',
+      width: '10%',
+      className: 'information_th',
+      render: (text, record, index) => {
+        return <TextOverflow>{text}</TextOverflow>;
+      },
+    },
+    {
       title: '设备别名',
       dataIndex: 'rec',
-      width: '12%',
+      width: '8%',
       className: 'information_th',
       render: (text, record, index) => {
         return <TextOverflow>{text}</TextOverflow>;
@@ -118,7 +117,7 @@ const columns = ({
       title: '所属站点',
       dataIndex: 'stationName',
       className: 'information_th',
-      width: '25%',
+      width: '18%',
       render: (text, record, index) => {
         return <TextOverflow>{text}</TextOverflow>;
       },
@@ -129,7 +128,6 @@ const columns = ({
       className: 'information_th',
       width: '5%',
       render: (text, record, index) => {
-        if (record.isConcentrator === 1) return null;
         return (
           <i
             className={classnames(
@@ -147,7 +145,6 @@ const columns = ({
       className: 'information_th',
       width: '5%',
       render: (text, record, index) => {
-        if (record.isConcentrator === 1) return null;
         return (
           <i
             className={classnames(
@@ -169,10 +166,9 @@ const columns = ({
           <a
             className={styles['child_link']}
             onClick={
-              record.isConcentrator !== 1 &&
-              (getAlarmTable ? getAlarmTable.bind(_this, record) : () => {})
+              getAlarmTable ? getAlarmTable.bind(_this, record) : () => {}
             }>
-            {record.isConcentrator === 1 ? null : text}
+            {text}
           </a>
         );
       },
@@ -183,7 +179,6 @@ const columns = ({
       className: 'information_th',
       width: '5%',
       render: (text, record, index) => {
-        if (record.isConcentrator === 1) return null;
         return (
           <i
             className={classnames(
@@ -201,7 +196,6 @@ const columns = ({
       width: '5%',
       className: 'information_th',
       render: (text, record, index) => {
-        if (record.isConcentrator === 1) return null;
         return (
           <i
             className={classnames(
@@ -213,20 +207,6 @@ const columns = ({
         );
       },
     },
-    // {
-    //   title: '连接方式',
-    //   dataIndex: '',
-    //   render: (text, record, index) => {
-    //     return record.connectType == 0 ? '被动' : '主动';
-    //   },
-    // },
-    // {
-    //   title: '状态',
-    //   dataIndex: '',
-    //   render: (text, record, index) => {
-    //     return record.statustwo == 0 ? '离线' : '在线';
-    //   },
-    // },
     {
       title: '操作',
       width: '5%',

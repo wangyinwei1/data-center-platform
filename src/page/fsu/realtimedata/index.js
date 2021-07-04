@@ -67,6 +67,7 @@ class Passageway extends Component {
     const params = {
       ...fsu_realtimedataStore.tableParmas,
       keywords: encodeURIComponent(value),
+      page: 1,
     };
     fsu_realtimedataStore.search(params);
   }

@@ -17,7 +17,13 @@ const menu = ({
   _this,
   record,
   disableClick,
+  exportMonitor,
+  portInfoClick,
+  exportSub,
   addLevelOneClick,
+  fsuStatusClick,
+  restartClick,
+  fsuSetTimeClick,
 }) => {
   return (
     <Menu className={styles['operation']}>
@@ -39,10 +45,56 @@ const menu = ({
           <span>编辑</span>
         </div>
       </Menu.Item>
+      {JSON.parse(localStorage.getItem('FsuTypeID')) === 2 && (
+        <Menu.Item key="c_restart" onClick={restartClick.bind(_this, record)}>
+          <div className={styles['edit']}>
+            <i className={classnames('icon iconfont icon-bianji')} />
+            <span>重启</span>
+          </div>
+        </Menu.Item>
+      )}
+      {JSON.parse(localStorage.getItem('FsuTypeID')) === 2 && (
+        <Menu.Item key="c_portInfo" onClick={portInfoClick.bind(_this, record)}>
+          <div className={styles['edit']}>
+            <i className={classnames('icon iconfont icon-bianji')} />
+            <span>获取端口信息</span>
+          </div>
+        </Menu.Item>
+      )}
+      {JSON.parse(localStorage.getItem('FsuTypeID')) === 2 && (
+        <Menu.Item
+          key="c_fsuSetTime"
+          onClick={fsuSetTimeClick.bind(_this, record)}>
+          <div className={styles['edit']}>
+            <i className={classnames('icon iconfont icon-bianji')} />
+            <span>校时</span>
+          </div>
+        </Menu.Item>
+      )}
       <Menu.Item key="c_disable" onClick={disableClick.bind(_this, record)}>
         <div className={styles['disable']}>
           <i className={classnames('icon iconfont icon-jinyong')} />
           <span>{record.status === 1 ? '启用' : '禁用'}</span>
+        </div>
+      </Menu.Item>
+      <Menu.Item key="c_status" onClick={fsuStatusClick.bind(_this, record)}>
+        <div className={styles['fsu_status']}>
+          <i className={classnames('icon iconfont icon-shebeizhuangtai')} />
+          <span>状态</span>
+        </div>
+      </Menu.Item>
+      <Menu.Item key="c_exportSub" onClick={exportSub.bind(_this, record)}>
+        <div className={styles['export_sub']}>
+          <i className={classnames('icon iconfont icon-daochu2')} />
+          <span>导出子设备</span>
+        </div>
+      </Menu.Item>
+      <Menu.Item
+        key="c_exportMonitor"
+        onClick={exportMonitor.bind(_this, record)}>
+        <div className={styles['export_monitor']}>
+          <i className={classnames('icon iconfont icon-daochu2')} />
+          <span>导出监控点</span>
         </div>
       </Menu.Item>
       <Menu.Item key="c_delete" onClick={deleteClick.bind(_this, record)}>
@@ -61,6 +113,12 @@ const columns = ({
   controlClick,
   disableClick,
   editClick,
+  fsuStatusClick,
+  exportMonitor,
+  fsuSetTimeClick,
+  exportSub,
+  portInfoClick,
+  restartClick,
   rumorClick,
   addLevelOneClick,
   detailClick,
@@ -87,20 +145,20 @@ const columns = ({
       },
     },
     {
-      title: '端口',
-      dataIndex: 'suPort',
-      className: 'information_th',
-      width: '6%',
-    },
-    {
       title: 'IP',
       dataIndex: 'suIP',
       className: 'information_th',
       width: '11%',
     },
     {
+      title: '端口',
+      dataIndex: 'suPort',
+      className: 'information_th',
+      width: '6%',
+    },
+    {
       title: '所属区域',
-      dataIndex: 'stationName',
+      dataIndex: 'station',
       className: 'information_th',
       width: '25%',
       render: (text, record, index) => {
@@ -179,20 +237,6 @@ const columns = ({
         );
       },
     },
-    // {
-    //   title: '连接方式',
-    //   dataIndex: '',
-    //   render: (text, record, index) => {
-    //     return record.connectType == 0 ? '被动' : '主动';
-    //   },
-    // },
-    // {
-    //   title: '状态',
-    //   dataIndex: '',
-    //   render: (text, record, index) => {
-    //     return record.statustwo == 0 ? '离线' : '在线';
-    //   },
-    // },
     {
       title: '操作',
       width: '5%',
@@ -206,7 +250,13 @@ const columns = ({
               deleteClick,
               detailClick,
               addLevelOneClick,
+              exportMonitor,
+              exportSub,
+              restartClick,
+              portInfoClick,
+              fsuStatusClick,
               disableClick,
+              fsuSetTimeClick,
               _this,
               record,
             })}
